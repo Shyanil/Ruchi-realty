@@ -1,0 +1,27 @@
+/* Preview-card shared rules. Each card lives in its own HTML file
+   and is rendered ~700×<= 400 px in the Design System tab. */
+
+@import url("../colors_and_type.css");
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  font-family: var(--rr-font-sans);
+  background: var(--rr-ink);
+  color: var(--rr-fg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding: 24px;
+  min-height: 100vh;
+}
+
+body.paper {
+  background: var(--rr-paper);
+  color: var(--rr-ink);
+}
+
+.row { display: flex; gap: 12px; align-items: stretch; flex-wrap: wrap; }
+.col { display: flex; flex-direction: column; gap: 12px; }
+.meta { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.5; }
+.mono { font-family: var(--rr-font-mono); }

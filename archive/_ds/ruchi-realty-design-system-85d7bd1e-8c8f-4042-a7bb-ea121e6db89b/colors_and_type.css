@@ -1,0 +1,306 @@
+/* ============================================================
+   Ruchi Realty — Foundation Tokens
+   Colors, type scale, spacing, radii, shadows, motion.
+   Use the semantic tokens (--rr-fg, --rr-h1) in components.
+   ============================================================ */
+
+/* ---------- 1. Fonts ----------
+   Ruchi's brand family is GOTHAM, now self-hosted from /fonts.
+   Weights: Thin 100 · XLight 200 · Light 300 · Book 400 ·
+   Medium 500 · Bold 700 · Black 800 · Ultra 900 (+ italics). */
+
+@font-face { font-family:"Gotham"; font-weight:100; font-style:normal; font-display:swap; src:url("fonts/Gotham-Thin.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:100; font-style:italic; font-display:swap; src:url("fonts/Gotham-ThinItalic.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:200; font-style:normal; font-display:swap; src:url("fonts/Gotham-XLight.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:200; font-style:italic; font-display:swap; src:url("fonts/Gotham-XLightItalic.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:300; font-style:normal; font-display:swap; src:url("fonts/Gotham-Light.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:300; font-style:italic; font-display:swap; src:url("fonts/Gotham-LightItalic.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:400; font-style:normal; font-display:swap; src:url("fonts/Gotham-Book.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:400; font-style:italic; font-display:swap; src:url("fonts/Gotham-BookItalic.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:500; font-style:normal; font-display:swap; src:url("fonts/Gotham-Medium.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:500; font-style:italic; font-display:swap; src:url("fonts/Gotham-MediumItalic.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:600 700; font-style:normal; font-display:swap; src:url("fonts/Gotham-Bold.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:600 700; font-style:italic; font-display:swap; src:url("fonts/Gotham-BoldItalic.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:800; font-style:normal; font-display:swap; src:url("fonts/Gotham-Black.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:800; font-style:italic; font-display:swap; src:url("fonts/Gotham-BlackItalic.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:900; font-style:normal; font-display:swap; src:url("fonts/Gotham-Ultra.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:900; font-style:italic; font-display:swap; src:url("fonts/Gotham-UltraItalic.otf") format("opentype"); }
+
+:root {
+
+  /* ---------- 2. Brand palette ----------
+     Primary = ink, the dominant brand surface.
+     Brand-Lime + Brand-Indigo are the two accent voices.
+     Mist / Bronze / Emerald are secondary supports. */
+
+  --rr-ink:        #231f20;   /* Primary near-black             */
+  --rr-ink-soft:   #2c2829;   /* Slight elevation off ink       */
+  --rr-paper:      #f5f4f1;   /* Warm off-white surface         */
+  --rr-paper-pure: #ffffff;
+
+  --rr-lime:       #bed747;   /* Primary brand accent (signature)*/
+  --rr-lime-deep:  #a3bc2f;   /* Pressed / hover deepen          */
+  --rr-indigo:     #2e3192;   /* Primary brand accent (cooler)   */
+  --rr-indigo-deep:#22245f;
+
+  --rr-mist:       #e6e7e8;   /* Secondary neutral grey          */
+  --rr-mist-2:     #d1d3d4;
+  --rr-bronze:     #a8782a;   /* Secondary warm metallic         */
+  --rr-emerald:    #4ab969;   /* Secondary success / vitality    */
+
+  /* ---------- 3. Foreground / Background — on dark ----------
+     Default Ruchi surface is INK. Foregrounds are paper-tinted. */
+
+  --rr-bg:         var(--rr-ink);
+  --rr-bg-elev:    var(--rr-ink-soft);
+  --rr-fg:         #f5f4f1;        /* primary text on ink         */
+  --rr-fg-2:       rgba(245,244,241,0.72); /* secondary           */
+  --rr-fg-3:       rgba(245,244,241,0.48); /* tertiary / meta     */
+  --rr-fg-mute:    rgba(245,244,241,0.28); /* divider / disabled  */
+  --rr-line:       rgba(245,244,241,0.14); /* hairline border     */
+
+  /* ---------- 4. Semantic colors ---------- */
+
+  --rr-accent:     var(--rr-lime);
+  --rr-accent-fg:  var(--rr-ink);  /* text on lime is ink         */
+  --rr-link:       var(--rr-lime);
+  --rr-success:    var(--rr-emerald);
+  --rr-info:       var(--rr-indigo);
+  --rr-warn:       var(--rr-bronze);
+
+  /* ---------- 5. Gradient ----------
+     The guidelines name a "Gradient" as a primary brand surface.
+     A vertical ink → ink-soft fade, with a faint vignette. */
+
+  --rr-gradient: radial-gradient(
+      120% 80% at 50% 0%,
+      #3a3536 0%,
+      #231f20 55%,
+      #19161a 100%);
+
+  /* The signature brand gradient (from the R monogram): a diagonal
+     run from teal-blue (bottom-left) up to lime (top-right). The
+     brand book lists "GRADIENT" as a primary colour — this is it. */
+  --rr-gradient-brand: linear-gradient(217deg, #c4d63f 0%, #8cc06b 38%, #5aa79f 72%, #4a9fb8 100%);
+
+  /* ---------- 6. Type stack ---------- */
+
+  --rr-font-sans: "Gotham", "Helvetica Neue", Arial, sans-serif;
+  --rr-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ---------- 7. Type scale (official Ruchi sizes) ---------- */
+
+  --rr-fs-eyebrow: 0.6875rem;   /* 11px — letterspaced tagline   */
+  --rr-fs-caption: 0.8125rem;   /* 13px                          */
+  --rr-fs-body:    1rem;        /* 16px — Body                   */
+  --rr-fs-lead:    1.125rem;    /* 18px — H6 / Lead              */
+  --rr-fs-h6:      1.125rem;    /* 18px — H6                     */
+  --rr-fs-h5:      1.5rem;      /* 24px — H5                     */
+  --rr-fs-h4:      1.875rem;    /* 30px — (interpolated)         */
+  --rr-fs-h3:      2.5rem;      /* 40px — H3                     */
+  --rr-fs-h2:      3.25rem;     /* 52px — H2                     */
+  --rr-fs-h1:      3.875rem;    /* 62px — H1                     */
+  --rr-fs-display: 5.5rem;      /* 88px — oversized display      */
+
+  /* ---------- 8. Weights & spacing ---------- */
+
+  --rr-w-light:    300;
+  --rr-w-regular:  400;
+  --rr-w-medium:   500;
+  --rr-w-semibold: 600;
+  --rr-w-bold:     700;
+  --rr-w-black:    800;
+
+  --rr-ls-tight:   -0.02em;
+  --rr-ls-normal:   0;
+  --rr-ls-wide:     0.06em;
+  --rr-ls-eyebrow:  0.28em;   /* "COMMITTED TO YOU" treatment    */
+
+  --rr-lh-tight:   1.05;
+  --rr-lh-snug:    1.2;
+  --rr-lh-body:    1.55;
+  --rr-lh-loose:   1.7;
+
+  /* ---------- 9. Spacing (4px base) ---------- */
+
+  --rr-s-1:   4px;
+  --rr-s-2:   8px;
+  --rr-s-3:   12px;
+  --rr-s-4:   16px;
+  --rr-s-5:   24px;
+  --rr-s-6:   32px;
+  --rr-s-7:   48px;
+  --rr-s-8:   64px;
+  --rr-s-9:   96px;
+  --rr-s-10:  128px;
+
+  /* ---------- 10. Radii ----------
+     Ruchi is intentional and restrained — radii stay small. */
+
+  --rr-r-0:   0px;
+  --rr-r-1:   2px;
+  --rr-r-2:   4px;
+  --rr-r-3:   8px;
+  --rr-r-pill: 999px;
+
+  /* ---------- 11. Shadows / elevation ----------
+     On dark surfaces, elevation reads as a faint warm glow + a
+     deeper cast shadow. */
+
+  --rr-elev-1: 0 1px 0 rgba(245,244,241,0.05) inset,
+               0 8px 24px rgba(0,0,0,0.35);
+  --rr-elev-2: 0 1px 0 rgba(245,244,241,0.06) inset,
+               0 18px 48px rgba(0,0,0,0.5);
+  --rr-glow-lime: 0 0 0 1px rgba(190,215,71,0.4),
+                  0 12px 32px rgba(190,215,71,0.15);
+
+  /* ---------- 12. Borders ---------- */
+
+  --rr-border:     1px solid var(--rr-line);
+  --rr-border-2:   1px solid rgba(245,244,241,0.28);
+
+  /* ---------- 13. Motion ----------
+     Calm, considered. No bounces. Long, eased fades. */
+
+  --rr-ease:       cubic-bezier(.2, .7, .2, 1);
+  --rr-ease-in:    cubic-bezier(.6, 0, .8, .2);
+  --rr-dur-fast:   180ms;
+  --rr-dur:        320ms;
+  --rr-dur-slow:   560ms;
+}
+
+
+/* ---------- 14. Light surface override ----------
+   Add class="rr-light" or attr [data-rr-surface="light"] to flip. */
+
+.rr-light, [data-rr-surface="light"] {
+  --rr-bg:      var(--rr-paper);
+  --rr-bg-elev: var(--rr-paper-pure);
+  --rr-fg:      var(--rr-ink);
+  --rr-fg-2:    rgba(35,31,32,0.66);
+  --rr-fg-3:    rgba(35,31,32,0.46);
+  --rr-fg-mute: rgba(35,31,32,0.22);
+  --rr-line:    rgba(35,31,32,0.10);
+  --rr-accent-fg: var(--rr-ink);
+}
+
+
+/* ============================================================
+   Semantic element styles — opt in per project via .rr-content
+   ============================================================ */
+
+.rr-content {
+  font-family: var(--rr-font-sans);
+  color: var(--rr-fg);
+  background: var(--rr-bg);
+  font-size: var(--rr-fs-body);
+  line-height: var(--rr-lh-body);
+  font-weight: var(--rr-w-regular);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.rr-content h1, .rr-h1 {
+  font-size: var(--rr-fs-h1);
+  font-weight: var(--rr-w-light);
+  letter-spacing: var(--rr-ls-tight);
+  line-height: var(--rr-lh-tight);
+  margin: 0 0 var(--rr-s-5);
+}
+.rr-content h2, .rr-h2 {
+  font-size: var(--rr-fs-h2);
+  font-weight: var(--rr-w-light);
+  letter-spacing: var(--rr-ls-tight);
+  line-height: var(--rr-lh-tight);
+  margin: 0 0 var(--rr-s-4);
+}
+.rr-content h3, .rr-h3 {
+  font-size: var(--rr-fs-h3);
+  font-weight: var(--rr-w-regular);
+  letter-spacing: var(--rr-ls-tight);
+  line-height: var(--rr-lh-snug);
+  margin: 0 0 var(--rr-s-4);
+}
+.rr-content h4, .rr-h4 {
+  font-size: var(--rr-fs-h4);
+  font-weight: var(--rr-w-medium);
+  line-height: var(--rr-lh-snug);
+  margin: 0 0 var(--rr-s-3);
+}
+.rr-content h5, .rr-h5 {
+  font-size: var(--rr-fs-h5);
+  font-weight: var(--rr-w-medium);
+  line-height: var(--rr-lh-snug);
+  margin: 0 0 var(--rr-s-3);
+}
+.rr-content p, .rr-p { margin: 0 0 var(--rr-s-4); max-width: 62ch; }
+.rr-lead { font-size: var(--rr-fs-lead); color: var(--rr-fg-2); }
+.rr-caption { font-size: var(--rr-fs-caption); color: var(--rr-fg-3); }
+.rr-eyebrow {
+  font-size: var(--rr-fs-eyebrow);
+  font-weight: var(--rr-w-medium);
+  letter-spacing: var(--rr-ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--rr-fg-2);
+}
+.rr-tagline { /* the "COMMITTED TO YOU" treatment */
+  font-weight: var(--rr-w-medium);
+  letter-spacing: var(--rr-ls-eyebrow);
+  text-transform: uppercase;
+}
+
+a.rr-link, .rr-content a {
+  color: var(--rr-link);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(190,215,71,0.4);
+  transition: border-color var(--rr-dur) var(--rr-ease);
+}
+.rr-content a:hover { border-color: var(--rr-lime); }
+
+
+/* ============================================================
+   Signature graphics — the brand's official gradient patterns,
+   built from the R monogram. Apply to any positioned container;
+   direct children automatically sit above the pattern.
+
+   1. .rr-sig-mark   — the single oversized gradient monogram,
+      cropped + bleeding off a corner (apparel, ID card, diary, box).
+   2. .rr-sig-field  — a gradient monogram field. Default is the
+      mirrored LATTICE; add .rr-sig--rows for the upright-rows band.
+
+   Tune presence with --rr-sig-opacity. Resize/anchor the mark with
+   --rr-sig-size / --rr-sig-x / --rr-sig-y and .rr-sig--left /
+   .rr-sig--top. The fields carry the gradient baked in (cover).
+   ============================================================ */
+
+.rr-sig-mark, .rr-sig-field { position: relative; overflow: hidden; }
+.rr-sig-mark > *, .rr-sig-field > * { position: relative; z-index: 1; }
+
+.rr-sig-mark::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  width: var(--rr-sig-size, 58%);
+  aspect-ratio: 2110 / 2481;
+  right: var(--rr-sig-x, -8%);
+  bottom: var(--rr-sig-y, -10%);
+  background: url("assets/patterns/signature-mark.png") center / contain no-repeat;
+  opacity: var(--rr-sig-opacity, 1);
+  pointer-events: none;
+}
+.rr-sig-mark.rr-sig--left::after { right: auto; left: var(--rr-sig-x, -8%); }
+.rr-sig-mark.rr-sig--top::after  { bottom: auto; top: var(--rr-sig-y, -10%); }
+
+.rr-sig-field::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: url("assets/patterns/signature-field-lattice.png") center / cover;
+  opacity: var(--rr-sig-opacity, 1);
+  pointer-events: none;
+}
+.rr-sig-field.rr-sig--rows::before {
+  background-image: url("assets/patterns/signature-field-rows.png");
+}

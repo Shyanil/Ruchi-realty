@@ -1,0 +1,66 @@
+/* ============================================================
+   Ruchi Realty — Foundation tokens (distilled for the homepage)
+   Fonts self-hosted, brand palette, type scale, spacing, motion.
+   ============================================================ */
+
+@font-face { font-family:"Gotham"; font-weight:100; font-style:normal; font-display:swap; src:url("../fonts/Gotham-Thin.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:300; font-style:normal; font-display:swap; src:url("../fonts/Gotham-Light.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:400; font-style:normal; font-display:swap; src:url("../fonts/Gotham-Book.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:500; font-style:normal; font-display:swap; src:url("../fonts/Gotham-Medium.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:600 700; font-style:normal; font-display:swap; src:url("../fonts/Gotham-Bold.otf") format("opentype"); }
+@font-face { font-family:"Gotham"; font-weight:800; font-style:normal; font-display:swap; src:url("../fonts/Gotham-Black.otf") format("opentype"); }
+
+:root {
+  /* palette */
+  --rr-ink:        #231f20;
+  --rr-ink-soft:   #2c2829;
+  --rr-paper:      #f5f4f1;
+  --rr-paper-pure: #ffffff;
+  --rr-lime:       #bed747;
+  --rr-lime-deep:  #a3bc2f;
+  --rr-indigo:     #2e3192;
+  --rr-indigo-deep:#22245f;
+  --rr-mist:       #e6e7e8;
+  --rr-mist-2:     #d1d3d4;
+  --rr-bronze:     #a8782a;
+  --rr-emerald:    #4ab969;
+
+  /* gradient — the R monogram fill: teal-blue → lime */
+  --rr-gradient-brand: linear-gradient(217deg, #c4d63f 0%, #8cc06b 38%, #5aa79f 72%, #4a9fb8 100%);
+  --rr-gradient-text:  linear-gradient(92deg, #bed747 0%, #8fd0a0 40%, #6ab0c0 72%, #aab2ef 100%);
+
+  /* type */
+  --rr-font-sans: "Gotham", "Helvetica Neue", Arial, sans-serif;
+  --rr-fs-eyebrow: 0.6875rem;
+  --rr-fs-caption: 0.8125rem;
+  --rr-fs-body:    1rem;
+  --rr-fs-lead:    1.125rem;
+  --rr-fs-h5:      1.5rem;
+  --rr-fs-h4:      1.875rem;
+  --rr-fs-h3:      2.5rem;
+  --rr-fs-h2:      3.25rem;
+  --rr-fs-h1:      3.875rem;
+  --rr-fs-display: 5.5rem;
+
+  --rr-w-light:300; --rr-w-regular:400; --rr-w-medium:500; --rr-w-bold:700; --rr-w-black:800;
+
+  --rr-ls-tight:-0.02em; --rr-ls-wide:0.06em; --rr-ls-eyebrow:0.28em;
+  --rr-lh-tight:1.05; --rr-lh-snug:1.2; --rr-lh-body:1.55; --rr-lh-loose:1.7;
+
+  /* spacing */
+  --rr-s-1:4px; --rr-s-2:8px; --rr-s-3:12px; --rr-s-4:16px; --rr-s-5:24px;
+  --rr-s-6:32px; --rr-s-7:48px; --rr-s-8:64px; --rr-s-9:96px; --rr-s-10:128px;
+
+  /* radii */
+  --rr-r-1:2px; --rr-r-2:4px; --rr-r-3:8px; --rr-r-pill:999px;
+
+  /* motion */
+  --rr-ease:    cubic-bezier(.2,.7,.2,1);
+  --rr-ease-in: cubic-bezier(.6,0,.8,.2);
+  --rr-dur-fast:180ms; --rr-dur:320ms; --rr-dur-slow:560ms;
+
+  /* shadows */
+  --rr-elev-paper: 0 10px 30px rgba(35,31,32,0.07);
+  --rr-elev-paper-2: 0 18px 50px rgba(35,31,32,0.10);
+  --rr-glow-lime: 0 0 0 1px rgba(190,215,71,0.4), 0 12px 32px rgba(190,215,71,0.15);
+}
