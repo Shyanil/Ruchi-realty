@@ -106,7 +106,9 @@ function VideoLightbox({ v, onClose }) {
         <button className="vt-modal__close" onClick={onClose} aria-label="Close film">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
         </button>
-        <video className="vt-modal__video" src={window.SHOWREEL} poster={v.poster} controls autoPlay playsInline />
+        {v.video ?
+          <iframe className="vt-modal__video" src={v.video} title={v.name} allow="autoplay; fullscreen; picture-in-picture" allowFullScreen></iframe> :
+          <video className="vt-modal__video" src={window.SHOWREEL} poster={v.poster} controls autoPlay playsInline />}
         <div className="vt-modal__cap">
           <div>
             <div className="vt-modal__name">{v.name}</div>

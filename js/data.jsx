@@ -179,14 +179,15 @@ const HERO_IMG = {
 // `poster` is the still; the films stream from the brand showreel as a stand-in
 // until each family's own clip is linked.
 const VIDEO_TESTIMONIALS = [
-  { name: "Sandip & Rituparna Ghosh", project: "Active Acres", city: "Kolkata", dur: "2:14", line: "We moved in on the date in our agreement.", poster: IMG_PEOPLE[0] },
-  { name: "Dr. Meera Iyer",           project: "Oscar Billionaires", city: "Indore", dur: "1:48", line: "The same person still picks up the phone.", poster: IMG_PEOPLE[3] },
-  { name: "Arvind Khandelwal",        project: "Ruchi Lifescapes", city: "Bhopal", dur: "2:32", line: "Exactly what the specification showed us.", poster: IMG_PEOPLE[2] },
-  { name: "The Banerjee Family",      project: "One Prime", city: "Kolkata", dur: "3:05", line: "A home our children grew into.", poster: IMG_PEOPLE[1] },
-  { name: "Pooja & Nikhil Verma",     project: "Oscar Fort", city: "Indore", dur: "1:57", line: "Handed over, exactly as promised.", poster: IMG_LIVING[0] },
-  { name: "Sucharita Bose",           project: "One Victoria", city: "Kolkata", dur: "2:41", line: "Light and air in every room.", poster: IMG_PEOPLE[4] },
-  { name: "Rajesh & Anita Malhotra",  project: "Saatvik Green", city: "Indore", dur: "2:09", line: "A township that began with shade.", poster: IMG_LIVING[2] },
-  { name: "Imtiaz & Farida Sheikh",   project: "Active Greens", city: "Kolkata", dur: "1:39", line: "Trust we could check before we signed.", poster: IMG_LIVING[1] },
+  { name: "Ruchi Realty", project: "Active Acres", city: "Kolkata", dur: "2:14", line: "We moved in on the date in our agreement.", poster: "https://ruchirealty.com/wp-content/uploads/2023/08/hqdefault.webp", video: "https://www.youtube.com/embed/GTYs3ZynAQU?feature=oembed&autoplay=1&rel=0&controls=0" },
+  { name: "Saatvik Vihar Review", project: "Oscar Billionaires", city: "Indore", dur: "1:48", line: "The same person still picks up the phone.", poster: "https://ruchirealty.com/wp-content/uploads/2023/09/sd1.jpg", video: "https://www.youtube.com/embed/S4hnOtmQA9s?feature=oembed&autoplay=1&rel=0&controls=0" },
+  { name: "Ruchi Realty", project: "Ruchi Lifescapes", city: "Bhopal", dur: "2:32", line: "Exactly what the specification showed us.", poster: "https://ruchirealty.com/wp-content/uploads/2023/08/hqdefault-1.webp", video: "https://www.youtube.com/embed/ZDJWHNFzjXc?feature=oembed&autoplay=1&rel=0&controls=0" },
+  { name: "Ruchi Realty", project: "One Prime", city: "Kolkata", dur: "3:05", line: "A home our children grew into.", poster: "https://ruchirealty.com/wp-content/uploads/2023/08/hqdefault-2.webp", video: "https://www.youtube.com/embed/rRzZ4gAwLjY?feature=oembed&autoplay=1&rel=0&controls=0" },
+  { name: "Ruchi Realty", project: "Oscar Fort", city: "Indore", dur: "1:57", line: "Handed over, exactly as promised.", poster: "https://ruchirealty.com/wp-content/uploads/2023/08/hqdefault-3.webp", video: "https://www.youtube.com/embed/Gsv3Kwl4k8U?feature=oembed&autoplay=1&rel=0&controls=0" },
+  { name: "OV Review", project: "One Victoria", city: "Kolkata", dur: "2:41", line: "Light and air in every room.", poster: "https://ruchirealty.com/wp-content/uploads/2025/07/rrr1.webp", video: "https://player.vimeo.com/video/1106022712?autoplay=1&rel=0&controls=0#t=" },
+  { name: "One Victoria Review", project: "Saatvik Green", city: "Indore", dur: "2:09", line: "A township that began with shade.", poster: "https://ruchirealty.com/wp-content/uploads/2025/07/rrr2-e1753965823137.webp", video: "https://player.vimeo.com/video/1106028174?autoplay=1&rel=0&controls=0#t=" },
+  { name: "OV Review 3", project: "Active Greens", city: "Kolkata", dur: "1:39", line: "Trust we could check before we signed.", poster: "https://ruchirealty.com/wp-content/uploads/2025/07/rrr3.webp", video: "https://player.vimeo.com/video/1106030671?autoplay=1&rel=0&controls=0#t=" },
+  { name: "rrr4", project: "One Victoria", city: "Kolkata", dur: "1:39", line: "Trust we could check before we signed.", poster: "https://ruchirealty.com/wp-content/uploads/2025/07/rrr4.webp", video: "https://player.vimeo.com/video/1106031951?autoplay=1&rel=0&controls=0#t=" },
 ];
 
 // brand showreel, reused by the hero and the testimonial lightbox

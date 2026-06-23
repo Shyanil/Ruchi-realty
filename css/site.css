@@ -282,6 +282,8 @@ body.nav-locked { overflow: hidden; }
 .vtcard--feat { grid-column: span 2; grid-row: span 2; }
 .vtcard__btn { position: relative; display: block; width: 100%; height: 100%; padding: 0; border: none; background: var(--rr-ink-soft); border-radius: var(--rr-r-3); overflow: hidden; cursor: pointer; text-align: left; }
 .vtcard__media { position: absolute; inset: 0; transition: transform 700ms var(--rr-ease); }
+.vtcard__media .rimg__img { transform: scale(1.2); }
+.vtgrid .vtcard:nth-child(2) .vtcard__media .rimg__img { transform: scale(1.55); }
 .vtcard__btn:hover .vtcard__media { transform: scale(1.05); }
 .vtcard__scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(34,36,95,0.12) 0%, rgba(20,20,55,0) 30%, rgba(18,18,48,0.5) 62%, rgba(13,13,38,0.94) 100%); }
 .vtcard__play { position: absolute; left: 16px; top: 16px; width: 44px; height: 44px; border-radius: 50%; background: rgba(245,244,241,0.12); backdrop-filter: blur(6px); border: 1px solid rgba(245,244,241,0.5); display: grid; place-items: center; z-index: 3; transition: background var(--rr-dur) var(--rr-ease), transform var(--rr-dur) var(--rr-ease), border-color var(--rr-dur) var(--rr-ease); }
