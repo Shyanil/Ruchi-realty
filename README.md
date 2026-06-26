@@ -9,16 +9,16 @@ are loaded from a CDN, and the `.jsx` files are compiled **in the browser** at p
 
 | File | Page |
 |------|------|
-| `Homepage.html` | Home |
+| `index.html` | Home |
 | `Projects.html` | All Projects (filterable catalogue) |
-| `Admin.html` | Dummy admin panel preview (localStorage-backed) |
+| `Admin.html` | Supabase-backed admin panel |
 
 Both pages pull the same source from `js/` and `css/`.
 
 ## Folder layout
 
 ```
-Homepage.html          ← page 1
+index.html             ← page 1
 Projects.html          ← page 2
 js/                    ← React source (this is where you work)
   data.jsx               project list + site content (edit copy/projects here)
@@ -50,14 +50,15 @@ browser. Run any static server from this folder, e.g.:
 python3 -m http.server 8000
 ```
 
-then visit `http://localhost:8000/Homepage.html`.
+then visit `http://localhost:8000/index.html`.
 
-Admin preview:
+Admin:
 
 - URL: `http://localhost:8000/Admin.html`
-- Dummy login: `admin@ruchirealty.local` / `admin123`
-- Data is stored in browser localStorage for review only.
-- Image upload controls store local preview images in browser storage until real upload credentials are connected.
+- Login uses Supabase Auth.
+- The user must have a matching `public.profiles` row with `role = 'admin'`.
+- Data is stored in Supabase tables with RLS policies from the SQL setup.
+- Image uploads go to Supabase Storage buckets.
 - Final Supabase SQL is in `backend/sql/00_complete_setup.sql`.
 
 ## Editing
@@ -66,7 +67,7 @@ Admin preview:
 - **Header / nav / hero / projects strip:** `js/sections1.jsx`
 - **Other homepage sections / footer:** `js/sections2.jsx`, `sections3.jsx`, `sections4.jsx`
 - **All Projects page & filters:** `js/projects-page.jsx`
-- **Dummy backend/admin bridge:** `js/backend-client.jsx`, `js/admin-panel.jsx`, `Admin.html`
+- **Supabase backend/admin bridge:** `js/supabase-config.js`, `js/backend-client.jsx`, `js/admin-panel.jsx`, `Admin.html`
 - **Colours / type / spacing:** `css/tokens.css` · **component styles:** `css/site.css`
 
 ## Notes on `build/`

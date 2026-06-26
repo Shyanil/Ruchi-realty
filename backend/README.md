@@ -2,8 +2,7 @@
 
 A self-contained, reusable backend for the Ruchi Realty site (and any project
 that wants the same setup). The "backend" here is **Supabase (Postgres + Auth +
-RLS)** plus a small **JavaScript integration layer** and an external **cPanel image
-upload** endpoint.
+RLS)** plus a small **JavaScript integration layer** and Supabase Storage uploads.
 
 Everything you need to stand the backend up in a brand-new project is in this folder.
 
@@ -13,14 +12,9 @@ Everything you need to stand the backend up in a brand-new project is in this fo
 ruchi-backend/
 ├── README.md                     ← you are here
 ├── sql/
-│   ├── 00_complete_setup.sql     ← RUN THIS in a fresh Supabase project (one shot)
-│   └── reference/                ← original setup + the incremental migrations
-│       ├── original_full_setup.sql
-│       ├── migration_01_projects_ordering.sql
-│       ├── migration_02_projects_status_lead_source.sql
-│       └── migration_03_site_settings.sql
+│   └── 00_complete_setup.sql     ← RUN THIS in a fresh Supabase project (one shot)
 ├── integration/                  ← the JS layer that talks to Supabase
-│   ├── supabase.js               ← client + cPanel image upload helper
+│   ├── supabase.js               ← client + Supabase Storage upload helper
 │   ├── projectService.js
 │   ├── leadService.js
 │   ├── blogService.js
@@ -33,7 +27,7 @@ ruchi-backend/
     ├── DATABASE.md              ← every table, column, constraint
     ├── AUTH_AND_RLS.md          ← admin auth + row-level-security model
     ├── SERVICES_API.md          ← every method in the JS layer
-    └── STORAGE_AND_UPLOADS.md   ← image upload contract (cPanel + optional Supabase)
+    └── STORAGE_AND_UPLOADS.md   ← Supabase Storage upload details
 ```
 
 ## Tech stack
@@ -42,7 +36,7 @@ ruchi-backend/
 |------------------|-----------------------------------------------------|
 | Database / Auth  | Supabase (PostgreSQL, Auth, Row Level Security)     |
 | DB access (JS)   | `@supabase/supabase-js` v2                          |
-| Image hosting    | cPanel `upload.php` endpoint (returns a public URL) |
+| Image hosting    | Supabase Storage (`project-images`, `blog-images`)  |
 | Frontend (uses)  | React + Vite (hooks are optional / React-specific)  |
 
 ## Tables
@@ -59,14 +53,14 @@ ruchi-backend/
 ## Quick start (TL;DR)
 
 1. Create a Supabase project.
-2. **Auth → Users →** add your admin user (email + password).
-3. Edit `sql/00_complete_setup.sql` — change the admin email near the top.
-4. **SQL Editor →** paste & run `sql/00_complete_setup.sql`.
-5. In your app, set the Supabase URL + anon key in `integration/supabase.js`.
-6. Point image uploads at your `upload.php` (or switch to Supabase Storage — see docs).
+2. **SQL Editor →** paste & run `sql/00_complete_setup.sql`.
+3. **Auth → Users →** add your admin user (email + password). The SQL trigger
+   automatically creates the matching admin profile.
+4. In your app, set the Supabase URL + anon key in `integration/supabase.js`.
+5. Keep public signups disabled unless every new Auth user should be an admin.
 
 Full walkthrough: **`docs/SETUP_GUIDE.md`**.
 
-> Current state: `integration/supabase.js` is intentionally blank. The review
-> frontend uses dummy localStorage data until your real Supabase URL, anon key,
-> and upload endpoint/API key are available.
+> Current state: `integration/supabase.js` is configured with the project URL and
+> anon key. Browser code uses the anon key for public access; RLS protects private
+> and admin-only data.

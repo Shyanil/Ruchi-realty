@@ -35,13 +35,13 @@ const MEGA = {
     feat: { kind: "statement", eyebrow: "Committed to you", title: "Thirty-eight years of keeping our word.", sub: "Read the story →", href: "#about" },
   },
   Insights: {
-    href: "#blog",
+    href: "Blog.html",
     blurb: "Industry insights, written plainly — materials, plans, and the relationships that begin at the keys.",
     cols: [
-      { h: "Latest insights", items: (window.BLOG || []).slice(0, 4).map((b) => [b.title, "#blog"]) },
-      { h: "Topics", items: [["On building", "#blog"], ["Materials", "#blog"], ["After handover", "#blog"]] },
+      { h: "Latest insights", items: (window.BLOG || []).slice(0, 4).map((b) => [b.title, "Blog.html"]) },
+      { h: "Topics", items: [["On building", "Blog.html"], ["Materials", "Blog.html"], ["After handover", "Blog.html"]] },
     ],
-    feat: { kind: "blog", eyebrow: (window.BLOG && BLOG[0].cat) || "Industry Insights", title: (window.BLOG && BLOG[0].title) || "Industry insights", sub: "Read the piece →", href: "#blog" },
+    feat: { kind: "blog", eyebrow: (window.BLOG && BLOG[0].cat) || "Industry Insights", title: (window.BLOG && BLOG[0].title) || "Industry insights", sub: "Read the piece →", href: "Blog.html" },
   },
   Contact: {
     href: "#contact",
@@ -275,8 +275,9 @@ function ProjectTile({ p, i, n }) {
   const cls = p.status === "Ready to Move" ? "status--ready"
     : p.status === "Ongoing" ? "status--ongoing" : "status--upcoming";
   const idx = String((n % 20) + 1).padStart(2, "0");
+  const Tile = p.url ? "a" : "article";
   return (
-    <article className="ptile" data-cursor="View">
+    <Tile className="ptile" data-cursor={p.url ? "View" : undefined} href={p.url || undefined}>
       <RImg src={p.img} alt={`${p.name}, ${p.city}`} className="ptile__media" grade />
       <div className="ptile__scrim"></div>
       <div className="ptile__idx">{idx}</div>
@@ -289,7 +290,7 @@ function ProjectTile({ p, i, n }) {
         <div className="ptile__name">{p.name}</div>
         <span className="ptile__view">View project<span className="ar">→</span></span>
       </div>
-    </article>
+    </Tile>
   );
 }
 
@@ -308,8 +309,22 @@ function projectsIn(city) {
 
 function Projects() {
   const [city, setCity] = uS1("All");
+  const [items, setItems] = uS1(() => PROJECTS);
+  uE1(() => {
+    let active = true;
+    if (window.RuchiBackend?.projects) {
+      window.RuchiBackend.projects.getPublicProjects().then(({ data }) => {
+        if (active && Array.isArray(data) && data.length) setItems(data);
+      });
+    }
+    return () => { active = false; };
+  }, []);
+  const pool = items.length ? items : PROJECTS;
+  const projectsForCity = (selectedCity) =>
+    selectedCity === "All" ? pool : pool.filter((p) => cityOf(p) === selectedCity);
   const filtered = projectsIn(city);
-  const shown = filtered.slice(0, 3);
+  const shown = projectsForCity(city).slice(0, 3);
+  const filteredCount = projectsForCity(city).length;
   return (
     <section className="projects section-pad" id="projects">
       <div className="rr-wrap">
@@ -327,7 +342,7 @@ function Projects() {
         <Reveal delay={80}>
           <div className="ptabs" role="tablist" aria-label="Filter projects by city">
             {PROJECT_CITIES.map((c) => {
-              const n = projectsIn(c).length;
+              const n = projectsForCity(c).length;
               return (
                 <button key={c} role="tab" type="button" aria-selected={city === c}
                   className={`ptab ${city === c ? "is-active" : ""}`} onClick={() => setCity(c)}>
@@ -352,7 +367,7 @@ function Projects() {
           <LegendDot cls="status--ongoing" label="Ongoing" />
           <LegendDot cls="status--upcoming" label="Upcoming" />
           <span className="projects__hint">
-            Showing {shown.length} of {filtered.length} {filtered.length === 1 ? "address" : "addresses"}{city === "All" ? "" : ` in ${city}`}
+            Showing {shown.length} of {filteredCount} {filteredCount === 1 ? "address" : "addresses"}{city === "All" ? "" : ` in ${city}`}
           </span>
         </div>
         <Reveal className="projects__more">

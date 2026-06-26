@@ -1,82 +1,144 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ruchi Realty — Committed to You</title>
-<meta name="description" content="Ruchi Realty builds homes meant to keep their promises — across Kolkata, Indore, and Bhopal. Committed to you." />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ruchi Realty — Committed to You</title>
+  <meta name="description"
+    content="Ruchi Realty builds homes meant to keep their promises — across Kolkata, Indore, and Bhopal. Committed to you." />
 
-<!-- code-referenced resources lifted for the standalone bundler -->
-<!-- (hero video stays a remote URL: cross-origin host sends no CORS headers, can't be inlined; it streams when online and falls back to the dark hero offline) -->
-<meta name="ext-resource-dependency" content="../assets/logo-h.png" data-resource-id="logoH" />
-<meta name="ext-resource-dependency" content="../assets/logo-h-white.png" data-resource-id="logoHW" />
-<meta name="ext-resource-dependency" content="../assets/award-wreath.jpg" data-resource-id="awardWreath" />
-<meta name="ext-resource-dependency" content="../assets/about-family.png" data-resource-id="aboutFamily" />
+  <!-- code-referenced resources lifted for the standalone bundler -->
+  <!-- (hero video stays a remote URL: cross-origin host sends no CORS headers, can't be inlined; it streams when online and falls back to the dark hero offline) -->
+  <meta name="ext-resource-dependency" content="../assets/logo-h.png" data-resource-id="logoH" />
+  <meta name="ext-resource-dependency" content="../assets/logo-h-white.png" data-resource-id="logoHW" />
+  <meta name="ext-resource-dependency" content="../assets/award-wreath.jpg" data-resource-id="awardWreath" />
+  <meta name="ext-resource-dependency" content="../assets/about-family.png" data-resource-id="aboutFamily" />
 
-<!-- curated Unsplash stills (registered in data.jsx load order: img0–11 towers, img12–14 living, img15–19 people) -->
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img0" />
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img1" />
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img2" />
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img3" />
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img4" />
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img5" />
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img6" />
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img7" />
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img8" />
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1496307653780-42ee777d4833?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img9" />
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img10" />
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img11" />
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img12" />
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img13" />
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img14" />
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1609220136736-443140cffec6?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img15" />
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1611095973763-414019e72400?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img16" />
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img17" />
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img18" />
-<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" data-resource-id="img19" />
+  <!-- curated Unsplash stills (registered in data.jsx load order: img0–11 towers, img12–14 living, img15–19 people) -->
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img0" />
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img1" />
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img2" />
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img3" />
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img4" />
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img5" />
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img6" />
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img7" />
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img8" />
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1496307653780-42ee777d4833?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img9" />
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img10" />
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img11" />
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img12" />
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img13" />
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img14" />
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1609220136736-443140cffec6?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img15" />
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1611095973763-414019e72400?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img16" />
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img17" />
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img18" />
+  <meta name="ext-resource-dependency"
+    content="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+    data-resource-id="img19" />
 
-<link rel="stylesheet" href="../css/tokens.css" />
-<link rel="stylesheet" href="../css/site.css" />
-<style>
-  @media (max-width: 920px){
-    .about-grid, .testi-grid, .contact-grid, .footer-cols { grid-template-columns: 1fr !important; }
-    .footer-cols { gap: 40px !important; }
-  }
-  @media (max-width: 560px){
-    .cf-row { grid-template-columns: 1fr !important; }
-  }
-</style>
+  <link rel="stylesheet" href="../css/tokens.css" />
+  <link rel="stylesheet" href="../css/site.css" />
+  <style>
+    @media (max-width: 920px) {
 
-<template id="__bundler_thumbnail" data-bg-color="#22245f">
-  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="rg" x1="80%" y1="6%" x2="14%" y2="94%">
-        <stop offset="0" stop-color="#c4d63f"/>
-        <stop offset="0.42" stop-color="#8cc06b"/>
-        <stop offset="0.74" stop-color="#5aa79f"/>
-        <stop offset="1" stop-color="#4a9fb8"/>
-      </linearGradient>
-    </defs>
-    <rect width="1200" height="800" fill="#22245f"/>
-    <text x="600" y="470" font-family="Georgia, serif" font-size="300" font-weight="700"
-      text-anchor="middle" fill="url(#rg)">R</text>
-  </svg>
-</template>
+      .about-grid,
+      .testi-grid,
+      .contact-grid,
+      .footer-cols {
+        grid-template-columns: 1fr !important;
+      }
+
+      .footer-cols {
+        gap: 40px !important;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .cf-row {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
+
+  <template id="__bundler_thumbnail" data-bg-color="#22245f">
+    <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="rg" x1="80%" y1="6%" x2="14%" y2="94%">
+          <stop offset="0" stop-color="#c4d63f" />
+          <stop offset="0.42" stop-color="#8cc06b" />
+          <stop offset="0.74" stop-color="#5aa79f" />
+          <stop offset="1" stop-color="#4a9fb8" />
+        </linearGradient>
+      </defs>
+      <rect width="1200" height="800" fill="#22245f" />
+      <text x="600" y="470" font-family="Georgia, serif" font-size="300" font-weight="700" text-anchor="middle"
+        fill="url(#rg)">R</text>
+    </svg>
+  </template>
 </head>
+
 <body>
-<div id="root"></div>
+  <div id="root"></div>
 
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js"
+    integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
+    integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
+    integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y"
+    crossorigin="anonymous"></script>
 
-<script type="text/babel" src="../js/tweaks-panel.jsx"></script>
-<script type="text/babel" src="../js/data.jsx"></script>
-<script type="text/babel" src="../js/components.jsx"></script>
-<script type="text/babel" src="../js/sections1.jsx"></script>
-<script type="text/babel" src="../js/sections2.jsx"></script>
-<script type="text/babel" src="../js/sections3.jsx"></script>
-<script type="text/babel" src="../js/sections4.jsx"></script>
-<script type="text/babel" src="../js/app.jsx"></script>
+  <script type="text/babel" src="../js/tweaks-panel.jsx"></script>
+  <script type="text/babel" src="../js/data.jsx"></script>
+  <script type="text/babel" src="../js/components.jsx"></script>
+  <script type="text/babel" src="../js/sections1.jsx"></script>
+  <script type="text/babel" src="../js/sections2.jsx"></script>
+  <script type="text/babel" src="../js/sections3.jsx"></script>
+  <script type="text/babel" src="../js/sections4.jsx"></script>
+  <script type="text/babel" src="../js/app.jsx"></script>
 </body>
+
 </html>

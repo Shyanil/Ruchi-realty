@@ -4,7 +4,7 @@
 const { useState, useEffect, useRef } = React;
 
 /* ---- Scroll reveal ---- */
-function Reveal({ children, delay = 0, as = "div", className = "", style = {} }) {
+function Reveal({ children, delay = 0, as = "div", className = "", style = {}, ...props }) {
   const ref = useRef(null);
   const [seen, setSeen] = useState(false);
   useEffect(() => {
@@ -18,7 +18,7 @@ function Reveal({ children, delay = 0, as = "div", className = "", style = {} })
   }, []);
   const Tag = as;
   return (
-    <Tag ref={ref} className={`reveal ${seen ? "in" : ""} ${className}`}
+    <Tag ref={ref} className={`reveal ${seen ? "in" : ""} ${className}`} {...props}
       style={{ transitionDelay: `${delay}ms`, ...style }}>
       {children}
     </Tag>

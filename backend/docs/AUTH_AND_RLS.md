@@ -4,6 +4,8 @@
 - Admins log in through **Supabase Auth** (email + password) — the password is
   managed entirely by Supabase, never stored in our tables.
 - Each admin has a row in `public.profiles` with `role = 'admin'`.
+- The final setup SQL creates a trigger on `auth.users`, so users added in
+  Supabase Auth automatically get a matching `public.profiles` row.
 - The `public.is_admin()` SQL function returns `true` when the current
   `auth.uid()` has an `admin` profile. Every "admin can…" policy calls it.
 
@@ -14,8 +16,9 @@ returns boolean language sql stable security definer set search_path = public as
 $$;
 ```
 
-To add an admin: create the user in **Auth → Users**, then insert/update their
-`profiles` row with `role = 'admin'` (the setup script does this by email).
+To add an admin: create the user in **Auth → Users**. The setup trigger creates
+the profile row automatically. Keep public signups disabled unless every new Auth
+user should become an admin.
 
 ## RLS policy matrix
 RLS is **enabled on every table**. `anon` = public visitors (the anon key),

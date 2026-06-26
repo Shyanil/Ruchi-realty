@@ -1,6 +1,7 @@
 /* ============================================================
    Sections 3 — Awards · Press · Industry Insights (v3)
    ============================================================ */
+const { useEffect: uE3, useState: uS3 } = React;
 
 const AWARD_WREATH = window.__rsrc("awardWreath", "assets/award-wreath.jpg");
 
@@ -102,6 +103,17 @@ function Press() {
 
 /* ---- Industry Insights ---- */
 function Blog() {
+  const [items, setItems] = uS3(() => BLOG);
+  uE3(() => {
+    let active = true;
+    if (window.RuchiBackend?.blogs) {
+      window.RuchiBackend.blogs.getPublicBlogs().then(({ data }) => {
+        if (active && Array.isArray(data) && data.length) setItems(data);
+      });
+    }
+    return () => { active = false; };
+  }, []);
+  const shown = items.length ? items.slice(0, 3) : BLOG.slice(0, 3);
   return (
     <section className="section-pad blog" id="blog" style={{ backgroundColor: "rgb(255, 253, 246)" }}>
       <div className="rr-wrap">
@@ -111,14 +123,14 @@ function Blog() {
               <div className="eyebrow sec-eyebrow">Industry Insights</div>
               <h2 className="blog__head">What we're thinking about,<br /><span className="rr-grad">written plainly.</span></h2>
             </div>
-            <button className="blog__all" onClick={() => smoothTo("#blog")}>View all insights<span className="ar">→</span></button>
+            <a className="blog__all" href="Blog.html">View all insights<span className="ar">→</span></a>
           </div>
         </Reveal>
       </div>
       <div className="rr-wrap">
         <div className="blog-grid">
-          {BLOG.slice(0, 3).map((b, i) =>
-            <Reveal key={i} delay={i * 70} as="article" className="blog-card">
+          {shown.map((b, i) =>
+            <Reveal key={i} delay={i * 70} as="a" className="blog-card" href={`Blog.html#${(b.slug || b.title || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`}>
               <RImg src={b.img} alt={b.title} className="blog-card__img" />
               <div className="blog-card__cat">{b.cat}</div>
               <h3 className="blog-card__title">{b.title}</h3>

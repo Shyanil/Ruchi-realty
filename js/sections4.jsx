@@ -8,18 +8,25 @@ function Contact() {
   const [f, setF] = uS4({ name: "", phone: "", email: "", project: "", message: "" });
   const [sent, setSent] = uS4(false);
   const [sending, setSending] = uS4(false);
+  const [error, setError] = uS4("");
   const set = (k) => (e) => setF((s) => ({ ...s, [k]: e.target.value }));
   const valid = f.name.trim() && f.phone.trim() && f.email.trim();
   const submit = async () => {
     if (!valid || sending) return;
     setSending(true);
+    setError("");
     if (window.RuchiBackend?.leads) {
-      await window.RuchiBackend.leads.submitLead({
+      const { error: submitError } = await window.RuchiBackend.leads.submitLead({
         ...f,
         interest: f.project || "General",
         notes: f.message,
         source: "Contact form",
       });
+      if (submitError) {
+        setError(submitError.message || "Could not send enquiry. Please try again.");
+        setSending(false);
+        return;
+      }
     }
     setSending(false);
     setSent(true);
@@ -87,6 +94,7 @@ function Contact() {
                     </button>
                     <span className="contact-note">No marketing. We reply within two working days.</span>
                   </div>
+                  {error ? <p className="contact-error">{error}</p> : null}
                 </div>
               }
             </div>
@@ -115,7 +123,7 @@ function Footer() {
 
   const cols = [
   ["Residences", [["One Victoria", "#projects"], ["One Prime", "#projects"], ["Active Acres", "#projects"], ["All projects", "Projects.html"]]],
-  ["The Firm", [["Approach", "#about"], ["People", "#about"], ["Commitments", "#why"], ["Careers", "#about"]]],
+  ["The Firm", [["Approach", "#about"], ["People", "#about"], ["Commitments", "#why"], ["Insights", "Blog.html"]]],
   ["Visit", [["Experience Centre", "#contact"], ["Private Viewings", "#contact"], ["Enquiries", "#contact"], ["RERA", "#contact"]]]];
 
   const offices = [

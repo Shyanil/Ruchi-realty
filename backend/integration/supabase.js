@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_CONFIG = Object.freeze({
-  url: '',
-  anonKey: '',
+  url: 'https://dychmqnydalfthfxzpnl.supabase.co',
+  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5Y2htcW55ZGFsZnRoZnh6cG5sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyODI3MjMsImV4cCI6MjA5Nzg1ODcyM30.hiFOSJkv1vPygCCBT1cQ6EY1OJ0TIYV90SETEJ-Vh3w',
 });
 
 export const isSupabaseConfigured = Boolean(
@@ -67,45 +67,22 @@ export const validateAdminImage = (file) => {
   return null;
 };
 
-const UPLOAD_ENDPOINT = '';
-const UPLOAD_API_KEY = '';
-
-// Uploads an admin image to an external image host and returns its public URL.
-// Until UPLOAD_ENDPOINT / UPLOAD_API_KEY are filled, use direct image URLs in
-// the dummy admin panel.
 export const uploadAdminImage = async (file, folder) => {
   const validationError = validateAdminImage(file);
   if (validationError) {
     return { data: null, error: new Error(validationError) };
   }
 
-  if (!UPLOAD_ENDPOINT || !UPLOAD_API_KEY) {
-    return {
-      data: null,
-      error: new Error('Image upload is not configured. Add your upload endpoint/API key or paste an image URL manually.'),
-    };
+  const bucket = folder === 'blogs' ? 'blog-images' : 'project-images';
+  const path = `${new Date().toISOString().slice(0, 10)}/${crypto.randomUUID()}-${file.name.toLowerCase().replace(/[^a-z0-9.]+/g, '-')}`;
+
+  const { error } = await supabase.storage.from(bucket).upload(path, file, {
+    contentType: file.type || 'image/webp',
+  });
+  if (error) {
+    return { data: null, error };
   }
 
-  const formData = new FormData();
-  formData.append('folder', folder);
-  formData.append('image', file, file.name);
-
-  try {
-    const response = await fetch(UPLOAD_ENDPOINT, {
-      method: 'POST',
-      headers: { 'X-API-KEY': UPLOAD_API_KEY },
-      body: formData,
-    });
-
-    const result = await response.json().catch(() => null);
-
-    if (!response.ok || !result?.success || !result?.url) {
-      const message = result?.error || result?.message || 'Image upload failed. Please try again.';
-      return { data: null, error: new Error(message) };
-    }
-
-    return { data: result.url, error: null };
-  } catch {
-    return { data: null, error: new Error('Could not reach the image server. Please try again.') };
-  }
+  const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+  return { data: data.publicUrl, error: null };
 };

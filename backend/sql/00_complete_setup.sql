@@ -7,13 +7,20 @@
 -- This is the full, final schema (all migrations already folded in), so a new
 -- project gets everything in one shot. Tables created:
 --   profiles, projects, leads, blogs, blog_comments, site_settings
--- Plus: is_admin() helper, RLS policies, and (optional) storage buckets.
+-- Plus: is_admin() helper, RLS policies, and storage buckets.
+--
+-- Image rules for admin uploads:
+--   project images: Supabase Storage bucket `project-images`, .webp only,
+--                   image/webp MIME type, 200 KB max.
+--   blog images:    Supabase Storage bucket `blog-images`, .webp only,
+--                   image/webp MIME type, 200 KB max.
 --
 -- BEFORE RUNNING:
---   1. Create an admin user in Authentication → Users (email + password).
---   2. Change YOUR_ADMIN_EMAIL@example.com below to that admin user's email.
---      The local review build uses dummy credentials only; Supabase Auth still
---      needs a real user when you connect production credentials.
+--   1. Keep public signups disabled unless you want every new Auth user to be
+--      able to use the admin panel.
+--   2. Create users in Authentication → Users. This script automatically creates
+--      matching public.profiles rows with role = 'admin' for Auth users, so the
+--      admin login calls Supabase Auth directly.
 -- =====================================================================
 
 create extension if not exists pgcrypto;
@@ -46,20 +53,51 @@ language sql stable security definer set search_path = public as $$
   );
 $$;
 
--- CHANGE this email to your admin user's email (created in Auth → Users).
+create or replace function public.handle_new_auth_user()
+returns trigger
+language plpgsql
+security definer
+set search_path = public as $$
+begin
+  insert into public.profiles (id, email, role, updated_at)
+  values (new.id, new.email, 'admin', now())
+  on conflict (id) do update
+    set email = excluded.email,
+        updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute function public.handle_new_auth_user();
+
 insert into public.profiles (id, email, role, updated_at)
 select id, email, 'admin', now()
 from auth.users
-where email = 'YOUR_ADMIN_EMAIL@example.com'
 on conflict (id) do update
-  set email = excluded.email, role = 'admin', updated_at = now();
+  set email = excluded.email,
+      updated_at = now();
+
+create or replace function public.set_updated_at()
+returns trigger language plpgsql as $$
+begin
+  new.updated_at = timezone('utc'::text, now());
+  return new;
+end;
+$$;
 
 -- ---------------------------------------------------------------------
 -- projects — property catalogue (admin-managed).
+-- Admins can add future projects and edit all fields, including title,
+-- tag, image_url, location, description, type, status, featured,
+-- sort_order, and feature_order.
 -- ---------------------------------------------------------------------
 create table if not exists public.projects (
   id            uuid not null default gen_random_uuid(),
   created_at    timestamptz not null default timezone('utc'::text, now()),
+  updated_at    timestamptz not null default timezone('utc'::text, now()),
   title         text not null,
   tag           text not null,
   image_url     text not null,
@@ -76,8 +114,23 @@ create table if not exists public.projects (
   )
 );
 
+alter table public.projects
+  add column if not exists updated_at timestamptz not null default timezone('utc'::text, now());
+
+alter table public.projects drop constraint if exists projects_image_url_storage_webp_check;
+alter table public.projects add constraint projects_image_url_storage_webp_check
+  check (
+    image_url like '%/storage/v1/object/public/project-images/%'
+    and lower(image_url) like '%.webp'
+  );
+
 create index if not exists projects_sort_order_idx    on public.projects (sort_order);
 create index if not exists projects_feature_order_idx on public.projects (feature_order);
+
+drop trigger if exists set_projects_updated_at on public.projects;
+create trigger set_projects_updated_at
+  before update on public.projects
+  for each row execute function public.set_updated_at();
 
 alter table public.projects enable row level security;
 
@@ -158,6 +211,13 @@ create table if not exists public.blogs (
   )
 );
 
+alter table public.blogs drop constraint if exists blogs_image_storage_webp_check;
+alter table public.blogs add constraint blogs_image_storage_webp_check
+  check (
+    image like '%/storage/v1/object/public/blog-images/%'
+    and lower(image) like '%.webp'
+  );
+
 create index if not exists blogs_category_idx on public.blogs using btree (category);
 create index if not exists blogs_featured_idx on public.blogs using btree (featured);
 
@@ -182,14 +242,6 @@ create policy "Admins can delete blogs"
 -- ---------------------------------------------------------------------
 -- blog_comments — public submissions, admin moderation.
 -- ---------------------------------------------------------------------
-create or replace function public.set_updated_at()
-returns trigger language plpgsql as $$
-begin
-  new.updated_at = timezone('utc'::text, now());
-  return new;
-end;
-$$;
-
 create table if not exists public.blog_comments (
   id          uuid not null default gen_random_uuid(),
   blog_id     uuid not null,
@@ -276,10 +328,11 @@ create policy "Admins can update site settings"
   on public.site_settings for update to authenticated using (public.is_admin()) with check (public.is_admin());
 
 -- ---------------------------------------------------------------------
--- (OPTIONAL) Supabase Storage buckets.
--- NOTE: the current app uploads images to a cPanel endpoint (upload.php) and
--- only stores the returned URL, so these buckets are optional. Keep them if you
--- want to host images in Supabase Storage instead — see STORAGE_AND_UPLOADS.md.
+-- Supabase Storage buckets.
+-- The admin panel uploads project/blog images here and stores the returned
+-- public URL in the database.
+-- Strict upload rule: WebP only and 200 KB max. Prepare/compress images before
+-- uploading from the admin panel.
 -- ---------------------------------------------------------------------
 insert into storage.buckets (id, name, public)
 values ('project-images', 'project-images', true),
@@ -292,7 +345,18 @@ create policy "Public can read project images"
 
 drop policy if exists "Admins can write project images" on storage.objects;
 create policy "Admins can write project images"
-  on storage.objects for insert to authenticated with check (bucket_id = 'project-images' and public.is_admin());
+  on storage.objects for insert to authenticated with check (
+    bucket_id = 'project-images'
+    and public.is_admin()
+    and lower(name) like '%.webp'
+    and metadata ? 'mimetype'
+    and (metadata->>'mimetype') = 'image/webp'
+    and case
+      when metadata ? 'size' and (metadata->>'size') ~ '^[0-9]+$'
+        then (metadata->>'size')::bigint <= 204800
+      else false
+    end
+  );
 
 drop policy if exists "Public can read blog images" on storage.objects;
 create policy "Public can read blog images"
@@ -300,4 +364,15 @@ create policy "Public can read blog images"
 
 drop policy if exists "Admins can write blog images" on storage.objects;
 create policy "Admins can write blog images"
-  on storage.objects for insert to authenticated with check (bucket_id = 'blog-images' and public.is_admin());
+  on storage.objects for insert to authenticated with check (
+    bucket_id = 'blog-images'
+    and public.is_admin()
+    and lower(name) like '%.webp'
+    and metadata ? 'mimetype'
+    and (metadata->>'mimetype') = 'image/webp'
+    and case
+      when metadata ? 'size' and (metadata->>'size') ~ '^[0-9]+$'
+        then (metadata->>'size')::bigint <= 204800
+      else false
+    end
+  );

@@ -9,10 +9,9 @@ npm install @supabase/supabase-js
 ```
 (The `use*.js` hooks also need `react`.)
 
-## Must-change before use
-- **`supabase.js`** — `url`, `anonKey`, `UPLOAD_ENDPOINT`, and `UPLOAD_API_KEY`
-  are intentionally blank. Fill them only when you have the new Supabase project
-  and image-host credentials.
+## Config
+- **`supabase.js`** contains the Supabase URL and anon public key used by this
+  project. For another project, replace those two values.
 
 ## External dependencies these files expect
 The copies keep their original relative imports. In a new project, provide or adjust:
@@ -31,7 +30,4 @@ If you don't need the projects "seed merge" or settings "defaults", you can dele
 those imports and simplify (return DB rows directly / hardcode defaults). See
 `../docs/SERVICES_API.md` for the per-method behaviour.
 
-## `isMockEnabled()`
-The public review build uses `js/backend-client.jsx` for dummy localStorage data.
-The files in this folder are the Supabase-facing service layer for the later
-production connection.
+The files in this folder are the Supabase-facing service layer.

@@ -10,9 +10,8 @@ Files live in `integration/`.
 - `supabase` — the configured Supabase client (set `url` + `anonKey` here).
 - `validateAdminImage(file)` → error string or `null`. Enforces **.webp only,
   ≤ 200 KB**.
-- `uploadAdminImage(file, folder)` → `{ data: publicUrl, error }`. POSTs the file
-  to the cPanel `upload.php` endpoint and returns the hosted URL. See
-  `STORAGE_AND_UPLOADS.md`.
+- `uploadAdminImage(file, folder)` → `{ data: publicUrl, error }`. Uploads the
+  file to Supabase Storage and returns the public URL. See `STORAGE_AND_UPLOADS.md`.
 
 ---
 

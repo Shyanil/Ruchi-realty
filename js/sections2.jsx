@@ -154,12 +154,6 @@ function Testimonials() {
               </button>
             </Reveal>
           )}
-          <Reveal delay={120} className="vtcard vtcard--cta">
-            <button className="vtcard__btn" onClick={() => setActive(-1)} aria-label="Play the full showreel">
-              <span className="vtcard-cta__play"><PlayGlyph /></span>
-              <span className="vtcard-cta__txt">Watch the<br />full reel <span>→</span></span>
-            </button>
-          </Reveal>
         </div>
       </div>
       {active !== null ? <VideoLightbox v={active === -1 ? reel : data[active]} onClose={() => setActive(null)} /> : null}

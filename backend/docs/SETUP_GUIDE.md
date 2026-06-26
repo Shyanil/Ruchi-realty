@@ -9,16 +9,15 @@ Follow these steps to reuse this backend in a fresh project.
 ## 2. Create the admin user
 - Dashboard → **Authentication → Users → Add user** (email + password).
 - This is the account that will log into the admin panel.
+- Keep public signups disabled unless every new Auth user should become an admin.
 
 ## 3. Run the SQL
 - Open `sql/00_complete_setup.sql`.
-- Near the top, change the email on this line to your admin's email:
-  ```sql
-  where email = 'YOUR_ADMIN_EMAIL@example.com'
-  ```
 - Dashboard → **SQL Editor → New query** → paste the **whole file** → **Run**.
-- This creates every table, the `is_admin()` helper, all RLS policies, the seed
-  `site_settings` row, and (optionally) storage buckets.
+- This creates every table, the `is_admin()` helper, the Auth profile trigger, all
+  RLS policies, the seed `site_settings` row, and storage buckets.
+- Existing Auth users are backfilled into `public.profiles`; new Auth users get a
+  profile row automatically.
 
 > Re-runnable: the script uses `create table if not exists`, `create index if
 > not exists`, and `drop policy if exists … create policy …`, so running it again
@@ -32,14 +31,9 @@ Follow these steps to reuse this backend in a fresh project.
 - `npm install @supabase/supabase-js`.
 
 ## 5. Image uploads
-The app stores only an image **URL** in the DB; the file itself lives on a cPanel
-host reached via `upload.php`. Two options:
-
-- **Keep cPanel:** set `UPLOAD_ENDPOINT` / `UPLOAD_API_KEY` in `supabase.js` and
-  deploy your `upload.php` (see `STORAGE_AND_UPLOADS.md` for the exact contract).
-- **Use Supabase Storage instead:** the `00_complete_setup.sql` already creates
-  `project-images` and `blog-images` buckets + policies. Swap `uploadAdminImage()`
-  to use `supabase.storage.from(bucket).upload(...)` and `.getPublicUrl(...)`.
+The app stores only an image **URL** in the DB; files upload to Supabase Storage.
+The `00_complete_setup.sql` script creates `project-images` and `blog-images`
+buckets with public reads and admin-only writes.
 
 ## 6. Seed content (optional)
 - `projects` / `blogs` / `site_settings` start empty (settings has one blank row).

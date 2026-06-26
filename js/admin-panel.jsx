@@ -43,8 +43,9 @@ function AdminImageUpload({ label, value, onChange }) {
     if (!file) return;
     try {
       setError("");
-      const dataUrl = await window.RuchiBackend.uploadImage(file);
-      onChange(dataUrl);
+      const bucket = label.toLowerCase().includes("blog") ? "blog-images" : "project-images";
+      const url = await window.RuchiBackend.uploadImage(file, bucket);
+      onChange(url);
     } catch (uploadError) {
       setError(uploadError.message || "Image upload failed.");
     }
@@ -59,19 +60,18 @@ function AdminImageUpload({ label, value, onChange }) {
         <span className="admin-uploader__label">{label}</span>
         <label className="admin-upload-btn">
           Upload image
-          <input type="file" accept="image/*" onChange={upload} />
+          <input type="file" accept="image/webp,.webp" onChange={upload} />
         </label>
         {value ? <button type="button" className="admin-text-btn" onClick={() => onChange("")}>Remove</button> : null}
-        {error ? <p className="admin-error">{error}</p> : <p className="admin-note">Stored locally for preview now. Later this can upload to Supabase/cPanel.</p>}
+        {error ? <p className="admin-error">{error}</p> : <p className="admin-note">Use WebP only, 200 KB max. Uploads to Supabase Storage after admin sign-in.</p>}
       </div>
     </div>
   );
 }
 
 function AdminLogin({ onLogin }) {
-  const creds = window.RuchiBackend.dummyCredentials;
-  const [email, setEmail] = useAdminState(creds.email);
-  const [password, setPassword] = useAdminState(creds.password);
+  const [email, setEmail] = useAdminState("");
+  const [password, setPassword] = useAdminState("");
   const [error, setError] = useAdminState("");
 
   const submit = async (event) => {
@@ -88,8 +88,8 @@ function AdminLogin({ onLogin }) {
     <main className="admin-login">
       <form className="admin-login__box" onSubmit={submit}>
         <img src="assets/logo-h.png" alt="Ruchi Realty" />
-        <p className="admin-kicker">Dummy review login</p>
-        <h1>Admin panel preview</h1>
+        <p className="admin-kicker">Secure admin login</p>
+        <h1>Admin panel</h1>
         <AdminField label="Email">
           <input value={email} onChange={(event) => setEmail(event.target.value)} />
         </AdminField>
@@ -98,7 +98,7 @@ function AdminLogin({ onLogin }) {
         </AdminField>
         {error ? <p className="admin-error">{error}</p> : null}
         <button className="admin-primary" type="submit">Sign in</button>
-        <p className="admin-note">Credentials: {creds.email} / {creds.password}</p>
+        <p className="admin-note">Use a Supabase Auth user that has an `admin` profile row.</p>
       </form>
     </main>
   );
@@ -123,9 +123,9 @@ function DashboardAdmin({ onTab }) {
     <section className="admin-dashboard">
       <div className="admin-hero">
         <div>
-          <p className="admin-kicker">Review workspace</p>
-          <h2>Manage content before Supabase is connected.</h2>
-          <p>Projects, leads, settings, and articles are saved in this browser for preview.</p>
+          <p className="admin-kicker">Supabase workspace</p>
+          <h2>Manage live website content.</h2>
+          <p>Projects, leads, settings, and articles are stored in Supabase with RLS-protected admin access.</p>
         </div>
         <button type="button" className="admin-primary" onClick={() => onTab("projects")}>Add project</button>
       </div>
@@ -160,9 +160,9 @@ function DashboardAdmin({ onTab }) {
         <div className="admin-panel">
           <h2>Next steps</h2>
           <div className="admin-task-list">
-            <span>Replace dummy Supabase config when credentials arrive.</span>
-            <span>Run `backend/sql/00_complete_setup.sql` in Supabase.</span>
-            <span>Create a real Auth user and update the admin email placeholder.</span>
+            <span>Run `backend/sql/00_complete_setup.sql` once in Supabase if it has not been run.</span>
+            <span>Create an Auth user and add its row to `public.profiles` with role `admin`.</span>
+            <span>Keep RLS enabled before using the public site.</span>
           </div>
         </div>
       </div>
@@ -279,7 +279,7 @@ function ProjectsAdmin() {
                 <button type="button" onClick={() => remove(project.id)}>Delete</button>
               </div>
             </article>
-          )) : <p className="admin-empty">No matching admin projects. Seed projects still show on public pages.</p>}
+          )) : <p className="admin-empty">No matching projects in Supabase yet.</p>}
         </div>
       </div>
     </section>
@@ -380,7 +380,7 @@ function SettingsAdmin() {
       <AdminField label="Map embed URL"><input value={settings.mapEmbedUrl || ""} onChange={(event) => set("mapEmbedUrl", event.target.value)} /></AdminField>
       <AdminField label="Map link"><input value={settings.mapLink || ""} onChange={(event) => set("mapLink", event.target.value)} /></AdminField>
       <button className="admin-primary" type="submit">Save settings</button>
-      {saved ? <p className="admin-success">Settings saved in dummy storage.</p> : null}
+      {saved ? <p className="admin-success">Settings saved in Supabase.</p> : null}
     </form>
   );
 }
@@ -494,9 +494,9 @@ function AdminApp() {
   return (
     <React.Fragment>
       <header className="admin-top">
-        <a href="Homepage.html" className="admin-brand"><img src="assets/logo-h.png" alt="Ruchi Realty" /></a>
+        <a href="index.html" className="admin-brand"><img src="assets/logo-h.png" alt="Ruchi Realty" /></a>
         <div>
-          <p className="admin-kicker">Dummy mode · Supabase blank</p>
+          <p className="admin-kicker">Supabase connected</p>
           <h1>Admin panel</h1>
         </div>
         <button type="button" className="admin-logout" onClick={logout}>Logout</button>

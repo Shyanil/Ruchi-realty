@@ -36,9 +36,11 @@ export const projectService = {
   // so the site always renders.
   async getPublicProjects() {
     const { data, error } = await supabase.from('projects').select('*');
-    const dbProjects = (data || []).map(normalizeProject);
-    const merged = [...SEED_PROJECTS.map(normalizeProject), ...dbProjects];
-    return { data: sortByOrder(merged, 'sort_order'), error };
+    const bySlug = new Map(SEED_PROJECTS.map(normalizeProject).map((project) => [project.slug, project]));
+    (data || []).map(normalizeProject).forEach((project) => {
+      if (!bySlug.has(project.slug)) bySlug.set(project.slug, project);
+    });
+    return { data: sortByOrder([...bySlug.values()], 'sort_order'), error };
   },
 
   // Looks up a single project (seed or DB) by slug for the detail page.

@@ -27,7 +27,7 @@ Property catalogue managed from the admin panel.
 | `created_at`    | timestamptz | default now()                                                |
 | `title`         | text        | **required**                                                 |
 | `tag`           | text        | **required** — short label (e.g. "Waterfront Residences")    |
-| `image_url`     | text        | **required** — public URL (from cPanel/Storage upload)       |
+| `image_url`     | text        | **required** — public URL from Supabase Storage              |
 | `location`      | text        | **required**                                                 |
 | `description`   | text        | nullable                                                     |
 | `type`          | text        | **required**; check in (`Residential`,`Commercial`,`Township`,`Land`,`Leasing`) |
