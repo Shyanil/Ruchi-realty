@@ -98,7 +98,7 @@ function AdminLogin({ onLogin }) {
         </AdminField>
         {error ? <p className="admin-error">{error}</p> : null}
         <button className="admin-primary" type="submit">Sign in</button>
-        <p className="admin-note">Use a Supabase Auth user that has an `admin` profile row.</p>
+        <p className="admin-note">Use an approved staff account with an admin profile.</p>
       </form>
     </main>
   );
@@ -123,9 +123,9 @@ function DashboardAdmin({ onTab }) {
     <section className="admin-dashboard">
       <div className="admin-hero">
         <div>
-          <p className="admin-kicker">Supabase workspace</p>
+          <p className="admin-kicker">Staff workspace</p>
           <h2>Manage live website content.</h2>
-          <p>Projects, leads, settings, and articles are stored in Supabase with RLS-protected admin access.</p>
+          <p>Projects, leads, settings, and articles are managed through authenticated staff access with RLS protection.</p>
         </div>
         <button type="button" className="admin-primary" onClick={() => onTab("projects")}>Add project</button>
       </div>
@@ -155,14 +155,6 @@ function DashboardAdmin({ onTab }) {
                 <button type="button" className="admin-text-btn" onClick={() => onTab("leads")}>Open</button>
               </article>
             )) : <p className="admin-empty">No leads yet.</p>}
-          </div>
-        </div>
-        <div className="admin-panel">
-          <h2>Next steps</h2>
-          <div className="admin-task-list">
-            <span>Run `backend/sql/00_complete_setup.sql` once in Supabase if it has not been run.</span>
-            <span>Create an Auth user and add its row to `public.profiles` with role `admin`.</span>
-            <span>Keep RLS enabled before using the public site.</span>
           </div>
         </div>
       </div>
