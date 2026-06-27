@@ -26,13 +26,13 @@ const MEGA = {
       img: "https://ruchirealty.com/wp-content/uploads/elementor/thumbs/VIEW_004_ELEVATION_VIEW_DAY_LIGHT_2024.01.18_HIRES-r0uodbh7ro4cp8vdge1k5i90cm98yiqhxmm5z0edmw.png" },
   },
   About: {
-    href: "#about",
+    href: "About.html",
     blurb: "Nearly four decades of treating a home as a promise — built with intent, held to long after the keys change hands.",
     cols: [
-      { h: "The firm", items: [["Our approach", "#about"], ["The proof, not the promise", "#why"], ["People & culture", "#about"], ["Careers", "#about"]] },
-      { h: "Recognition", items: [["Awards", "#awards"], ["Press & media", "#press"]] },
+      { h: "The firm", items: [["Our approach", "About.html"], ["The proof, not the promise", "#why"], ["People & culture", "About.html#team"], ["Careers", "Careers.html"]] },
+      { h: "Recognition", items: [["Awards & events", "Awards.html"], ["Press & media", "#press"]] },
     ],
-    feat: { kind: "statement", eyebrow: "Committed to you", title: "Thirty-eight years of keeping our word.", sub: "Read the story →", href: "#about" },
+    feat: { kind: "statement", eyebrow: "Committed to you", title: "Thirty-eight years of keeping our word.", sub: "Read the story →", href: "About.html" },
   },
   Insights: {
     href: "Blog.html",
