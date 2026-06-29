@@ -30,7 +30,7 @@ const MEGA = {
     blurb: "Nearly four decades of treating a home as a promise — built with intent, held to long after the keys change hands.",
     cols: [
       { h: "The firm", items: [["Our approach", "About.html"], ["The proof, not the promise", "#why"], ["People & culture", "About.html#team"], ["Careers", "Careers.html"]] },
-      { h: "Recognition", items: [["Awards & events", "Awards.html"], ["Press & media", "#press"]] },
+      { h: "Recognition", items: [["Awards", "Awards.html"], ["Press & media", "#press"]] },
     ],
     feat: { kind: "statement", eyebrow: "Committed to you", title: "Thirty-eight years of keeping our word.", sub: "Read the story →", href: "About.html" },
   },

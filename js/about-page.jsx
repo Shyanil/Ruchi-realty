@@ -146,12 +146,11 @@ function AboutHero() {
       <div className="rr-wrap ab-hero__wrap">
         <div className="ab-hero__content">
           <Reveal>
-            <div className="ab-hero__badge">ABOUT RUCHI REALTY</div>
             <h1 className="ab-hero__title">
-              Building spaces where life feels complete.
+              About Ruchi Realty
             </h1>
             <p className="ab-hero__lead">
-              Ruchi Realty brings over 17 years of real estate expertise across residential, commercial, retail, and plotted developments, creating spaces shaped by engineering excellence, sustainability, and everyday comfort.
+              Building trust through landmark spaces across India.
             </p>
           </Reveal>
         </div>
@@ -360,23 +359,25 @@ function AboutProjects() {
     setActiveIdx((prev) => (prev - 1 + activeProjects.length) % activeProjects.length);
   };
 
-  const cardWidth = isMobile ? 260 : 360;
-  const gap = isMobile ? 20 : 32;
+  const cardWidth = isMobile ? 280 : 370;
+  const gap = isMobile ? 20 : 28;
   const step = cardWidth + gap;
   const trackTransform = `translateX(-${activeIdx * step}px)`;
 
   return (
     <section className="ab-projects section-pad" id="footprint">
       <div className="rr-wrap">
-        <div className="ab-projects__header">
-          <Reveal>
-            <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>FOOTPRINT</div>
-            <h2 className="ab-projects__title">A growing footprint across Kolkata, Indore, and Bhopal</h2>
+        <Reveal>
+          <div className="sec-head sec-head--dark ab-projects__header">
+            <div>
+              <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>FOOTPRINT</div>
+              <h2 className="ab-projects__title">Landmark addresses,<br /><span className="rr-grad">across key cities.</span></h2>
+            </div>
             <p className="ab-projects__lead">
               Ruchi Realty’s portfolio includes landmark residential towers, commercial spaces, plotted developments, and townships across major Indian cities.
             </p>
-          </Reveal>
-        </div>
+          </div>
+        </Reveal>
 
         <Reveal>
           <div className="ab-tabs" role="tablist" aria-label="Projects by city">
@@ -390,12 +391,15 @@ function AboutProjects() {
         </Reveal>
       </div>
 
+      <div className="projects__sig ab-projects__sig" aria-hidden="true"></div>
+
       {/* Flat horizontal slider track */}
       <div className="ab-flat-slider" key={city}>
         <div className="ab-flat-viewport">
           <div className="ab-flat-track" style={{ transform: trackTransform }}>
             {activeProjects.map((p, i) => {
               const isActive = i === activeIdx;
+              const statusSlug = p.status.toLowerCase().replace(/\s+/g, '-');
               return (
                 <div
                   key={`${p.name}-${i}`}
@@ -404,12 +408,17 @@ function AboutProjects() {
                   <div className="ab-proj-tile__media">
                     <RImg src={p.img} alt={p.name} className="ab-proj-tile__img" />
                     <div className="ab-proj-tile__shade"></div>
-                    <span className={`ab-proj-tile__status ab-proj-tile__status--${p.status.toLowerCase().replace(/\s+/g, '-')}`}>
-                      {p.status}
-                    </span>
+                    <div className="ab-proj-tile__top">
+                      <span className="ab-proj-tile__city">{city}</span>
+                      <span className={`ab-proj-tile__status ab-proj-tile__status--${statusSlug}`}>
+                        {p.status}
+                      </span>
+                    </div>
+                    <span className="ab-proj-tile__idx">{String(i + 1).padStart(2, "0")}</span>
                     <div className="ab-proj-tile__content">
                       <h3 className="ab-proj-tile__name">{p.name}</h3>
                       <p className="ab-proj-tile__desc">{p.desc}</p>
+                      <span className="ab-proj-tile__view">Select address <span className="ar">→</span></span>
                     </div>
                   </div>
                 </div>
@@ -448,6 +457,15 @@ function AboutProjects() {
             ))}
           </div>
         )}
+
+        <div className="ab-projects__footer">
+          <span className="ab-projects__hint">
+            Showing {activeIdx + 1} of {activeProjects.length} {activeProjects.length === 1 ? "address" : "addresses"} in {city}
+          </span>
+          <a className="projects__allbtn ab-projects__allbtn" href={`Projects.html#city=${city}`}>
+            View All Projects<span className="ar">→</span>
+          </a>
+        </div>
       </div>
     </section>
   );
@@ -585,7 +603,6 @@ function AboutUsPage() {
         <AboutVisionMission />
         <AboutProjects />
         <AboutTeam />
-        <AboutCTA />
       </main>
       <Footer />
     </React.Fragment>

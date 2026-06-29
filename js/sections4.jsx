@@ -123,7 +123,7 @@ function Footer() {
 
   const cols = [
   ["Residences", [["One Victoria", "#projects"], ["One Prime", "#projects"], ["Active Acres", "#projects"], ["All projects", "Projects.html"]]],
-  ["The Firm", [["Approach", "About.html"], ["People", "About.html#team"], ["Careers", "Careers.html"], ["Awards & events", "Awards.html"], ["Insights", "Blog.html"]]],
+  ["The Firm", [["Approach", "About.html"], ["People", "About.html#team"], ["Careers", "Careers.html"], ["Awards", "Awards.html"], ["Insights", "Blog.html"]]],
   ["Visit", [["Experience Centre", "#contact"], ["Private Viewings", "#contact"], ["Enquiries", "#contact"], ["RERA", "#contact"]]]];
 
   const offices = [
