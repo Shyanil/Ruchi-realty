@@ -38,7 +38,6 @@
 }
 
 .admin-login h1,
-.admin-top h1,
 .admin-panel h2 {
   margin: 0;
   font-weight: var(--rr-w-light);
@@ -76,25 +75,15 @@
   color: #24723b;
 }
 
-.admin-top {
-  display: grid;
-  grid-template-columns: 190px 1fr auto;
-  gap: 24px;
+.admin-top-row {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 24px clamp(20px, 5vw, 64px);
-  background: rgba(255,255,255,0.82);
-  border-bottom: 1px solid rgba(35,31,32,0.1);
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  padding: 12px clamp(20px, 5vw, 64px) 0;
 }
 
 .admin-brand img {
-  width: 170px;
-}
-
-.admin-top h1 {
-  font-size: clamp(30px, 4vw, 52px);
+  width: 120px;
 }
 
 .admin-logout,
@@ -467,14 +456,6 @@
 }
 
 @media (max-width: 920px) {
-  .admin-top {
-    grid-template-columns: 1fr auto;
-  }
-
-  .admin-brand {
-    grid-column: 1 / -1;
-  }
-
   .admin-grid,
   .admin-grid--dashboard,
   .admin-form-grid {
@@ -516,5 +497,204 @@
   .admin-thumb {
     width: 100%;
     height: 160px;
+  }
+}
+
+.admin-careers-head {
+  margin-bottom: 24px;
+}
+
+.admin-careers-grid {
+  grid-template-columns: 1fr 1fr;
+}
+
+.admin-job-meta {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.admin-job-meta span {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.admin-job-dept {
+  background: rgba(46,49,146,0.08);
+  color: var(--rr-indigo);
+  font-weight: var(--rr-w-medium);
+}
+
+.admin-job-type {
+  background: rgba(190,215,71,0.2);
+  color: rgba(35,31,32,0.72);
+}
+
+.admin-job-inactive {
+  background: rgba(157,29,32,0.08);
+  color: #9d1d20;
+}
+
+.admin-row--inactive {
+  opacity: 0.6;
+}
+
+.admin-apps-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.admin-apps-toolbar-left {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.admin-apps-count {
+  font-size: 13px;
+  color: rgba(35,31,32,0.5);
+}
+
+.admin-app-card {
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  padding: 20px;
+}
+
+.admin-app-main {
+  display: grid;
+  gap: 10px;
+}
+
+.admin-app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin-app-name {
+  font-size: 16px;
+}
+
+.admin-app-date {
+  font-size: 11px;
+  color: rgba(35,31,32,0.45);
+  white-space: nowrap;
+}
+
+.admin-app-contact {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: rgba(35,31,32,0.62);
+}
+
+.admin-app-job {
+  font-weight: var(--rr-w-medium);
+  color: var(--rr-indigo);
+}
+
+.admin-app-section {
+  display: grid;
+  gap: 4px;
+}
+
+.admin-app-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(35,31,32,0.45);
+  font-weight: var(--rr-w-medium);
+}
+
+.admin-app-section p {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(35,31,32,0.72);
+  line-height: 1.5;
+}
+
+.admin-app-message {
+  white-space: pre-wrap;
+  background: #fbfaf7;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(35,31,32,0.06);
+}
+
+.admin-app-resume {
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.admin-app-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  min-width: 100px;
+}
+
+.admin-app-status {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: var(--rr-w-medium);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.admin-app-status--new {
+  background: rgba(46,49,146,0.08);
+  color: var(--rr-indigo);
+}
+
+.admin-app-status--contacted {
+  background: rgba(190,215,71,0.2);
+  color: rgba(35,31,32,0.72);
+}
+
+.admin-app-status--qualified {
+  background: rgba(36,114,59,0.1);
+  color: #24723b;
+}
+
+.admin-app-status--lost {
+  background: rgba(157,29,32,0.08);
+  color: #9d1d20;
+}
+
+.admin-app-status--closed {
+  background: rgba(35,31,32,0.06);
+  color: rgba(35,31,32,0.58);
+}
+
+@media (max-width: 920px) {
+  .admin-careers-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-app-card {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-app-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-app-side {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
   }
 }

@@ -1,11 +1,7 @@
-/* ============================================================
-   About Us + Core Team Page — Ruchi Realty (Refined Redesign)
-   ============================================================ */
-const { useState: uSP, useEffect: uEP } = React;
-
-// ----------------------------------------------------------------
-// Data Definitions
-// ----------------------------------------------------------------
+import { useState, useEffect } from "react";
+import Nav from "../components/Nav";
+import { Footer } from "../components/Footer";
+import { Reveal, RImg } from "../components/shared";
 
 const LEDGER_ITEMS = [
   {
@@ -51,7 +47,7 @@ const ABOUT_PROJECTS = {
     { name: "One Victoria", desc: "Ultra-luxury 3 & 4 BHK apartments at Action Area-1, New Town.", status: "Ongoing", img: "assets/projects/one-victoria.webp" }
   ],
   Indore: [
-    { name: "Oscar The Billionaire’s Destination", desc: "Ultra-premium luxury plotted development on 24 acres.", status: "Completed", img: "assets/projects/oscar-billionaires.webp" },
+    { name: "Oscar The Billionaire\u2019s Destination", desc: "Ultra-premium luxury plotted development on 24 acres.", status: "Completed", img: "assets/projects/oscar-billionaires.webp" },
     { name: "Oscar Pride", desc: "Ultra-premium luxury plots across 8 acres.", status: "Completed", img: "assets/projects/oscar-pride.webp" },
     { name: "Oscar Fort", desc: "A leisure-focused premium development designed around dreams and happiness.", status: "Completed", img: "assets/projects/oscar-fort.webp" },
     { name: "Oscar Palace", desc: "Royal-themed project designed like a majestic kingdom palace.", status: "Ongoing", img: "assets/projects/oscar-palace.webp" },
@@ -72,7 +68,7 @@ const TEAM_MEMBERS = [
     name: "Mr. Manish Shahra",
     role: "Managing Director",
     img: "uploads/manish-shahra.webp",
-    bio: "Industrial Production Engineering graduate with a Master’s in Management from IMS Indore. He brings vast experience across agri-commodities, edible oils, dairy, real estate, wind energy, infrastructure, power, mining, housing development, and international trade.",
+    bio: "Industrial Production Engineering graduate with a Master\u2019s in Management from IMS Indore. He brings vast experience across agri-commodities, edible oils, dairy, real estate, wind energy, infrastructure, power, mining, housing development, and international trade.",
     fullBio: "Mr. Manish Shahra is the Managing Director of Ruchi Realty. He holds a degree in Industrial Production Engineering and a Master's in Management from IMS Indore. Over the past few decades, he has spearheaded the diversification of the Ruchi Group into real estate, infrastructure, green wind energy, power generation, mining, and international trade. His visionary leadership has been the driving force behind the company's expansion into tier-1 and tier-2 Indian cities, establishing Ruchi Realty as a pioneer in quality housing and integrated townships."
   },
   {
@@ -86,7 +82,7 @@ const TEAM_MEMBERS = [
     name: "Ms. Sonakshi Shahra",
     role: "Executive Director",
     img: "uploads/sonakshi-shahra.webp",
-    bio: "A new-generation real estate leader with a Bachelor’s degree in Real Estate from New York University and a Master’s degree from ISB Hyderabad. She brings global education, strategic thinking, and a strong understanding of modern real estate markets.",
+    bio: "A new-generation real estate leader with a Bachelor\u2019s degree in Real Estate from New York University and a Master\u2019s degree from ISB Hyderabad. She brings global education, strategic thinking, and a strong understanding of modern real estate markets.",
     fullBio: "Ms. Sonakshi Shahra brings global expertise and new-age strategy to Ruchi Realty. She completed her Bachelor's degree in Real Estate at New York University (NYU) and earned her Master's degree from the Indian School of Business (ISB), Hyderabad. At Ruchi Realty, Ms. Shahra leads project strategy, corporate communications, and digital transformation. She is dedicated to bringing architectural innovation, customer-centric software tools, and sustainable building systems to all upcoming residential developments, aligning the brand with global luxury standards."
   },
   {
@@ -100,7 +96,7 @@ const TEAM_MEMBERS = [
     name: "Mr. Niroj Mishra",
     role: "Chief Executive Officer",
     img: "uploads/niroj-mishra.webp",
-    bio: "A certified business assessor and civil engineering professional with around 215 years of experience across business development, construction management, project management, contract management, marketing, sales, safety, quality, and operations.",
+    bio: "A certified business assessor and civil engineering professional with around 21 years of experience across business development, construction management, project management, contract management, marketing, sales, safety, quality, and operations.",
     fullBio: "Mr. Niroj Mishra is the Chief Executive Officer (CEO) of Ruchi Realty. A civil engineering professional and certified business assessor, he holds more than 21 years of experience in real estate and infrastructure development. He leads the operational machinery of the firm, supervising everything from architectural feasibility studies and raw material audits to site safety, contract administration, and sales execution. His disciplined approach ensures that projects meet rigorous quality benchmarks and safety standard protocols."
   },
   {
@@ -111,10 +107,6 @@ const TEAM_MEMBERS = [
     fullBio: "Mr. Akshay Chandre leads the Sales, Marketing, and Customer Relationship Management (CRM) divisions at Ruchi Realty. With over 20 years of hands-on expertise in the real estate sector, he has previously managed portfolios for prominent developers including Tata Realty and Mahindra Lifespaces. Mr. Chandre focuses on aligning sales strategies with customer expectations and establishing premium post-possession support teams, ensuring that Ruchi Realty's dedication to buyers is felt long after the keys are delivered."
   }
 ];
-
-// ----------------------------------------------------------------
-// Sub-Components
-// ----------------------------------------------------------------
 
 function AboutHero() {
   return (
@@ -150,20 +142,18 @@ function AboutLegacy() {
                 Welcome to Ruchi Realty, where excellence in real estate meets a commitment to crafting exceptional spaces. For over 17 years, the company has developed, managed, and sold residential, commercial, and retail properties across India.
               </p>
               <p className="ab-legacy__body">
-                Founded in 2008, Ruchi Realty has built a strong presence through modern design, superior construction quality, thoughtful amenities, and a customer-first approach. The company’s portfolio spans Kolkata, Indore, and Bhopal, with landmark projects across apartments, townships, commercial spaces, and plotted developments.
+                Founded in 2008, Ruchi Realty has built a strong presence through modern design, superior construction quality, thoughtful amenities, and a customer-first approach. The company\u2019s portfolio spans Kolkata, Indore, and Bhopal, with landmark projects across apartments, townships, commercial spaces, and plotted developments.
               </p>
             </Reveal>
           </div>
-          
+
           <div className="ab-legacy__right">
             <Reveal delay={80} className="ab-legacy__media-container">
-              {/* Overlapping editorial images composition */}
               <div className="ab-legacy__media-stack">
                 <img className="ab-legacy__stack-img ab-legacy__stack-img--base" src="assets/projects/one-victoria.webp" alt="One Victoria" />
                 <img className="ab-legacy__stack-img ab-legacy__stack-img--1" src="uploads/hero-active-acres.webp" alt="Active Acres Concept" />
                 <img className="ab-legacy__stack-img ab-legacy__stack-img--2" src="assets/projects/active-acres.webp" alt="Active Acres Realized" />
-                
-                {/* Floating Glassmorphic Stats Blocks */}
+
                 <div className="ab-legacy__stats-glass">
                   <div className="ab-glass-stat">
                     <span className="ab-glass-stat__val">17+</span>
@@ -188,7 +178,7 @@ function AboutLegacy() {
 }
 
 function AboutPhilosophy() {
-  const [activeLedger, setActiveLedger] = uSP(0);
+  const [activeLedger, setActiveLedger] = useState(0);
 
   return (
     <section className="ab-philosophy section-pad" id="philosophy">
@@ -204,8 +194,7 @@ function AboutPhilosophy() {
             </p>
           </Reveal>
         </div>
-        
-        {/* Split Layout: Left image, Right vertical ledger */}
+
         <div className="ab-philosophy__split">
           <Reveal className="ab-philosophy__image-panel">
             {LEDGER_ITEMS.map((item, idx) => (
@@ -227,7 +216,7 @@ function AboutPhilosophy() {
             {LEDGER_ITEMS.map((item, index) => {
               const isOpen = activeLedger === index;
               return (
-                <div key={index} 
+                <div key={index}
                   className={`ab-ledger-item ${isOpen ? "is-active" : ""}`}
                   onMouseEnter={() => setActiveLedger(index)}
                   onClick={() => setActiveLedger(index)}>
@@ -254,7 +243,6 @@ function AboutVisionMission() {
     <section className="ab-vm section-pad" id="vision-mission">
       <div className="rr-wrap">
         <div className="ab-vm__grid">
-          {/* Mission Card (Dark with low-opacity construction backdrop) */}
           <Reveal className="ab-vm-card ab-vm-card--dark">
             <div className="ab-vm-card__bg" style={{ backgroundImage: "url('uploads/hero-active-acres.webp')" }}></div>
             <div className="ab-vm-card__overlay"></div>
@@ -265,12 +253,11 @@ function AboutVisionMission() {
                 Ruchi Realty is dedicated to crafting residential, commercial, and mixed-use projects that redefine modern living. With a legacy built on over 17 years of expertise and dedication, the company aims to exceed expectations, foster healthy communities, and create environments where contentment flourishes.
               </p>
               <blockquote className="ab-vm-card__quote">
-                "To build real estate marvels across residential and commercial developments while setting new standards in quality and architectural excellence."
+                &ldquo;To build real estate marvels across residential and commercial developments while setting new standards in quality and architectural excellence.&rdquo;
               </blockquote>
             </div>
           </Reveal>
 
-          {/* Vision Card (Light with low-opacity completed project backdrop) */}
           <Reveal className="ab-vm-card ab-vm-card--light" delay={120}>
             <div className="ab-vm-card__bg" style={{ backgroundImage: "url('assets/projects/one-rajarhat.webp')" }}></div>
             <div className="ab-vm-card__overlay"></div>
@@ -281,7 +268,7 @@ function AboutVisionMission() {
                 Transforming the real estate landscape with innovation, sustainability, and excellence, crafting spaces where joy and vibrancy thrive.
               </p>
               <blockquote className="ab-vm-card__quote">
-                "To contribute significantly to building a stronger nation and become the country’s trusted real estate company."
+                &ldquo;To contribute significantly to building a stronger nation and become the country\u2019s trusted real estate company.&rdquo;
               </blockquote>
             </div>
           </Reveal>
@@ -292,27 +279,27 @@ function AboutVisionMission() {
 }
 
 function AboutProjects() {
-  const [city, setCity] = uSP("Kolkata");
-  const [activeIdx, setActiveIdx] = uSP(0);
-  const [isMobile, setIsMobile] = uSP(false);
+  const [city, setCity] = useState("Kolkata");
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   const activeProjects = ABOUT_PROJECTS[city];
 
-  uEP(() => {
+  useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  uEP(() => {
+  useEffect(() => {
     setActiveIdx(0);
   }, [city]);
 
   const next = () => {
     setActiveIdx((prev) => (prev + 1) % activeProjects.length);
   };
-  
+
   const prev = () => {
     setActiveIdx((prev) => (prev - 1 + activeProjects.length) % activeProjects.length);
   };
@@ -332,7 +319,7 @@ function AboutProjects() {
               <h2 className="ab-projects__title">Landmark addresses,<br /><span className="rr-grad">across key cities.</span></h2>
             </div>
             <p className="ab-projects__lead">
-              Ruchi Realty’s portfolio includes landmark residential towers, commercial spaces, plotted developments, and townships across major Indian cities.
+              Ruchi Realty\u2019s portfolio includes landmark residential towers, commercial spaces, plotted developments, and townships across major Indian cities.
             </p>
           </div>
         </Reveal>
@@ -351,7 +338,6 @@ function AboutProjects() {
 
       <div className="projects__sig ab-projects__sig" aria-hidden="true"></div>
 
-      {/* Flat horizontal slider track */}
       <div className="ab-flat-slider" key={city}>
         <div className="ab-flat-viewport">
           <div className="ab-flat-track" style={{ transform: trackTransform }}>
@@ -376,17 +362,16 @@ function AboutProjects() {
                     <div className="ab-proj-tile__content">
                       <h3 className="ab-proj-tile__name">{p.name}</h3>
                       <p className="ab-proj-tile__desc">{p.desc}</p>
-                      <span className="ab-proj-tile__view">Select address <span className="ar">→</span></span>
+                      <span className="ab-proj-tile__view">Select address <span className="ar">\u2192</span></span>
                     </div>
                   </div>
                 </div>
               );
             })}
           </div>
-          
-          {/* Nav arrows */}
+
           {activeProjects.length > 1 && (
-            <React.Fragment>
+            <>
               <button type="button" className="ab-flat-arrow ab-flat-arrow--prev" onClick={prev} aria-label="Previous Project">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
@@ -397,11 +382,10 @@ function AboutProjects() {
                   <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
                 </svg>
               </button>
-            </React.Fragment>
+            </>
           )}
         </div>
 
-        {/* Indicator dots */}
         {activeProjects.length > 1 && (
           <div className="ab-flat-dots">
             {activeProjects.map((_, i) => (
@@ -420,8 +404,8 @@ function AboutProjects() {
           <span className="ab-projects__hint">
             Showing {activeIdx + 1} of {activeProjects.length} {activeProjects.length === 1 ? "address" : "addresses"} in {city}
           </span>
-          <a className="projects__allbtn ab-projects__allbtn" href={`Projects.html#city=${city}`}>
-            View All Projects<span className="ar">→</span>
+          <a className="projects__allbtn ab-projects__allbtn" href={`/projects?city=${city}`}>
+            View All Projects<span className="ar">\u2192</span>
           </a>
         </div>
       </div>
@@ -430,7 +414,7 @@ function AboutProjects() {
 }
 
 function TeamModal({ member, onClose }) {
-  uEP(() => {
+  useEffect(() => {
     const handleKeyDown = (e) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", handleKeyDown);
     document.body.classList.add("nav-locked");
@@ -469,7 +453,7 @@ function TeamModal({ member, onClose }) {
 }
 
 function AboutTeam() {
-  const [selectedMember, setSelectedMember] = uSP(null);
+  const [selectedMember, setSelectedMember] = useState(null);
 
   return (
     <section className="ab-team section-pad" id="team">
@@ -479,7 +463,7 @@ function AboutTeam() {
             <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>LEADERSHIP</div>
             <h2 className="ab-team__title">Meet the people shaping Ruchi Realty</h2>
             <p className="ab-team__lead">
-              Our leaders don’t just plan and strategize. They bring the expertise, discipline, and vision to execute landmark developments with consistency and care.
+              Our leaders don\u2019t just plan and strategize. They bring the expertise, discipline, and vision to execute landmark developments with consistency and care.
             </p>
           </Reveal>
         </div>
@@ -495,7 +479,7 @@ function AboutTeam() {
                 <span className="ab-team-card__role">{m.role}</span>
                 <p className="ab-team-card__bio">{m.bio}</p>
                 <button type="button" className="ab-team-card__btn" onClick={() => setSelectedMember(m)}>
-                  Read Full Bio <span className="ar">→</span>
+                  Read Full Bio <span className="ar">\u2192</span>
                 </button>
               </div>
             </Reveal>
@@ -513,29 +497,29 @@ function AboutTeam() {
 function AboutCTA() {
   const onExplore = (e) => {
     e.preventDefault();
-    smoothTo("#footprint");
+    if (window.smoothTo) window.smoothTo("#footprint");
   };
   const onContact = (e) => {
     e.preventDefault();
-    smoothTo("#contact");
+    if (window.smoothTo) window.smoothTo("#contact");
   };
 
   return (
     <section className="ab-cta">
-      <div className="ab-cta__bg" style={{ backgroundImage: `url('assets/projects/one-victoria.webp')` }}></div>
+      <div className="ab-cta__bg" style={{ backgroundImage: "url('assets/projects/one-victoria.webp')" }}></div>
       <div className="ab-cta__overlay"></div>
       <div className="rr-wrap ab-cta__wrap">
         <Reveal className="ab-cta__content">
-          <h2 className="ab-cta__title">Let’s build your next address with confidence.</h2>
+          <h2 className="ab-cta__title">Let\u2019s build your next address with confidence.</h2>
           <p className="ab-cta__lead">
-            Explore Ruchi Realty’s landmark developments across Kolkata, Indore, and Bhopal — crafted with engineering excellence, thoughtful design, and long-term value.
+            Explore Ruchi Realty\u2019s landmark developments across Kolkata, Indore, and Bhopal \u2014 crafted with engineering excellence, thoughtful design, and long-term value.
           </p>
           <div className="ab-cta__buttons">
             <a href="#footprint" className="submit-btn" onClick={onExplore} style={{ background: "var(--rr-lime)", color: "var(--rr-ink)" }}>
-              Explore Projects <span className="ar">→</span>
+              Explore Projects <span className="ar">\u2192</span>
             </a>
             <a href="#contact" className="ab-btn-outline" onClick={onContact} style={{ color: "#fff", borderColor: "rgba(255,255,255,0.4)" }}>
-              Contact Us <span className="ar">→</span>
+              Contact Us <span className="ar">\u2192</span>
             </a>
           </div>
         </Reveal>
@@ -544,15 +528,13 @@ function AboutCTA() {
   );
 }
 
-// ----------------------------------------------------------------
-// Main Page Composer
-// ----------------------------------------------------------------
-
-function AboutUsPage() {
-  const onContact = () => smoothTo("#contact");
+export default function AboutPage() {
+  const onContact = () => {
+    if (window.smoothTo) window.smoothTo("#contact");
+  };
 
   return (
-    <React.Fragment>
+    <>
       <Nav onContact={onContact} />
       <main>
         <AboutHero />
@@ -563,8 +545,6 @@ function AboutUsPage() {
         <AboutTeam />
       </main>
       <Footer />
-    </React.Fragment>
+    </>
   );
 }
-
-ReactDOM.createRoot(document.getElementById("root")).render(<AboutUsPage />);

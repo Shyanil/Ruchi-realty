@@ -1,7 +1,11 @@
-/* ============================================================
-   Ruchi Realty — Admin review panel
-   ============================================================ */
-const { useEffect: useAdminEffect, useMemo: useAdminMemo, useState: useAdminState } = React;
+import { useState, useEffect, useMemo } from "react";
+
+const toJSON = (value) => {
+  try { return JSON.stringify(value, null, 2); } catch { return ""; }
+};
+const fromJSON = (value) => {
+  try { return JSON.parse(value); } catch { return []; }
+};
 
 const emptyProject = {
   title: "",
@@ -14,6 +18,23 @@ const emptyProject = {
   featured: false,
   sort_order: "",
   feature_order: "",
+  heroTitle: "",
+  heroTagline: "",
+  heroLogo: "",
+  heroBg: "",
+  overviewParagraphs: [],
+  overviewHighlights: [],
+  amenities: [],
+  specifications: [],
+  locationImage: "",
+  locationMapEmbed: "",
+  locationDestinations: [],
+  walkthroughVideoId: "",
+  galleryImages: [],
+  brochureUrl: "",
+  metaTitle: "",
+  metaDescription: "",
+  isPublished: false,
 };
 
 const emptyBlog = {
@@ -51,7 +72,7 @@ function AdminField({ label, children }) {
 }
 
 function AdminImageUpload({ label, value, onChange }) {
-  const [error, setError] = useAdminState("");
+  const [error, setError] = useState("");
   const upload = async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -84,9 +105,9 @@ function AdminImageUpload({ label, value, onChange }) {
 }
 
 function AdminLogin({ onLogin }) {
-  const [email, setEmail] = useAdminState("");
-  const [password, setPassword] = useAdminState("");
-  const [error, setError] = useAdminState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const submit = async (event) => {
     event.preventDefault();
@@ -119,13 +140,13 @@ function AdminLogin({ onLogin }) {
 }
 
 function DashboardAdmin({ onTab }) {
-  const [projects, setProjects] = useAdminState([]);
-  const [leads, setLeads] = useAdminState([]);
-  const [blogs, setBlogs] = useAdminState([]);
-  const [jobs, setJobs] = useAdminState([]);
-  const [applications, setApplications] = useAdminState([]);
+  const [projects, setProjects] = useState([]);
+  const [leads, setLeads] = useState([]);
+  const [blogs, setBlogs] = useState([]);
+  const [jobs, setJobs] = useState([]);
+  const [applications, setApplications] = useState([]);
 
-  useAdminEffect(() => {
+  useEffect(() => {
     window.RuchiBackend.projects.getAllProjects().then(({ data }) => setProjects(data || []));
     window.RuchiBackend.leads.getAllLeads().then(({ data }) => setLeads(data || []));
     window.RuchiBackend.blogs.getAllBlogs().then(({ data }) => setBlogs(data || []));
@@ -134,7 +155,6 @@ function DashboardAdmin({ onTab }) {
   }, []);
 
   const newLeads = leads.filter((lead) => lead.status === "new").length;
-  const featuredProjects = projects.filter((project) => project.featured).length;
   const activeJobs = jobs.filter((job) => job.is_active).length;
   const latestLeads = leads.slice(0, 4);
   const latestApps = applications.slice(0, 4);
@@ -177,7 +197,7 @@ function DashboardAdmin({ onTab }) {
               <article className="admin-row" key={lead.id}>
                 <div>
                   <strong>{lead.name}</strong>
-                  <span>{lead.interest} · {lead.status}</span>
+                  <span>{lead.interest} \u00b7 {lead.status}</span>
                 </div>
                 <button type="button" className="admin-text-btn" onClick={() => onTab("leads")}>Open</button>
               </article>
@@ -191,7 +211,7 @@ function DashboardAdmin({ onTab }) {
               <article className="admin-row" key={app.id}>
                 <div>
                   <strong>{app.full_name}</strong>
-                  <span>{app.job_title || "Career"} · {app.status}</span>
+                  <span>{app.job_title || "Career"} \u00b7 {app.status}</span>
                 </div>
                 <button type="button" className="admin-text-btn" onClick={() => onTab("careers")}>Open</button>
               </article>
@@ -204,23 +224,23 @@ function DashboardAdmin({ onTab }) {
 }
 
 function ProjectsAdmin() {
-  const [projects, setProjects] = useAdminState([]);
-  const [form, setForm] = useAdminState(emptyProject);
-  const [editingId, setEditingId] = useAdminState(null);
-  const [query, setQuery] = useAdminState("");
-  const [statusFilter, setStatusFilter] = useAdminState("All");
+  const [projects, setProjects] = useState([]);
+  const [form, setForm] = useState(emptyProject);
+  const [editingId, setEditingId] = useState(null);
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
 
   const load = async () => {
     const { data } = await window.RuchiBackend.projects.getAllProjects();
     setProjects(data || []);
   };
 
-  useAdminEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, []);
 
   const set = (key, value) => setForm((current) => ({ ...current, [key]: value }));
-  const edit = (project) => {
+  const edit = async (project) => {
     setEditingId(project.id);
-    setForm({
+    const base = {
       title: project.title || "",
       tag: project.tag || "",
       image_url: project.image_url || "",
@@ -231,6 +251,27 @@ function ProjectsAdmin() {
       featured: Boolean(project.featured),
       sort_order: project.sort_order ?? "",
       feature_order: project.feature_order ?? "",
+    };
+    const { data: sp } = await window.RuchiBackend.projectSubpages.getByProjectId(project.id);
+    setForm({
+      ...base,
+      heroTitle: sp?.heroTitle || "",
+      heroTagline: sp?.heroTagline || "",
+      heroLogo: sp?.heroLogo || "",
+      heroBg: sp?.heroBg || "",
+      overviewParagraphs: sp?.overviewParagraphs || [],
+      overviewHighlights: sp?.overviewHighlights || [],
+      amenities: sp?.amenities || [],
+      specifications: sp?.specifications || [],
+      locationImage: sp?.locationImage || "",
+      locationMapEmbed: sp?.locationMapEmbed || "",
+      locationDestinations: sp?.locationDestinations || [],
+      walkthroughVideoId: sp?.walkthroughVideoId || "",
+      galleryImages: sp?.galleryImages || [],
+      brochureUrl: sp?.brochureUrl || "",
+      metaTitle: sp?.metaTitle || "",
+      metaDescription: sp?.metaDescription || "",
+      isPublished: sp?.isPublished ?? false,
     });
   };
 
@@ -241,13 +282,37 @@ function ProjectsAdmin() {
 
   const save = async (event) => {
     event.preventDefault();
-    if (editingId) await window.RuchiBackend.projects.updateProject(editingId, form);
-    else await window.RuchiBackend.projects.createProject(form);
+    if (editingId) {
+      await window.RuchiBackend.projects.updateProject(editingId, form);
+      await window.RuchiBackend.projectSubpages.upsert({
+        project_id: editingId,
+        heroTitle: form.heroTitle,
+        heroTagline: form.heroTagline,
+        heroLogo: form.heroLogo,
+        heroBg: form.heroBg,
+        overviewParagraphs: form.overviewParagraphs,
+        overviewHighlights: form.overviewHighlights,
+        amenities: form.amenities,
+        specifications: form.specifications,
+        locationImage: form.locationImage,
+        locationMapEmbed: form.locationMapEmbed,
+        locationDestinations: form.locationDestinations,
+        walkthroughVideoId: form.walkthroughVideoId,
+        galleryImages: form.galleryImages,
+        brochureUrl: form.brochureUrl,
+        metaTitle: form.metaTitle,
+        metaDescription: form.metaDescription,
+        isPublished: form.isPublished,
+      });
+    } else {
+      await window.RuchiBackend.projects.createProject(form);
+    }
     reset();
     load();
   };
 
   const remove = async (id) => {
+    await window.RuchiBackend.projectSubpages.delete(id);
     await window.RuchiBackend.projects.deleteProject(id);
     if (editingId === id) reset();
     load();
@@ -285,6 +350,50 @@ function ProjectsAdmin() {
         <AdminImageUpload label="Project image" value={form.image_url} onChange={(value) => set("image_url", value)} />
         <AdminField label="Description"><textarea rows={4} value={form.description} onChange={(event) => set("description", event.target.value)} /></AdminField>
         <label className="admin-check"><input type="checkbox" checked={form.featured} onChange={(event) => set("featured", event.target.checked)} /> Featured project</label>
+
+        {editingId ? (<details className="admin-details" style={{ marginTop: "24px" }}>
+          <summary style={{ cursor: "pointer", fontWeight: 600, fontSize: "14px", userSelect: "none" }}>Project subpage content</summary>
+          <div style={{ marginTop: "16px" }}>
+            <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Hero</h3>
+            <AdminField label="Hero title"><input value={form.heroTitle} onChange={(e) => set("heroTitle", e.target.value)} /></AdminField>
+            <AdminField label="Hero tagline"><input value={form.heroTagline} onChange={(e) => set("heroTagline", e.target.value)} /></AdminField>
+            <AdminImageUpload label="Hero logo" value={form.heroLogo} onChange={(v) => set("heroLogo", v)} />
+            <AdminImageUpload label="Hero background" value={form.heroBg} onChange={(v) => set("heroBg", v)} />
+
+            <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Overview</h3>
+            <AdminField label="Paragraphs (JSON array)"><textarea rows={3} value={toJSON(form.overviewParagraphs)} onChange={(e) => set("overviewParagraphs", fromJSON(e.target.value))} /></AdminField>
+            <AdminField label="Highlights (JSON array)"><textarea rows={4} value={toJSON(form.overviewHighlights)} onChange={(e) => set("overviewHighlights", fromJSON(e.target.value))} /></AdminField>
+
+            <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Amenities</h3>
+            <AdminField label="Amenities (JSON array)"><textarea rows={4} value={toJSON(form.amenities)} onChange={(e) => set("amenities", fromJSON(e.target.value))} /></AdminField>
+
+            <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Specifications</h3>
+            <AdminField label="Specifications (JSON array)"><textarea rows={4} value={toJSON(form.specifications)} onChange={(e) => set("specifications", fromJSON(e.target.value))} /></AdminField>
+
+            <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Location</h3>
+            <AdminImageUpload label="Location image" value={form.locationImage} onChange={(v) => set("locationImage", v)} />
+            <AdminField label="Map embed URL"><input value={form.locationMapEmbed} onChange={(e) => set("locationMapEmbed", e.target.value)} /></AdminField>
+            <AdminField label="Destinations (JSON array)"><textarea rows={4} value={toJSON(form.locationDestinations)} onChange={(e) => set("locationDestinations", fromJSON(e.target.value))} /></AdminField>
+
+            <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Walkthrough</h3>
+            <AdminField label="YouTube video ID"><input value={form.walkthroughVideoId} onChange={(e) => set("walkthroughVideoId", e.target.value)} /></AdminField>
+
+            <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Gallery</h3>
+            <AdminField label="Gallery images (JSON array)"><textarea rows={4} value={toJSON(form.galleryImages)} onChange={(e) => set("galleryImages", fromJSON(e.target.value))} /></AdminField>
+
+            <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Brochure</h3>
+            <AdminField label="Brochure URL"><input value={form.brochureUrl} onChange={(e) => set("brochureUrl", e.target.value)} /></AdminField>
+
+            <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>SEO</h3>
+            <AdminField label="Meta title"><input value={form.metaTitle} onChange={(e) => set("metaTitle", e.target.value)} /></AdminField>
+            <AdminField label="Meta description"><textarea rows={2} value={form.metaDescription} onChange={(e) => set("metaDescription", e.target.value)} /></AdminField>
+
+            <label className="admin-check" style={{ margin: "12px 0" }}>
+              <input type="checkbox" checked={form.isPublished} onChange={(e) => set("isPublished", e.target.checked)} /> Subpage published
+            </label>
+          </div>
+        </details>) : null}
+
         <button className="admin-primary" type="submit">{editingId ? "Update project" : "Create project"}</button>
       </form>
 
@@ -305,7 +414,7 @@ function ProjectsAdmin() {
               <img className="admin-thumb" src={project.image_url || "assets/logo-mark.png"} alt="" />
               <div>
                 <strong>{project.title}</strong>
-                <span>{project.location} · {project.type} · {project.status}</span>
+                <span>{project.location} \u00b7 {project.type} \u00b7 {project.status}</span>
               </div>
               <div className="admin-actions">
                 <button type="button" onClick={() => edit(project)}>Edit</button>
@@ -320,14 +429,14 @@ function ProjectsAdmin() {
 }
 
 function LeadsAdmin() {
-  const [leads, setLeads] = useAdminState([]);
-  const [query, setQuery] = useAdminState("");
-  const [statusFilter, setStatusFilter] = useAdminState("All");
+  const [leads, setLeads] = useState([]);
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
   const load = async () => {
     const { data } = await window.RuchiBackend.leads.getAllLeads();
     setLeads(data || []);
   };
-  useAdminEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, []);
 
   const updateStatus = async (id, status) => {
     await window.RuchiBackend.leads.updateLeadStatus(id, status);
@@ -360,8 +469,8 @@ function LeadsAdmin() {
           <article className="admin-row admin-row--lead" key={lead.id}>
             <div>
               <strong>{lead.name}</strong>
-              <span>{lead.phone} · {lead.email}</span>
-              <span>{lead.interest} · {lead.source}</span>
+              <span>{lead.phone} \u00b7 {lead.email}</span>
+              <span>{lead.interest} \u00b7 {lead.source}</span>
               {lead.notes ? <p>{lead.notes}</p> : null}
             </div>
             <div className="admin-actions">
@@ -378,10 +487,10 @@ function LeadsAdmin() {
 }
 
 function SettingsAdmin() {
-  const [settings, setSettings] = useAdminState(null);
-  const [saved, setSaved] = useAdminState(false);
+  const [settings, setSettings] = useState(null);
+  const [saved, setSaved] = useState(false);
 
-  useAdminEffect(() => {
+  useEffect(() => {
     window.RuchiBackend.settings.getSettings().then(({ data }) => setSettings(data));
   }, []);
 
@@ -419,15 +528,15 @@ function SettingsAdmin() {
 }
 
 function BlogsAdmin() {
-  const [blogs, setBlogs] = useAdminState([]);
-  const [form, setForm] = useAdminState(emptyBlog);
-  const [editingId, setEditingId] = useAdminState(null);
-  const [query, setQuery] = useAdminState("");
+  const [blogs, setBlogs] = useState([]);
+  const [form, setForm] = useState(emptyBlog);
+  const [editingId, setEditingId] = useState(null);
+  const [query, setQuery] = useState("");
   const load = async () => {
     const { data } = await window.RuchiBackend.blogs.getAllBlogs();
     setBlogs(data || []);
   };
-  useAdminEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, []);
 
   const set = (key, value) => setForm((current) => ({ ...current, [key]: value }));
   const reset = () => {
@@ -492,7 +601,7 @@ function BlogsAdmin() {
               <img className="admin-thumb" src={blog.image || "assets/logo-mark.png"} alt="" />
               <div>
                 <strong>{blog.title}</strong>
-                <span>{blog.category} · {blog.author}</span>
+                <span>{blog.category} \u00b7 {blog.author}</span>
               </div>
               <div className="admin-actions">
                 <button type="button" onClick={() => edit(blog)}>Edit</button>
@@ -507,12 +616,12 @@ function BlogsAdmin() {
 }
 
 function CareersAdmin() {
-  const [jobs, setJobs] = useAdminState([]);
-  const [applications, setApplications] = useAdminState([]);
-  const [subTab, setSubTab] = useAdminState("jobs");
-  const [form, setForm] = useAdminState(emptyJob);
-  const [editingId, setEditingId] = useAdminState(null);
-  const [query, setQuery] = useAdminState("");
+  const [jobs, setJobs] = useState([]);
+  const [applications, setApplications] = useState([]);
+  const [subTab, setSubTab] = useState("jobs");
+  const [form, setForm] = useState(emptyJob);
+  const [editingId, setEditingId] = useState(null);
+  const [query, setQuery] = useState("");
 
   const loadJobs = async () => {
     const { data } = await window.RuchiBackend.careers.getAll();
@@ -523,7 +632,7 @@ function CareersAdmin() {
     setApplications(data || []);
   };
 
-  useAdminEffect(() => { loadJobs(); loadApplications(); }, []);
+  useEffect(() => { loadJobs(); loadApplications(); }, []);
 
   const set = (key, value) => setForm((current) => ({ ...current, [key]: value }));
   const reset = () => {
@@ -572,7 +681,7 @@ function CareersAdmin() {
   );
 
   return (
-    <React.Fragment>
+    <>
       <div className="admin-careers-head">
         <div className="admin-tabs" style={{ margin: 0 }}>
           <button type="button" className={subTab === "jobs" ? "is-active" : ""} onClick={() => setSubTab("jobs")}>Job Listings</button>
@@ -635,7 +744,7 @@ function CareersAdmin() {
           </form>
         </div>
       ) : (
-        <React.Fragment>
+        <>
           <div className="admin-apps-toolbar">
             <div className="admin-apps-toolbar-left">
               <h3 style={{ margin: 0 }}>Applications</h3>
@@ -677,16 +786,16 @@ function CareersAdmin() {
               </article>
             )) : <p className="admin-empty">No career applications yet.</p>}
           </div>
-        </React.Fragment>
+        </>
       )}
-    </React.Fragment>
+    </>
   );
 }
 
-function AdminApp() {
-  const [user, setUser] = useAdminState(() => window.RuchiBackend.auth.currentUser());
-  const [tab, setTab] = useAdminState("dashboard");
-  const tabs = useAdminMemo(() => [
+export default function AdminPage() {
+  const [user, setUser] = useState(() => window.RuchiBackend?.auth?.currentUser());
+  const [tab, setTab] = useState("dashboard");
+  const tabs = useMemo(() => [
     ["dashboard", "Dashboard"],
     ["projects", "Projects"],
     ["careers", "Careers"],
@@ -694,6 +803,11 @@ function AdminApp() {
     ["settings", "Settings"],
     ["blogs", "Blogs"],
   ], []);
+
+  useEffect(() => {
+    document.body.classList.add("admin-body");
+    return () => document.body.classList.remove("admin-body");
+  }, []);
 
   if (!user) return <AdminLogin onLogin={setUser} />;
 
@@ -703,9 +817,9 @@ function AdminApp() {
   };
 
   return (
-    <React.Fragment>
+    <>
       <div className="admin-top-row">
-        <a href="index.html" className="admin-brand"><img src="assets/logo-h.png" alt="Ruchi Realty" /></a>
+        <a href="/" className="admin-brand"><img src="assets/logo-h.png" alt="Ruchi Realty" /></a>
         <button type="button" className="admin-logout" onClick={logout}>Logout</button>
       </div>
       <nav className="admin-tabs" aria-label="Admin sections">
@@ -721,8 +835,6 @@ function AdminApp() {
         {tab === "settings" ? <SettingsAdmin /> : null}
         {tab === "blogs" ? <BlogsAdmin /> : null}
       </main>
-    </React.Fragment>
+    </>
   );
 }
-
-ReactDOM.createRoot(document.getElementById("root")).render(<AdminApp />);

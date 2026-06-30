@@ -296,6 +296,7 @@ function ProjectTile({ p, i, n }) {
 
 /* ---- Projects carousel ---- */
 const PROJECT_CITIES = ["All", "Kolkata", "Indore", "Bhopal"];
+const PROJECT_STATUSES = ["All", "Ready to Move", "Ongoing", "Upcoming"];
 function cityOf(p) {
   const c = p.city || "";
   if (c.includes("Kolkata")) return "Kolkata";
@@ -303,12 +304,13 @@ function cityOf(p) {
   if (c.includes("Bhopal")) return "Bhopal";
   return "Other";
 }
-function projectsIn(city) {
-  return city === "All" ? PROJECTS : PROJECTS.filter((p) => cityOf(p) === city);
+function statusCls(s) {
+  return s === "Ready to Move" ? "status--ready" : s === "Ongoing" ? "status--ongoing" : "status--upcoming";
 }
 
 function Projects() {
   const [city, setCity] = uS1("All");
+  const [status, setStatus] = uS1("All");
   const [items, setItems] = uS1(() => PROJECTS);
   uE1(() => {
     let active = true;
@@ -320,11 +322,13 @@ function Projects() {
     return () => { active = false; };
   }, []);
   const pool = items.length ? items : PROJECTS;
-  const projectsForCity = (selectedCity) =>
-    selectedCity === "All" ? pool : pool.filter((p) => cityOf(p) === selectedCity);
-  const filtered = projectsIn(city);
-  const shown = projectsForCity(city).slice(0, 3);
-  const filteredCount = projectsForCity(city).length;
+  const filterPool = (selCity, selStatus) =>
+    pool.filter((p) =>
+      (selCity === "All" || cityOf(p) === selCity) &&
+      (selStatus === "All" || p.status === selStatus)
+    );
+  const shown = filterPool(city, status).slice(0, 3);
+  const filteredCount = filterPool(city, "All").length;
   return (
     <section className="projects section-pad" id="projects">
       <div className="rr-wrap">
@@ -342,7 +346,7 @@ function Projects() {
         <Reveal delay={80}>
           <div className="ptabs" role="tablist" aria-label="Filter projects by city">
             {PROJECT_CITIES.map((c) => {
-              const n = projectsForCity(c).length;
+              const n = filterPool(c, "All").length;
               return (
                 <button key={c} role="tab" type="button" aria-selected={city === c}
                   className={`ptab ${city === c ? "is-active" : ""}`} onClick={() => setCity(c)}>
@@ -352,20 +356,32 @@ function Projects() {
             })}
           </div>
         </Reveal>
+        <Reveal delay={120}>
+          <div className="ptabs ptabs--status" role="group" aria-label="Filter projects by status">
+            {PROJECT_STATUSES.map((s) => {
+              const n = filterPool(city, s).length;
+              const cls = s === "All" ? "" : statusCls(s);
+              return (
+                <button key={s} type="button" aria-pressed={status === s}
+                  className={`ptab ${status === s ? "is-active" : ""}`} onClick={() => setStatus(s)}>
+                  {s === "All" ? null : <span className={`dot ${cls}`}></span>}
+                  {s === "All" ? "All" : s}<span className="ptab__count">{n}</span>
+                </button>
+              );
+            })}
+          </div>
+        </Reveal>
       </div>
       <div className="projects__sig" aria-hidden="true"></div>
       <div className="rr-wrap">
-        <div className="pgrid" key={city}>
+        <div className="pgrid" key={`${city}-${status}`}>
           {shown.map((p, i) =>
-            <Reveal key={`${city}-${p.name}-${p.city}`} delay={i * 80}>
+            <Reveal key={`${city}-${status}-${p.name}-${p.city}`} delay={i * 80}>
               <ProjectTile p={p} i={i} n={i} />
             </Reveal>
           )}
         </div>
         <div className="projects__legend">
-          <LegendDot cls="status--ready" label="Ready to Move" />
-          <LegendDot cls="status--ongoing" label="Ongoing" />
-          <LegendDot cls="status--upcoming" label="Upcoming" />
           <span className="projects__hint">
             Showing {shown.length} of {filteredCount} {filteredCount === 1 ? "address" : "addresses"}{city === "All" ? "" : ` in ${city}`}
           </span>
@@ -377,8 +393,5 @@ function Projects() {
     </section>
   );
 }
-function LegendDot({ cls, label }) {
-  return <span className={`status ${cls}`} style={{ cursor: "default" }}><span className="dot"></span>{label}</span>;
-}
 
-Object.assign(window, { Nav, Hero, Intro, Projects, ProjectTile, LegendDot, cityOf, projectsIn, smoothTo });
+Object.assign(window, { Nav, Hero, Intro, Projects, ProjectTile, cityOf, projectsIn, smoothTo });

@@ -290,6 +290,36 @@
     async deleteLead(id) {
       return rest("leads", { id: `eq.${id}` }, { method: "DELETE", auth: true });
     },
+    async getCareerLeads() {
+      const result = await rest("leads", { select: "*", interest: "like.Careers:%", order: "created_at.desc" }, { auth: true });
+      return result.error ? result : { data: result.data || [], error: null };
+    },
+    async downloadCSV(leads) {
+      const rows = Array.isArray(leads) ? leads : [];
+      const headers = ["Name", "Email", "Phone", "Interest", "Source", "Status", "Notes", "Submitted At"];
+      const csv = [
+        headers.join(","),
+        ...rows.map((lead) => [
+          `"${(lead.name || "").replace(/"/g, '""')}"`,
+          `"${(lead.email || "").replace(/"/g, '""')}"`,
+          `"${(lead.phone || "").replace(/"/g, '""')}"`,
+          `"${(lead.interest || "").replace(/"/g, '""')}"`,
+          `"${(lead.source || "").replace(/"/g, '""')}"`,
+          `"${(lead.status || "").replace(/"/g, '""')}"`,
+          `"${(lead.notes || "").replace(/"/g, '""')}"`,
+          `"${lead.created_at ? new Date(lead.created_at).toLocaleString() : ""}"`,
+        ].join(",")),
+      ].join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `career-applications-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    },
   };
 
   const settingsService = {
@@ -306,6 +336,155 @@
         json: settingsPayload(settings),
       });
       return result.error ? result : { data: normalizeSettings(result.data?.[0]), error: null };
+    },
+  };
+
+  const normalizeCareerJob = (job = {}) => {
+    const dropdown_val = job.dropdown_val || `${job.title || ""} — ${job.dept || ""}`;
+    return {
+      id: job.id || uid(),
+      slug: job.slug || "",
+      title: job.title || "",
+      dept: job.dept || "",
+      type: job.type || "Full-time",
+      desc: job.desc || "",
+      dropdownVal: dropdown_val,
+      dropdown_val,
+      overview: job.overview || "",
+      responsibilities: Array.isArray(job.responsibilities) ? job.responsibilities : [],
+      requirements: Array.isArray(job.requirements) ? job.requirements : [],
+      is_active: job.is_active !== false,
+      sort_order: toOrder(job.sort_order) ?? 0,
+      created_at: job.created_at || new Date().toISOString(),
+      updated_at: job.updated_at || "",
+    };
+  };
+
+  const careerJobPayload = (job = {}) => ({
+    slug: job.slug || slugify(job.title),
+    title: job.title,
+    dept: job.dept,
+    type: job.type || "Full-time",
+    desc: job.desc,
+    dropdown_val: job.dropdown_val || `${job.title} — ${job.dept}`,
+    overview: job.overview || "",
+    responsibilities: Array.isArray(job.responsibilities) ? job.responsibilities : [],
+    requirements: Array.isArray(job.requirements) ? job.requirements : [],
+    is_active: job.is_active !== false,
+    sort_order: toOrder(job.sort_order) ?? 0,
+  });
+
+  const uploadResume = async (file) => {
+    if (!file) throw new Error("No file selected.");
+    const maxSize = 30 * 1024;
+    if (file.size > maxSize) throw new Error("Resume must be 30 KB or smaller.");
+    const allowed = [".pdf", ".doc", ".docx"];
+    const ext = "." + file.name.split(".").pop().toLowerCase();
+    if (!allowed.includes(ext)) throw new Error("Only .pdf, .doc, and .docx files are accepted.");
+    const safeName = file.name.toLowerCase().replace(/\.[^.]+$/, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    const path = `careers/${new Date().toISOString().slice(0, 10)}/${uid()}-${safeName}${ext}`;
+    const result = await request(`/storage/v1/object/resumes/${path}`, {
+      method: "POST",
+      headers: { "Content-Type": file.type || "application/octet-stream", "x-upsert": "false" },
+      body: file,
+    });
+    if (result.error) throw result.error;
+    return { url: `${CONFIG.supabaseUrl}/storage/v1/object/public/resumes/${path}`, name: file.name };
+  };
+
+  const careerApplicationsService = {
+    async submit(data) {
+      return rest("career_applications", {}, {
+        method: "POST",
+        json: {
+          job_slug: data.job_slug || "",
+          job_title: data.job_title || "",
+          full_name: (data.full_name || "").trim(),
+          email: (data.email || "").trim(),
+          phone: (data.phone || "").trim(),
+          city: (data.city || "").trim(),
+          candidate_profile: data.candidate_profile || "",
+          message: data.message || "",
+          resume_url: data.resume_url || "",
+          resume_name: data.resume_name || "",
+          status: "new",
+        },
+      });
+    },
+    async getAll() {
+      const result = await rest("career_applications", { select: "*", order: "created_at.desc" }, { auth: true });
+      return result.error ? result : { data: result.data || [], error: null };
+    },
+    async updateStatus(id, status) {
+      return rest("career_applications", { id: `eq.${id}`, select: "*" }, {
+        method: "PATCH",
+        auth: true,
+        headers: { Prefer: "return=representation" },
+        json: { status },
+      });
+    },
+    async remove(id) {
+      return rest("career_applications", { id: `eq.${id}` }, { method: "DELETE", auth: true });
+    },
+    downloadCSV(applications) {
+      const rows = Array.isArray(applications) ? applications : [];
+      const headers = ["Full Name", "Email", "Phone", "Job Title", "City", "Candidate Profile", "Message", "Resume URL", "Status", "Submitted At"];
+      const csv = [
+        headers.join(","),
+        ...rows.map((app) => [
+          `"${(app.full_name || "").replace(/"/g, '""')}"`,
+          `"${(app.email || "").replace(/"/g, '""')}"`,
+          `"${(app.phone || "").replace(/"/g, '""')}"`,
+          `"${(app.job_title || "").replace(/"/g, '""')}"`,
+          `"${(app.city || "").replace(/"/g, '""')}"`,
+          `"${(app.candidate_profile || "").replace(/"/g, '""')}"`,
+          `"${(app.message || "").replace(/"/g, '""')}"`,
+          `"${(app.resume_url || "").replace(/"/g, '""')}"`,
+          `"${(app.status || "").replace(/"/g, '""')}"`,
+          `"${app.created_at ? new Date(app.created_at).toLocaleString() : ""}"`,
+        ].join(",")),
+      ].join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `career-applications-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    },
+  };
+
+  const careerService = {
+    async getAll() {
+      const result = await rest("career_jobs", { select: "*", order: "sort_order.asc.nullslast,created_at.desc" });
+      return result.error ? result : { data: (result.data || []).map(normalizeCareerJob), error: null };
+    },
+    async getActive() {
+      const result = await rest("career_jobs", { select: "*", is_active: "eq.true", order: "sort_order.asc.nullslast,created_at.desc" });
+      return result.error ? { data: [], error: null } : { data: (result.data || []).map(normalizeCareerJob), error: null };
+    },
+    async create(data) {
+      const result = await rest("career_jobs", { select: "*" }, {
+        method: "POST",
+        auth: true,
+        headers: { Prefer: "return=representation" },
+        json: careerJobPayload(data),
+      });
+      return result.error ? result : { data: normalizeCareerJob(result.data?.[0]), error: null };
+    },
+    async update(id, data) {
+      const result = await rest("career_jobs", { id: `eq.${id}`, select: "*" }, {
+        method: "PATCH",
+        auth: true,
+        headers: { Prefer: "return=representation" },
+        json: careerJobPayload(data),
+      });
+      return result.error ? result : { data: normalizeCareerJob(result.data?.[0]), error: null };
+    },
+    async remove(id) {
+      return rest("career_jobs", { id: `eq.${id}` }, { method: "DELETE", auth: true });
     },
   };
 
@@ -338,6 +517,96 @@
     },
     async deleteBlog(id) {
       return rest("blogs", { id: `eq.${id}` }, { method: "DELETE", auth: true });
+    },
+  };
+
+  /* ------------------------------------------------------------
+     Project Subpages (table: project_subpages)
+     ------------------------------------------------------------ */
+  const normalizeSubpage = (sp = {}) => ({
+    id: sp.id || uid(),
+    project_id: sp.project_id || "",
+    created_at: sp.created_at || new Date().toISOString(),
+    updated_at: sp.updated_at || "",
+    heroTitle: sp.hero_title || "",
+    heroTagline: sp.hero_tagline || "",
+    heroLogo: sp.hero_logo || "",
+    heroBg: sp.hero_bg || "",
+    overviewParagraphs: Array.isArray(sp.overview_paragraphs) ? sp.overview_paragraphs : [],
+    overviewHighlights: Array.isArray(sp.overview_highlights) ? sp.overview_highlights : [],
+    amenities: Array.isArray(sp.amenities) ? sp.amenities : [],
+    specifications: Array.isArray(sp.specifications) ? sp.specifications : [],
+    locationImage: sp.location_image || "",
+    locationMapEmbed: sp.location_map_embed || "",
+    locationDestinations: Array.isArray(sp.location_destinations) ? sp.location_destinations : [],
+    walkthroughVideoId: sp.walkthrough_video_id || "",
+    galleryImages: Array.isArray(sp.gallery_images) ? sp.gallery_images : [],
+    brochureUrl: sp.brochure_url || "",
+    metaTitle: sp.meta_title || "",
+    metaDescription: sp.meta_description || "",
+    isPublished: Boolean(sp.is_published),
+  });
+
+  const subpagePayload = (sp = {}) => ({
+    project_id: sp.project_id,
+    hero_title: sp.heroTitle || "",
+    hero_tagline: sp.heroTagline || "",
+    hero_logo: sp.heroLogo || "",
+    hero_bg: sp.heroBg || "",
+    overview_paragraphs: Array.isArray(sp.overviewParagraphs) ? sp.overviewParagraphs : [],
+    overview_highlights: Array.isArray(sp.overviewHighlights) ? sp.overviewHighlights : [],
+    amenities: Array.isArray(sp.amenities) ? sp.amenities : [],
+    specifications: Array.isArray(sp.specifications) ? sp.specifications : [],
+    location_image: sp.locationImage || "",
+    location_map_embed: sp.locationMapEmbed || "",
+    location_destinations: Array.isArray(sp.locationDestinations) ? sp.locationDestinations : [],
+    walkthrough_video_id: sp.walkthroughVideoId || "",
+    gallery_images: Array.isArray(sp.galleryImages) ? sp.galleryImages : [],
+    brochure_url: sp.brochureUrl || "",
+    meta_title: sp.metaTitle || "",
+    meta_description: sp.metaDescription || "",
+    is_published: sp.isPublished ?? false,
+  });
+
+  const projectSubpagesService = {
+    async getByProjectId(projectId) {
+      const result = await rest("project_subpages", {
+        select: "*",
+        project_id: `eq.${projectId}`,
+        limit: "1",
+      });
+      return result.error ? result : { data: result.data?.[0] ? normalizeSubpage(result.data[0]) : null, error: null };
+    },
+    async upsert(subpage) {
+      const payload = subpagePayload(subpage);
+      const { project_id } = payload;
+      const existing = await rest("project_subpages", {
+        select: "id",
+        project_id: `eq.${project_id}`,
+        limit: "1",
+      });
+      if (existing.data?.[0]) {
+        const result = await rest("project_subpages", {
+          project_id: `eq.${project_id}`,
+          select: "*",
+        }, {
+          method: "PATCH",
+          auth: true,
+          headers: { Prefer: "return=representation" },
+          json: payload,
+        });
+        return result.error ? result : { data: normalizeSubpage(result.data?.[0]), error: null };
+      }
+      const result = await rest("project_subpages", { select: "*" }, {
+        method: "POST",
+        auth: true,
+        headers: { Prefer: "return=representation" },
+        json: { ...payload, id: uid() },
+      });
+      return result.error ? result : { data: normalizeSubpage(result.data?.[0]), error: null };
+    },
+    async delete(projectId) {
+      return rest("project_subpages", { project_id: `eq.${projectId}` }, { method: "DELETE", auth: true });
     },
   };
 
@@ -395,8 +664,12 @@
     leads: leadService,
     settings: settingsService,
     blogs: blogService,
+    careers: careerService,
+    careerApplications: careerApplicationsService,
+    projectSubpages: projectSubpagesService,
     syncPublicProjects,
     uploadImage,
+    uploadResume,
   };
 
   syncPublicProjects();
