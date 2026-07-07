@@ -64,8 +64,8 @@ const PROJECTS = [
   // --- Ready to Move · Kolkata ---
   { name: "One Rajarhat", city: "Rajarhat · Kolkata", type: "Residential", status: "Ready to Move", url: "https://ruchirealty.com/one-rajarhat/", img: "assets/projects/one-rajarhat.webp" },
   { name: "One Prime", city: "New Town · Kolkata", type: "Residential", status: "Ready to Move", url: "https://ruchirealty.com/one-prime-residential/", img: "assets/projects/one-prime.webp" },
-  { name: "Active Business Park", city: "Kolkata", type: "Commercial", status: "Ready to Move", url: "https://ruchirealty.com/active-business-park/", img: "assets/projects/active-business-park.webp" },
-  { name: "Active Green", city: "Kolkata", type: "Residential", status: "Ready to Move", url: "https://ruchirealty.com/active-greens/", img: "assets/projects/active-green.webp" },
+  { name: "Active Business Park", city: "Kolkata", type: "Commercial", status: "Ready to Move", url: "/active-business-park", img: "assets/projects/active-business-park.webp" },
+  { name: "Active Greens", city: "Kolkata", type: "Residential", status: "Ready to Move", url: "/active-greens", img: "assets/projects/active-green.webp" },
 
   // --- Ready to Move · Indore ---
   { name: "Oscar Pride", city: "Indore", type: "Township", status: "Ready to Move", url: "https://ruchirealty.com/oscar-pride/", img: "assets/projects/oscar-pride.webp" },

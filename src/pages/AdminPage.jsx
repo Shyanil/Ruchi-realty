@@ -7,6 +7,52 @@ const fromJSON = (value) => {
   try { return JSON.parse(value); } catch { return []; }
 };
 
+function extractSpecsAndCustomData(specifications) {
+  const specs = [];
+  let gmbReviews = null;
+  let videoSection = null;
+  let heroMobileUrl = "";
+  let companyLogoUrl = "";
+  let gmbGoogleIconUrl = "";
+  let gmbStarIconUrl = "";
+  let locationMapUrl = "";
+  let floorPlans = [];
+
+  (specifications || []).forEach((s) => {
+    if (s.title === "__gmb_reviews__") {
+      try { gmbReviews = JSON.parse(s.desc); } catch (e) {}
+    } else if (s.title === "__video_section__") {
+      try { videoSection = JSON.parse(s.desc); } catch (e) {}
+    } else if (s.title === "__hero_mobile_url__") {
+      heroMobileUrl = s.desc;
+    } else if (s.title === "__company_logo_url__") {
+      companyLogoUrl = s.desc;
+    } else if (s.title === "__gmb_google_icon_url__") {
+      gmbGoogleIconUrl = s.desc;
+    } else if (s.title === "__gmb_star_icon_url__") {
+      gmbStarIconUrl = s.desc;
+    } else if (s.title === "__location_map_url__") {
+      locationMapUrl = s.desc;
+    } else if (s.title === "__floor_plans__") {
+      try { floorPlans = JSON.parse(s.desc); } catch (e) {}
+    } else {
+      specs.push(s);
+    }
+  });
+
+  return {
+    specifications: specs,
+    gmbReviews,
+    videoSection,
+    heroMobileUrl,
+    companyLogoUrl,
+    gmbGoogleIconUrl,
+    gmbStarIconUrl,
+    locationMapUrl,
+    floorPlans,
+  };
+}
+
 const emptyProject = {
   title: "",
   tag: "",
@@ -22,6 +68,14 @@ const emptyProject = {
   heroTagline: "",
   heroLogo: "",
   heroBg: "",
+  heroMobileUrl: "",
+  companyLogoUrl: "",
+  gmbGoogleIconUrl: "",
+  gmbStarIconUrl: "",
+  locationMapUrl: "",
+  floorPlans: [],
+  videoSection: { enabled: false, videoUrl: "", thumbnailUrl: "" },
+  gmbReviews: { enabled: false, googleIconUrl: "", starIconUrl: "", reviews: [] },
   overviewParagraphs: [],
   overviewHighlights: [],
   amenities: [],
@@ -34,7 +88,7 @@ const emptyProject = {
   brochureUrl: "",
   metaTitle: "",
   metaDescription: "",
-  isPublished: false,
+  isPublished: true,
 };
 
 const emptyBlog = {
@@ -62,6 +116,23 @@ const emptyJob = {
 
 const JOB_TYPES = ["Full-time", "Part-time", "Contract", "Internship", "Future Opportunity"];
 
+const DEFAULT_OVERVIEW_HIGHLIGHT_ICONS = ["location", "amenities", "infrastructure", "size"];
+const DEFAULT_OVERVIEW_HIGHLIGHTS = [
+  { label: "Prime Location", desc: "Well-connected address with everyday conveniences close by." },
+  { label: "Lifestyle Amenities", desc: "Thoughtfully planned spaces for daily comfort and community living." },
+  { label: "Quality Infrastructure", desc: "Designed with dependable services, security, and long-term usability." },
+  { label: "Flexible Spaces", desc: "Practical layouts planned for modern residential and investment needs." },
+];
+
+function withOverviewHighlightIcons(items = []) {
+  const source = Array.isArray(items) && items.length ? items : DEFAULT_OVERVIEW_HIGHLIGHTS;
+  return source.slice(0, 4).map((item, index) => ({
+    label: item.label || DEFAULT_OVERVIEW_HIGHLIGHTS[index]?.label || "Project Highlight",
+    desc: item.desc || DEFAULT_OVERVIEW_HIGHLIGHTS[index]?.desc || "Key project advantage.",
+    icon: DEFAULT_OVERVIEW_HIGHLIGHT_ICONS[index] || "location",
+  }));
+}
+
 function AdminField({ label, children }) {
   return (
     <label className="admin-field">
@@ -71,18 +142,77 @@ function AdminField({ label, children }) {
   );
 }
 
+function compressAndConvertToWebP(file, maxKb = 100) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+        const maxDimension = 1600;
+        if (width > maxDimension || height > maxDimension) {
+          if (width > height) {
+            height = Math.round((height * maxDimension) / width);
+            width = maxDimension;
+          } else {
+            width = Math.round((width * maxDimension) / height);
+            height = maxDimension;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+
+        let quality = 0.85;
+        const attempt = () => {
+          canvas.toBlob((blob) => {
+            if (!blob) {
+              reject(new Error("Compression failed"));
+              return;
+            }
+            if (blob.size <= maxKb * 1024 || quality <= 0.1) {
+              resolve(blob);
+            } else {
+              quality -= 0.08;
+              attempt();
+            }
+          }, "image/webp", quality);
+        };
+        attempt();
+      };
+      img.onerror = () => reject(new Error("Failed to load image"));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error("Failed to read file"));
+    reader.readAsDataURL(file);
+  });
+}
+
 function AdminImageUpload({ label, value, onChange }) {
   const [error, setError] = useState("");
+  const [compressing, setCompressing] = useState(false);
+
   const upload = async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
     try {
       setError("");
+      setCompressing(true);
+      
+      const webpBlob = await compressAndConvertToWebP(file, 100);
+      const safeName = file.name.replace(/\.[^.]+$/, "") + ".webp";
+      const webpFile = new File([webpBlob], safeName, { type: "image/webp" });
+      
       const bucket = label.toLowerCase().includes("blog") ? "blog-images" : "project-images";
-      const url = await window.RuchiBackend.uploadImage(file, bucket);
+      const url = await window.RuchiBackend.uploadImage(webpFile, bucket);
       onChange(url);
     } catch (uploadError) {
       setError(uploadError.message || "Image upload failed.");
+    } finally {
+      setCompressing(false);
     }
   };
 
@@ -93,12 +223,22 @@ function AdminImageUpload({ label, value, onChange }) {
       </div>
       <div className="admin-uploader__body">
         <span className="admin-uploader__label">{label}</span>
-        <label className="admin-upload-btn">
-          Upload image
-          <input type="file" accept="image/webp,.webp" onChange={upload} />
-        </label>
-        {value ? <button type="button" className="admin-text-btn" onClick={() => onChange("")}>Remove</button> : null}
-        {error ? <p className="admin-error">{error}</p> : <p className="admin-note">Use WebP only, 200 KB max. Uploads to Supabase Storage after admin sign-in.</p>}
+        <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "8px" }}>
+          <label className="admin-upload-btn" style={{ opacity: compressing ? 0.6 : 1 }}>
+            {compressing ? "Uploading..." : "Upload file"}
+            <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp,image/*" onChange={upload} disabled={compressing} style={{ display: "none" }} />
+          </label>
+          {value ? <button type="button" className="admin-text-btn" onClick={() => onChange("")} disabled={compressing}>Remove</button> : null}
+        </div>
+        <input 
+          type="text" 
+          value={value || ""} 
+          onChange={(e) => onChange(e.target.value)} 
+          placeholder="Or paste local path / URL (e.g. assets/projects/...)" 
+          style={{ width: "100%", padding: "6px 10px", fontSize: "12px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }}
+          disabled={compressing}
+        />
+        {error ? <p className="admin-error">{error}</p> : <p className="admin-note" style={{ marginTop: "4px" }}>PNG, JPG, WebP auto-compressed to WebP under 100 KB.</p>}
       </div>
     </div>
   );
@@ -223,12 +363,329 @@ function DashboardAdmin({ onTab }) {
   );
 }
 
+function KeyValueListEditor({ title, items, onChange, keyPlaceholder = "Label", valuePlaceholder = "Description", keyProp = "label", valueProp = "desc", thirdProp = "", thirdPlaceholder = "" }) {
+  const list = Array.isArray(items) ? items : [];
+  const updateRow = (index, prop, val) => {
+    const newList = [...list];
+    newList[index] = { ...newList[index], [prop]: val };
+    onChange(newList);
+  };
+  const addRow = () => {
+    const newItem = { [keyProp]: "", [valueProp]: "" };
+    if (thirdProp) {
+      newItem[thirdProp] = "";
+    }
+    onChange([...list, newItem]);
+  };
+  const removeRow = (index) => {
+    onChange(list.filter((_, i) => i !== index));
+  };
+
+  return (
+    <div className="admin-list-editor" style={{ marginBottom: "18px", padding: "12px", border: "1px solid rgba(35, 31, 32, 0.15)", borderRadius: "6px" }}>
+      <h4 style={{ margin: "0 0 10px 0", fontSize: "13px", fontWeight: "600", textTransform: "uppercase", opacity: 0.7 }}>{title}</h4>
+      {list.map((item, index) => (
+        <div key={index} style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "8px", alignItems: "center" }}>
+          <input
+            type="text"
+            value={item[keyProp] || ""}
+            onChange={(e) => updateRow(index, keyProp, e.target.value)}
+            placeholder={keyPlaceholder}
+            style={{ flex: "1 1 120px", minWidth: "120px", padding: "6px 10px", fontSize: "13px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }}
+          />
+          <input
+            type="text"
+            value={item[valueProp] || ""}
+            onChange={(e) => updateRow(index, valueProp, e.target.value)}
+            placeholder={valuePlaceholder}
+            style={{ flex: "2 1 180px", minWidth: "180px", padding: "6px 10px", fontSize: "13px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }}
+          />
+          {thirdProp && (
+            <input
+              type="text"
+              value={item[thirdProp] || ""}
+              onChange={(e) => updateRow(index, thirdProp, e.target.value)}
+              placeholder={thirdPlaceholder}
+              list={thirdProp === "icon" ? "highlight-icons" : undefined}
+              style={{ flex: "1.5 1 140px", minWidth: "140px", padding: "6px 10px", fontSize: "13px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }}
+            />
+          )}
+          <button
+            type="button"
+            onClick={() => removeRow(index)}
+            style={{
+              background: "#ff4d4d",
+              color: "#fff",
+              border: "none",
+              borderRadius: "4px",
+              padding: "6px 10px",
+              cursor: "pointer",
+              fontSize: "12px"
+            }}
+          >
+            Remove
+          </button>
+        </div>
+      ))}
+      {thirdProp === "icon" && (
+        <datalist id="highlight-icons">
+          {["location", "home", "amenities", "security"].map((ico) => <option key={ico} value={ico} />)}
+        </datalist>
+      )}
+      <button
+        type="button"
+        onClick={addRow}
+        style={{
+          background: "var(--rr-indigo)",
+          color: "#fff",
+          border: "none",
+          borderRadius: "4px",
+          padding: "6px 12px",
+          cursor: "pointer",
+          fontSize: "12px"
+        }}
+      >
+        + Add Row
+      </button>
+    </div>
+  );
+}
+
+function AmenitiesListEditor({ items, onChange }) {
+  const list = Array.isArray(items) ? items : [];
+  const updateRow = (index, prop, val) => {
+    const newList = [...list];
+    newList[index] = { ...newList[index], [prop]: val };
+    onChange(newList);
+  };
+  const addRow = () => {
+    onChange([...list, { name: "", icon: "pool" }]);
+  };
+  const removeRow = (index) => {
+    onChange(list.filter((_, i) => i !== index));
+  };
+  const ICONS = ["pool", "gym", "library", "table-tennis", "hall", "badminton", "tennis", "other"];
+
+  return (
+    <div className="admin-list-editor" style={{ marginBottom: "18px", padding: "12px", border: "1px solid rgba(35, 31, 32, 0.15)", borderRadius: "6px" }}>
+      <h4 style={{ margin: "0 0 10px 0", fontSize: "13px", fontWeight: "600", textTransform: "uppercase", opacity: 0.7 }}>Amenities</h4>
+      {list.map((item, index) => (
+        <div key={index} style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "8px", alignItems: "center" }}>
+          <input
+            type="text"
+            value={item.name || ""}
+            onChange={(e) => updateRow(index, "name", e.target.value)}
+            placeholder="Amenity Name"
+            style={{ flex: "2 1 180px", minWidth: "180px", padding: "6px 10px", fontSize: "13px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }}
+          />
+          <input
+            type="text"
+            list="amenity-icons"
+            value={item.icon || "pool"}
+            onChange={(e) => updateRow(index, "icon", e.target.value)}
+            placeholder="Icon (e.g. pool, assets/projects/...)"
+            style={{ flex: "1.5 1 140px", minWidth: "140px", padding: "6px 10px", fontSize: "13px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }}
+          />
+          <button
+            type="button"
+            onClick={() => removeRow(index)}
+            style={{
+              background: "#ff4d4d",
+              color: "#fff",
+              border: "none",
+              borderRadius: "4px",
+              padding: "6px 10px",
+              cursor: "pointer",
+              fontSize: "12px"
+            }}
+          >
+            Remove
+          </button>
+        </div>
+      ))}
+      <datalist id="amenity-icons">
+        {ICONS.map((ico) => <option key={ico} value={ico} />)}
+      </datalist>
+      <button
+        type="button"
+        onClick={addRow}
+        style={{
+          background: "var(--rr-indigo)",
+          color: "#fff",
+          border: "none",
+          borderRadius: "4px",
+          padding: "6px 12px",
+          cursor: "pointer",
+          fontSize: "12px"
+        }}
+      >
+        + Add Amenity
+      </button>
+    </div>
+  );
+}
+
+function GalleryListEditor({ items, onChange }) {
+  const list = Array.isArray(items) ? items : [];
+  const updateRow = (index, prop, val) => {
+    const newList = [...list];
+    newList[index] = { ...newList[index], [prop]: val };
+    onChange(newList);
+  };
+  const addRow = () => {
+    onChange([...list, { src: "", alt: "" }]);
+  };
+  const removeRow = (index) => {
+    onChange(list.filter((_, i) => i !== index));
+  };
+  const handleUpload = async (index, event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    try {
+      const url = await window.RuchiBackend.uploadImage(file, "project-images");
+      updateRow(index, "src", url);
+    } catch (err) {
+      alert(err.message || "Upload failed");
+    }
+  };
+
+  return (
+    <div className="admin-list-editor" style={{ marginBottom: "18px", padding: "12px", border: "1px solid rgba(35, 31, 32, 0.15)", borderRadius: "6px" }}>
+      <h4 style={{ margin: "0 0 10px 0", fontSize: "13px", fontWeight: "600", textTransform: "uppercase", opacity: 0.7 }}>Gallery Images</h4>
+      {list.map((item, index) => (
+        <div key={index} style={{ display: "flex", flexDirection: "column", gap: "6px", padding: "10px", background: "rgba(0,0,0,0.02)", border: "1px dashed rgba(35, 31, 32, 0.2)", borderRadius: "4px", marginBottom: "10px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", alignItems: "center" }}>
+            {item.src ? (
+              <img src={item.src} alt="" style={{ width: "50px", height: "50px", objectFit: "cover", borderRadius: "4px" }} />
+            ) : (
+              <div style={{ width: "50px", height: "50px", background: "#eee", borderRadius: "4px", display: "grid", placeItems: "center", fontSize: "10px", color: "#999" }}>No Img</div>
+            )}
+            <div style={{ flex: 1, display: "flex", gap: "8px", alignItems: "center" }}>
+              <label className="admin-upload-btn" style={{ margin: 0, padding: "6px 12px", fontSize: "12px" }}>
+                Upload file
+                <input type="file" accept="image/webp,.webp" onChange={(e) => handleUpload(index, e)} style={{ display: "none" }} />
+              </label>
+              <input
+                type="text"
+                value={item.src || ""}
+                onChange={(e) => updateRow(index, "src", e.target.value)}
+                placeholder="Or paste local path / URL"
+                style={{ flex: 1, padding: "6px 10px", fontSize: "12px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }}
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => removeRow(index)}
+              style={{
+                background: "#ff4d4d",
+                color: "#fff",
+                border: "none",
+                borderRadius: "4px",
+                padding: "6px 10px",
+                cursor: "pointer",
+                fontSize: "12px"
+              }}
+            >
+              Remove
+            </button>
+          </div>
+          <input
+            type="text"
+            value={item.alt || ""}
+            onChange={(e) => updateRow(index, "alt", e.target.value)}
+            placeholder="Alt description / Caption"
+            style={{ padding: "6px 10px", fontSize: "12px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }}
+          />
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={addRow}
+        style={{
+          background: "var(--rr-indigo)",
+          color: "#fff",
+          border: "none",
+          borderRadius: "4px",
+          padding: "6px 12px",
+          cursor: "pointer",
+          fontSize: "12px"
+        }}
+      >
+        + Add Gallery Image
+      </button>
+    </div>
+  );
+}
+
+function ReviewsListEditor({ items, onChange }) {
+  const list = Array.isArray(items) ? items : [];
+  const updateRow = (index, prop, val) => {
+    const newList = [...list];
+    newList[index] = { ...newList[index], [prop]: val };
+    onChange(newList);
+  };
+  const addRow = () => {
+    onChange([...list, { author: "", text: "", time: "Recent" }]);
+  };
+  const removeRow = (index) => {
+    onChange(list.filter((_, i) => i !== index));
+  };
+  return (
+    <div className="admin-list-editor" style={{ marginBottom: "18px", padding: "12px", border: "1px solid rgba(35, 31, 32, 0.15)", borderRadius: "6px" }}>
+      <h4 style={{ margin: "0 0 10px 0", fontSize: "13px", fontWeight: "600", textTransform: "uppercase", opacity: 0.7 }}>GMB Reviews List</h4>
+      {list.map((item, index) => (
+        <div key={index} style={{ display: "flex", flexDirection: "column", gap: "6px", padding: "10px", background: "rgba(0,0,0,0.02)", border: "1px dashed rgba(35, 31, 32, 0.2)", borderRadius: "4px", marginBottom: "10px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+            <input
+              type="text"
+              value={item.author || ""}
+              onChange={(e) => updateRow(index, "author", e.target.value)}
+              placeholder="Author Name"
+              style={{ flex: "1 1 120px", minWidth: "120px", padding: "6px 10px", fontSize: "12px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }}
+            />
+            <input
+              type="text"
+              value={item.time || ""}
+              onChange={(e) => updateRow(index, "time", e.target.value)}
+              placeholder="Time (e.g., 2 weeks ago)"
+              style={{ flex: "1 1 120px", minWidth: "120px", padding: "6px 10px", fontSize: "12px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }}
+            />
+            <button
+              type="button"
+              onClick={() => removeRow(index)}
+              style={{ background: "#ff4d4d", color: "#fff", border: "none", borderRadius: "4px", padding: "6px 10px", cursor: "pointer", fontSize: "12px" }}
+            >
+              Remove
+            </button>
+          </div>
+          <textarea
+            value={item.text || ""}
+            onChange={(e) => updateRow(index, "text", e.target.value)}
+            placeholder="Review Text"
+            rows={2}
+            style={{ padding: "6px 10px", fontSize: "12px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }}
+          />
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={addRow}
+        style={{ background: "var(--rr-indigo)", color: "#fff", border: "none", borderRadius: "4px", padding: "6px 12px", cursor: "pointer", fontSize: "12px" }}
+      >
+        + Add Review
+      </button>
+    </div>
+  );
+}
+
 function ProjectsAdmin() {
   const [projects, setProjects] = useState([]);
   const [form, setForm] = useState(emptyProject);
   const [editingId, setEditingId] = useState(null);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
+  const [overviewText, setOverviewText] = useState("");
+  const [updating, setUpdating] = useState(false);
 
   const load = async () => {
     const { data } = await window.RuchiBackend.projects.getAllProjects();
@@ -238,8 +695,16 @@ function ProjectsAdmin() {
   useEffect(() => { load(); }, []);
 
   const set = (key, value) => setForm((current) => ({ ...current, [key]: value }));
+  
   const edit = async (project) => {
     setEditingId(project.id);
+    
+    // Smooth scroll to the form container
+    const formElement = document.querySelector(".admin-grid form");
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
     const base = {
       title: project.title || "",
       tag: project.tag || "",
@@ -253,6 +718,8 @@ function ProjectsAdmin() {
       feature_order: project.feature_order ?? "",
     };
     const { data: sp } = await window.RuchiBackend.projectSubpages.getByProjectId(project.id);
+    setOverviewText(sp?.overviewParagraphs?.join("\n\n") || "");
+    const extracted = extractSpecsAndCustomData(sp?.specifications);
     setForm({
       ...base,
       heroTitle: sp?.heroTitle || "",
@@ -260,9 +727,17 @@ function ProjectsAdmin() {
       heroLogo: sp?.heroLogo || "",
       heroBg: sp?.heroBg || "",
       overviewParagraphs: sp?.overviewParagraphs || [],
-      overviewHighlights: sp?.overviewHighlights || [],
+      overviewHighlights: withOverviewHighlightIcons(sp?.overviewHighlights),
       amenities: sp?.amenities || [],
-      specifications: sp?.specifications || [],
+      specifications: extracted.specifications || [],
+      heroMobileUrl: extracted.heroMobileUrl || "",
+      companyLogoUrl: extracted.companyLogoUrl || "",
+      gmbGoogleIconUrl: extracted.gmbGoogleIconUrl || "",
+      gmbStarIconUrl: extracted.gmbStarIconUrl || "",
+      locationMapUrl: extracted.locationMapUrl || "",
+      floorPlans: extracted.floorPlans || [],
+      videoSection: extracted.videoSection || { enabled: false, videoUrl: "", thumbnailUrl: "" },
+      gmbReviews: extracted.gmbReviews || { enabled: false, googleIconUrl: "", starIconUrl: "", reviews: [] },
       locationImage: sp?.locationImage || "",
       locationMapEmbed: sp?.locationMapEmbed || "",
       locationDestinations: sp?.locationDestinations || [],
@@ -271,44 +746,71 @@ function ProjectsAdmin() {
       brochureUrl: sp?.brochureUrl || "",
       metaTitle: sp?.metaTitle || "",
       metaDescription: sp?.metaDescription || "",
-      isPublished: sp?.isPublished ?? false,
+      isPublished: sp?.isPublished ?? true,
     });
   };
 
   const reset = () => {
     setEditingId(null);
     setForm(emptyProject);
+    setOverviewText("");
   };
 
   const save = async (event) => {
     event.preventDefault();
-    if (editingId) {
-      await window.RuchiBackend.projects.updateProject(editingId, form);
-      await window.RuchiBackend.projectSubpages.upsert({
-        project_id: editingId,
-        heroTitle: form.heroTitle,
-        heroTagline: form.heroTagline,
+    setUpdating(true);
+    try {
+      const paragraphs = overviewText.split(/\n{2,}/).map(p => p.trim()).filter(Boolean);
+      const specsWithCustom = [
+        ...(form.specifications || []),
+        { title: "__hero_mobile_url__", desc: form.heroMobileUrl || "" },
+        { title: "__company_logo_url__", desc: form.companyLogoUrl || "" },
+        { title: "__gmb_google_icon_url__", desc: form.gmbGoogleIconUrl || "" },
+        { title: "__gmb_star_icon_url__", desc: form.gmbStarIconUrl || "" },
+        { title: "__location_map_url__", desc: form.locationMapUrl || "" },
+        { title: "__floor_plans__", desc: JSON.stringify(form.floorPlans || []) },
+        { title: "__video_section__", desc: JSON.stringify(form.videoSection || { enabled: false, videoUrl: "", thumbnailUrl: "" }) },
+        { title: "__gmb_reviews__", desc: JSON.stringify(form.gmbReviews || { enabled: false, googleIconUrl: "", starIconUrl: "", reviews: [] }) },
+      ];
+      const subpagePayload = (projectId) => ({
+        project_id: projectId,
+        heroTitle: form.heroTitle || form.title,
+        heroTagline: form.heroTagline || form.tag || form.description,
         heroLogo: form.heroLogo,
-        heroBg: form.heroBg,
-        overviewParagraphs: form.overviewParagraphs,
-        overviewHighlights: form.overviewHighlights,
+        heroBg: form.heroBg || form.image_url,
+        overviewParagraphs: paragraphs.length ? paragraphs : [form.description].filter(Boolean),
+        overviewHighlights: withOverviewHighlightIcons(form.overviewHighlights),
         amenities: form.amenities,
-        specifications: form.specifications,
+        specifications: specsWithCustom,
         locationImage: form.locationImage,
         locationMapEmbed: form.locationMapEmbed,
         locationDestinations: form.locationDestinations,
         walkthroughVideoId: form.walkthroughVideoId,
         galleryImages: form.galleryImages,
         brochureUrl: form.brochureUrl,
-        metaTitle: form.metaTitle,
-        metaDescription: form.metaDescription,
-        isPublished: form.isPublished,
+        metaTitle: form.metaTitle || `${form.title} | Ruchi Realty`,
+        metaDescription: form.metaDescription || form.description,
+        isPublished: form.isPublished !== false,
       });
-    } else {
-      await window.RuchiBackend.projects.createProject(form);
+      if (editingId) {
+        await window.RuchiBackend.projects.updateProject(editingId, form);
+        const { error: subpageError } = await window.RuchiBackend.projectSubpages.upsert(subpagePayload(editingId));
+        if (subpageError) throw subpageError;
+      } else {
+        const { data: created, error: createError } = await window.RuchiBackend.projects.createProject(form);
+        if (createError) throw createError;
+        if (created?.id) {
+          const { error: subpageError } = await window.RuchiBackend.projectSubpages.upsert(subpagePayload(created.id));
+          if (subpageError) throw subpageError;
+        }
+      }
+      reset();
+      load();
+    } catch (e) {
+      alert("Failed to save: " + e.message);
+    } finally {
+      setUpdating(false);
     }
-    reset();
-    load();
   };
 
   const remove = async (id) => {
@@ -325,7 +827,49 @@ function ProjectsAdmin() {
 
   return (
     <section className="admin-grid">
-      <form className="admin-panel" onSubmit={save}>
+      <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
+      {updating && (
+        <div style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(35, 31, 32, 0.7)",
+          zIndex: 9999,
+          display: "grid",
+          placeItems: "center",
+          color: "#fff",
+          backdropFilter: "blur(4px)"
+        }}>
+          <div style={{
+            background: "#fff",
+            color: "var(--rr-ink)",
+            padding: "32px 48px",
+            borderRadius: "8px",
+            boxShadow: "0 20px 50px rgba(0,0,0,0.3)",
+            textAlign: "center",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "16px"
+          }}>
+            <div style={{
+              width: "40px",
+              height: "40px",
+              border: "3px solid rgba(46,49,146,0.1)",
+              borderTopColor: "var(--rr-indigo)",
+              borderRadius: "50%",
+              animation: "spin 1s linear infinite"
+            }} />
+            <strong style={{ fontSize: "16px" }}>Updating Project...</strong>
+            <span style={{ fontSize: "13px", opacity: 0.6 }}>Saving changes to Supabase database</span>
+          </div>
+        </div>
+      )}
+      <form className="admin-panel" onSubmit={save} style={{ maxWidth: "100%", overflowX: "hidden" }}>
         <div className="admin-panel__head">
           <h2>{editingId ? "Update project" : "Create project"}</h2>
           {editingId ? <button type="button" className="admin-text-btn" onClick={reset}>Cancel edit</button> : null}
@@ -351,35 +895,70 @@ function ProjectsAdmin() {
         <AdminField label="Description"><textarea rows={4} value={form.description} onChange={(event) => set("description", event.target.value)} /></AdminField>
         <label className="admin-check"><input type="checkbox" checked={form.featured} onChange={(event) => set("featured", event.target.checked)} /> Featured project</label>
 
-        {editingId ? (<details className="admin-details" style={{ marginTop: "24px" }}>
+        {editingId ? (<details className="admin-details" style={{ marginTop: "24px", width: "100%", maxWidth: "100%", overflow: "hidden" }}>
           <summary style={{ cursor: "pointer", fontWeight: 600, fontSize: "14px", userSelect: "none" }}>Project subpage content</summary>
-          <div style={{ marginTop: "16px" }}>
+          <div style={{ marginTop: "16px", width: "100%", maxWidth: "100%", overflowX: "hidden" }}>
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Hero</h3>
             <AdminField label="Hero title"><input value={form.heroTitle} onChange={(e) => set("heroTitle", e.target.value)} /></AdminField>
             <AdminField label="Hero tagline"><input value={form.heroTagline} onChange={(e) => set("heroTagline", e.target.value)} /></AdminField>
             <AdminImageUpload label="Hero logo" value={form.heroLogo} onChange={(v) => set("heroLogo", v)} />
             <AdminImageUpload label="Hero background" value={form.heroBg} onChange={(v) => set("heroBg", v)} />
+            <AdminField label="Hero mobile background URL"><input value={form.heroMobileUrl} onChange={(e) => set("heroMobileUrl", e.target.value)} /></AdminField>
+            <AdminField label="Company logo URL"><input value={form.companyLogoUrl} onChange={(e) => set("companyLogoUrl", e.target.value)} /></AdminField>
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Overview</h3>
-            <AdminField label="Paragraphs (JSON array)"><textarea rows={3} value={toJSON(form.overviewParagraphs)} onChange={(e) => set("overviewParagraphs", fromJSON(e.target.value))} /></AdminField>
-            <AdminField label="Highlights (JSON array)"><textarea rows={4} value={toJSON(form.overviewHighlights)} onChange={(e) => set("overviewHighlights", fromJSON(e.target.value))} /></AdminField>
+            <AdminField label="Overview Paragraphs (separate paragraphs with an empty line)"><textarea rows={6} value={overviewText} onChange={(e) => setOverviewText(e.target.value)} placeholder="Write first paragraph.&#10;&#10;Write second paragraph." /></AdminField>
+            <KeyValueListEditor title="Overview Highlights" items={form.overviewHighlights.length ? form.overviewHighlights : DEFAULT_OVERVIEW_HIGHLIGHTS} onChange={(list) => set("overviewHighlights", withOverviewHighlightIcons(list))} keyPlaceholder="Highlight Label" valuePlaceholder="Highlight Description" />
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Amenities</h3>
-            <AdminField label="Amenities (JSON array)"><textarea rows={4} value={toJSON(form.amenities)} onChange={(e) => set("amenities", fromJSON(e.target.value))} /></AdminField>
+            <AmenitiesListEditor items={form.amenities} onChange={(list) => set("amenities", list)} />
 
-            <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Specifications</h3>
-            <AdminField label="Specifications (JSON array)"><textarea rows={4} value={toJSON(form.specifications)} onChange={(e) => set("specifications", fromJSON(e.target.value))} /></AdminField>
+            <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Specifications / Landscape</h3>
+            <KeyValueListEditor title="Specifications / Landscape" items={form.specifications} onChange={(list) => set("specifications", list)} keyPlaceholder="Specification Title" valuePlaceholder="Specification Details" keyProp="title" valueProp="desc" />
+            <KeyValueListEditor title="Floor Plans" items={form.floorPlans} onChange={(list) => set("floorPlans", list)} keyPlaceholder="Plan Title (e.g., 3 BHK)" valuePlaceholder="Floor Plan Image URL" keyProp="title" valueProp="desc" />
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Location</h3>
             <AdminImageUpload label="Location image" value={form.locationImage} onChange={(v) => set("locationImage", v)} />
             <AdminField label="Map embed URL"><input value={form.locationMapEmbed} onChange={(e) => set("locationMapEmbed", e.target.value)} /></AdminField>
-            <AdminField label="Destinations (JSON array)"><textarea rows={4} value={toJSON(form.locationDestinations)} onChange={(e) => set("locationDestinations", fromJSON(e.target.value))} /></AdminField>
+            <AdminField label="Static location map URL"><input value={form.locationMapUrl} onChange={(e) => set("locationMapUrl", e.target.value)} /></AdminField>
+            <KeyValueListEditor title="Location Destinations" items={form.locationDestinations} onChange={(list) => set("locationDestinations", list)} keyPlaceholder="Destination Name" valuePlaceholder="Distance (e.g. 5 km)" keyProp="name" valueProp="dist" />
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Walkthrough</h3>
-            <AdminField label="YouTube video ID"><input value={form.walkthroughVideoId} onChange={(e) => set("walkthroughVideoId", e.target.value)} /></AdminField>
+            <AdminField label="Walkthrough YouTube URL (e.g. https://www.youtube.com/watch?v=...)">
+              <input 
+                type="text" 
+                value={form.walkthroughVideoId ? (form.walkthroughVideoId.length === 11 ? `https://www.youtube.com/watch?v=${form.walkthroughVideoId}` : form.walkthroughVideoId) : ""} 
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const getYouTubeId = (url) => {
+                    if (!url) return "";
+                    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                    const match = url.match(regExp);
+                    return (match && match[2].length === 11) ? match[2] : url;
+                  };
+                  set("walkthroughVideoId", getYouTubeId(val));
+                }}
+                placeholder="Paste YouTube video link here"
+              />
+            </AdminField>
+
+            <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Video / Testimonial Section</h3>
+            <label className="admin-check" style={{ margin: "12px 0" }}>
+              <input type="checkbox" checked={form.videoSection?.enabled} onChange={(e) => set("videoSection", { ...form.videoSection, enabled: e.target.checked })} /> Enable Video / Testimonial Section
+            </label>
+            <AdminField label="Video URL"><input value={form.videoSection?.videoUrl || ""} onChange={(e) => set("videoSection", { ...form.videoSection, videoUrl: e.target.value })} placeholder="YouTube link or direct video file URL" /></AdminField>
+            <AdminField label="Video Thumbnail URL"><input value={form.videoSection?.thumbnailUrl || ""} onChange={(e) => set("videoSection", { ...form.videoSection, thumbnailUrl: e.target.value })} placeholder="Thumbnail image URL" /></AdminField>
+
+            <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>GMB Reviews Section</h3>
+            <label className="admin-check" style={{ margin: "12px 0" }}>
+              <input type="checkbox" checked={form.gmbReviews?.enabled} onChange={(e) => set("gmbReviews", { ...form.gmbReviews, enabled: e.target.checked })} /> Enable GMB Reviews Section
+            </label>
+            <AdminField label="Google Icon URL"><input value={form.gmbReviews?.googleIconUrl || ""} onChange={(e) => set("gmbReviews", { ...form.gmbReviews, googleIconUrl: e.target.value })} /></AdminField>
+            <AdminField label="Star Icon URL"><input value={form.gmbReviews?.starIconUrl || ""} onChange={(e) => set("gmbReviews", { ...form.gmbReviews, starIconUrl: e.target.value })} /></AdminField>
+            <ReviewsListEditor items={form.gmbReviews?.reviews} onChange={(list) => set("gmbReviews", { ...form.gmbReviews, reviews: list })} />
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Gallery</h3>
-            <AdminField label="Gallery images (JSON array)"><textarea rows={4} value={toJSON(form.galleryImages)} onChange={(e) => set("galleryImages", fromJSON(e.target.value))} /></AdminField>
+            <GalleryListEditor items={form.galleryImages} onChange={(list) => set("galleryImages", list)} />
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Brochure</h3>
             <AdminField label="Brochure URL"><input value={form.brochureUrl} onChange={(e) => set("brochureUrl", e.target.value)} /></AdminField>
@@ -532,6 +1111,8 @@ function BlogsAdmin() {
   const [form, setForm] = useState(emptyBlog);
   const [editingId, setEditingId] = useState(null);
   const [query, setQuery] = useState("");
+  const [updating, setUpdating] = useState(false);
+
   const load = async () => {
     const { data } = await window.RuchiBackend.blogs.getAllBlogs();
     setBlogs(data || []);
@@ -545,13 +1126,27 @@ function BlogsAdmin() {
   };
   const save = async (event) => {
     event.preventDefault();
-    if (editingId) await window.RuchiBackend.blogs.updateBlog(editingId, form);
-    else await window.RuchiBackend.blogs.createBlog(form);
-    reset();
-    load();
+    setUpdating(true);
+    try {
+      if (editingId) await window.RuchiBackend.blogs.updateBlog(editingId, form);
+      else await window.RuchiBackend.blogs.createBlog(form);
+      reset();
+      load();
+    } catch (e) {
+      alert("Failed to save blog: " + e.message);
+    } finally {
+      setUpdating(false);
+    }
   };
   const edit = (blog) => {
     setEditingId(blog.id);
+    
+    // Smooth scroll to the form container
+    const formElement = document.querySelector(".admin-grid form");
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
     setForm({ ...emptyBlog, ...blog, tags: Array.isArray(blog.tags) ? blog.tags.join(", ") : blog.tags || "" });
   };
   const remove = async (id) => {
@@ -566,6 +1161,42 @@ function BlogsAdmin() {
 
   return (
     <section className="admin-grid">
+      {updating && (
+        <div style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(35, 31, 32, 0.7)",
+          zIndex: 9999,
+          display: "grid",
+          placeItems: "center",
+          color: "#fff",
+          backdropFilter: "blur(4px)"
+        }}>
+          <div style={{
+            background: "#fff",
+            color: "var(--rr-ink)",
+            padding: "32px 48px",
+            borderRadius: "8px",
+            boxShadow: "0 20px 50px rgba(0,0,0,0.3)",
+            textAlign: "center",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "16px"
+          }}>
+            <div style={{
+              width: "40px",
+              height: "40px",
+              border: "3px solid rgba(46,49,146,0.1)",
+              borderTopColor: "var(--rr-indigo)",
+              borderRadius: "50%",
+              animation: "spin 1s linear infinite"
+            }} />
+            <strong style={{ fontSize: "16px" }}>Updating Blog...</strong>
+            <span style={{ fontSize: "13px", opacity: 0.6 }}>Saving changes to Supabase database</span>
+          </div>
+        </div>
+      )}
       <form className="admin-panel" onSubmit={save}>
         <div className="admin-panel__head">
           <h2>{editingId ? "Update blog" : "Create blog"}</h2>

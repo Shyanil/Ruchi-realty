@@ -22,6 +22,28 @@ export function ProjectTile({ p, i, n }) {
   const cls = p.status === "Ready to Move" ? "status--ready"
     : p.status === "Ongoing" ? "status--ongoing" : "status--upcoming";
   const idx = String((n % 20) + 1).padStart(2, "0");
+
+  const isInternal = p.url && p.url.startsWith("/");
+
+  if (isInternal) {
+    return (
+      <Link className="ptile" data-cursor="View" to={p.url}>
+        <RImg src={p.img} alt={`${p.name}, ${p.city}`} className="ptile__media" grade />
+        <div className="ptile__scrim"></div>
+        <div className="ptile__idx">{idx}</div>
+        <div className="ptile__top">
+          <span className={`status ${cls}`}><span className="dot"></span>{p.status}</span>
+          <span className="ptile__typetag">{p.type}</span>
+        </div>
+        <div className="ptile__body">
+          <div className="ptile__loc">{p.city}</div>
+          <div className="ptile__name">{p.name}</div>
+          <span className="ptile__view">View project<span className="ar">→</span></span>
+        </div>
+      </Link>
+    );
+  }
+
   const Tile = p.url ? "a" : "article";
   return (
     <Tile className="ptile" data-cursor={p.url ? "View" : undefined} href={p.url || undefined}>

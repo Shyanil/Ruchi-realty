@@ -89,9 +89,20 @@
 
   const toOrder = (value) => (value === "" || value == null || Number.isNaN(Number(value)) ? null : Number(value));
 
+  const projectRouteForTitle = (title = "") => {
+    const key = title.toLowerCase().trim();
+    if (key.includes("oscar") && key.includes("billion")) return "/oscar-indore";
+    if (key.includes("active greens") || key.includes("active green")) return "/active-greens";
+    if (key.includes("one rajarhat")) return "/one-rajarhat";
+    if (key.includes("active business park")) return "/active-business-park";
+    if (key.includes("active acres") || key.includes("angelica")) return "/active-acres-angelica";
+    return "";
+  };
+
   const normalizeProject = (project = {}) => {
     const title = project.title || project.name || "Untitled Project";
     const location = project.location || project.city || "";
+    const slug = project.slug || slugify(`${title}-${location}`);
     return {
       id: project.id || uid(),
       created_at: project.created_at || new Date().toISOString(),
@@ -108,8 +119,8 @@
       featured: Boolean(project.featured),
       sort_order: toOrder(project.sort_order),
       feature_order: toOrder(project.feature_order),
-      slug: project.slug || slugify(`${title}-${location}`),
-      url: project.url || "",
+      slug,
+      url: project.url || projectRouteForTitle(title) || `/projects/${slug}`,
     };
   };
 

@@ -16,10 +16,10 @@ const SECTIONS = [
 ];
 
 const HIGHLIGHTS = [
-  { label: "Prime Location", desc: "Located on Indore Bypass, connected to the city's best addresses." },
-  { label: "Ample Amenities", desc: "Club house, tennis court, gazebos, jogging tracks and more." },
-  { label: "Urban Infrastructure", desc: "Storm water mgmt, roadway engineering & electrification." },
-  { label: "4,000-12,500 SQ. FT.", desc: "Generous plot sizes crafted for premium living." },
+  { label: "Prime Location", desc: "Located on Indore Bypass, connected to the city's best addresses.", icon: `${BASE}/icon-location.webp` },
+  { label: "Ample Amenities", desc: "Club house, tennis court, gazebos, jogging tracks and more.", icon: `${BASE}/icon-amenities.webp` },
+  { label: "Urban Infrastructure", desc: "Storm water mgmt, roadway engineering & electrification.", icon: `${BASE}/icon-infrastructure.webp` },
+  { label: "4,000-12,500 SQ. FT.", desc: "Generous plot sizes crafted for premium living.", icon: `${BASE}/icon-size.webp` },
 ];
 
 const AMENITIES = [
@@ -57,26 +57,43 @@ const GALLERY_IMAGES = [
   { src: `${BASE}/temple.webp`, alt: "Temple at Oscar Indore" },
 ];
 
-function HeroSection({ onBrochureClick }) {
-  const scrollTo = (id) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-  };
+const fallbackData = {
+  heroTitle: "Oscar / Oscar Billionaires",
+  heroTagline: "A Smart Upgrade To Premium Living",
+  heroLogo: `${BASE}/logo.webp`,
+  heroBg: `${BASE}/hero.webp`,
+  overviewParagraphs: [
+    "A Plotted development project, Oscar presents us with the first opportunity to share our definition of what a residential enclave should truly embody. A unique presentation of empirical lifestyle experience, architecturally the concept for the project reflects the traditional heritage living coupled with design influences that are current and appeals to the taste of modern generation.",
+    "Conveniently located on the Indore ByPass it is for the city-dwellers looking for quietude. The project's relative sparsity, ample open spaces and oneness with nature are a huge draw for a quick retreat. Here, peace and privacy are as much a function of design as demand."
+  ],
+  overviewHighlights: HIGHLIGHTS,
+  amenities: AMENITIES,
+  specifications: SPECS,
+  locationImage: `${BASE}/location.webp`,
+  locationMapEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d58871.16254808635!2d75.81428517089842!3d22.7295231!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3962fcbaf1440857%3A0xab5e3a8f6c4c5d5e!2sIndore%2C+Madhya+Pradesh!5e0!3m2!1sen!2sin!4v1",
+  locationDestinations: DESTINATIONS,
+  walkthroughVideoId: "HDft2VxWI9k",
+  galleryImages: GALLERY_IMAGES,
+  brochureUrl: `${BASE}/brochure.pdf`,
+  metaTitle: "Oscar / Oscar Billionaires — Premium Plotted Development in Indore | Ruchi Realty",
+  metaDescription: "Explore Oscar / Oscar Billionaires in Indore — a premium plotted development with prime location, world-class amenities, and plots from 4,000-12,500 sq. ft."
+};
 
+function HeroSection({ subpage, onBrochureClick }) {
   return (
     <header className="osc-hero" data-screen-label="Oscar Billionaires">
       <div className="osc-hero__bg">
-        <img src={`${BASE}/hero.webp`} alt="Oscar Billionaires Indore" />
+        <img src={subpage.heroBg} alt={subpage.heroTitle} />
       </div>
       <div className="osc-hero__overlay"></div>
       <div className="osc-hero__sig" aria-hidden="true"></div>
       <div className="rr-wrap osc-hero__wrap">
         <Reveal>
           <div className="osc-hero__content">
-            <img className="osc-hero__logo" src={`${BASE}/logo.webp`} alt="Oscar Logo" loading="eager" />
-            <h1 className="osc-hero__title">Oscar / Oscar Billionaires</h1>
+            {subpage.heroLogo && <img className="osc-hero__logo" src={subpage.heroLogo} alt="Oscar Logo" loading="eager" />}
+            <h1 className="osc-hero__title">{subpage.heroTitle}</h1>
             <p className="osc-hero__city">Indore</p>
-            <p className="osc-hero__tagline">A Smart Upgrade To Premium Living</p>
+            <p className="osc-hero__tagline">{subpage.heroTagline}</p>
             <div className="osc-hero__actions">
               <button className="submit-btn" onClick={() => { window.location.href = "/projects"; }}>
                 More Projects<span className="ar">→</span>
@@ -89,8 +106,9 @@ function HeroSection({ onBrochureClick }) {
         </Reveal>
       </div>
       <div className="osc-hero__chips">
-        {HIGHLIGHTS.map((h, i) => (
-          <Reveal key={h.label} delay={i * 80} className="osc-chip">
+        {(subpage.overviewHighlights || []).map((h, i) => (
+          <Reveal key={h.label || i} delay={i * 80} className="osc-chip">
+            {h.icon && <img src={h.icon} alt="" style={{ width: "24px", height: "24px", marginBottom: "4px", objectFit: "contain" }} />}
             <span className="osc-chip__label">{h.label}</span>
             <span className="osc-chip__desc">{h.desc}</span>
           </Reveal>
@@ -143,7 +161,7 @@ function StickyNav() {
   );
 }
 
-function OverviewSection() {
+function OverviewSection({ subpage }) {
   return (
     <section className="section-pad osc-section" id="overview">
       <div className="rr-wrap">
@@ -155,16 +173,13 @@ function OverviewSection() {
         </Reveal>
         <div className="osc-overview__grid">
           <Reveal className="osc-overview__text">
-            <p>
-              A Plotted development project, Oscar presents us with the first opportunity to share our definition of what a residential enclave should truly embody. A unique presentation of empirical lifestyle experience, architecturally the concept for the project reflects the traditional heritage living coupled with design influences that are current and appeals to the taste of modern generation.
-            </p>
-            <p>
-              Conveniently located on the Indore ByPass it is for the city-dwellers looking for quietude. The project&rsquo;s relative sparsity, ample open spaces and oneness with nature are a huge draw for a quick retreat. Here, peace and privacy are as much a function of design as demand.
-            </p>
+            {(subpage.overviewParagraphs || []).map((p, idx) => (
+              <p key={idx}>{p}</p>
+            ))}
           </Reveal>
           <div className="osc-overview__stats">
-            {HIGHLIGHTS.map((h, i) => (
-              <Reveal key={h.label} delay={i * 70} className="osc-stat-card">
+            {(subpage.overviewHighlights || []).map((h, i) => (
+              <Reveal key={h.label || i} delay={i * 70} className="osc-stat-card">
                 <span className="osc-stat-card__label">{h.label}</span>
                 <span className="osc-stat-card__desc">{h.desc}</span>
               </Reveal>
@@ -176,7 +191,7 @@ function OverviewSection() {
   );
 }
 
-function AmenitiesSection() {
+function AmenitiesSection({ subpage }) {
   return (
     <section className="section-pad osc-section osc-section--dark" id="amenities">
       <div className="rr-wrap">
@@ -192,8 +207,8 @@ function AmenitiesSection() {
           </div>
         </Reveal>
         <div className="osc-amenities__grid">
-          {AMENITIES.map((a, i) => (
-            <Reveal key={a.name} delay={i * 70} className="osc-amenity-card">
+          {(subpage.amenities || []).map((a, i) => (
+            <Reveal key={a.name || i} delay={i * 70} className="osc-amenity-card">
               <div className="osc-amenity-card__icon">
                 <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   {a.icon === "pool" && <>
@@ -211,6 +226,9 @@ function AmenitiesSection() {
                   {a.icon === "tennis" && <>
                     <circle cx="24" cy="24" r="18" /><path d="M24 6a18 18 0 0 0 0 36" /><path d="M6 24h36" />
                   </>}
+                  {!["pool", "gym", "hall", "badminton", "tennis"].includes(a.icon) && <>
+                    <circle cx="24" cy="24" r="18" /><path d="M12 24h24M24 12v24" />
+                  </>}
                 </svg>
               </div>
               <h4 className="osc-amenity-card__name">{a.name}</h4>
@@ -222,7 +240,7 @@ function AmenitiesSection() {
   );
 }
 
-function SpecificationsSection() {
+function SpecificationsSection({ subpage }) {
   return (
     <section className="section-pad osc-section" id="specifications">
       <div className="rr-wrap">
@@ -237,8 +255,8 @@ function SpecificationsSection() {
             <img src={`${BASE}/specification.webp`} alt="Oscar Specifications" loading="lazy" className="osc-specs__img" />
           </Reveal>
           <div className="osc-specs__cards">
-            {SPECS.map((s, i) => (
-              <Reveal key={s.title} delay={i * 70} className="osc-spec-card">
+            {(subpage.specifications || []).map((s, i) => (
+              <Reveal key={s.title || i} delay={i * 70} className="osc-spec-card">
                 <h4 className="osc-spec-card__title">{s.title}</h4>
                 <p className="osc-spec-card__desc">{s.desc}</p>
               </Reveal>
@@ -250,7 +268,7 @@ function SpecificationsSection() {
   );
 }
 
-function LocationSection() {
+function LocationSection({ subpage }) {
   return (
     <section className="section-pad osc-section osc-section--dark" id="location">
       <div className="rr-wrap">
@@ -264,26 +282,28 @@ function LocationSection() {
         </Reveal>
         <div className="osc-location__grid">
           <Reveal className="osc-location__visual">
-            <img src={`${BASE}/location.webp`} alt="Oscar Location Map" loading="lazy" className="osc-location__img" />
+            <img src={subpage.locationImage} alt="Oscar Location Map" loading="lazy" className="osc-location__img" />
           </Reveal>
           <Reveal delay={80} className="osc-location__info">
             <h3 className="osc-location__heading">Key Destinations</h3>
             <div className="osc-location__list">
-              {DESTINATIONS.map((d) => (
-                <div key={d.name} className="osc-location__item">
+              {(subpage.locationDestinations || []).map((d, i) => (
+                <div key={d.name || i} className="osc-location__item">
                   <span className="osc-location__name">{d.name}</span>
                   <span className="osc-location__dist">{d.dist}</span>
                 </div>
               ))}
             </div>
-            <div className="osc-location__map-wrap">
-              <iframe
-                title="Oscar Indore Location"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d58871.16254808635!2d75.81428517089842!3d22.7295231!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3962fcbaf1440857%3A0xab5e3a8f6c4c5d5e!2sIndore%2C+Madhya+Pradesh!5e0!3m2!1sen!2sin!4v1"
-                width="100%" height="240" style={{ border: 0 }}
-                allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
+            {subpage.locationMapEmbed && (
+              <div className="osc-location__map-wrap">
+                <iframe
+                  title="Oscar Indore Location"
+                  src={subpage.locationMapEmbed}
+                  width="100%" height="240" style={{ border: 0 }}
+                  allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"
+                />
+              </div>
+            )}
           </Reveal>
         </div>
       </div>
@@ -291,9 +311,9 @@ function LocationSection() {
   );
 }
 
-function WalkthroughSection() {
+function WalkthroughSection({ subpage }) {
   const [playing, setPlaying] = useState(false);
-  const videoId = "HDft2VxWI9k";
+  const videoId = subpage.walkthroughVideoId;
 
   return (
     <section className="section-pad osc-section" id="walkthrough">
@@ -311,7 +331,7 @@ function WalkthroughSection() {
         </Reveal>
         <Reveal delay={80} className="osc-walkthrough__video-wrap">
           <div className="osc-walkthrough__frame">
-            {playing ? (
+            {playing && videoId ? (
               <iframe
                 src={`https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1`}
                 title="Oscar Walkthrough Video"
@@ -320,7 +340,7 @@ function WalkthroughSection() {
               />
             ) : (
               <button type="button" className="osc-walkthrough__play-btn" onClick={() => setPlaying(true)} aria-label="Play walkthrough video">
-                <img src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`} alt="Walkthrough thumbnail" loading="lazy" />
+                <img src={videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : `https://img.youtube.com/vi/HDft2VxWI9k/maxresdefault.jpg`} alt="Walkthrough thumbnail" loading="lazy" />
                 <span className="osc-walkthrough__play-icon">
                   <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="10" />
@@ -336,8 +356,9 @@ function WalkthroughSection() {
   );
 }
 
-function GallerySection() {
+function GallerySection({ subpage }) {
   const [lightbox, setLightbox] = useState(null);
+  const images = subpage.galleryImages || [];
 
   useEffect(() => {
     if (lightbox !== null) {
@@ -360,8 +381,8 @@ function GallerySection() {
           </div>
         </Reveal>
         <div className="osc-gallery__grid">
-          {GALLERY_IMAGES.map((img, i) => (
-            <Reveal key={img.src} delay={(i % 4) * 60} className={`osc-gallery__item ${i === 0 ? "osc-gallery__item--wide" : ""}`}>
+          {images.map((img, i) => (
+            <Reveal key={img.src || i} delay={(i % 4) * 60} className={`osc-gallery__item ${i === 0 ? "osc-gallery__item--wide" : ""}`}>
               <button type="button" className="osc-gallery__btn" onClick={() => setLightbox(i)} aria-label={`View ${img.alt}`}>
                 <img src={img.src} alt={img.alt} loading="lazy" className="osc-gallery__img" />
                 <span className="osc-gallery__zoom">
@@ -375,23 +396,23 @@ function GallerySection() {
         </div>
       </div>
 
-      {lightbox !== null && (
+      {lightbox !== null && images[lightbox] && (
         <div className="osc-lightbox" onClick={() => setLightbox(null)}>
           <button type="button" className="osc-lightbox__close" onClick={() => setLightbox(null)} aria-label="Close gallery">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
-          <button type="button" className="osc-lightbox__arrow osc-lightbox__arrow--prev" onClick={(e) => { e.stopPropagation(); setLightbox((p) => (p === 0 ? GALLERY_IMAGES.length - 1 : p - 1)); }} aria-label="Previous">
+          <button type="button" className="osc-lightbox__arrow osc-lightbox__arrow--prev" onClick={(e) => { e.stopPropagation(); setLightbox((p) => (p === 0 ? images.length - 1 : p - 1)); }} aria-label="Previous">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
             </svg>
           </button>
           <div className="osc-lightbox__content" onClick={(e) => e.stopPropagation()}>
-            <img src={GALLERY_IMAGES[lightbox].src} alt={GALLERY_IMAGES[lightbox].alt} className="osc-lightbox__img" />
-            <p className="osc-lightbox__caption">{GALLERY_IMAGES[lightbox].alt}</p>
+            <img src={images[lightbox].src} alt={images[lightbox].alt} className="osc-lightbox__img" />
+            <p className="osc-lightbox__caption">{images[lightbox].alt}</p>
           </div>
-          <button type="button" className="osc-lightbox__arrow osc-lightbox__arrow--next" onClick={(e) => { e.stopPropagation(); setLightbox((p) => (p === GALLERY_IMAGES.length - 1 ? 0 : p + 1)); }} aria-label="Next">
+          <button type="button" className="osc-lightbox__arrow osc-lightbox__arrow--next" onClick={(e) => { e.stopPropagation(); setLightbox((p) => (p === images.length - 1 ? 0 : p + 1)); }} aria-label="Next">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
             </svg>
@@ -402,7 +423,7 @@ function GallerySection() {
   );
 }
 
-function BrochurePopup({ onClose }) {
+function BrochurePopup({ subpage, onClose }) {
   const [f, setF] = useState({ name: "", phone: "", email: "", project: "Oscar Billionaires — Indore", message: "" });
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
@@ -429,7 +450,7 @@ function BrochurePopup({ onClose }) {
     }
     setSending(false);
     setSent(true);
-    window.open(`${BASE}/brochure.pdf`, "_blank");
+    window.open(subpage.brochureUrl, "_blank");
   };
 
   return (
@@ -451,7 +472,7 @@ function BrochurePopup({ onClose }) {
         ) : (
           <>
             <h3>Download Brochure</h3>
-            <p>Enter your details to receive the Oscar &mdash; Indore brochure.</p>
+            <p>Enter your details to receive the brochure.</p>
             <div className="field"><label>Name</label>
               <input value={f.name} onChange={set("name")} placeholder="Your full name" /></div>
             <div className="field"><label>Phone</label>
@@ -463,7 +484,7 @@ function BrochurePopup({ onClose }) {
                 {PROJECT_OPTIONS.map((o) => <option key={o} value={o}>{o}</option>)}
               </select></div>
             <div className="field"><label>Message</label>
-              <textarea rows={3} value={f.message} onChange={set("message")} placeholder="I&rsquo;d like to know more about Oscar &mdash; Indore." /></div>
+              <textarea rows={3} value={f.message} onChange={set("message")} placeholder={`I'd like to know more about the project.`} /></div>
             <button className="submit-btn" onClick={submit} disabled={!valid || sending} style={{ width: "100%", justifyContent: "center", marginTop: "8px" }}>
               {sending ? "Sending..." : "Download Now"}<span className="ar">→</span>
             </button>
@@ -475,7 +496,7 @@ function BrochurePopup({ onClose }) {
   );
 }
 
-function CtaSection({ onBrochureClick }) {
+function CtaSection({ subpage, onBrochureClick }) {
   return (
     <section className="section-pad osc-section" id="brochure-cta">
       <div className="rr-wrap" style={{ textAlign: "center" }}>
@@ -484,7 +505,7 @@ function CtaSection({ onBrochureClick }) {
             Ready to own your dream plot?<br /><span className="rr-grad">Download the brochure.</span>
           </h2>
           <p style={{ fontSize: "var(--rr-fs-lead)", color: "rgba(35,31,32,0.62)", lineHeight: "1.6", margin: "0 auto 36px", maxWidth: "48ch" }}>
-            Get detailed information about Oscar &mdash; Indore including plot sizes, pricing, and payment plans.
+            Get detailed information about the project including plot sizes, pricing, and payment plans.
           </p>
           <button className="submit-btn" onClick={onBrochureClick} style={{ display: "inline-flex" }}>
             Download Brochure<span className="ar">→</span>
@@ -498,8 +519,56 @@ function CtaSection({ onBrochureClick }) {
 export default function OscarPage() {
   const [brochurePopup, setBrochurePopup] = useState(false);
   const [navHidden, setNavHidden] = useState(false);
+  const [subpage, setSubpage] = useState(fallbackData);
+
   const onContact = useCallback(() => {
     setBrochurePopup(true);
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    const fetchSubpage = async () => {
+      if (!window.RuchiBackend) return;
+      try {
+        const { data: projects } = await window.RuchiBackend.projects.getPublicProjects();
+        if (!active) return;
+        
+        // Find the project matching url "/oscar-indore" or title "Oscar Billionaires"
+        const project = (projects || []).find(
+          (p) => p.url === "/oscar-indore" || p.title === "Oscar Billionaires"
+        );
+        
+        if (project) {
+          const { data: sp } = await window.RuchiBackend.projectSubpages.getByProjectId(project.id);
+          if (!active) return;
+          if (sp) {
+            setSubpage({
+              heroTitle: sp.heroTitle || fallbackData.heroTitle,
+              heroTagline: sp.heroTagline || fallbackData.heroTagline,
+              heroLogo: sp.heroLogo || fallbackData.heroLogo,
+              heroBg: sp.heroBg || fallbackData.heroBg,
+              overviewParagraphs: sp.overviewParagraphs?.length ? sp.overviewParagraphs : fallbackData.overviewParagraphs,
+              overviewHighlights: sp.overviewHighlights?.length ? sp.overviewHighlights : fallbackData.overviewHighlights,
+              amenities: sp.amenities?.length ? sp.amenities : fallbackData.amenities,
+              specifications: sp.specifications?.length ? sp.specifications : fallbackData.specifications,
+              locationImage: sp.locationImage || fallbackData.locationImage,
+              locationMapEmbed: sp.locationMapEmbed || fallbackData.locationMapEmbed,
+              locationDestinations: sp.locationDestinations?.length ? sp.locationDestinations : fallbackData.locationDestinations,
+              walkthroughVideoId: sp.walkthroughVideoId || fallbackData.walkthroughVideoId,
+              galleryImages: sp.galleryImages?.length ? sp.galleryImages : fallbackData.galleryImages,
+              brochureUrl: sp.brochureUrl || fallbackData.brochureUrl,
+              metaTitle: sp.metaTitle || fallbackData.metaTitle,
+              metaDescription: sp.metaDescription || fallbackData.metaDescription,
+            });
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load project subpage:", err);
+      }
+    };
+    
+    fetchSubpage();
+    return () => { active = false; };
   }, []);
 
   useEffect(() => {
@@ -512,30 +581,39 @@ export default function OscarPage() {
   }, []);
 
   useEffect(() => {
-    document.title = "Oscar / Oscar Billionaires — Premium Plotted Development in Indore | Ruchi Realty";
-    const meta = document.createElement("meta");
-    meta.name = "description";
-    meta.content = "Explore Oscar / Oscar Billionaires in Indore — a premium plotted development with prime location, world-class amenities, and plots from 4,000-12,500 sq. ft.";
-    document.head.appendChild(meta);
-    return () => meta.remove();
-  }, []);
+    document.title = subpage.metaTitle || fallbackData.metaTitle;
+    let meta = document.querySelector('meta[name="description"]');
+    let created = false;
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "description";
+      created = true;
+    }
+    meta.content = subpage.metaDescription || fallbackData.metaDescription;
+    if (created) {
+      document.head.appendChild(meta);
+    }
+    return () => {
+      if (created) meta.remove();
+    };
+  }, [subpage.metaTitle, subpage.metaDescription]);
 
   return (
     <>
       <Nav onContact={onContact} hidden={navHidden} />
       <main>
-        <HeroSection onBrochureClick={() => setBrochurePopup(true)} />
+        <HeroSection subpage={subpage} onBrochureClick={() => setBrochurePopup(true)} />
         <StickyNav />
-        <OverviewSection />
-        <AmenitiesSection />
-        <SpecificationsSection />
-        <LocationSection />
-        <WalkthroughSection />
-        <GallerySection />
-        <CtaSection onBrochureClick={() => setBrochurePopup(true)} />
+        <OverviewSection subpage={subpage} />
+        <AmenitiesSection subpage={subpage} />
+        <SpecificationsSection subpage={subpage} />
+        <LocationSection subpage={subpage} />
+        <WalkthroughSection subpage={subpage} />
+        <GallerySection subpage={subpage} />
+        <CtaSection subpage={subpage} onBrochureClick={() => setBrochurePopup(true)} />
       </main>
       <Footer />
-      {brochurePopup && <BrochurePopup onClose={() => setBrochurePopup(false)} />}
+      {brochurePopup && <BrochurePopup subpage={subpage} onClose={() => setBrochurePopup(false)} />}
     </>
   );
 }
