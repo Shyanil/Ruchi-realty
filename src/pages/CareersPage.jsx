@@ -506,7 +506,7 @@ export default function CareersPage() {
 
   return (
     <div className="cr-page">
-      <Nav onContact={() => {
+      <Nav solid onContact={() => {
         if (window.smoothTo) window.smoothTo("#contact");
       }} />
 

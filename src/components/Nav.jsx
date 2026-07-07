@@ -152,7 +152,7 @@ function MegaPanel({ cfg, go }) {
   );
 }
 
-export default function Nav({ onContact, hidden }) {
+export default function Nav({ onContact, hidden, solid: forceSolid = false }) {
   const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(null);
   const [mobile, setMobile] = useState(false);
@@ -208,7 +208,7 @@ export default function Nav({ onContact, hidden }) {
     }
   };
 
-  const dark = !solid && !open;
+  const dark = !forceSolid && !solid && !open;
 
   const isActive = (label) => {
     const href = MEGA[label]?.href;
