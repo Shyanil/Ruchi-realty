@@ -15,11 +15,29 @@ import OneRajarhatPage from './pages/OneRajarhatPage'
 import GenericProjectPage from './pages/GenericProjectPage'
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    if (!hash) {
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    const targetId = decodeURIComponent(hash.slice(1));
+    let attempts = 0;
+    const scrollToHash = () => {
+      const el = document.getElementById(targetId);
+      if (el) {
+        const offset = 80;
+        window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - offset, behavior: "smooth" });
+        return;
+      }
+      attempts += 1;
+      if (attempts < 20) window.setTimeout(scrollToHash, 50);
+    };
+
+    window.setTimeout(scrollToHash, 0);
+  }, [pathname, hash]);
 
   return null;
 }
