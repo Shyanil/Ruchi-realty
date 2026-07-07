@@ -12,6 +12,12 @@ const ICONS = {
   size: "assets/projects/oscar/icon-size.webp",
 };
 
+function assetUrl(src = "") {
+  if (!src) return "";
+  if (/^(https?:|data:|blob:|\/)/.test(src)) return src;
+  return `/${src.replace(/^\.\//, "")}`;
+}
+
 const DEFAULT_HIGHLIGHTS = [
   { label: "Prime Location", desc: "Well-connected address with everyday conveniences close by.", icon: "location" },
   { label: "Lifestyle Amenities", desc: "Thoughtfully planned spaces for daily comfort and community living.", icon: "amenities" },
@@ -21,9 +27,9 @@ const DEFAULT_HIGHLIGHTS = [
 
 function highlightIconSrc(icon, index) {
   const key = String(icon || DEFAULT_HIGHLIGHTS[index]?.icon || "").toLowerCase();
-  if (ICONS[key]) return ICONS[key];
-  if (/^https?:\/\//.test(icon) || String(icon || "").includes("/")) return icon;
-  return ICONS[DEFAULT_HIGHLIGHTS[index]?.icon] || ICONS.location;
+  if (ICONS[key]) return assetUrl(ICONS[key]);
+  if (/^https?:\/\//.test(icon) || String(icon || "").includes("/")) return assetUrl(icon);
+  return assetUrl(ICONS[DEFAULT_HIGHLIGHTS[index]?.icon] || ICONS.location);
 }
 
 function normalizeProjectSubpage(project, sp) {
@@ -33,16 +39,16 @@ function normalizeProjectSubpage(project, sp) {
     title,
     location: project?.location || project?.city || "",
     tag: sp?.heroTagline || project?.tag || description,
-    heroBg: sp?.heroBg || project?.image_url || project?.img || "assets/projects/oscar-billionaires.webp",
+    heroBg: assetUrl(sp?.heroBg || project?.image_url || project?.img || "assets/projects/oscar-billionaires.webp"),
     overviewParagraphs: sp?.overviewParagraphs?.length ? sp.overviewParagraphs : [description],
     overviewHighlights: sp?.overviewHighlights?.length ? sp.overviewHighlights.slice(0, 4) : DEFAULT_HIGHLIGHTS,
     amenities: sp?.amenities || [],
     specifications: (sp?.specifications || []).filter((item) => !String(item.title || "").startsWith("__")),
-    locationImage: sp?.locationImage || "",
+    locationImage: assetUrl(sp?.locationImage || ""),
     locationMapEmbed: sp?.locationMapEmbed || "",
     locationDestinations: sp?.locationDestinations || [],
-    galleryImages: sp?.galleryImages || [],
-    brochureUrl: sp?.brochureUrl || "",
+    galleryImages: (sp?.galleryImages || []).map((img) => ({ ...img, src: assetUrl(img.src) })),
+    brochureUrl: assetUrl(sp?.brochureUrl || ""),
     metaTitle: sp?.metaTitle || `${title} | Ruchi Realty`,
     metaDescription: sp?.metaDescription || description,
   };
