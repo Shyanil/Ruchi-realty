@@ -104,14 +104,13 @@ export function ProjectsSection() {
     return () => { active = false; };
   }, []);
   const pool = items.length ? items : PROJECTS;
-  const featuredPool = pool.some((p) => p.featured) ? pool.filter((p) => p.featured) : pool;
-  const filterPool = (selCity, selStatus, source = pool) =>
-    source.filter((p) =>
+  const filterPool = (selCity, selStatus) =>
+    pool.filter((p) =>
       (selCity === "All" || cityOf(p) === selCity) &&
       (selStatus === "All" || p.status === selStatus)
     );
-  const shown = orderFeaturedProjects(filterPool(city, status, featuredPool)).slice(0, 4);
-  const filteredCount = filterPool(city, "All").length;
+  const shown = orderFeaturedProjects(filterPool(city, status)).slice(0, 3);
+  const filteredCount = filterPool(city, status).length;
   return (
     <section className="projects section-pad" id="projects">
       <div className="rr-wrap">
@@ -122,7 +121,7 @@ export function ProjectsSection() {
               <h2>Addresses we build,<br /><span className="rr-grad">and then stand by.</span></h2>
             </div>
             <p className="sec-head__lead">
-              Residences, commercial space, and townships across Kolkata, Indore, and Bhopal ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â each one carried from drawing to handover with the same care.
+              Residences, commercial space, and townships across Kolkata, Indore, and Bhopal - each one carried from drawing to handover with the same care.
             </p>
           </div>
         </Reveal>
