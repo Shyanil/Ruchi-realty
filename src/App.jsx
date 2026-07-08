@@ -12,6 +12,7 @@ import ActiveBusinessParkPage from './pages/ActiveBusinessParkPage'
 import ActiveAcresAngelicaPage from './pages/ActiveAcresAngelicaPage'
 import ActiveGreensPage from './pages/ActiveGreensPage'
 import OneRajarhatPage from './pages/OneRajarhatPage'
+import OnePrimeResidentialPage from './pages/OnePrimeResidentialPage'
 import GenericProjectPage from './pages/GenericProjectPage'
 
 function ScrollToTop() {
@@ -57,6 +58,8 @@ export default function App() {
       <Route path="/active-greens" element={<ActiveGreensPage />} />
       <Route path="/ActiveGreens.html" element={<ActiveGreensPage />} />
       <Route path="/one-rajarhat" element={<OneRajarhatPage />} />
+      <Route path="/one-prime-residential" element={<OnePrimeResidentialPage />} />
+      <Route path="/projects/one-prime-residential" element={<OnePrimeResidentialPage />} />
       <Route path="/OneRajarhat.html" element={<OneRajarhatPage />} />
       <Route path="/projects" element={<ProjectsPage />} />
 

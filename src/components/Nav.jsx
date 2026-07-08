@@ -225,7 +225,7 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false }) {
       <div className="nav__bar">
         <a className="nav__brand" href="#top" onClick={(e) => go(e, "#top")} aria-label="Ruchi Realty — home">
           <img className="nav__logo"
-            src={dark ? "assets/logo-h-white.png" : "assets/logo-h.png"}
+            src={dark ? "/assets/logo-h-white.png" : "/assets/logo-h.png"}
             alt="Ruchi Realty" />
         </a>
         <nav className="nav__links" aria-label="Primary">

@@ -1,5 +1,5 @@
 /* ============================================================
-   Ruchi Realty — Supabase backend bridge
+   Ruchi Realty ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Supabase backend bridge
    ============================================================ */
 (function () {
   const SUPABASE = window.RUCHI_SUPABASE_CONFIG || {};
@@ -46,14 +46,17 @@
 
   const authHeader = (requireAuth = false) => {
     const session = readSession();
-    return requireAuth && session?.access_token ? session.access_token : CONFIG.supabaseAnonKey;
+    if (requireAuth) return session?.access_token || "";
+    return CONFIG.supabaseAnonKey;
   };
 
   const request = async (path, options = {}) => {
     if (!configured) return disabled("Supabase is not configured. Check js/supabase-config.js.");
+    const token = options.token || authHeader(options.auth);
+    if (options.auth && !token) return { data: null, error: new Error("Please sign in again before uploading or saving admin content.") };
     const headers = {
       apikey: CONFIG.supabaseAnonKey,
-      Authorization: `Bearer ${options.token || authHeader(options.auth)}`,
+      Authorization: `Bearer ${token}`,
       ...(options.headers || {}),
     };
     if (options.json !== undefined) headers["Content-Type"] = "application/json";
@@ -71,6 +74,9 @@
       }
       return { data, error: null };
     } catch (error) {
+      if (/Failed to fetch/i.test(error?.message || "")) {
+        return { data: null, error: new Error("Could not connect to Supabase. Check internet connection, browser CORS/ad-blocking, and Supabase project availability.") };
+      }
       return { data: null, error };
     }
   };
@@ -94,6 +100,7 @@
     if (key.includes("oscar") && key.includes("billion")) return "/oscar-indore";
     if (key.includes("active greens") || key.includes("active green")) return "/active-greens";
     if (key.includes("one rajarhat")) return "/one-rajarhat";
+    if (key.includes("one prime")) return "/projects/one-prime-residential";
     if (key.includes("active business park")) return "/active-business-park";
     if (key.includes("active acres") || key.includes("angelica")) return "/active-acres-angelica";
     return "";
@@ -351,7 +358,7 @@
   };
 
   const normalizeCareerJob = (job = {}) => {
-    const dropdown_val = job.dropdown_val || `${job.title || ""} — ${job.dept || ""}`;
+    const dropdown_val = job.dropdown_val || `${job.title || ""} ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â ${job.dept || ""}`;
     return {
       id: job.id || uid(),
       slug: job.slug || "",
@@ -377,7 +384,7 @@
     dept: job.dept,
     type: job.type || "Full-time",
     desc: job.desc,
-    dropdown_val: job.dropdown_val || `${job.title} — ${job.dept}`,
+    dropdown_val: job.dropdown_val || `${job.title} ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â ${job.dept}`,
     overview: job.overview || "",
     responsibilities: Array.isArray(job.responsibilities) ? job.responsibilities : [],
     requirements: Array.isArray(job.requirements) ? job.requirements : [],
@@ -621,19 +628,56 @@
     },
   };
 
+  const adminFromSession = (session) => session?.user?.id
+    ? { email: session.user?.email, id: session.user.id, role: "admin" }
+    : null;
+
+  const assertAdminSession = async (session) => {
+    if (!session?.access_token || !session?.user?.id) {
+      return { data: null, error: new Error("No active Supabase session.") };
+    }
+
+    const profile = await rest("profiles", {
+      select: "id,role,email",
+      id: `eq.${session.user.id}`,
+      limit: "1",
+    }, { token: session.access_token });
+
+    if (profile.error) return profile;
+    const row = profile.data?.[0];
+    if (!row || row.role !== "admin") {
+      return { data: null, error: new Error("This Supabase user is signed in, but it does not have an admin profile. Add a public.profiles row with role = 'admin'.") };
+    }
+
+    return { data: { email: session.user?.email || row.email, id: session.user.id, role: row.role }, error: null };
+  };
+
   const auth = {
     currentUser() {
+      return adminFromSession(readSession());
+    },
+    async verifyCurrentUser() {
       const session = readSession();
-      return session ? { email: session.user?.email, id: session.user?.id, role: "admin" } : null;
+      if (!session) return { data: null, error: null };
+      const result = await assertAdminSession(session);
+      if (result.error) localStorage.removeItem(SESSION_KEY);
+      return result;
     },
     async login(email, password) {
+      const cleanEmail = String(email || "").trim();
       const result = await request("/auth/v1/token?grant_type=password", {
         method: "POST",
-        json: { email, password },
+        json: { email: cleanEmail, password },
       });
       if (result.error) return result;
+
       const session = saveSession(result.data);
-      return { data: { email: session.user?.email, id: session.user?.id, role: "admin" }, error: null };
+      const admin = await assertAdminSession(session);
+      if (admin.error) {
+        localStorage.removeItem(SESSION_KEY);
+        return admin;
+      }
+      return admin;
     },
     async logout() {
       const session = readSession();
@@ -645,7 +689,30 @@
     },
   };
 
+
+  const storageObjectFromPublicUrl = (url = "") => {
+    const text = String(url || "").trim();
+    const prefix = `${CONFIG.supabaseUrl}/storage/v1/object/public/`;
+    if (!text.startsWith(prefix)) return null;
+    const restPath = text.slice(prefix.length);
+    const slash = restPath.indexOf("/");
+    if (slash <= 0) return null;
+    return {
+      bucket: restPath.slice(0, slash),
+      path: decodeURIComponent(restPath.slice(slash + 1)),
+    };
+  };
+
+  const deleteImage = async (url) => {
+    const object = storageObjectFromPublicUrl(url);
+    if (!object) return { data: null, error: null };
+    return request(`/storage/v1/object/${object.bucket}/${encodeURI(object.path)}`, {
+      method: "DELETE",
+      auth: true,
+    });
+  };
   const uploadImage = async (file, bucket = "project-images") => {
+    if (!readSession()?.access_token) return Promise.reject(new Error("Please sign in again before uploading images."));
     if (!file) return Promise.reject(new Error("Please choose an image file."));
     const maxImageSize = 200 * 1024;
     const isWebp = file.type === "image/webp" && file.name.toLowerCase().endsWith(".webp");
@@ -663,7 +730,13 @@
       },
       body: file,
     });
-    if (result.error) throw result.error;
+    if (result.error) {
+      const message = result.error.message || "Image upload failed.";
+      if (/Could not connect|Failed to fetch/i.test(message)) throw new Error("Upload could not reach Supabase Storage. Check internet connection, CORS/ad-blocking, and that the Supabase project is active.");
+      if (/row-level security|permission|unauthorized|403/i.test(message)) throw new Error("Supabase blocked this upload. Confirm your user has public.profiles.role = admin and storage.objects upload policies are installed.");
+      if (/bucket|not found/i.test(message)) throw new Error(`Supabase storage bucket '${bucket}' is missing. Run the storage setup SQL first.`);
+      throw result.error;
+    }
     return `${CONFIG.supabaseUrl}/storage/v1/object/public/${bucket}/${path}`;
   };
 
@@ -680,6 +753,7 @@
     projectSubpages: projectSubpagesService,
     syncPublicProjects,
     uploadImage,
+    deleteImage,
     uploadResume,
   };
 

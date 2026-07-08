@@ -58,12 +58,12 @@ const IMG_PEOPLE = [
 const PROJECTS = [
   // --- Ongoing flagship + Ready to Move marquee (lead the default "All" view) ---
   { name: "One Victoria", city: "New Town · Kolkata", type: "Residential", status: "Ongoing", url: "https://ruchirealty.com/one-victoria/", img: "assets/projects/one-victoria.webp" },
+  { name: "One Prime Residential", city: "New Town, Kolkata", type: "Residential", status: "Ongoing", url: "/projects/one-prime-residential", img: "/projects/one-prime-residential/card.webp" },
   { name: "Oscar Billionaires", city: "Indore", type: "Township", status: "Ready to Move", url: "https://ruchirealty.com/oscar-indore/", img: "assets/projects/oscar-billionaires.webp" },
   { name: "Active Acres", city: "Kolkata", type: "Residential", status: "Ready to Move", url: "https://ruchirealty.com/active-acres/", img: "assets/projects/active-acres.webp" },
 
   // --- Ready to Move · Kolkata ---
   { name: "One Rajarhat", city: "Rajarhat · Kolkata", type: "Residential", status: "Ready to Move", url: "https://ruchirealty.com/one-rajarhat/", img: "assets/projects/one-rajarhat.webp" },
-  { name: "One Prime", city: "New Town · Kolkata", type: "Residential", status: "Ready to Move", url: "https://ruchirealty.com/one-prime-residential/", img: "assets/projects/one-prime.webp" },
   { name: "Active Business Park", city: "Kolkata", type: "Commercial", status: "Ready to Move", url: "/active-business-park", img: "assets/projects/active-business-park.webp" },
   { name: "Active Greens", city: "Kolkata", type: "Residential", status: "Ready to Move", url: "/active-greens", img: "assets/projects/active-green.webp" },
 
@@ -92,7 +92,7 @@ const PROJECT_OPTIONS = [
   "One Victoria — New Town, Kolkata",
   "One Rajarhat — Kolkata",
   "Active Acres — Kolkata",
-  "One Prime — New Town, Kolkata",
+  "One Prime Residential - New Town, Kolkata",
   "Oscar Billionaires — Indore",
   "Oscar Pride — Indore",
   "Oscar Fort — Indore",

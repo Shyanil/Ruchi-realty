@@ -1,0 +1,184 @@
+[
+  {
+    "id": "card",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/12/one_prime_business_menu_new.webp",
+    "downloadedLocalPath": "public/projects/one-prime-residential/card.webp",
+    "finalPublicPath": "/projects/one-prime-residential/card.webp",
+    "usageSection": "main image"
+  },
+  {
+    "id": "logo",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/one-prime.png",
+    "downloadedLocalPath": "public/projects/one-prime-residential/logo.webp",
+    "finalPublicPath": "/projects/one-prime-residential/logo.webp",
+    "usageSection": "logo"
+  },
+  {
+    "id": "brochure",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2026/03/One-Prime.pdf",
+    "downloadedLocalPath": "public/projects/one-prime-residential/brochure.pdf",
+    "finalPublicPath": "/projects/one-prime-residential/brochure.pdf",
+    "usageSection": "brochure"
+  },
+  {
+    "id": "gallery-1",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/image-1.jpg",
+    "downloadedLocalPath": "public/projects/one-prime-residential/gallery-1.webp",
+    "finalPublicPath": "/projects/one-prime-residential/gallery-1.webp",
+    "usageSection": "gallery"
+  },
+  {
+    "id": "gallery-2",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/image-2.jpg",
+    "downloadedLocalPath": "public/projects/one-prime-residential/gallery-2.webp",
+    "finalPublicPath": "/projects/one-prime-residential/gallery-2.webp",
+    "usageSection": "gallery"
+  },
+  {
+    "id": "gallery-3",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/image-3.jpg",
+    "downloadedLocalPath": "public/projects/one-prime-residential/gallery-3.webp",
+    "finalPublicPath": "/projects/one-prime-residential/gallery-3.webp",
+    "usageSection": "gallery"
+  },
+  {
+    "id": "gallery-4",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/image-4.jpg",
+    "downloadedLocalPath": "public/projects/one-prime-residential/gallery-4.webp",
+    "finalPublicPath": "/projects/one-prime-residential/gallery-4.webp",
+    "usageSection": "gallery"
+  },
+  {
+    "id": "gallery-5",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/image-5.jpg",
+    "downloadedLocalPath": "public/projects/one-prime-residential/gallery-5.webp",
+    "finalPublicPath": "/projects/one-prime-residential/gallery-5.webp",
+    "usageSection": "gallery"
+  },
+  {
+    "id": "location-map",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/One-prime-location.jpg",
+    "downloadedLocalPath": "public/projects/one-prime-residential/location-map.webp",
+    "finalPublicPath": "/projects/one-prime-residential/location-map.webp",
+    "usageSection": "location"
+  },
+  {
+    "id": "floor-plan-10th",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/Floor-Plan-1.png",
+    "downloadedLocalPath": "public/projects/one-prime-residential/floor-plan-10th.webp",
+    "finalPublicPath": "/projects/one-prime-residential/floor-plan-10th.webp",
+    "usageSection": "floor plan"
+  },
+  {
+    "id": "floor-plan-11th",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/Floor-Plan-2.png",
+    "downloadedLocalPath": "public/projects/one-prime-residential/floor-plan-11th.webp",
+    "finalPublicPath": "/projects/one-prime-residential/floor-plan-11th.webp",
+    "usageSection": "floor plan"
+  },
+  {
+    "id": "floor-plan-12th",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/Floor-Plan-3.png",
+    "downloadedLocalPath": "public/projects/one-prime-residential/floor-plan-12th.webp",
+    "finalPublicPath": "/projects/one-prime-residential/floor-plan-12th.webp",
+    "usageSection": "floor plan"
+  },
+  {
+    "id": "floor-plan-13th",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/Floor-Plan-4.png",
+    "downloadedLocalPath": "public/projects/one-prime-residential/floor-plan-13th.webp",
+    "finalPublicPath": "/projects/one-prime-residential/floor-plan-13th.webp",
+    "usageSection": "floor plan"
+  },
+  {
+    "id": "construction-2026-04",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2026/04/WhatsApp-Image-2026-04-03-at-11.23.07-AM-960x720.jpeg",
+    "downloadedLocalPath": "public/projects/one-prime-residential/construction-2026-04.webp",
+    "finalPublicPath": "/projects/one-prime-residential/construction-2026-04.webp",
+    "usageSection": "construction"
+  },
+  {
+    "id": "construction-2024-07",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2024/07/WhatsApp-Image-2024-07-01-at-3.45.49-PM-960x750.jpeg",
+    "downloadedLocalPath": "public/projects/one-prime-residential/construction-2024-07.webp",
+    "finalPublicPath": "/projects/one-prime-residential/construction-2024-07.webp",
+    "usageSection": "construction"
+  },
+  {
+    "id": "construction-1",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/11/one_primec1-960x750.jpeg",
+    "downloadedLocalPath": "public/projects/one-prime-residential/construction-1.webp",
+    "finalPublicPath": "/projects/one-prime-residential/construction-1.webp",
+    "usageSection": "construction"
+  },
+  {
+    "id": "construction-2",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/11/one_primec2-960x750.jpeg",
+    "downloadedLocalPath": "public/projects/one-prime-residential/construction-2.webp",
+    "finalPublicPath": "/projects/one-prime-residential/construction-2.webp",
+    "usageSection": "construction"
+  },
+  {
+    "id": "construction-3",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/11/one_primec3-960x750.jpeg",
+    "downloadedLocalPath": "public/projects/one-prime-residential/construction-3.webp",
+    "finalPublicPath": "/projects/one-prime-residential/construction-3.webp",
+    "usageSection": "construction"
+  },
+  {
+    "id": "construction-4",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/11/one_primec4-960x750.jpeg",
+    "downloadedLocalPath": "public/projects/one-prime-residential/construction-4.webp",
+    "finalPublicPath": "/projects/one-prime-residential/construction-4.webp",
+    "usageSection": "construction"
+  },
+  {
+    "id": "construction-5",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/11/one_primec5-960x750.jpeg",
+    "downloadedLocalPath": "public/projects/one-prime-residential/construction-5.webp",
+    "finalPublicPath": "/projects/one-prime-residential/construction-5.webp",
+    "usageSection": "construction"
+  },
+  {
+    "id": "construction-6",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/11/one_primec6-960x750.jpeg",
+    "downloadedLocalPath": "public/projects/one-prime-residential/construction-6.webp",
+    "finalPublicPath": "/projects/one-prime-residential/construction-6.webp",
+    "usageSection": "construction"
+  },
+  {
+    "id": "construction-7",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/11/one_primec7-960x750.jpeg",
+    "downloadedLocalPath": "public/projects/one-prime-residential/construction-7.webp",
+    "finalPublicPath": "/projects/one-prime-residential/construction-7.webp",
+    "usageSection": "construction"
+  },
+  {
+    "id": "construction-2022-11",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/11/WhatsApp-Image-2022-11-30-at-2.41.48-PM-960x750.jpeg",
+    "downloadedLocalPath": "public/projects/one-prime-residential/construction-2022-11.webp",
+    "finalPublicPath": "/projects/one-prime-residential/construction-2022-11.webp",
+    "usageSection": "construction"
+  },
+  {
+    "id": "construction-op-12",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/11/OP_12-960x632.png",
+    "downloadedLocalPath": "public/projects/one-prime-residential/construction-op-12.webp",
+    "finalPublicPath": "/projects/one-prime-residential/construction-op-12.webp",
+    "usageSection": "construction"
+  },
+  {
+    "id": "construction-op-17",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/11/OP_17-960x635.png",
+    "downloadedLocalPath": "public/projects/one-prime-residential/construction-op-17.webp",
+    "finalPublicPath": "/projects/one-prime-residential/construction-op-17.webp",
+    "usageSection": "construction"
+  },
+  {
+    "id": "construction-op-19",
+    "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/11/OP_19-960x625.png",
+    "downloadedLocalPath": "public/projects/one-prime-residential/construction-op-19.webp",
+    "finalPublicPath": "/projects/one-prime-residential/construction-op-19.webp",
+    "usageSection": "construction"
+  }
+]

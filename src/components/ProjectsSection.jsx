@@ -18,6 +18,33 @@ function statusCls(s) {
   return s === "Ready to Move" ? "status--ready" : s === "Ongoing" ? "status--ongoing" : "status--upcoming";
 }
 
+export function prioritizeOnePrime(items = []) {
+  return items;
+}
+
+function orderValue(value) {
+  return value === null || value === undefined || value === "" || Number.isNaN(Number(value)) ? 9999 : Number(value);
+}
+
+function orderFeaturedProjects(items = []) {
+  return [...items].sort((a, b) => {
+    const featureDiff = orderValue(a.feature_order) - orderValue(b.feature_order);
+    if (featureDiff !== 0) return featureDiff;
+    const sortDiff = orderValue(a.sort_order) - orderValue(b.sort_order);
+    if (sortDiff !== 0) return sortDiff;
+    return String(a.name || a.title || "").localeCompare(String(b.name || b.title || ""));
+  });
+}
+
+export function CardArrow() {
+  return (
+    <svg className="ptile__arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ marginLeft: 8, verticalAlign: "-3px" }}>
+      <path d="M5 12h14" />
+      <path d="m13 6 6 6-6 6" />
+    </svg>
+  );
+}
+
 export function ProjectTile({ p, i, n }) {
   const cls = p.status === "Ready to Move" ? "status--ready"
     : p.status === "Ongoing" ? "status--ongoing" : "status--upcoming";
@@ -38,7 +65,7 @@ export function ProjectTile({ p, i, n }) {
         <div className="ptile__body">
           <div className="ptile__loc">{p.city}</div>
           <div className="ptile__name">{p.name}</div>
-          <span className="ptile__view">View project<span className="ar">→</span></span>
+          <span className="ptile__view">View project<CardArrow /></span>
         </div>
       </Link>
     );
@@ -57,7 +84,7 @@ export function ProjectTile({ p, i, n }) {
       <div className="ptile__body">
         <div className="ptile__loc">{p.city}</div>
         <div className="ptile__name">{p.name}</div>
-        <span className="ptile__view">View project<span className="ar">→</span></span>
+        <span className="ptile__view">View project<CardArrow /></span>
       </div>
     </Tile>
   );
@@ -77,12 +104,13 @@ export function ProjectsSection() {
     return () => { active = false; };
   }, []);
   const pool = items.length ? items : PROJECTS;
-  const filterPool = (selCity, selStatus) =>
-    pool.filter((p) =>
+  const featuredPool = pool.some((p) => p.featured) ? pool.filter((p) => p.featured) : pool;
+  const filterPool = (selCity, selStatus, source = pool) =>
+    source.filter((p) =>
       (selCity === "All" || cityOf(p) === selCity) &&
       (selStatus === "All" || p.status === selStatus)
     );
-  const shown = filterPool(city, status).slice(0, 3);
+  const shown = orderFeaturedProjects(filterPool(city, status, featuredPool)).slice(0, 4);
   const filteredCount = filterPool(city, "All").length;
   return (
     <section className="projects section-pad" id="projects">
@@ -94,7 +122,7 @@ export function ProjectsSection() {
               <h2>Addresses we build,<br /><span className="rr-grad">and then stand by.</span></h2>
             </div>
             <p className="sec-head__lead">
-              Residences, commercial space, and townships across Kolkata, Indore, and Bhopal — each one carried from drawing to handover with the same care.
+              Residences, commercial space, and townships across Kolkata, Indore, and Bhopal ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â each one carried from drawing to handover with the same care.
             </p>
           </div>
         </Reveal>
@@ -142,7 +170,7 @@ export function ProjectsSection() {
           </span>
         </div>
         <Reveal className="projects__more">
-          <Link className="projects__allbtn" to="/projects">View All Projects<span className="ar">→</span></Link>
+          <Link className="projects__allbtn" to="/projects">View All Projects<CardArrow /></Link>
         </Reveal>
       </div>
     </section>

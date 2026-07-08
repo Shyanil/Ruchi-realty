@@ -115,6 +115,24 @@ const emptyJob = {
 };
 
 const JOB_TYPES = ["Full-time", "Part-time", "Contract", "Internship", "Future Opportunity"];
+const AMENITY_PRESETS = [
+  { name: "Swimming Pool", icon: "pool" },
+  { name: "Gymnasium", icon: "gym" },
+  { name: "Open Gym", icon: "gym" },
+  { name: "Clubhouse", icon: "hall" },
+  { name: "Multi-purpose Hall", icon: "hall" },
+  { name: "Library", icon: "library" },
+  { name: "Table Tennis", icon: "table-tennis" },
+  { name: "Badminton Court", icon: "badminton" },
+  { name: "Tennis Court", icon: "tennis" },
+  { name: "Yoga / Meditation Area", icon: "yoga" },
+  { name: "Jogging Track", icon: "jogging" },
+  { name: "Children Play Area", icon: "playground" },
+  { name: "Landscaped Garden", icon: "landscape" },
+  { name: "Car Parking", icon: "parking" },
+  { name: "Security", icon: "security" },
+  { name: "Power Backup", icon: "generator" },
+];
 
 const DEFAULT_OVERVIEW_HIGHLIGHT_ICONS = ["location", "amenities", "infrastructure", "size"];
 const DEFAULT_OVERVIEW_HIGHLIGHTS = [
@@ -142,6 +160,31 @@ function AdminField({ label, children }) {
   );
 }
 
+
+async function deleteUploadedAsset(url) {
+  if (!url || !window.RuchiBackend?.deleteImage) return;
+  const { error } = await window.RuchiBackend.deleteImage(url);
+  if (error) console.warn("Could not delete uploaded asset", error);
+}
+
+function collectProjectAssetUrls(project = {}, subpage = null) {
+  const urls = [project.image_url, project.img];
+  if (!subpage) return urls.filter(Boolean);
+  urls.push(subpage.heroLogo, subpage.heroBg, subpage.locationImage, subpage.brochureUrl);
+  (subpage.galleryImages || []).forEach((item) => urls.push(item.src));
+  (subpage.specifications || []).forEach((item) => {
+    if (item.title === "__floor_plans__") {
+      try { JSON.parse(item.desc || "[]").forEach((plan) => urls.push(plan.desc)); } catch {}
+    }
+    if (item.title === "__video_section__") {
+      try {
+        const video = JSON.parse(item.desc || "{}");
+        urls.push(video.thumbnailUrl);
+      } catch {}
+    }
+  });
+  return [...new Set(urls.filter(Boolean))];
+}
 function compressAndConvertToWebP(file, maxKb = 100) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -191,26 +234,53 @@ function compressAndConvertToWebP(file, maxKb = 100) {
   });
 }
 
+function uploadErrorMessage(error, label = "image") {
+  const text = String(error?.message || error || "");
+  if (/failed to fetch/i.test(text)) {
+    return "Upload could not reach Supabase Storage. Check your internet connection, make sure the storage bucket exists, and confirm this admin user has storage upload permission.";
+  }
+  if (/row-level security|violates row-level security|403|Unauthorized|permission/i.test(text)) {
+    return "Upload was blocked by Supabase permissions. Confirm the logged-in user has public.profiles.role = admin and the storage policy allows admin uploads.";
+  }
+  if (/bucket|not found/i.test(text)) {
+    return "Storage bucket is missing. Create the project-images and blog-images buckets from the setup SQL, then try again.";
+  }
+  return text || `Could not upload ${label}.`;
+}
+
+function uploadGuidance(label = "") {
+  const key = label.toLowerCase();
+  if (key.includes("logo")) return "Upload only the project/logo mark here. Do not upload a landscape, building, or brochure image in this field.";
+  if (key.includes("background") || key.includes("project image")) return "Upload a landscape/project visual here. Do not upload the logo in this field.";
+  if (key.includes("location")) return "Upload a map or location image here.";
+  if (key.includes("blog")) return "Upload the blog cover image here.";
+  return "Upload the matching image for this field.";
+}
+
 function AdminImageUpload({ label, value, onChange }) {
   const [error, setError] = useState("");
   const [compressing, setCompressing] = useState(false);
 
   const upload = async (event) => {
     const file = event.target.files?.[0];
+    event.target.value = "";
     if (!file) return;
     try {
       setError("");
       setCompressing(true);
-      
+
+      if (!file.type.startsWith("image/")) {
+        throw new Error(`${label} must be an image file.`);
+      }
       const webpBlob = await compressAndConvertToWebP(file, 100);
       const safeName = file.name.replace(/\.[^.]+$/, "") + ".webp";
       const webpFile = new File([webpBlob], safeName, { type: "image/webp" });
-      
+
       const bucket = label.toLowerCase().includes("blog") ? "blog-images" : "project-images";
       const url = await window.RuchiBackend.uploadImage(webpFile, bucket);
       onChange(url);
     } catch (uploadError) {
-      setError(uploadError.message || "Image upload failed.");
+      setError(uploadErrorMessage(uploadError, label));
     } finally {
       setCompressing(false);
     }
@@ -223,40 +293,55 @@ function AdminImageUpload({ label, value, onChange }) {
       </div>
       <div className="admin-uploader__body">
         <span className="admin-uploader__label">{label}</span>
+        <p className="admin-note" style={{ margin: "0 0 8px" }}>{uploadGuidance(label)}</p>
         <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "8px" }}>
           <label className="admin-upload-btn" style={{ opacity: compressing ? 0.6 : 1 }}>
             {compressing ? "Uploading..." : "Upload file"}
             <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp,image/*" onChange={upload} disabled={compressing} style={{ display: "none" }} />
           </label>
-          {value ? <button type="button" className="admin-text-btn" onClick={() => onChange("")} disabled={compressing}>Remove</button> : null}
+          {value ? <button type="button" className="admin-text-btn" onClick={async () => { setError(""); await deleteUploadedAsset(value); onChange(""); }} disabled={compressing}>Remove</button> : null}
         </div>
-        <input 
-          type="text" 
-          value={value || ""} 
-          onChange={(e) => onChange(e.target.value)} 
-          placeholder="Or paste local path / URL (e.g. assets/projects/...)" 
+        <input
+          type="text"
+          value={value || ""}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="Or paste local path / URL (e.g. assets/projects/...)"
           style={{ width: "100%", padding: "6px 10px", fontSize: "12px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }}
           disabled={compressing}
         />
-        {error ? <p className="admin-error">{error}</p> : <p className="admin-note" style={{ marginTop: "4px" }}>PNG, JPG, WebP auto-compressed to WebP under 100 KB.</p>}
+        {error ? <p className="admin-error">{error}</p> : <p className="admin-note" style={{ marginTop: "4px" }}>PNG, JPG, WebP auto-compressed to WebP under 100 KB before upload.</p>}
       </div>
     </div>
   );
 }
-
 function AdminLogin({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const submit = async (event) => {
     event.preventDefault();
-    const { data, error: loginError } = await window.RuchiBackend.auth.login(email, password);
-    if (loginError) {
-      setError(loginError.message);
+    if (loading) return;
+    if (!window.RuchiBackend?.auth?.login) {
+      setError("Admin backend is not loaded. Refresh the page and try again.");
       return;
     }
-    onLogin(data);
+
+    setError("");
+    setLoading(true);
+    try {
+      const { data, error: loginError } = await window.RuchiBackend.auth.login(email, password);
+      if (loginError) {
+        setError(loginError.message || "Sign in failed. Please check the Supabase user and admin profile.");
+        return;
+      }
+      onLogin(data);
+    } catch (loginError) {
+      setError(loginError.message || "Sign in failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -266,19 +351,18 @@ function AdminLogin({ onLogin }) {
         <p className="admin-kicker">Secure admin login</p>
         <h1>Admin panel</h1>
         <AdminField label="Email">
-          <input value={email} onChange={(event) => setEmail(event.target.value)} />
+          <input type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} />
         </AdminField>
         <AdminField label="Password">
-          <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+          <input type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} />
         </AdminField>
         {error ? <p className="admin-error">{error}</p> : null}
-        <button className="admin-primary" type="submit">Sign in</button>
-        <p className="admin-note">Use an approved staff account with an admin profile.</p>
+        <button className="admin-primary" type="submit" disabled={loading}>{loading ? "Signing in..." : "Sign in"}</button>
+        <p className="admin-note">Use a Supabase Auth user that also has role admin in public.profiles.</p>
       </form>
     </main>
   );
 }
-
 function DashboardAdmin({ onTab }) {
   const [projects, setProjects] = useState([]);
   const [leads, setLeads] = useState([]);
@@ -458,73 +542,90 @@ function AmenitiesListEditor({ items, onChange }) {
     newList[index] = { ...newList[index], [prop]: val };
     onChange(newList);
   };
-  const addRow = () => {
-    onChange([...list, { name: "", icon: "pool" }]);
+  const addPreset = (presetName) => {
+    const preset = AMENITY_PRESETS.find((item) => item.name === presetName);
+    if (!preset) return;
+    if (list.some((item) => item.name === preset.name)) return;
+    onChange([...list, { ...preset }]);
   };
-  const removeRow = (index) => {
-    onChange(list.filter((_, i) => i !== index));
-  };
-  const ICONS = ["pool", "gym", "library", "table-tennis", "hall", "badminton", "tennis", "other"];
+  const addCustom = () => onChange([...list, { name: "", icon: "other" }]);
+  const removeRow = (index) => onChange(list.filter((_, i) => i !== index));
+  const iconOptions = [...new Set([...AMENITY_PRESETS.map((item) => item.icon), "other"])]
 
   return (
     <div className="admin-list-editor" style={{ marginBottom: "18px", padding: "12px", border: "1px solid rgba(35, 31, 32, 0.15)", borderRadius: "6px" }}>
       <h4 style={{ margin: "0 0 10px 0", fontSize: "13px", fontWeight: "600", textTransform: "uppercase", opacity: 0.7 }}>Amenities</h4>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "12px" }}>
+        <select defaultValue="" onChange={(e) => { addPreset(e.target.value); e.target.value = ""; }} style={{ flex: "1 1 220px", minWidth: "220px", padding: "8px 10px", border: "1px solid rgba(35,31,32,.2)", borderRadius: "4px" }}>
+          <option value="" disabled>Select amenity to add</option>
+          {AMENITY_PRESETS.map((item) => <option key={item.name} value={item.name}>{item.name}</option>)}
+        </select>
+        <button type="button" className="admin-text-btn" onClick={addCustom}>Add custom amenity</button>
+      </div>
       {list.map((item, index) => (
         <div key={index} style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "8px", alignItems: "center" }}>
-          <input
-            type="text"
-            value={item.name || ""}
-            onChange={(e) => updateRow(index, "name", e.target.value)}
-            placeholder="Amenity Name"
-            style={{ flex: "2 1 180px", minWidth: "180px", padding: "6px 10px", fontSize: "13px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }}
-          />
-          <input
-            type="text"
-            list="amenity-icons"
-            value={item.icon || "pool"}
-            onChange={(e) => updateRow(index, "icon", e.target.value)}
-            placeholder="Icon (e.g. pool, assets/projects/...)"
-            style={{ flex: "1.5 1 140px", minWidth: "140px", padding: "6px 10px", fontSize: "13px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }}
-          />
-          <button
-            type="button"
-            onClick={() => removeRow(index)}
-            style={{
-              background: "#ff4d4d",
-              color: "#fff",
-              border: "none",
-              borderRadius: "4px",
-              padding: "6px 10px",
-              cursor: "pointer",
-              fontSize: "12px"
-            }}
-          >
-            Remove
-          </button>
+          <input type="text" value={item.name || ""} onChange={(e) => updateRow(index, "name", e.target.value)} placeholder="Amenity Name" style={{ flex: "2 1 180px", minWidth: "180px", padding: "6px 10px", fontSize: "13px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }} />
+          <select value={item.icon || "other"} onChange={(e) => updateRow(index, "icon", e.target.value)} style={{ flex: "1.5 1 140px", minWidth: "140px", padding: "6px 10px", fontSize: "13px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }}>
+            {iconOptions.map((ico) => <option key={ico} value={ico}>{ico}</option>)}
+          </select>
+          <button type="button" onClick={() => removeRow(index)} style={{ background: "#ff4d4d", color: "#fff", border: "none", borderRadius: "4px", padding: "6px 10px", cursor: "pointer", fontSize: "12px" }}>Remove</button>
         </div>
       ))}
-      <datalist id="amenity-icons">
-        {ICONS.map((ico) => <option key={ico} value={ico} />)}
-      </datalist>
-      <button
-        type="button"
-        onClick={addRow}
-        style={{
-          background: "var(--rr-indigo)",
-          color: "#fff",
-          border: "none",
-          borderRadius: "4px",
-          padding: "6px 12px",
-          cursor: "pointer",
-          fontSize: "12px"
-        }}
-      >
-        + Add Amenity
-      </button>
+      {!list.length ? <p className="admin-note">Choose amenities from the dropdown. The selected name and matching icon will be saved to the project subpage.</p> : null}
     </div>
   );
 }
+function FloorPlansEditor({ items, onChange }) {
+  const list = Array.isArray(items) ? items : [];
+  const updateRow = (index, prop, val) => {
+    const newList = [...list];
+    newList[index] = { ...newList[index], [prop]: val };
+    onChange(newList);
+  };
+  const addRow = () => onChange([...list, { title: "", desc: "", config: "" }]);
+  const removeRow = async (index) => {
+    await deleteUploadedAsset(list[index]?.desc);
+    onChange(list.filter((_, i) => i !== index));
+  };
+  const handleUpload = async (index, event) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    try {
+      const webpBlob = await compressAndConvertToWebP(file, 140);
+      const safeName = file.name.replace(/\.[^.]+$/, "") + ".webp";
+      const webpFile = new File([webpBlob], safeName, { type: "image/webp" });
+      const url = await window.RuchiBackend.uploadImage(webpFile, "project-images");
+      updateRow(index, "desc", url);
+    } catch (err) {
+      alert(uploadErrorMessage(err, "floor plan image"));
+    }
+  };
 
+  return (
+    <div className="admin-list-editor" style={{ marginBottom: "18px", padding: "12px", border: "1px solid rgba(35, 31, 32, 0.15)", borderRadius: "6px" }}>
+      <h4 style={{ margin: "0 0 10px 0", fontSize: "13px", fontWeight: "600", textTransform: "uppercase", opacity: 0.7 }}>Floor Plans</h4>
+      {list.map((item, index) => (
+        <div key={index} style={{ display: "flex", flexDirection: "column", gap: "8px", padding: "10px", background: "rgba(0,0,0,0.02)", border: "1px dashed rgba(35, 31, 32, 0.2)", borderRadius: "4px", marginBottom: "10px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", alignItems: "center" }}>
+            {item.desc ? <img src={item.desc} alt="" style={{ width: "56px", height: "56px", objectFit: "cover", borderRadius: "4px" }} /> : <div style={{ width: "56px", height: "56px", background: "#eee", borderRadius: "4px", display: "grid", placeItems: "center", fontSize: "10px", color: "#999" }}>No plan</div>}
+            <input type="text" value={item.title || ""} onChange={(e) => updateRow(index, "title", e.target.value)} placeholder="Plan title (e.g. 10th Floor Plan)" style={{ flex: "1 1 180px", minWidth: "180px", padding: "6px 10px", fontSize: "12px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }} />
+            <input type="text" value={item.config || ""} onChange={(e) => updateRow(index, "config", e.target.value)} placeholder="Config (e.g. 3 BHK)" style={{ flex: "0 1 140px", minWidth: "120px", padding: "6px 10px", fontSize: "12px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }} />
+            <button type="button" onClick={() => removeRow(index)} style={{ background: "#ff4d4d", color: "#fff", border: "none", borderRadius: "4px", padding: "6px 10px", cursor: "pointer", fontSize: "12px" }}>Remove</button>
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", alignItems: "center" }}>
+            <label className="admin-upload-btn" style={{ margin: 0, padding: "6px 12px", fontSize: "12px" }}>
+              Upload plan image
+              <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp,image/*" onChange={(e) => handleUpload(index, e)} style={{ display: "none" }} />
+            </label>
+            <input type="text" value={item.desc || ""} onChange={(e) => updateRow(index, "desc", e.target.value)} placeholder="Or paste floor plan image URL / local path" style={{ flex: "1 1 260px", minWidth: "220px", padding: "6px 10px", fontSize: "12px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }} />
+          </div>
+        </div>
+      ))}
+      <button type="button" onClick={addRow} style={{ background: "var(--rr-indigo)", color: "#fff", border: "none", borderRadius: "4px", padding: "6px 12px", cursor: "pointer", fontSize: "12px" }}>+ Add Floor Plan</button>
+    </div>
+  );
+}
 function GalleryListEditor({ items, onChange }) {
   const list = Array.isArray(items) ? items : [];
   const updateRow = (index, prop, val) => {
@@ -535,17 +636,23 @@ function GalleryListEditor({ items, onChange }) {
   const addRow = () => {
     onChange([...list, { src: "", alt: "" }]);
   };
-  const removeRow = (index) => {
+  const removeRow = async (index) => {
+    await deleteUploadedAsset(list[index]?.src);
     onChange(list.filter((_, i) => i !== index));
   };
   const handleUpload = async (index, event) => {
     const file = event.target.files?.[0];
+    event.target.value = "";
     if (!file) return;
     try {
-      const url = await window.RuchiBackend.uploadImage(file, "project-images");
+      if (!file.type.startsWith("image/")) throw new Error("Gallery item must be an image file.");
+      const webpBlob = await compressAndConvertToWebP(file, 140);
+      const safeName = file.name.replace(/\.[^.]+$/, "") + ".webp";
+      const webpFile = new File([webpBlob], safeName, { type: "image/webp" });
+      const url = await window.RuchiBackend.uploadImage(webpFile, "project-images");
       updateRow(index, "src", url);
     } catch (err) {
-      alert(err.message || "Upload failed");
+      alert(uploadErrorMessage(err, "gallery image"));
     }
   };
 
@@ -563,7 +670,7 @@ function GalleryListEditor({ items, onChange }) {
             <div style={{ flex: 1, display: "flex", gap: "8px", alignItems: "center" }}>
               <label className="admin-upload-btn" style={{ margin: 0, padding: "6px 12px", fontSize: "12px" }}>
                 Upload file
-                <input type="file" accept="image/webp,.webp" onChange={(e) => handleUpload(index, e)} style={{ display: "none" }} />
+                <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp,image/*" onChange={(e) => handleUpload(index, e)} style={{ display: "none" }} />
               </label>
               <input
                 type="text"
@@ -767,7 +874,7 @@ function ProjectsAdmin() {
         { title: "__company_logo_url__", desc: form.companyLogoUrl || "" },
         { title: "__gmb_google_icon_url__", desc: form.gmbGoogleIconUrl || "" },
         { title: "__gmb_star_icon_url__", desc: form.gmbStarIconUrl || "" },
-        { title: "__location_map_url__", desc: form.locationMapUrl || "" },
+        { title: "__location_map_url__", desc: "" },
         { title: "__floor_plans__", desc: JSON.stringify(form.floorPlans || []) },
         { title: "__video_section__", desc: JSON.stringify(form.videoSection || { enabled: false, videoUrl: "", thumbnailUrl: "" }) },
         { title: "__gmb_reviews__", desc: JSON.stringify(form.gmbReviews || { enabled: false, googleIconUrl: "", starIconUrl: "", reviews: [] }) },
@@ -776,7 +883,7 @@ function ProjectsAdmin() {
         project_id: projectId,
         heroTitle: form.heroTitle || form.title,
         heroTagline: form.heroTagline || form.tag || form.description,
-        heroLogo: form.heroLogo,
+        heroLogo: form.heroLogo || form.companyLogoUrl || "assets/logo-h.png",
         heroBg: form.heroBg || form.image_url,
         overviewParagraphs: paragraphs.length ? paragraphs : [form.description].filter(Boolean),
         overviewHighlights: withOverviewHighlightIcons(form.overviewHighlights),
@@ -787,7 +894,7 @@ function ProjectsAdmin() {
         locationDestinations: form.locationDestinations,
         walkthroughVideoId: form.walkthroughVideoId,
         galleryImages: form.galleryImages,
-        brochureUrl: form.brochureUrl,
+        brochureUrl: form.brochureUrl || "",
         metaTitle: form.metaTitle || `${form.title} | Ruchi Realty`,
         metaDescription: form.metaDescription || form.description,
         isPublished: form.isPublished !== false,
@@ -814,6 +921,9 @@ function ProjectsAdmin() {
   };
 
   const remove = async (id) => {
+    const project = projects.find((item) => item.id === id) || {};
+    const { data: sp } = await window.RuchiBackend.projectSubpages.getByProjectId(id);
+    await Promise.all(collectProjectAssetUrls(project, sp).map((url) => deleteUploadedAsset(url)));
     await window.RuchiBackend.projectSubpages.delete(id);
     await window.RuchiBackend.projects.deleteProject(id);
     if (editingId === id) reset();
@@ -888,21 +998,21 @@ function ProjectsAdmin() {
               {["Ready to Move", "Ongoing", "Upcoming", "New Launch", "For Sale"].map((item) => <option key={item}>{item}</option>)}
             </select>
           </AdminField>
-          <AdminField label="Sort order"><input type="number" value={form.sort_order} onChange={(event) => set("sort_order", event.target.value)} /></AdminField>
-          <AdminField label="Feature order"><input type="number" value={form.feature_order} onChange={(event) => set("feature_order", event.target.value)} /></AdminField>
+          <AdminField label="Sort order"><input inputMode="numeric" pattern="[0-9]*" value={form.sort_order ?? ""} onChange={(event) => set("sort_order", event.target.value.replace(/[^0-9]/g, ""))} placeholder="Projects page order, lower first" /></AdminField>
+          <AdminField label="Feature order"><input inputMode="numeric" pattern="[0-9]*" value={form.feature_order ?? ""} onChange={(event) => set("feature_order", event.target.value.replace(/[^0-9]/g, ""))} placeholder="Homepage featured order, lower first" /></AdminField>
         </div>
         <AdminImageUpload label="Project image" value={form.image_url} onChange={(value) => set("image_url", value)} />
         <AdminField label="Description"><textarea rows={4} value={form.description} onChange={(event) => set("description", event.target.value)} /></AdminField>
         <label className="admin-check"><input type="checkbox" checked={form.featured} onChange={(event) => set("featured", event.target.checked)} /> Featured project</label>
 
-        {editingId ? (<details className="admin-details" style={{ marginTop: "24px", width: "100%", maxWidth: "100%", overflow: "hidden" }}>
+        <details className="admin-details" open={!editingId} style={{ marginTop: "24px", width: "100%", maxWidth: "100%", overflow: "hidden" }}>
           <summary style={{ cursor: "pointer", fontWeight: 600, fontSize: "14px", userSelect: "none" }}>Project subpage content</summary>
           <div style={{ marginTop: "16px", width: "100%", maxWidth: "100%", overflowX: "hidden" }}>
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Hero</h3>
             <AdminField label="Hero title"><input value={form.heroTitle} onChange={(e) => set("heroTitle", e.target.value)} /></AdminField>
             <AdminField label="Hero tagline"><input value={form.heroTagline} onChange={(e) => set("heroTagline", e.target.value)} /></AdminField>
-            <AdminImageUpload label="Hero logo" value={form.heroLogo} onChange={(v) => set("heroLogo", v)} />
-            <AdminImageUpload label="Hero background" value={form.heroBg} onChange={(v) => set("heroBg", v)} />
+            <AdminImageUpload label="Hero logo only" value={form.heroLogo} onChange={(v) => set("heroLogo", v)} />
+            <AdminImageUpload label="Hero background landscape" value={form.heroBg} onChange={(v) => set("heroBg", v)} />
             <AdminField label="Hero mobile background URL"><input value={form.heroMobileUrl} onChange={(e) => set("heroMobileUrl", e.target.value)} /></AdminField>
             <AdminField label="Company logo URL"><input value={form.companyLogoUrl} onChange={(e) => set("companyLogoUrl", e.target.value)} /></AdminField>
 
@@ -915,12 +1025,10 @@ function ProjectsAdmin() {
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Specifications / Landscape</h3>
             <KeyValueListEditor title="Specifications / Landscape" items={form.specifications} onChange={(list) => set("specifications", list)} keyPlaceholder="Specification Title" valuePlaceholder="Specification Details" keyProp="title" valueProp="desc" />
-            <KeyValueListEditor title="Floor Plans" items={form.floorPlans} onChange={(list) => set("floorPlans", list)} keyPlaceholder="Plan Title (e.g., 3 BHK)" valuePlaceholder="Floor Plan Image URL" keyProp="title" valueProp="desc" />
+            <FloorPlansEditor items={form.floorPlans} onChange={(list) => set("floorPlans", list)} />
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Location</h3>
-            <AdminImageUpload label="Location image" value={form.locationImage} onChange={(v) => set("locationImage", v)} />
-            <AdminField label="Map embed URL"><input value={form.locationMapEmbed} onChange={(e) => set("locationMapEmbed", e.target.value)} /></AdminField>
-            <AdminField label="Static location map URL"><input value={form.locationMapUrl} onChange={(e) => set("locationMapUrl", e.target.value)} /></AdminField>
+            <AdminField label="Google Maps embed iframe URL"><input value={form.locationMapEmbed} onChange={(e) => set("locationMapEmbed", e.target.value)} placeholder="Paste Google Maps embed URL or iframe code only" /></AdminField>
             <KeyValueListEditor title="Location Destinations" items={form.locationDestinations} onChange={(list) => set("locationDestinations", list)} keyPlaceholder="Destination Name" valuePlaceholder="Distance (e.g. 5 km)" keyProp="name" valueProp="dist" />
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Walkthrough</h3>
@@ -961,7 +1069,7 @@ function ProjectsAdmin() {
             <GalleryListEditor items={form.galleryImages} onChange={(list) => set("galleryImages", list)} />
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Brochure</h3>
-            <AdminField label="Brochure URL"><input value={form.brochureUrl} onChange={(e) => set("brochureUrl", e.target.value)} /></AdminField>
+            <AdminField label="Brochure URL"><input value={form.brochureUrl} onChange={(e) => set("brochureUrl", e.target.value)} placeholder="Optional. Leave blank to keep the brochure CTA and send users to enquiry." /></AdminField>
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>SEO</h3>
             <AdminField label="Meta title"><input value={form.metaTitle} onChange={(e) => set("metaTitle", e.target.value)} /></AdminField>
@@ -971,7 +1079,7 @@ function ProjectsAdmin() {
               <input type="checkbox" checked={form.isPublished} onChange={(e) => set("isPublished", e.target.checked)} /> Subpage published
             </label>
           </div>
-        </details>) : null}
+        </details>
 
         <button className="admin-primary" type="submit">{editingId ? "Update project" : "Create project"}</button>
       </form>
@@ -1425,6 +1533,7 @@ function CareersAdmin() {
 
 export default function AdminPage() {
   const [user, setUser] = useState(() => window.RuchiBackend?.auth?.currentUser());
+  const [checkingSession, setCheckingSession] = useState(Boolean(window.RuchiBackend?.auth?.currentUser()));
   const [tab, setTab] = useState("dashboard");
   const tabs = useMemo(() => [
     ["dashboard", "Dashboard"],
@@ -1440,6 +1549,23 @@ export default function AdminPage() {
     return () => document.body.classList.remove("admin-body");
   }, []);
 
+  useEffect(() => {
+    let active = true;
+    const verify = async () => {
+      if (!window.RuchiBackend?.auth?.verifyCurrentUser) {
+        setCheckingSession(false);
+        return;
+      }
+      const { data, error } = await window.RuchiBackend.auth.verifyCurrentUser();
+      if (!active) return;
+      setUser(error ? null : data);
+      setCheckingSession(false);
+    };
+    verify();
+    return () => { active = false; };
+  }, []);
+
+  if (checkingSession) return <main className="admin-login"><div className="admin-login__box"><p className="admin-kicker">Secure admin login</p><h1>Checking session...</h1></div></main>;
   if (!user) return <AdminLogin onLogin={setUser} />;
 
   const logout = async () => {
