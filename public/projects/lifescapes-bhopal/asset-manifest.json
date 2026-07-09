@@ -1,0 +1,22 @@
+﻿{
+  "project": "Ruchi Lifescapes Bhopal",
+  "slug": "lifescapes-bhopal",
+  "assets": [
+    { "usage": "logo", "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/logo-bhopal.png", "localPath": "public/projects/lifescapes-bhopal/logo.png", "publicPath": "/projects/lifescapes-bhopal/logo.png" },
+    { "usage": "card, hero, location image", "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/ruchi_Bhopal.webp", "localPath": "public/projects/lifescapes-bhopal/card.webp", "publicPath": "/projects/lifescapes-bhopal/card.webp" },
+    { "usage": "gallery", "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/6.jpg", "localPath": "public/projects/lifescapes-bhopal/gallery-1.jpg", "publicPath": "/projects/lifescapes-bhopal/gallery-1.jpg" },
+    { "usage": "gallery", "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/1-3-2.jpg", "localPath": "public/projects/lifescapes-bhopal/gallery-2.jpg", "publicPath": "/projects/lifescapes-bhopal/gallery-2.jpg" },
+    { "usage": "gallery", "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/2-2-2.jpg", "localPath": "public/projects/lifescapes-bhopal/gallery-3.jpg", "publicPath": "/projects/lifescapes-bhopal/gallery-3.jpg" },
+    { "usage": "gallery", "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/3-2.jpg", "localPath": "public/projects/lifescapes-bhopal/gallery-4.jpg", "publicPath": "/projects/lifescapes-bhopal/gallery-4.jpg" },
+    { "usage": "gallery", "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/4-1.jpg", "localPath": "public/projects/lifescapes-bhopal/gallery-5.jpg", "publicPath": "/projects/lifescapes-bhopal/gallery-5.jpg" },
+    { "usage": "gallery", "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/5.jpg", "localPath": "public/projects/lifescapes-bhopal/gallery-6.jpg", "publicPath": "/projects/lifescapes-bhopal/gallery-6.jpg" },
+    { "usage": "floor plan", "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/0001.jpg", "localPath": "public/projects/lifescapes-bhopal/floor-master.jpg", "publicPath": "/projects/lifescapes-bhopal/floor-master.jpg" },
+    { "usage": "floor plan", "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/2.5bhk.jpg", "localPath": "public/projects/lifescapes-bhopal/floor-2-5-bhk.jpg", "publicPath": "/projects/lifescapes-bhopal/floor-2-5-bhk.jpg" },
+    { "usage": "floor plan", "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/3bhk.jpg", "localPath": "public/projects/lifescapes-bhopal/floor-3-bhk.jpg", "publicPath": "/projects/lifescapes-bhopal/floor-3-bhk.jpg" },
+    { "usage": "floor plan", "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/Orchid-row-house.jpg", "localPath": "public/projects/lifescapes-bhopal/floor-orchid-row-house.jpg", "publicPath": "/projects/lifescapes-bhopal/floor-orchid-row-house.jpg" },
+    { "usage": "floor plan", "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/orchid-2.jpg", "localPath": "public/projects/lifescapes-bhopal/floor-orchid-row-house-2.jpg", "publicPath": "/projects/lifescapes-bhopal/floor-orchid-row-house-2.jpg" },
+    { "usage": "floor plan", "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/Tulip-twin-bunglow.jpg", "localPath": "public/projects/lifescapes-bhopal/floor-tulip-twin-bungalow.jpg", "publicPath": "/projects/lifescapes-bhopal/floor-tulip-twin-bungalow.jpg" },
+    { "usage": "floor plan", "originalUrl": "https://ruchirealty.com/wp-content/uploads/2023/08/villa.jpg", "localPath": "public/projects/lifescapes-bhopal/floor-villa.jpg", "publicPath": "/projects/lifescapes-bhopal/floor-villa.jpg" },
+    { "usage": "brochure", "originalUrl": "https://ruchirealty.com/wp-content/uploads/2026/03/Ruchi-Lifescapes-Bhopal-Brochure.pdf", "localPath": "public/projects/lifescapes-bhopal/brochure.pdf", "publicPath": "/projects/lifescapes-bhopal/brochure.pdf" }
+  ]
+}

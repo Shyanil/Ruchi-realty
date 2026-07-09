@@ -82,7 +82,7 @@ export default function ProjectsPage() {
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>Our Projects</div>
               <h1 className="pp-head">Every address,<br /><span className="rr-grad">across three cities.</span></h1>
               <p className="pp-lead">
-                Residences, commercial space, and townships in Kolkata, Indore, and Bhopal Ã¢â‚¬â€ each one carried from drawing to handover with the same care.
+                Residences, commercial space, and townships in Kolkata, Indore, and Bhopal - each one carried from drawing to handover with the same care.
               </p>
             </Reveal>
           </div>
@@ -119,12 +119,12 @@ export default function ProjectsPage() {
               )}
             </div>
             {list.length === 0 ?
-              <p className="pp-empty">Nothing here yet Ã¢â‚¬â€ try a different city or status.</p> : null}
+              <p className="pp-empty">Nothing here yet - try a different city or status.</p> : null}
             <p className="pp-count">
               {list.length} {list.length === 1 ? "address" : "addresses"}
-              {type === "All" ? "" : ` Ã‚Â· ${type}s`}
+              {type === "All" ? "" : ` - ${type}s`}
               {city === "All" ? "" : ` in ${city}`}
-              {status === "All" ? "" : ` Ã‚Â· ${status}`}
+              {status === "All" ? "" : ` - ${status}`}
             </p>
           </div>
         </section>

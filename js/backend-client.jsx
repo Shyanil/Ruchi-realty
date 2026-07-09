@@ -95,13 +95,24 @@
 
   const toOrder = (value) => (value === "" || value == null || Number.isNaN(Number(value)) ? null : Number(value));
 
-  const projectRouteForTitle = (title = "") => {
+  const projectSlugForTitle = (title = "", location = "") => {
     const key = title.toLowerCase().trim();
+    const place = location.toLowerCase().trim();
+    if (key.includes("ruchi lifescapes") && place.includes("bhopal")) return "lifescapes-bhopal";
+    if (key.includes("oscar fort") && place.includes("indore")) return "oscar-fort-indore";
+    return slugify(`${title}-${location}`);
+  };
+
+  const projectRouteForTitle = (title = "", location = "") => {
+    const key = title.toLowerCase().trim();
+    const place = location.toLowerCase().trim();
     if (key.includes("oscar") && key.includes("billion")) return "/oscar-indore";
     if (key.includes("active greens") || key.includes("active green")) return "/active-greens";
     if (key.includes("one rajarhat")) return "/one-rajarhat";
     if (key.includes("one prime")) return "/projects/one-prime-residential";
     if (key.includes("active business park")) return "/active-business-park";
+    if (key.includes("ruchi lifescapes") && place.includes("bhopal")) return "/projects/lifescapes-bhopal";
+    if (key.includes("oscar fort") && place.includes("indore")) return "/projects/oscar-fort-indore";
     if (key.includes("active acres") || key.includes("angelica")) return "/active-acres-angelica";
     return "";
   };
@@ -109,7 +120,7 @@
   const normalizeProject = (project = {}) => {
     const title = project.title || project.name || "Untitled Project";
     const location = project.location || project.city || "";
-    const slug = project.slug || slugify(`${title}-${location}`);
+    const slug = project.slug || projectSlugForTitle(title, location);
     return {
       id: project.id || uid(),
       created_at: project.created_at || new Date().toISOString(),
@@ -127,7 +138,7 @@
       sort_order: toOrder(project.sort_order),
       feature_order: toOrder(project.feature_order),
       slug,
-      url: project.url || projectRouteForTitle(title) || `/projects/${slug}`,
+      url: project.url || projectRouteForTitle(title, location) || `/projects/${slug}`,
     };
   };
 

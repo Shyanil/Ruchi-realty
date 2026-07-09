@@ -75,11 +75,11 @@ const PROJECTS = [
   { name: "Anand Vihar", city: "Indore", type: "Township", status: "Ready to Move", url: "https://ruchirealty.com/anand-vihar/", img: "assets/projects/anand-vihar.webp" },
 
   // --- Ready to Move · Bhopal ---
-  { name: "Ruchi Lifescapes", city: "Bhopal", type: "Residential", status: "Ready to Move", url: "https://ruchirealty.com/lifescapes-bhopal/", img: "assets/projects/ruchi-lifescapes-bhopal.webp" },
+  { name: "Ruchi Lifescapes", city: "Bhopal, Madhya Pradesh", type: "Residential", status: "Ready to Move", url: "/projects/lifescapes-bhopal", img: "/projects/lifescapes-bhopal/card.webp" },
 
   // --- Ongoing ---
   { name: "Angelica", city: "Active Acres · Kolkata", type: "Residential", status: "Ongoing", url: "https://ruchirealty.com/angelica/", img: "assets/projects/active-acres.webp" },
-  { name: "Oscar Fort", city: "Indore", type: "Township", status: "Ongoing", url: "https://ruchirealty.com/oscar-fort/", img: "assets/projects/oscar-fort.webp" },
+  { name: "Oscar Fort", city: "Indore", type: "Township", status: "Ongoing", url: "/projects/oscar-fort-indore", img: "/projects/oscar-fort-indore/hero.jpg" },
   { name: "Oscar Sanctuary", city: "Indore", type: "Township", status: "Ongoing", img: "assets/projects/oscar-sanctuary.webp" },
 
   // --- Upcoming ---

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import ProjectsPage from './pages/ProjectsPage'
 import AboutPage from './pages/AboutPage'
@@ -62,6 +62,9 @@ export default function App() {
       <Route path="/projects/one-prime-residential" element={<OnePrimeResidentialPage />} />
       <Route path="/OneRajarhat.html" element={<OneRajarhatPage />} />
       <Route path="/projects" element={<ProjectsPage />} />
+      <Route path="/lifescapes-bhopal" element={<Navigate to="/projects/lifescapes-bhopal" replace />} />
+      <Route path="/oscar-fort" element={<Navigate to="/projects/oscar-fort-indore" replace />} />
+      <Route path="/oscar-fort-indore" element={<Navigate to="/projects/oscar-fort-indore" replace />} />
 
       <Route path="/Projects.html" element={<ProjectsPage />} />
       <Route path="/projects/:slug" element={<GenericProjectPage />} />

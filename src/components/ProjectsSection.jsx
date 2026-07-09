@@ -18,6 +18,18 @@ function statusCls(s) {
   return s === "Ready to Move" ? "status--ready" : s === "Ongoing" ? "status--ongoing" : "status--upcoming";
 }
 
+function projectUrl(p) {
+  const name = String(p?.name || p?.title || "").toLowerCase();
+  const city = String(p?.city || p?.location || "").toLowerCase();
+  if (name.includes("ruchi lifescapes") && city.includes("bhopal")) {
+    return "/projects/lifescapes-bhopal";
+  }
+  if (name.includes("oscar fort") && city.includes("indore")) {
+    return "/projects/oscar-fort-indore";
+  }
+  return p?.url || "";
+}
+
 export function prioritizeOnePrime(items = []) {
   return items;
 }
@@ -50,11 +62,12 @@ export function ProjectTile({ p, i, n }) {
     : p.status === "Ongoing" ? "status--ongoing" : "status--upcoming";
   const idx = String((n % 20) + 1).padStart(2, "0");
 
-  const isInternal = p.url && p.url.startsWith("/");
+  const url = projectUrl(p);
+  const isInternal = url && url.startsWith("/");
 
   if (isInternal) {
     return (
-      <Link className="ptile" data-cursor="View" to={p.url}>
+      <Link className="ptile" data-cursor="View" to={url}>
         <RImg src={p.img} alt={`${p.name}, ${p.city}`} className="ptile__media" grade />
         <div className="ptile__scrim"></div>
         <div className="ptile__idx">{idx}</div>
@@ -71,9 +84,9 @@ export function ProjectTile({ p, i, n }) {
     );
   }
 
-  const Tile = p.url ? "a" : "article";
+  const Tile = url ? "a" : "article";
   return (
-    <Tile className="ptile" data-cursor={p.url ? "View" : undefined} href={p.url || undefined}>
+    <Tile className="ptile" data-cursor={url ? "View" : undefined} href={url || undefined}>
       <RImg src={p.img} alt={`${p.name}, ${p.city}`} className="ptile__media" grade />
       <div className="ptile__scrim"></div>
       <div className="ptile__idx">{idx}</div>
