@@ -4,6 +4,8 @@ import Nav from "../components/Nav";
 import { Footer } from "../components/Footer";
 import { Reveal } from "../components/shared";
 import { CardArrow } from "../components/ProjectsSection";
+import { OSCAR_PRIDE_FALLBACK } from "../data/oscarPride";
+import { OSCAR_PALACE_FALLBACK } from "../data/oscarPalace";
 
 const ICONS = {
   location: "assets/projects/oscar/icon-location.webp",
@@ -13,6 +15,8 @@ const ICONS = {
 };
 
 const FALLBACK_SUBPAGES = {
+  "oscar-pride-indore": OSCAR_PRIDE_FALLBACK,
+  "oscar-palace": OSCAR_PALACE_FALLBACK,
   "oscar-fort-indore": {
     "heroTitle": "Oscar Fort",
     "heroTagline": "Your Journey To a Royal Living begins here",
@@ -429,10 +433,11 @@ function parseJson(value, fallback) {
 }
 
 function extractCustomSpecs(specifications = []) {
-  const custom = { specifications: [], floorPlans: [], videoSection: null, locationMapUrl: "" };
+  const custom = { specifications: [], floorPlans: [], videoSection: null, heroMedia: null, locationMapUrl: "" };
   specifications.forEach((item) => {
     if (item.title === "__floor_plans__") custom.floorPlans = parseJson(item.desc, []);
     else if (item.title === "__video_section__") custom.videoSection = parseJson(item.desc, null);
+    else if (item.title === "__hero_media__") custom.heroMedia = parseJson(item.desc, null);
     else if (item.title === "__location_map_url__") custom.locationMapUrl = item.desc || "";
     else if (!String(item.title || "").startsWith("__")) custom.specifications.push(item);
   });
@@ -477,6 +482,7 @@ function normalizeProjectSubpage(project, sp) {
     tag: sp?.heroTagline || project?.tag || description,
     heroLogo: assetUrl(sp?.heroLogo || ""),
     heroBg: assetUrl(sp?.heroBg || project?.image_url || project?.img || "assets/projects/oscar-billionaires.webp"),
+    heroMedia: custom.heroMedia,
     overviewParagraphs: sp?.overviewParagraphs?.length ? sp.overviewParagraphs : [description],
     overviewHighlights: sp?.overviewHighlights?.length ? sp.overviewHighlights.slice(0, 4) : DEFAULT_HIGHLIGHTS,
     amenities: Array.isArray(sp?.amenities) ? sp.amenities : [],
@@ -680,7 +686,7 @@ export default function GenericProjectPage() {
       <Nav onContact={onBrochure} />
       <main>
         <header className="osc-hero" data-screen-label={data.title}>
-          <div className="osc-hero__bg"><img src={data.heroBg} alt={data.title} /></div>
+          <div className="osc-hero__bg"><img src={data.heroBg} alt={data.title} />{data.heroMedia?.type === "youtube_video" && data.heroMedia.url ? <iframe className="osc-hero__video" src={data.heroMedia.url} title={`${data.title} hero video`} allow="autoplay; encrypted-media" tabIndex="-1" aria-hidden="true" /> : null}</div>
           <div className="osc-hero__overlay"></div>
           <div className="osc-hero__sig" aria-hidden="true"></div>
           <div className="rr-wrap osc-hero__wrap">

@@ -1,5 +1,5 @@
 /* ============================================================
-   Ruchi Realty — Homepage styles (v2 redesign)
+   Ruchi Realty â€” Homepage styles (v2 redesign)
    ============================================================ */
 
 * { box-sizing: border-box; }
@@ -240,7 +240,7 @@ body.nav-locked { overflow: hidden; }
 .wc-card h4 { font-size: 19px; font-weight: var(--rr-w-medium); margin: 26px 0 10px; letter-spacing: -0.01em; }
 .wc-card p { font-size: 14.5px; color: rgba(35,31,32,0.62); margin: 0; line-height: 1.58; }
 
-/* Why Choose — sticky intro + interactive ledger */
+/* Why Choose â€” sticky intro + interactive ledger */
 .why2 { display: grid; grid-template-columns: 0.82fr 1.18fr; gap: clamp(40px, 7vw, 110px); align-items: start; }
 .why2__aside { position: sticky; top: clamp(96px, 12vh, 130px); align-self: start; }
 .why2__head { font-size: clamp(30px, 4.2vw, 54px); font-weight: var(--rr-w-light); letter-spacing: var(--rr-ls-tight); line-height: 1.05; margin: 16px 0 20px; }
@@ -276,7 +276,7 @@ body.nav-locked { overflow: hidden; }
 }
 
 /* ============================================================ TESTIMONIALS (video gallery) */
-/* gradient accent — the footer's signature move, reused across headlines */
+/* gradient accent â€” the footer's signature move, reused across headlines */
 .rr-grad { background: var(--rr-gradient-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
 .testimonials { background: var(--rr-indigo-deep); color: var(--rr-paper); position: relative; overflow: hidden; }
@@ -1093,6 +1093,8 @@ body.nav-locked { overflow: hidden; }
   height: 100%;
   object-fit: cover;
 }
+
+.osc-hero__video { position: absolute; top: 50%; left: 50%; width: max(100vw, 177.78vh); height: max(100vh, 56.25vw); border: 0; transform: translate(-50%, -50%); pointer-events: none; }
 
 .osc-hero__overlay {
   position: absolute;

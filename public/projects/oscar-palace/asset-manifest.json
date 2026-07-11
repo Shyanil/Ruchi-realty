@@ -1,0 +1,237 @@
+{
+    "project":  "Oscar Palace",
+    "hero_video_url":  "https://www.youtube.com/embed/ukNbmZfb2tY?autoplay=1\u0026mute=1\u0026loop=1\u0026playlist=ukNbmZfb2tY\u0026controls=0\u0026showinfo=0\u0026rel=0\u0026modestbranding=1\u0026disablekb=1\u0026iv_load_policy=3\u0026cc_load_policy=0",
+    "walkthrough_video_url":  "https://www.youtube.com/watch?v=0E0QQrL3ZyE",
+    "brochure":  "VERIFY - no PDF URL found",
+    "map_embed":  "VERIFY - no iframe found",
+    "assets":  [
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-1.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-1.jpg",
+                       "public_url":  "/projects/oscar-palace/amenities-a-1.jpg",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-1.webp",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-1.webp",
+                       "public_url":  "/projects/oscar-palace/amenities-a-1.webp",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-10.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-10.jpg",
+                       "public_url":  "/projects/oscar-palace/amenities-a-10.jpg",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-10.webp",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-10.webp",
+                       "public_url":  "/projects/oscar-palace/amenities-a-10.webp",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-2.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-2.jpg",
+                       "public_url":  "/projects/oscar-palace/amenities-a-2.jpg",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-2.webp",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-2.webp",
+                       "public_url":  "/projects/oscar-palace/amenities-a-2.webp",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-3.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-3.jpg",
+                       "public_url":  "/projects/oscar-palace/amenities-a-3.jpg",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-3.webp",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-3.webp",
+                       "public_url":  "/projects/oscar-palace/amenities-a-3.webp",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-4.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-4.jpg",
+                       "public_url":  "/projects/oscar-palace/amenities-a-4.jpg",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-4.webp",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-4.webp",
+                       "public_url":  "/projects/oscar-palace/amenities-a-4.webp",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-5.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-5.jpg",
+                       "public_url":  "/projects/oscar-palace/amenities-a-5.jpg",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-5.webp",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-5.webp",
+                       "public_url":  "/projects/oscar-palace/amenities-a-5.webp",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-6.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-6.jpg",
+                       "public_url":  "/projects/oscar-palace/amenities-a-6.jpg",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-6.webp",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-6.webp",
+                       "public_url":  "/projects/oscar-palace/amenities-a-6.webp",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-7.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-7.jpg",
+                       "public_url":  "/projects/oscar-palace/amenities-a-7.jpg",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-7.webp",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-7.webp",
+                       "public_url":  "/projects/oscar-palace/amenities-a-7.webp",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-8.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-8.jpg",
+                       "public_url":  "/projects/oscar-palace/amenities-a-8.jpg",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-8.webp",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-8.webp",
+                       "public_url":  "/projects/oscar-palace/amenities-a-8.webp",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-9.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-9.jpg",
+                       "public_url":  "/projects/oscar-palace/amenities-a-9.jpg",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/amenities/a-9.webp",
+                       "downloaded_local_path":  "public/projects/oscar-palace/amenities-a-9.webp",
+                       "public_url":  "/projects/oscar-palace/amenities-a-9.webp",
+                       "usage_section":  "amenity"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/gallery/g-1.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-palace/gallery-g-1.jpg",
+                       "public_url":  "/projects/oscar-palace/gallery-g-1.jpg",
+                       "usage_section":  "gallery"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/gallery/g-1.webp",
+                       "downloaded_local_path":  "public/projects/oscar-palace/gallery-g-1.webp",
+                       "public_url":  "/projects/oscar-palace/gallery-g-1.webp",
+                       "usage_section":  "gallery"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/gallery/g-2.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-palace/gallery-g-2.jpg",
+                       "public_url":  "/projects/oscar-palace/gallery-g-2.jpg",
+                       "usage_section":  "gallery"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/gallery/g-2.webp",
+                       "downloaded_local_path":  "public/projects/oscar-palace/gallery-g-2.webp",
+                       "public_url":  "/projects/oscar-palace/gallery-g-2.webp",
+                       "usage_section":  "gallery"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/gallery/g-3.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-palace/gallery-g-3.jpg",
+                       "public_url":  "/projects/oscar-palace/gallery-g-3.jpg",
+                       "usage_section":  "gallery"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/gallery/g-3.webp",
+                       "downloaded_local_path":  "public/projects/oscar-palace/gallery-g-3.webp",
+                       "public_url":  "/projects/oscar-palace/gallery-g-3.webp",
+                       "usage_section":  "gallery"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/gallery/g-4.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-palace/gallery-g-4.jpg",
+                       "public_url":  "/projects/oscar-palace/gallery-g-4.jpg",
+                       "usage_section":  "gallery"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/gallery/g-4.webp",
+                       "downloaded_local_path":  "public/projects/oscar-palace/gallery-g-4.webp",
+                       "public_url":  "/projects/oscar-palace/gallery-g-4.webp",
+                       "usage_section":  "gallery"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/gallery/g-5.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-palace/gallery-g-5.jpg",
+                       "public_url":  "/projects/oscar-palace/gallery-g-5.jpg",
+                       "usage_section":  "gallery"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/gallery/g-5.webp",
+                       "downloaded_local_path":  "public/projects/oscar-palace/gallery-g-5.webp",
+                       "public_url":  "/projects/oscar-palace/gallery-g-5.webp",
+                       "usage_section":  "gallery"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/hero-sm.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-palace/hero-sm.jpg",
+                       "public_url":  "/projects/oscar-palace/hero-sm.jpg",
+                       "usage_section":  "hero fallback/card"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/hero.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-palace/hero.jpg",
+                       "public_url":  "/projects/oscar-palace/hero.jpg",
+                       "usage_section":  "hero fallback/card"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/loc-1.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-palace/loc-1.jpg",
+                       "public_url":  "/projects/oscar-palace/loc-1.jpg",
+                       "usage_section":  "location"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/logo.png",
+                       "downloaded_local_path":  "public/projects/oscar-palace/logo.png",
+                       "public_url":  "/projects/oscar-palace/logo.png",
+                       "usage_section":  "project logo"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/plan.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-palace/plan.jpg",
+                       "public_url":  "/projects/oscar-palace/plan.jpg",
+                       "usage_section":  "layout plan"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/plan.webp",
+                       "downloaded_local_path":  "public/projects/oscar-palace/plan.webp",
+                       "public_url":  "/projects/oscar-palace/plan.webp",
+                       "usage_section":  "layout plan"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/ruchi_logo.png",
+                       "downloaded_local_path":  "public/projects/oscar-palace/ruchi_logo.png",
+                       "public_url":  "/projects/oscar-palace/ruchi_logo.png",
+                       "usage_section":  "company/contact"
+                   },
+                   {
+                       "original_url":  "https://ruchirealty.com/oscar-palace/images/walkthrough-thumb.webp",
+                       "downloaded_local_path":  "public/projects/oscar-palace/walkthrough-thumb.webp",
+                       "public_url":  "/projects/oscar-palace/walkthrough-thumb.webp",
+                       "usage_section":  "walkthrough thumbnail"
+                   }
+               ]
+}

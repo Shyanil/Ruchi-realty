@@ -27,6 +27,8 @@ function projectUrl(p) {
   if (name.includes("oscar fort") && city.includes("indore")) {
     return "/projects/oscar-fort-indore";
   }
+  if (name.includes("oscar pride") && city.includes("indore")) return "/projects/oscar-pride-indore";
+  if (name.includes("oscar palace") && city.includes("indore")) return "/projects/oscar-palace";
   return p?.url || "";
 }
 

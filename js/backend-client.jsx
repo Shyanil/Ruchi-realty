@@ -1,5 +1,5 @@
 /* ============================================================
-   Ruchi Realty ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Supabase backend bridge
+   Ruchi Realty ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Supabase backend bridge
    ============================================================ */
 (function () {
   const SUPABASE = window.RUCHI_SUPABASE_CONFIG || {};
@@ -100,6 +100,8 @@
     const place = location.toLowerCase().trim();
     if (key.includes("ruchi lifescapes") && place.includes("bhopal")) return "lifescapes-bhopal";
     if (key.includes("oscar fort") && place.includes("indore")) return "oscar-fort-indore";
+    if (key.includes("oscar pride") && place.includes("indore")) return "oscar-pride-indore";
+    if (key.includes("oscar palace") && place.includes("indore")) return "oscar-palace";
     return slugify(`${title}-${location}`);
   };
 
@@ -113,6 +115,8 @@
     if (key.includes("active business park")) return "/active-business-park";
     if (key.includes("ruchi lifescapes") && place.includes("bhopal")) return "/projects/lifescapes-bhopal";
     if (key.includes("oscar fort") && place.includes("indore")) return "/projects/oscar-fort-indore";
+    if (key.includes("oscar pride") && place.includes("indore")) return "/projects/oscar-pride-indore";
+    if (key.includes("oscar palace") && place.includes("indore")) return "/projects/oscar-palace";
     if (key.includes("active acres") || key.includes("angelica")) return "/active-acres-angelica";
     return "";
   };
@@ -369,7 +373,7 @@
   };
 
   const normalizeCareerJob = (job = {}) => {
-    const dropdown_val = job.dropdown_val || `${job.title || ""} ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â ${job.dept || ""}`;
+    const dropdown_val = job.dropdown_val || `${job.title || ""} ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ${job.dept || ""}`;
     return {
       id: job.id || uid(),
       slug: job.slug || "",
@@ -395,7 +399,7 @@
     dept: job.dept,
     type: job.type || "Full-time",
     desc: job.desc,
-    dropdown_val: job.dropdown_val || `${job.title} ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â ${job.dept}`,
+    dropdown_val: job.dropdown_val || `${job.title} ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ${job.dept}`,
     overview: job.overview || "",
     responsibilities: Array.isArray(job.responsibilities) ? job.responsibilities : [],
     requirements: Array.isArray(job.requirements) ? job.requirements : [],
