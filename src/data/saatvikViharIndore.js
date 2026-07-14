@@ -1,0 +1,46 @@
+export const SAATVIK_VIHAR_INDORE_FALLBACK = {
+  heroTitle: "Saatvik Vihar",
+  heroTagline: "Saatvik Vihar - Value Of Comfort And Quality",
+  heroLogo: "/projects/saatvik-vihar-indore/project-logo.webp",
+  heroBg: "/projects/saatvik-vihar-indore/hero.webp",
+  overviewParagraphs: [
+    "Value Of Comfort And Quality",
+    "Saatvik Vihar is synonymous with trust, backed by years of experience in the real estate industry. With a deep understanding of the sector, we grasp the needs and aspirations of both the masses and classes, particularly in terms of affordable housing solutions.",
+    "Our philosophy revolves around offering comprehensive living solutions that prioritize quality, ambiance, and affordability. Unlike others, we refrain from making lofty promises that we cannot fulfill. Instead, we pride ourselves on delivering what we commit to, making realistic offers the hallmark of Saatvik Vihar.",
+    "We are dedicated to maintaining a single standard of excellence across all our projects, emphasizing the quality and integrity of our developments. Saatvik Vihar represents our humble endeavor to provide housing solutions accessible to people from all walks of life, ensuring customer satisfaction remains our primary focus.",
+    "In an overcrowded real estate market, Saatvik Vihar distinguishes itself by its unwavering commitment to serving the genuine needs of our clients. We are willing to go the extra mile to ensure the utmost satisfaction and well-being of our clientele, embodying the essence of “Saatvik” values in all our endeavors.",
+  ],
+  overviewHighlights: [
+    { label: "Amenities", desc: "Ample Amenities", icon: "amenities" },
+    { label: "Township", desc: "Premium Township", icon: "infrastructure" },
+    { label: "Plot Size", desc: "600 to 1800 Sq.ft", icon: "size" },
+    { label: "Location", desc: "Prime Location", icon: "location" },
+  ],
+  amenities: [
+    { name: "Senior Citizen Garden", icon: "garden" },
+    { name: "Gazebo", icon: "hall" },
+    { name: "Club House", icon: "hall" },
+    { name: "Gymnasium", icon: "gym" },
+  ],
+  specifications: [
+    { title: "Project Details", desc: "Opposite Sanchi Plant, A.B. Road, Mangliya Sadak, Indore (M.P.). Registration ID: P-SWR-19-2266. Phone: +91 731 401 8009. Email: emarketing@rrhlrealty.com" },
+    { title: "__hero_mobile_url__", desc: "/projects/saatvik-vihar-indore/hero-mobile.webp" },
+    { title: "__company_logo_url__", desc: "/projects/saatvik-vihar-indore/company-logo.webp" },
+    { title: "__video_section__", desc: JSON.stringify({ enabled: true, title: "Saatvik Vihar Walkthrough", videoUrl: "https://www.youtube.com/embed/_7QV5Mp_prE?controls=1&rel=0&autoplay=0&start=7", thumbnailUrl: "/projects/saatvik-vihar-indore/hero.webp" }) },
+  ],
+  locationImage: "/projects/saatvik-vihar-indore/location-map.webp",
+  locationMapEmbed: "",
+  locationDestinations: [
+    { name: "Project Address", dist: "Mangliya Sadak, Indore" },
+    { name: "Landmark", dist: "Opposite Sanchi Plant" },
+    { name: "Registration ID", dist: "P-SWR-19-2266" },
+  ],
+  walkthroughVideoId: "https://www.youtube.com/watch?v=_7QV5Mp_prE&t=7s",
+  galleryImages: Array.from({ length: 6 }, (_, index) => ({
+    src: `/projects/saatvik-vihar-indore/gallery-${index + 1}.webp`,
+    alt: `Saatvik Vihar Indore gallery image ${index + 1}`,
+  })),
+  brochureUrl: "",
+  metaTitle: "Saatvik Vihar Indore - Ruchi Realty",
+  metaDescription: "Saatvik Vihar Indore is a premium township at Mangliya Sadak, Indore, offering residential plots from 600 to 1800 sq.ft with ample amenities, quality living solutions, and a prime location opposite Sanchi Plant on A.B. Road.",
+};

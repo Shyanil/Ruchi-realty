@@ -1,0 +1,11 @@
+import fs from "node:fs";
+const items = JSON.parse(fs.readFileSync("public/assets/media/gallery/media-assets-manifest.json", "utf8"));
+const q = (value) => String(value ?? "").replaceAll("'", "''");
+console.log("-- Generated from the deduplicated local media manifest. Safe to rerun.\nbegin;");
+for (const item of items) {
+  console.log(`insert into public.media_assets(original_url,original_filename,file_path,public_url,thumbnail_url,mime_type,file_size,thumbnail_file_size,width,height,hash,usage_type) values ('${q(item.original_url)}','${q(item.original_filename)}','${q(item.local_path)}','${q(item.public_url)}','${q(item.thumbnail_url)}','image/webp',${item.file_size},${item.thumbnail_file_size},${item.width || "null"},${item.height || "null"},'${item.hash}','${item.usage_type}') on conflict(hash) do update set public_url=excluded.public_url,thumbnail_url=excluded.thumbnail_url,file_size=excluded.file_size;`);
+  if (item.usage_type !== "press_placeholder") console.log(`insert into public.media_gallery_items(title,slug,caption,alt_text,image_asset_id,category,album,display_order,is_featured,status) select '${q(item.title)}','${q(item.slug)}','${q(item.caption)}','${q(item.alt_text)}',id,'${q(item.category)}','${q(item.album)}',${items.indexOf(item)},${items.indexOf(item) === 0},'published' from public.media_assets where hash='${item.hash}' on conflict(slug) do update set image_asset_id=excluded.image_asset_id,category=excluded.category,album=excluded.album;`);
+}
+const featured = items.filter((item) => ["credai-event-2","credai-event-1","bhaskar-event-1","award-recognition-1","award-recognition-2"].includes(item.slug));
+for (const [index,item] of featured.entries()) { const type = item.category === "Awards" ? "Award" : item.slug.startsWith("bhaskar") ? "Media Coverage" : "Event"; console.log(`insert into public.media_events_awards(title,slug,item_type,excerpt,description,cover_asset_id,status,is_featured,display_order) select '${q(item.title)}','${q(item.slug)}','${type}','${q(item.caption)}','${q(item.caption)}',id,'published',${index === 0},${index} from public.media_assets where hash='${item.hash}' on conflict(slug) do update set cover_asset_id=excluded.cover_asset_id,item_type=excluded.item_type;`); }
+console.log("commit;");

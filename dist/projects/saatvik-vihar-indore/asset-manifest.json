@@ -1,0 +1,33 @@
+{
+  "project": "Saatvik Vihar Indore",
+  "slug": "saatvik-vihar-indore",
+  "format": "All downloaded raster assets were converted to optimized WebP for frontend use.",
+  "assets": [
+    { "original_url": "https://ruchirealty.com/saatvik-vihar-indore/images/hero.jpg", "downloaded_local_path": "public/projects/saatvik-vihar-indore/hero.webp", "final_public_path": "/projects/saatvik-vihar-indore/hero.webp", "usage_section": "hero/card" },
+    { "original_url": "https://ruchirealty.com/saatvik-vihar-indore/images/hero-sm.jpg", "downloaded_local_path": "public/projects/saatvik-vihar-indore/hero-mobile.webp", "final_public_path": "/projects/saatvik-vihar-indore/hero-mobile.webp", "usage_section": "mobile hero" },
+    { "original_url": "https://ruchirealty.com/saatvik-vihar-indore/images/logo.png", "downloaded_local_path": "public/projects/saatvik-vihar-indore/project-logo.webp", "final_public_path": "/projects/saatvik-vihar-indore/project-logo.webp", "usage_section": "project logo" },
+    { "original_url": "https://ruchirealty.com/saatvik-vihar-indore/images/ruchi_logo.png", "downloaded_local_path": "public/projects/saatvik-vihar-indore/company-logo.webp", "final_public_path": "/projects/saatvik-vihar-indore/company-logo.webp", "usage_section": "contact/company" },
+    { "original_url": "https://ruchirealty.com/saatvik-vihar-indore/images/amenities/a-1.png", "downloaded_local_path": "public/projects/saatvik-vihar-indore/amenity-1.webp", "final_public_path": "/projects/saatvik-vihar-indore/amenity-1.webp", "usage_section": "amenity reference; renderer uses existing garden icon" },
+    { "original_url": "https://ruchirealty.com/saatvik-vihar-indore/images/amenities/a-2.png", "downloaded_local_path": "public/projects/saatvik-vihar-indore/amenity-2.webp", "final_public_path": "/projects/saatvik-vihar-indore/amenity-2.webp", "usage_section": "amenity reference; renderer uses existing hall icon" },
+    { "original_url": "https://ruchirealty.com/saatvik-vihar-indore/images/amenities/a-3.png", "downloaded_local_path": "public/projects/saatvik-vihar-indore/amenity-3.webp", "final_public_path": "/projects/saatvik-vihar-indore/amenity-3.webp", "usage_section": "amenity reference; renderer uses existing hall icon" },
+    { "original_url": "https://ruchirealty.com/saatvik-vihar-indore/images/amenities/a-4.png", "downloaded_local_path": "public/projects/saatvik-vihar-indore/amenity-4.webp", "final_public_path": "/projects/saatvik-vihar-indore/amenity-4.webp", "usage_section": "amenity reference; renderer uses existing gym icon" },
+    { "original_url": "https://ruchirealty.com/saatvik-vihar-indore/images/gallery/g-1.jpg", "downloaded_local_path": "public/projects/saatvik-vihar-indore/gallery-1.webp", "final_public_path": "/projects/saatvik-vihar-indore/gallery-1.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/saatvik-vihar-indore/images/gallery/g-2.jpg", "downloaded_local_path": "public/projects/saatvik-vihar-indore/gallery-2.webp", "final_public_path": "/projects/saatvik-vihar-indore/gallery-2.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/saatvik-vihar-indore/images/gallery/g-3.jpg", "downloaded_local_path": "public/projects/saatvik-vihar-indore/gallery-3.webp", "final_public_path": "/projects/saatvik-vihar-indore/gallery-3.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/saatvik-vihar-indore/images/gallery/g-4.jpg", "downloaded_local_path": "public/projects/saatvik-vihar-indore/gallery-4.webp", "final_public_path": "/projects/saatvik-vihar-indore/gallery-4.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/saatvik-vihar-indore/images/gallery/g-5.jpg", "downloaded_local_path": "public/projects/saatvik-vihar-indore/gallery-5.webp", "final_public_path": "/projects/saatvik-vihar-indore/gallery-5.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/saatvik-vihar-indore/images/gallery/g-6.jpg", "downloaded_local_path": "public/projects/saatvik-vihar-indore/gallery-6.webp", "final_public_path": "/projects/saatvik-vihar-indore/gallery-6.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/saatvik-vihar-indore/images/loc-1.jpg", "downloaded_local_path": "public/projects/saatvik-vihar-indore/location-map.webp", "final_public_path": "/projects/saatvik-vihar-indore/location-map.webp", "usage_section": "location" }
+  ],
+  "walkthrough": {
+    "source_url": "https://www.youtube.com/embed/_7QV5Mp_prE?controls=1&rel=0&autoplay=0&start=7",
+    "video_id": "_7QV5Mp_prE",
+    "usage_section": "walkthrough; streamed directly and not downloaded"
+  },
+  "verify": [
+    "Brochure PDF is not exposed by the source HTML or its download buttons.",
+    "No layout or floor-plan section or source asset was found.",
+    "Google Maps iframe is not present; the downloaded location image is used.",
+    "Amenity image cards are not supported by the current shared renderer, so existing amenity icon keys are used."
+  ]
+}

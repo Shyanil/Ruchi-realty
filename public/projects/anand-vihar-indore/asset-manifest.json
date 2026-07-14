@@ -1,0 +1,32 @@
+{
+  "project": "Anand Vihar Indore",
+  "slug": "anand-vihar-indore",
+  "format": "All downloaded raster assets were converted to optimized WebP for frontend use.",
+  "assets": [
+    { "original_url": "https://anandviharindore.com/residential-plots/images/hero.jpg", "downloaded_local_path": "public/projects/anand-vihar-indore/hero.webp", "final_public_path": "/projects/anand-vihar-indore/hero.webp", "usage_section": "hero/card" },
+    { "original_url": "https://anandviharindore.com/residential-plots/images/hero-sm.jpg", "downloaded_local_path": "public/projects/anand-vihar-indore/hero-mobile.webp", "final_public_path": "/projects/anand-vihar-indore/hero-mobile.webp", "usage_section": "mobile hero" },
+    { "original_url": "https://anandviharindore.com/residential-plots/images/anand-vihar-logo.png", "downloaded_local_path": "public/projects/anand-vihar-indore/project-logo.webp", "final_public_path": "/projects/anand-vihar-indore/project-logo.webp", "usage_section": "project logo" },
+    { "original_url": "https://anandviharindore.com/residential-plots/images/amenities/a-1.jpg", "downloaded_local_path": "public/projects/anand-vihar-indore/amenity-1.webp", "final_public_path": "/projects/anand-vihar-indore/amenity-1.webp", "usage_section": "amenity reference; renderer uses existing jogging icon" },
+    { "original_url": "https://anandviharindore.com/residential-plots/images/amenities/a-2.jpg", "downloaded_local_path": "public/projects/anand-vihar-indore/amenity-2.webp", "final_public_path": "/projects/anand-vihar-indore/amenity-2.webp", "usage_section": "amenity reference; renderer uses existing security icon" },
+    { "original_url": "https://anandviharindore.com/residential-plots/images/amenities/a-3.jpg", "downloaded_local_path": "public/projects/anand-vihar-indore/amenity-3.webp", "final_public_path": "/projects/anand-vihar-indore/amenity-3.webp", "usage_section": "amenity reference; renderer uses existing pool icon" },
+    { "original_url": "https://anandviharindore.com/residential-plots/images/amenities/a-4.jpg", "downloaded_local_path": "public/projects/anand-vihar-indore/amenity-4.webp", "final_public_path": "/projects/anand-vihar-indore/amenity-4.webp", "usage_section": "amenity reference; renderer uses existing hall icon" },
+    { "original_url": "https://anandviharindore.com/residential-plots/images/amenities/a-5.jpg", "downloaded_local_path": "public/projects/anand-vihar-indore/amenity-5.webp", "final_public_path": "/projects/anand-vihar-indore/amenity-5.webp", "usage_section": "amenity reference; renderer uses existing playground icon" },
+    { "original_url": "https://anandviharindore.com/residential-plots/images/amenities/a-6.jpg", "downloaded_local_path": "public/projects/anand-vihar-indore/amenity-6.webp", "final_public_path": "/projects/anand-vihar-indore/amenity-6.webp", "usage_section": "amenity reference; renderer uses existing table-games icon" },
+    { "original_url": "https://anandviharindore.com/residential-plots/images/amenities/a-7.jpg", "downloaded_local_path": "public/projects/anand-vihar-indore/amenity-7.webp", "final_public_path": "/projects/anand-vihar-indore/amenity-7.webp", "usage_section": "amenity reference; renderer uses existing landscape icon" },
+    { "original_url": "https://anandviharindore.com/residential-plots/images/amenities/a-8.jpg", "downloaded_local_path": "public/projects/anand-vihar-indore/amenity-8.webp", "final_public_path": "/projects/anand-vihar-indore/amenity-8.webp", "usage_section": "amenity reference; renderer uses established infrastructure fallback" },
+    { "original_url": "https://anandviharindore.com/residential-plots/images/g-1.jpg", "downloaded_local_path": "public/projects/anand-vihar-indore/gallery-1.webp", "final_public_path": "/projects/anand-vihar-indore/gallery-1.webp", "usage_section": "gallery" },
+    { "original_url": "https://anandviharindore.com/residential-plots/images/g-2.jpg", "downloaded_local_path": "public/projects/anand-vihar-indore/gallery-2.webp", "final_public_path": "/projects/anand-vihar-indore/gallery-2.webp", "usage_section": "gallery" },
+    { "original_url": "https://anandviharindore.com/residential-plots/images/g-3.jpg", "downloaded_local_path": "public/projects/anand-vihar-indore/gallery-3.webp", "final_public_path": "/projects/anand-vihar-indore/gallery-3.webp", "usage_section": "gallery" },
+    { "original_url": "https://anandviharindore.com/residential-plots/images/g-4.jpg", "downloaded_local_path": "public/projects/anand-vihar-indore/gallery-4.webp", "final_public_path": "/projects/anand-vihar-indore/gallery-4.webp", "usage_section": "gallery" },
+    { "original_url": "https://anandviharindore.com/residential-plots/images/g-5.jpg", "downloaded_local_path": "public/projects/anand-vihar-indore/gallery-5.webp", "final_public_path": "/projects/anand-vihar-indore/gallery-5.webp", "usage_section": "gallery" },
+    { "original_url": "https://anandviharindore.com/residential-plots/images/g-6.jpg", "downloaded_local_path": "public/projects/anand-vihar-indore/gallery-6.webp", "final_public_path": "/projects/anand-vihar-indore/gallery-6.webp", "usage_section": "gallery" },
+    { "original_url": "https://anandviharindore.com/residential-plots/images/loc-1.jpg", "downloaded_local_path": "public/projects/anand-vihar-indore/location-map.webp", "final_public_path": "/projects/anand-vihar-indore/location-map.webp", "usage_section": "location" }
+  ],
+  "verify": [
+    "Brochure PDF is not exposed by the source HTML or its download buttons.",
+    "No layout or floor-plan section or source asset was found.",
+    "Walkthrough video URL is not present in the source HTML.",
+    "Google Maps embed is not present; the downloaded location map image is used.",
+    "Amenity image cards are not supported by the current shared renderer, so existing amenity icon keys are used."
+  ]
+}

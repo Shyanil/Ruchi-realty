@@ -1,0 +1,21 @@
+export const OSCAR_SANCTUARY_INDORE_FALLBACK = {
+  heroTitle: "Oscar Sanctuary",
+  heroTagline: "Residential project in Indore",
+  heroLogo: "",
+  heroBg: "/projects/oscar-sanctuary-indore/hero.webp",
+  overviewParagraphs: [],
+  overviewHighlights: [],
+  amenities: [],
+  specifications: [
+    { title: "__floor_plans__", desc: "[]" },
+    { title: "__video_section__", desc: JSON.stringify({ enabled: false, videoUrl: "", thumbnailUrl: "" }) },
+  ],
+  locationImage: "",
+  locationMapEmbed: "",
+  locationDestinations: [],
+  walkthroughVideoId: "",
+  galleryImages: [],
+  brochureUrl: "",
+  metaTitle: "",
+  metaDescription: "",
+};

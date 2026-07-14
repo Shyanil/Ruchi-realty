@@ -1,0 +1,2 @@
+import { Link } from "react-router-dom";
+export default function MediaHero({ eyebrow="Ruchi Realty Media", title, subtitle, breadcrumb }) { return <header className="media-hero"><div className="media-hero__mark" aria-hidden="true"/><div className="rr-wrap"><nav aria-label="Breadcrumb"><Link to="/">Home</Link><span>/</span><Link to="/media">Media</Link>{breadcrumb && <><span>/</span><span>{breadcrumb}</span></>}</nav><span className="eyebrow">{eyebrow}</span><h1>{title}</h1><p>{subtitle}</p></div></header>; }

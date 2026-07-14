@@ -22,8 +22,8 @@ const MEGA = {
         ["Upcoming", "Projects.html#status=Upcoming"],
         ["Townships", "Projects.html#type=Township"]] },
     ],
-    feat: { kind: "project", eyebrow: "Now unveiling", title: "One Victoria", sub: "New Town · Kolkata", href: "#projects",
-      img: "https://ruchirealty.com/wp-content/uploads/elementor/thumbs/VIEW_004_ELEVATION_VIEW_DAY_LIGHT_2024.01.18_HIRES-r0uodbh7ro4cp8vdge1k5i90cm98yiqhxmm5z0edmw.png" },
+    feat: { kind: "project", eyebrow: "Now unveiling", title: "One Victoria", sub: "New Town · Kolkata", href: "/projects/one-victoria-new-town",
+      img: "/projects/one-victoria-new-town/hero.webp" },
   },
   About: {
     href: "About.html",

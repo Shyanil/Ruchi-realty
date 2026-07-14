@@ -1,0 +1,16 @@
+{
+  "project": "Ruchi Enclave Indore",
+  "slug": "ruchi-enclave-indore",
+  "assets": [
+    {
+      "original_url": "https://ruchirealty.com/wp-content/uploads/elementor/thumbs/ruchi_enclave_slider-rkz7cpnktz2oztaikuupxb48vcwtfdlndpzfsefibs.webp",
+      "downloaded_local_path": "public/projects/ruchi-enclave-indore/hero.webp",
+      "final_public_path": "/projects/ruchi-enclave-indore/hero.webp",
+      "usage_section": "temporary hero/card"
+    }
+  ],
+  "verify": [
+    "Project business status requires confirmation; Upcoming is retained from the existing admin-compatible listing value.",
+    "Overview details, highlights, amenities, gallery, floor plans, location media, brochure and walkthrough are intentionally empty for later admin updates."
+  ]
+}

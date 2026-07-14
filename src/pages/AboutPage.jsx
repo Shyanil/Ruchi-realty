@@ -44,19 +44,19 @@ const ABOUT_PROJECTS = {
     { name: "Active Business Park", desc: "Commercial complex over 2.25 lakh sq. ft.", status: "Completed", img: "assets/projects/active-business-park.webp" },
     { name: "One Rajarhat", desc: "G+23 stories across 3 high-rise towers in New Town.", status: "Completed", img: "assets/projects/one-rajarhat.webp" },
     { name: "One Prime", desc: "Mixed-use apartments in New Town.", status: "Ongoing", img: "assets/projects/one-prime.webp" },
-    { name: "One Victoria", desc: "Ultra-luxury 3 & 4 BHK apartments at Action Area-1, New Town.", status: "Ongoing", img: "assets/projects/one-victoria.webp" }
+    { name: "One Victoria", desc: "An ongoing residential and retail development in Action Area 1, New Town, Kolkata.", status: "Ongoing", img: "/projects/one-victoria-new-town/hero.webp", url: "/projects/one-victoria-new-town" }
   ],
   Indore: [
     { name: "Oscar The Billionaire\u2019s Destination", desc: "Ultra-premium luxury plotted development on 24 acres.", status: "Completed", img: "assets/projects/oscar-billionaires.webp" },
     { name: "Oscar Pride", desc: "Ultra-premium luxury plots across 8 acres.", status: "Completed", img: "assets/projects/oscar-pride.webp" },
     { name: "Oscar Fort", desc: "A leisure-focused premium development designed around dreams and happiness.", status: "Completed", img: "assets/projects/oscar-fort.webp" },
     { name: "Oscar Palace", desc: "Royal-themed project designed like a majestic kingdom palace.", status: "Ongoing", img: "assets/projects/oscar-palace.webp" },
-    { name: "Oscar Sanctuary", desc: "Nature-themed residential plotting project with rivers, hills, gardens, and micro forests.", status: "Upcoming", img: "assets/projects/oscar-sanctuary.webp" },
-    { name: "Ruchi Lifescapes", desc: "Luxury plots spanning 73 acres with 700 plots.", status: "Completed", img: "assets/projects/ruchi-lifescapes-indore.webp" },
-    { name: "Ruchi Enclave", desc: "Residential plotting project near Bypass Road.", status: "Completed", img: "assets/projects/ruchi-enclave.webp" },
-    { name: "Saatvik Vihar", desc: "Luxury plots across 31 acres with 698 plots.", status: "Completed", img: "assets/projects/saatvik-vihar.webp" },
-    { name: "Saatvik Green", desc: "Premium plotting project across 28 acres.", status: "Ongoing", img: "assets/projects/saatvik-green.webp" },
-    { name: "Anand Vihar", desc: "Premium plotting project with 900 plots.", status: "Completed", img: "assets/projects/anand-vihar.webp" }
+    { name: "Oscar Sanctuary", desc: "Oscar Sanctuary is a residential project in Indore. Full project details can be updated from the admin panel.", status: "Ongoing", img: "/projects/oscar-sanctuary-indore/hero.webp", url: "/projects/oscar-sanctuary-indore" },
+    { name: "Ruchi Lifescapes", desc: "Luxury plots spanning 73 acres with 700 plots.", status: "Completed", img: "/projects/ruchi-lifescapes-indore-project/hero.webp", url: "/projects/ruchi-lifescapes-indore-project" },
+    { name: "Ruchi Enclave", desc: "Ruchi Enclave is a residential project in Indore. Full project details can be updated from the admin panel.", status: "Upcoming", img: "/projects/ruchi-enclave-indore/hero.webp", url: "/projects/ruchi-enclave-indore" },
+    { name: "Saatvik Vihar", desc: "Luxury plots across 31 acres with 698 plots.", status: "Completed", img: "/projects/saatvik-vihar-indore/hero.webp", url: "/projects/saatvik-vihar-indore" },
+    { name: "Saatvik Green", desc: "Premium plotting project across 28 acres.", status: "Ongoing", img: "/projects/saatvikgreen-indore/hero.webp", url: "/projects/saatvikgreen-indore" },
+    { name: "Anand Vihar", desc: "Premium plotting project with 900 plots.", status: "Completed", img: "/projects/anand-vihar-indore/hero.webp", url: "/projects/anand-vihar-indore" }
   ],
   Bhopal: [
     { name: "Ruchi Lifescapes", desc: "Mixed-use township on Hoshangabad Road with plots, duplexes, villas, and apartments across 85 acres.", status: "Completed", img: "assets/projects/ruchi-lifescapes-bhopal.webp" }
@@ -348,7 +348,7 @@ function AboutProjects() {
                 <div
                   key={`${p.name}-${i}`}
                   className={`ab-proj-tile ab-proj-tile--flat ${isActive ? "is-active" : ""}`}
-                  onClick={() => setActiveIdx(i)}>
+                  onClick={() => p.url ? window.location.assign(p.url) : setActiveIdx(i)}>
                   <div className="ab-proj-tile__media">
                     <RImg src={p.img} alt={p.name} className="ab-proj-tile__img" />
                     <div className="ab-proj-tile__shade"></div>
@@ -362,7 +362,7 @@ function AboutProjects() {
                     <div className="ab-proj-tile__content">
                       <h3 className="ab-proj-tile__name">{p.name}</h3>
                       <p className="ab-proj-tile__desc">{p.desc}</p>
-                      <span className="ab-proj-tile__view">Select address <span className="ar">\u2192</span></span>
+                      <span className="ab-proj-tile__view">{p.url ? "View project" : "Select address"} <span className="ar">\u2192</span></span>
                     </div>
                   </div>
                 </div>

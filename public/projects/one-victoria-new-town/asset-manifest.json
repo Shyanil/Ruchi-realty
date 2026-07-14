@@ -1,0 +1,33 @@
+{
+  "project": "One Victoria",
+  "slug": "one-victoria-new-town",
+  "assets": [
+    { "original_url": "https://ruchirealty.com/one-victoria-new-town/images/hero.webp", "local_path": "public/projects/one-victoria-new-town/hero.webp", "final_path": "/projects/one-victoria-new-town/hero.webp", "usage": "hero/card" },
+    { "original_url": "https://ruchirealty.com/one-victoria-new-town/images/hero-sm.webp", "local_path": "public/projects/one-victoria-new-town/hero-mobile.webp", "final_path": "/projects/one-victoria-new-town/hero-mobile.webp", "usage": "mobile hero" },
+    { "original_url": "https://ruchirealty.com/one-victoria-new-town/images/victoria_logo.png", "local_path": "public/projects/one-victoria-new-town/project-logo.png", "final_path": "/projects/one-victoria-new-town/project-logo.png", "usage": "project logo" },
+    { "original_url": "https://ruchirealty.com/one-victoria-new-town/images/ruchi_logo.png", "local_path": "public/projects/one-victoria-new-town/company-logo.png", "final_path": "/projects/one-victoria-new-town/company-logo.png", "usage": "company/contact" },
+    { "original_url": "https://ruchirealty.com/one-victoria-new-town/images/fav_logo.png", "local_path": "public/projects/one-victoria-new-town/favicon.png", "final_path": "/projects/one-victoria-new-town/favicon.png", "usage": "source identity asset" },
+    { "original_url": "https://ruchirealty.com/one-victoria-new-town/images/plans/mg-1.jpg", "local_path": "public/projects/one-victoria-new-town/plans/typical-floor-plan.jpg", "final_path": "/projects/one-victoria-new-town/plans/typical-floor-plan.jpg", "usage": "floor plan - Typical Floor Plan" },
+    { "original_url": "https://ruchirealty.com/one-victoria-new-town/images/plans/mg-2.jpg", "local_path": "public/projects/one-victoria-new-town/plans/star-gazing-deck.jpg", "final_path": "/projects/one-victoria-new-town/plans/star-gazing-deck.jpg", "usage": "floor plan - Star Gazing Deck" },
+    { "original_url": "https://ruchirealty.com/one-victoria-new-town/images/plans/mg-3.jpg", "local_path": "public/projects/one-victoria-new-town/plans/podium-plan.jpg", "final_path": "/projects/one-victoria-new-town/plans/podium-plan.jpg", "usage": "floor plan - Podium Plan" },
+    { "original_url": "https://ruchirealty.com/one-victoria-new-town/images/g-1.webp", "local_path": "public/projects/one-victoria-new-town/gallery/gallery-1.webp", "final_path": "/projects/one-victoria-new-town/gallery/gallery-1.webp", "usage": "gallery" },
+    { "original_url": "https://ruchirealty.com/one-victoria-new-town/images/g-2.webp", "local_path": "public/projects/one-victoria-new-town/gallery/gallery-2.webp", "final_path": "/projects/one-victoria-new-town/gallery/gallery-2.webp", "usage": "gallery" },
+    { "original_url": "https://ruchirealty.com/one-victoria-new-town/images/g-3.webp", "local_path": "public/projects/one-victoria-new-town/gallery/gallery-3.webp", "final_path": "/projects/one-victoria-new-town/gallery/gallery-3.webp", "usage": "gallery" },
+    { "original_url": "https://ruchirealty.com/one-victoria-new-town/images/g-4.webp", "local_path": "public/projects/one-victoria-new-town/gallery/gallery-4.webp", "final_path": "/projects/one-victoria-new-town/gallery/gallery-4.webp", "usage": "gallery" },
+    { "original_url": "https://ruchirealty.com/one-victoria-new-town/images/g-5.webp", "local_path": "public/projects/one-victoria-new-town/gallery/gallery-5.webp", "final_path": "/projects/one-victoria-new-town/gallery/gallery-5.webp", "usage": "gallery" },
+    { "original_url": "https://ruchirealty.com/one-victoria-new-town/images/g-6.webp", "local_path": "public/projects/one-victoria-new-town/gallery/gallery-6.webp", "final_path": "/projects/one-victoria-new-town/gallery/gallery-6.webp", "usage": "gallery" },
+    { "original_url": "https://ruchirealty.com/one-victoria-new-town/images/c1.jpeg", "local_path": "public/projects/one-victoria-new-town/gallery/construction-1.jpeg", "final_path": "/projects/one-victoria-new-town/gallery/construction-1.jpeg", "usage": "gallery - Construction" },
+    { "original_url": "https://ruchirealty.com/one-victoria-new-town/images/c2.jpeg", "local_path": "public/projects/one-victoria-new-town/gallery/construction-2.jpeg", "final_path": "/projects/one-victoria-new-town/gallery/construction-2.jpeg", "usage": "gallery - Construction" },
+    { "original_url": "https://ruchirealty.com/one-victoria-new-town/images/c3.jpeg", "local_path": "public/projects/one-victoria-new-town/gallery/construction-3.jpeg", "final_path": "/projects/one-victoria-new-town/gallery/construction-3.jpeg", "usage": "gallery - Construction" },
+    { "original_url": "https://ruchirealty.com/one-victoria-new-town/images/loc-1.webp", "local_path": "public/projects/one-victoria-new-town/location.webp", "final_path": "/projects/one-victoria-new-town/location.webp", "usage": "location" }
+  ],
+  "source_alternatives_not_needed": [
+    "gallery g-1.jpg through g-6.jpg because supplied WebP variants are used",
+    "location loc-1.jpg because the supplied WebP variant is used"
+  ],
+  "verify": [
+    "Brochure PDF URL was not found and remains empty.",
+    "Walkthrough video URL was not found and remains empty.",
+    "The source labels mg-3.jpg as both Podium Plan and Site Plan; only Podium Plan is seeded pending confirmation of a distinct Site Plan asset."
+  ]
+}

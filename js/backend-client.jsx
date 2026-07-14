@@ -98,7 +98,14 @@
   const projectSlugForTitle = (title = "", location = "") => {
     const key = title.toLowerCase().trim();
     const place = location.toLowerCase().trim();
+    if (key.includes("one victoria") && place.includes("kolkata")) return "one-victoria-new-town";
     if (key.includes("ruchi lifescapes") && place.includes("bhopal")) return "lifescapes-bhopal";
+    if (key.includes("ruchi lifescapes") && place.includes("indore")) return "ruchi-lifescapes-indore-project";
+    if (key.includes("anand vihar") && place.includes("indore")) return "anand-vihar-indore";
+    if (key.includes("saatvik green") && place.includes("indore")) return "saatvikgreen-indore";
+    if (key.includes("saatvik vihar") && place.includes("indore")) return "saatvik-vihar-indore";
+    if (key.includes("ruchi enclave") && place.includes("indore")) return "ruchi-enclave-indore";
+    if (key.includes("oscar sanctuary") && place.includes("indore")) return "oscar-sanctuary-indore";
     if (key.includes("oscar fort") && place.includes("indore")) return "oscar-fort-indore";
     if (key.includes("oscar pride") && place.includes("indore")) return "oscar-pride-indore";
     if (key.includes("oscar palace") && place.includes("indore")) return "oscar-palace";
@@ -108,12 +115,19 @@
   const projectRouteForTitle = (title = "", location = "") => {
     const key = title.toLowerCase().trim();
     const place = location.toLowerCase().trim();
+    if (key.includes("one victoria") && place.includes("kolkata")) return "/projects/one-victoria-new-town";
     if (key.includes("oscar") && key.includes("billion")) return "/oscar-indore";
     if (key.includes("active greens") || key.includes("active green")) return "/active-greens";
     if (key.includes("one rajarhat")) return "/one-rajarhat";
     if (key.includes("one prime")) return "/projects/one-prime-residential";
     if (key.includes("active business park")) return "/active-business-park";
     if (key.includes("ruchi lifescapes") && place.includes("bhopal")) return "/projects/lifescapes-bhopal";
+    if (key.includes("ruchi lifescapes") && place.includes("indore")) return "/projects/ruchi-lifescapes-indore-project";
+    if (key.includes("anand vihar") && place.includes("indore")) return "/projects/anand-vihar-indore";
+    if (key.includes("saatvik green") && place.includes("indore")) return "/projects/saatvikgreen-indore";
+    if (key.includes("saatvik vihar") && place.includes("indore")) return "/projects/saatvik-vihar-indore";
+    if (key.includes("ruchi enclave") && place.includes("indore")) return "/projects/ruchi-enclave-indore";
+    if (key.includes("oscar sanctuary") && place.includes("indore")) return "/projects/oscar-sanctuary-indore";
     if (key.includes("oscar fort") && place.includes("indore")) return "/projects/oscar-fort-indore";
     if (key.includes("oscar pride") && place.includes("indore")) return "/projects/oscar-pride-indore";
     if (key.includes("oscar palace") && place.includes("indore")) return "/projects/oscar-palace";
@@ -173,7 +187,7 @@
   const mergePublicProjects = (dbProjects = []) => {
     const bySlug = new Map(getSeedProjects().map((item) => [item.slug, item]));
     dbProjects.map(normalizeProject).forEach((item) => {
-      if (!bySlug.has(item.slug)) bySlug.set(item.slug, item);
+      bySlug.set(item.slug, { ...(bySlug.get(item.slug) || {}), ...item });
     });
     return sortProjects([...bySlug.values()]);
   };
@@ -239,6 +253,9 @@
     img: blog.image || blog.img || "",
     date: blog.published_at ? new Date(blog.published_at).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "",
     tags: Array.isArray(blog.tags) ? blog.tags : [],
+    image_alt: blog.image_alt || blog.title || "Ruchi Realty blog image",
+    status: blog.status || "published",
+    reading_time_minutes: blog.reading_time_minutes || Math.max(1, Math.ceil(String(blog.content || "").split(/\s+/).filter(Boolean).length / 200)),
   });
 
   const blogPayload = (blog = {}) => ({
@@ -252,6 +269,17 @@
     category: blog.category || "News",
     featured: Boolean(blog.featured),
     published_at: blog.published_at || new Date().toISOString(),
+    image_alt: blog.image_alt || blog.title,
+    status: blog.status || "published",
+    seo_title: blog.seo_title || null,
+    seo_description: blog.seo_description || null,
+    canonical_url: blog.canonical_url || null,
+    og_title: blog.og_title || null,
+    og_description: blog.og_description || null,
+    og_image_url: blog.og_image_url || blog.image || null,
+    reading_time_minutes: Number(blog.reading_time_minutes) || null,
+    old_url: blog.old_url || null,
+    related_project_links: Array.isArray(blog.related_project_links) ? blog.related_project_links : [],
   });
 
   const projectService = {
@@ -527,8 +555,12 @@
       return result.error ? result : { data: (result.data || []).map(normalizeBlog), error: null };
     },
     async getPublicBlogs() {
-      const result = await rest("blogs", { select: "*", order: "published_at.desc" });
+      const result = await rest("blogs", { select: "*", status: "eq.published", order: "published_at.desc" });
       return result.error ? { data: [], error: result.error } : { data: (result.data || []).map(normalizeBlog), error: null };
+    },
+    async getBlogBySlug(slug) {
+      const result = await rest("blogs", { select: "*", slug: `eq.${slug}`, status: "eq.published", limit: "1" });
+      return result.error ? result : { data: result.data?.[0] ? normalizeBlog(result.data[0]) : null, error: null };
     },
     async createBlog(blogData) {
       const result = await rest("blogs", { select: "*" }, {
@@ -551,6 +583,39 @@
     async deleteBlog(id) {
       return rest("blogs", { id: `eq.${id}` }, { method: "DELETE", auth: true });
     },
+    async getApprovedComments(blogId) {
+      const result = await rest("blog_comments", { select: "id,name,comment,created_at", blog_id: `eq.${blogId}`, status: "eq.approved", order: "created_at.desc" });
+      return result.error ? result : { data: result.data || [], error: null };
+    },
+    async createComment(blogId, data) {
+      return rest("blog_comments", { select: "id" }, { method: "POST", headers: { Prefer: "return=minimal" }, json: { blog_id: blogId, name: String(data.name || "").trim().slice(0, 80), email: String(data.email || "").trim().toLowerCase().slice(0, 160), comment: String(data.comment || "").trim().slice(0, 3000), status: "pending" } });
+    },
+    async getAllComments() {
+      return rest("blog_comments", { select: "*,blogs(title,slug)", order: "created_at.desc" }, { auth: true });
+    },
+    async updateCommentStatus(id, status) {
+      return rest("blog_comments", { id: `eq.${id}`, select: "*" }, { method: "PATCH", auth: true, headers: { Prefer: "return=representation" }, json: { status } });
+    },
+    async deleteComment(id) {
+      return rest("blog_comments", { id: `eq.${id}` }, { method: "DELETE", auth: true });
+    },
+  };
+
+  const mediaService = {
+    async getGallery() { return rest("media_gallery_items", { select: "*,media_assets!image_asset_id(*)", status: "eq.published", order: "display_order.asc,created_at.desc" }); },
+    async getAllGallery() { return rest("media_gallery_items", { select: "*,media_assets!image_asset_id(*)", order: "display_order.asc,created_at.desc" }, { auth: true }); },
+    async getPress() { return rest("media_press_releases", { select: "*,media_assets!cover_asset_id(*)", status: "eq.published", order: "is_featured.desc,release_date.desc,display_order.asc" }); },
+    async getAllPress() { return rest("media_press_releases", { select: "*,media_assets!cover_asset_id(*)", order: "release_date.desc,display_order.asc" }, { auth: true }); },
+    async getPressBySlug(slug) { const result=await rest("media_press_releases", { select: "*,media_assets!cover_asset_id(*)", slug:`eq.${slug}`, status:"eq.published", limit:"1" }); return result.error?result:{data:result.data?.[0]||null,error:null}; },
+    async getEvents() { return rest("media_events_awards", { select: "*,media_assets!cover_asset_id(*)", status:"eq.published", order:"is_featured.desc,display_order.asc,event_date.desc" }); },
+    async getAllEvents() { return rest("media_events_awards", { select: "*,media_assets!cover_asset_id(*)", order:"display_order.asc,event_date.desc" }, { auth:true }); },
+    async createAsset(url, usageType="gallery", meta={}) { const hash=meta.hash||await crypto.subtle.digest("SHA-256",new TextEncoder().encode(url)).then(b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")); const result=await rest("media_assets",{on_conflict:"hash",select:"*"},{method:"POST",auth:true,headers:{Prefer:"resolution=merge-duplicates,return=representation"},json:{original_filename:meta.original_filename||url.split("/").pop(),file_path:url,public_url:url,thumbnail_url:url,mime_type:"image/webp",file_size:meta.file_size||null,width:meta.width||null,height:meta.height||null,hash,usage_type:usageType}}); return result.error?result:{data:result.data?.[0],error:null}; },
+    async saveGallery(data,id) { const method=id?"PATCH":"POST", params=id?{id:`eq.${id}`,select:"*"}:{select:"*"}; return rest("media_gallery_items",params,{method,auth:true,headers:{Prefer:"return=representation"},json:data}); },
+    async deleteGallery(id){return rest("media_gallery_items",{id:`eq.${id}`},{method:"DELETE",auth:true});},
+    async savePress(data,id){return rest("media_press_releases",id?{id:`eq.${id}`,select:"*"}:{select:"*"},{method:id?"PATCH":"POST",auth:true,headers:{Prefer:"return=representation"},json:data});},
+    async deletePress(id){return rest("media_press_releases",{id:`eq.${id}`},{method:"DELETE",auth:true});},
+    async saveEvent(data,id){return rest("media_events_awards",id?{id:`eq.${id}`,select:"*"}:{select:"*"},{method:id?"PATCH":"POST",auth:true,headers:{Prefer:"return=representation"},json:data});},
+    async deleteEvent(id){return rest("media_events_awards",{id:`eq.${id}`},{method:"DELETE",auth:true});},
   };
 
   /* ------------------------------------------------------------
@@ -763,6 +828,7 @@
     leads: leadService,
     settings: settingsService,
     blogs: blogService,
+    media: mediaService,
     careers: careerService,
     careerApplications: careerApplicationsService,
     projectSubpages: projectSubpagesService,

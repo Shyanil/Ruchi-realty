@@ -1,0 +1,16 @@
+{
+  "project": "Oscar Sanctuary",
+  "slug": "oscar-sanctuary-indore",
+  "assets": [
+    {
+      "original_url": "https://ruchirealty.com/wp-content/uploads/2026/03/os-1.webp",
+      "downloaded_local_path": "public/projects/oscar-sanctuary-indore/hero.webp",
+      "final_public_path": "/projects/oscar-sanctuary-indore/hero.webp",
+      "usage": "temporary hero/card"
+    }
+  ],
+  "verify": [
+    "Business status requires confirmation; Ongoing is retained from the existing primary project listing.",
+    "Overview, highlights, amenities, gallery, floor plans, location, brochure, and walkthrough remain intentionally empty."
+  ]
+}

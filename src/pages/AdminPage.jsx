@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import MediaAdmin from "../components/admin/MediaAdmin";
 
 const toJSON = (value) => {
   try { return JSON.stringify(value, null, 2); } catch { return ""; }
@@ -92,6 +93,7 @@ const emptyProject = {
 };
 
 const emptyBlog = {
+  slug: "",
   title: "",
   excerpt: "",
   content: "",
@@ -100,6 +102,18 @@ const emptyBlog = {
   category: "News",
   tags: "",
   featured: false,
+  status: "draft",
+  image_alt: "",
+  published_at: "",
+  seo_title: "",
+  seo_description: "",
+  canonical_url: "",
+  og_title: "",
+  og_description: "",
+  og_image_url: "",
+  reading_time_minutes: "",
+  old_url: "",
+  related_project_links: "",
 };
 
 const emptyJob = {
@@ -309,7 +323,7 @@ function AdminImageUpload({ label, value, onChange }) {
           style={{ width: "100%", padding: "6px 10px", fontSize: "12px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }}
           disabled={compressing}
         />
-        {error ? <p className="admin-error">{error}</p> : <p className="admin-note" style={{ marginTop: "4px" }}>PNG, JPG, WebP auto-compressed to WebP under 100 KB before upload.</p>}
+        {error ? <p className="admin-error">{error}</p> : null}
       </div>
     </div>
   );
@@ -1013,8 +1027,6 @@ function ProjectsAdmin() {
             <AdminField label="Hero tagline"><input value={form.heroTagline} onChange={(e) => set("heroTagline", e.target.value)} /></AdminField>
             <AdminImageUpload label="Hero logo only" value={form.heroLogo} onChange={(v) => set("heroLogo", v)} />
             <AdminImageUpload label="Hero background landscape" value={form.heroBg} onChange={(v) => set("heroBg", v)} />
-            <AdminField label="Hero mobile background URL"><input value={form.heroMobileUrl} onChange={(e) => set("heroMobileUrl", e.target.value)} /></AdminField>
-            <AdminField label="Company logo URL"><input value={form.companyLogoUrl} onChange={(e) => set("companyLogoUrl", e.target.value)} /></AdminField>
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Overview</h3>
             <AdminField label="Overview Paragraphs (separate paragraphs with an empty line)"><textarea rows={6} value={overviewText} onChange={(e) => setOverviewText(e.target.value)} placeholder="Write first paragraph.&#10;&#10;Write second paragraph." /></AdminField>
@@ -1220,12 +1232,16 @@ function BlogsAdmin() {
   const [editingId, setEditingId] = useState(null);
   const [query, setQuery] = useState("");
   const [updating, setUpdating] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [subTab, setSubTab] = useState("posts");
 
   const load = async () => {
     const { data } = await window.RuchiBackend.blogs.getAllBlogs();
     setBlogs(data || []);
   };
   useEffect(() => { load(); }, []);
+  const loadComments = async () => { const { data } = await window.RuchiBackend.blogs.getAllComments(); setComments(data || []); };
+  useEffect(() => { loadComments(); }, []);
 
   const set = (key, value) => setForm((current) => ({ ...current, [key]: value }));
   const reset = () => {
@@ -1236,8 +1252,9 @@ function BlogsAdmin() {
     event.preventDefault();
     setUpdating(true);
     try {
-      if (editingId) await window.RuchiBackend.blogs.updateBlog(editingId, form);
-      else await window.RuchiBackend.blogs.createBlog(form);
+      const payload = { ...form, related_project_links: String(form.related_project_links || "").split(",").map((item) => item.trim()).filter(Boolean) };
+      const result = editingId ? await window.RuchiBackend.blogs.updateBlog(editingId, payload) : await window.RuchiBackend.blogs.createBlog(payload);
+      if (result.error) throw result.error;
       reset();
       load();
     } catch (e) {
@@ -1255,7 +1272,7 @@ function BlogsAdmin() {
       formElement.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    setForm({ ...emptyBlog, ...blog, tags: Array.isArray(blog.tags) ? blog.tags.join(", ") : blog.tags || "" });
+    setForm({ ...emptyBlog, ...blog, tags: Array.isArray(blog.tags) ? blog.tags.join(", ") : blog.tags || "", related_project_links: Array.isArray(blog.related_project_links) ? blog.related_project_links.join(", ") : blog.related_project_links || "", published_at: blog.published_at ? blog.published_at.slice(0, 16) : "" });
   };
   const remove = async (id) => {
     await window.RuchiBackend.blogs.deleteBlog(id);
@@ -1266,9 +1283,12 @@ function BlogsAdmin() {
   const filteredBlogs = blogs.filter((blog) =>
     `${blog.title} ${blog.category} ${blog.author}`.toLowerCase().includes(query.toLowerCase())
   );
+  const moderate = async (id, status) => { const { error } = await window.RuchiBackend.blogs.updateCommentStatus(id, status); if (!error) loadComments(); };
+  const removeComment = async (id) => { if (!confirm("Delete this comment permanently?")) return; await window.RuchiBackend.blogs.deleteComment(id); loadComments(); };
 
   return (
     <section className="admin-grid">
+      <div className="admin-subtabs"><button type="button" className={subTab === "posts" ? "is-active" : ""} onClick={() => setSubTab("posts")}>Blog posts ({blogs.length})</button><button type="button" className={subTab === "comments" ? "is-active" : ""} onClick={() => setSubTab("comments")}>Comments ({comments.length})</button></div>
       {updating && (
         <div style={{
           position: "fixed",
@@ -1305,7 +1325,7 @@ function BlogsAdmin() {
           </div>
         </div>
       )}
-      <form className="admin-panel" onSubmit={save}>
+      {subTab === "posts" ? <><form className="admin-panel" onSubmit={save}>
         <div className="admin-panel__head">
           <h2>{editingId ? "Update blog" : "Create blog"}</h2>
           {editingId ? <button type="button" className="admin-text-btn" onClick={reset}>Cancel edit</button> : null}
@@ -1318,11 +1338,20 @@ function BlogsAdmin() {
             </select>
           </AdminField>
           <AdminField label="Author"><input value={form.author} onChange={(event) => set("author", event.target.value)} /></AdminField>
+          <AdminField label="Slug"><input value={form.slug} onChange={(event) => set("slug", event.target.value)} placeholder="generated-from-title" /></AdminField>
+          <AdminField label="Status"><select value={form.status} onChange={(event) => set("status", event.target.value)}><option value="draft">Draft</option><option value="published">Published</option><option value="unpublished">Unpublished</option></select></AdminField>
+          <AdminField label="Publish date"><input type="datetime-local" value={form.published_at} onChange={(event) => set("published_at", event.target.value)} /></AdminField>
         </div>
         <AdminImageUpload label="Blog image" value={form.image} onChange={(value) => set("image", value)} />
+        <AdminField label="Image alt text"><input required value={form.image_alt} onChange={(event) => set("image_alt", event.target.value)} /></AdminField>
         <AdminField label="Excerpt"><textarea required rows={3} value={form.excerpt} onChange={(event) => set("excerpt", event.target.value)} /></AdminField>
         <AdminField label="Content"><textarea required rows={7} value={form.content} onChange={(event) => set("content", event.target.value)} /></AdminField>
         <AdminField label="Tags, comma separated"><input value={form.tags} onChange={(event) => set("tags", event.target.value)} /></AdminField>
+        <div className="admin-form-grid"><AdminField label="SEO title"><input maxLength="70" value={form.seo_title} onChange={(event) => set("seo_title", event.target.value)} /></AdminField><AdminField label="Canonical URL"><input type="url" value={form.canonical_url} onChange={(event) => set("canonical_url", event.target.value)} /></AdminField><AdminField label="Reading time (minutes)"><input type="number" min="1" value={form.reading_time_minutes} onChange={(event) => set("reading_time_minutes", event.target.value)} /></AdminField></div>
+        <AdminField label="SEO description"><textarea maxLength="170" rows={3} value={form.seo_description} onChange={(event) => set("seo_description", event.target.value)} /></AdminField>
+        <div className="admin-form-grid"><AdminField label="OG title"><input value={form.og_title} onChange={(event) => set("og_title", event.target.value)} /></AdminField><AdminField label="OG image URL"><input value={form.og_image_url} onChange={(event) => set("og_image_url", event.target.value)} /></AdminField></div>
+        <AdminField label="OG description"><textarea rows={2} value={form.og_description} onChange={(event) => set("og_description", event.target.value)} /></AdminField>
+        <AdminField label="Related project links, comma separated"><input value={form.related_project_links} onChange={(event) => set("related_project_links", event.target.value)} placeholder="/projects/one-victoria-new-town, /projects/oscar-pride-indore" /></AdminField>
         <label className="admin-check"><input type="checkbox" checked={form.featured} onChange={(event) => set("featured", event.target.checked)} /> Featured article</label>
         <button className="admin-primary" type="submit">{editingId ? "Update blog" : "Create blog"}</button>
       </form>
@@ -1349,7 +1378,7 @@ function BlogsAdmin() {
             </article>
           )) : <p className="admin-empty">No matching blogs yet.</p>}
         </div>
-      </div>
+      </div></> : <div className="admin-panel admin-comments"><div className="admin-panel__head"><h2>Comment moderation</h2><span className="admin-count">{comments.length}</span></div><div className="admin-list">{comments.map((item) => <article className="admin-comment" key={item.id}><div><strong>{item.name}</strong><span>{item.email} · {item.blogs?.title || "Blog"} · {new Date(item.created_at).toLocaleString()}</span><p>{item.comment}</p><em className={`comment-status comment-status--${item.status}`}>{item.status}</em></div><div className="admin-actions"><button type="button" onClick={() => moderate(item.id, "approved")}>Approve</button><button type="button" onClick={() => moderate(item.id, "rejected")}>Reject</button><button type="button" onClick={() => moderate(item.id, "spam")}>Spam</button><button type="button" onClick={() => removeComment(item.id)}>Delete</button></div></article>)}</div></div>}
     </section>
   );
 }
@@ -1422,7 +1451,7 @@ function CareersAdmin() {
   return (
     <>
       <div className="admin-careers-head">
-        <div className="admin-tabs" style={{ margin: 0 }}>
+        <div className="admin-subtabs admin-careers-subtabs">
           <button type="button" className={subTab === "jobs" ? "is-active" : ""} onClick={() => setSubTab("jobs")}>Job Listings</button>
           <button type="button" className={subTab === "applications" ? "is-active" : ""} onClick={() => setSubTab("applications")}>Applications ({applications.length})</button>
         </div>
@@ -1542,6 +1571,7 @@ export default function AdminPage() {
     ["leads", "Leads"],
     ["settings", "Settings"],
     ["blogs", "Blogs"],
+    ["media", "Media"],
   ], []);
 
   useEffect(() => {
@@ -1591,6 +1621,7 @@ export default function AdminPage() {
         {tab === "leads" ? <LeadsAdmin /> : null}
         {tab === "settings" ? <SettingsAdmin /> : null}
         {tab === "blogs" ? <BlogsAdmin /> : null}
+        {tab === "media" ? <MediaAdmin /> : null}
       </main>
     </>
   );

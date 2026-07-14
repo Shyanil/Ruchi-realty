@@ -1,0 +1,29 @@
+{
+  "project": "Saatvik Green Indore",
+  "slug": "saatvikgreen-indore",
+  "format": "All frontend raster assets use optimized WebP. Both supplied JPG and WebP gallery variants were downloaded; high-resolution JPG sources were converted for final use.",
+  "assets": [
+    { "original_url": "https://ruchirealty.com/saatvikgreen-indore/images/hero.webp", "downloaded_local_path": "public/projects/saatvikgreen-indore/hero.webp", "final_public_path": "/projects/saatvikgreen-indore/hero.webp", "usage_section": "hero/card" },
+    { "original_url": "https://ruchirealty.com/saatvikgreen-indore/images/hero-sm.webp", "downloaded_local_path": "public/projects/saatvikgreen-indore/hero-mobile.webp", "final_public_path": "/projects/saatvikgreen-indore/hero-mobile.webp", "usage_section": "mobile hero" },
+    { "original_url": "https://ruchirealty.com/saatvikgreen-indore/images/saatvik-green-indore-logo.png", "downloaded_local_path": "public/projects/saatvikgreen-indore/project-logo.webp", "final_public_path": "/projects/saatvikgreen-indore/project-logo.webp", "usage_section": "project logo" },
+    { "original_url": "https://ruchirealty.com/saatvikgreen-indore/images/ruchi_logo.png", "downloaded_local_path": "public/projects/saatvikgreen-indore/company-logo.webp", "final_public_path": "/projects/saatvikgreen-indore/company-logo.webp", "usage_section": "contact/company" },
+    { "original_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-1.webp", "source_jpg_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-1.jpg", "downloaded_local_path": "public/projects/saatvikgreen-indore/gallery-1.webp", "final_public_path": "/projects/saatvikgreen-indore/gallery-1.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-2.webp", "source_jpg_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-2.jpg", "downloaded_local_path": "public/projects/saatvikgreen-indore/gallery-2.webp", "final_public_path": "/projects/saatvikgreen-indore/gallery-2.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-3.webp", "source_jpg_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-3.jpg", "downloaded_local_path": "public/projects/saatvikgreen-indore/gallery-3.webp", "final_public_path": "/projects/saatvikgreen-indore/gallery-3.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-4.webp", "source_jpg_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-4.jpg", "downloaded_local_path": "public/projects/saatvikgreen-indore/gallery-4.webp", "final_public_path": "/projects/saatvikgreen-indore/gallery-4.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-5.webp", "source_jpg_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-5.jpg", "downloaded_local_path": "public/projects/saatvikgreen-indore/gallery-5.webp", "final_public_path": "/projects/saatvikgreen-indore/gallery-5.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-6.webp", "source_jpg_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-6.jpg", "downloaded_local_path": "public/projects/saatvikgreen-indore/gallery-6.webp", "final_public_path": "/projects/saatvikgreen-indore/gallery-6.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-7.webp", "source_jpg_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-7.jpg", "downloaded_local_path": "public/projects/saatvikgreen-indore/gallery-7.webp", "final_public_path": "/projects/saatvikgreen-indore/gallery-7.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-8.webp", "source_jpg_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-8.jpg", "downloaded_local_path": "public/projects/saatvikgreen-indore/gallery-8.webp", "final_public_path": "/projects/saatvikgreen-indore/gallery-8.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-9.webp", "source_jpg_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-9.jpg", "downloaded_local_path": "public/projects/saatvikgreen-indore/gallery-9.webp", "final_public_path": "/projects/saatvikgreen-indore/gallery-9.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-10.webp", "source_jpg_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-10.jpg", "downloaded_local_path": "public/projects/saatvikgreen-indore/gallery-10.webp", "final_public_path": "/projects/saatvikgreen-indore/gallery-10.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-11.webp", "source_jpg_url": "https://ruchirealty.com/saatvikgreen-indore/images/g-11.jpg", "downloaded_local_path": "public/projects/saatvikgreen-indore/gallery-11.webp", "final_public_path": "/projects/saatvikgreen-indore/gallery-11.webp", "usage_section": "gallery" }
+  ],
+  "map_embed": "Verified Google Maps iframe stored in project_subpages.location_map_embed.",
+  "verify": [
+    "Brochure PDF is not exposed by the source HTML or its download buttons.",
+    "No layout or floor-plan section or source asset was found.",
+    "Walkthrough video URL is not present in the source HTML.",
+    "No separate amenities section or amenity list is present; amenities are omitted."
+  ]
+}

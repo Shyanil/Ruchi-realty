@@ -7,6 +7,8 @@ const ROUTE_MAP = {
   "Blog.html": "/blog",
   "Awards.html": "/awards",
   "Projects.html": "/projects",
+  "Contact.html": "/contact",
+  "Media.html": "/media",
 };
 
 function smoothTo(href) {
@@ -32,9 +34,9 @@ export function Footer() {
   const phoneHref = `tel:${phone.replace(/[^\d+]/g, "")}`;
 
   const cols = [
-  ["Residences", [["One Victoria", "#projects"], ["One Prime", "#projects"], ["Active Acres", "#projects"], ["All projects", "Projects.html"]]],
-  ["The Firm", [["Approach", "About.html"], ["People", "About.html#team"], ["Careers", "Careers.html"], ["Awards", "Awards.html"], ["Insights", "Blog.html"]]],
-  ["Visit", [["Experience Centre", "#contact"], ["Private Viewings", "#contact"], ["Enquiries", "#contact"], ["RERA", "#contact"]]]];
+  ["Residences", [["One Victoria", "/projects/one-victoria-new-town"], ["One Prime", "#projects"], ["Active Acres", "#projects"], ["All projects", "Projects.html"]]],
+  ["The Firm", [["Approach", "About.html"], ["People", "About.html#team"], ["Careers", "Careers.html"], ["Media", "Media.html"], ["Insights", "Blog.html"]]],
+  ["Visit", [["Experience Centre", "Contact.html#experience-centre"], ["Private Viewings", "Contact.html#private-viewings"], ["Enquiries", "Contact.html#enquiries"], ["RERA", "Contact.html#enquiries"]]]];
 
   const offices = [
   ["Kolkata", "54, 10 D. C. Dey Road · Near ITC Sonar,\nTangra · Kolkata 700015."],

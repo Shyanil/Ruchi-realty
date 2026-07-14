@@ -122,7 +122,7 @@ function Footer() {
   const phoneHref = `tel:${phone.replace(/[^\d+]/g, "")}`;
 
   const cols = [
-  ["Residences", [["One Victoria", "#projects"], ["One Prime", "#projects"], ["Active Acres", "#projects"], ["All projects", "Projects.html"]]],
+  ["Residences", [["One Victoria", "/projects/one-victoria-new-town"], ["One Prime", "#projects"], ["Active Acres", "#projects"], ["All projects", "Projects.html"]]],
   ["The Firm", [["Approach", "About.html"], ["People", "About.html#team"], ["Careers", "Careers.html"], ["Awards", "Awards.html"], ["Insights", "Blog.html"]]],
   ["Visit", [["Experience Centre", "#contact"], ["Private Viewings", "#contact"], ["Enquiries", "#contact"], ["RERA", "#contact"]]]];
 

@@ -24,7 +24,7 @@ export function BlogSection() {
               <div className="eyebrow sec-eyebrow">Industry Insights</div>
               <h2 className="blog__head">What we're thinking about,<br /><span className="rr-grad">written plainly.</span></h2>
             </div>
-            <Link className="blog__all" to="/blog">View all insights<span className="ar">→</span></Link>
+            <Link className="blog__all" to="/blogs">View all insights<span className="ar">→</span></Link>
           </div>
         </Reveal>
       </div>
@@ -32,7 +32,7 @@ export function BlogSection() {
         <div className="blog-grid">
           {shown.map((b, i) =>
             <Reveal key={i} delay={i * 70}>
-              <Link className="blog-card" to="/blog">
+              <Link className="blog-card" to={`/blogs/${b.slug}`}>
                 <RImg src={b.img} alt={b.title} className="blog-card__img" />
                 <div className="blog-card__cat">{b.cat}</div>
                 <h3 className="blog-card__title">{b.title}</h3>

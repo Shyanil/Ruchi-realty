@@ -10,6 +10,8 @@ const ROUTE_MAP = {
   "Awards.html": "/awards",
   "Blog.html": "/blog",
   "Careers.html": "/careers",
+  "Contact.html": "/contact",
+  "Media.html": "/media",
   "index.html": "/",
 };
 
@@ -41,8 +43,8 @@ const MEGA = (() => {
         ]},
       ],
       feat: {
-        kind: "project", eyebrow: "Now unveiling", title: "One Victoria", sub: "New Town · Kolkata", href: "#projects",
-        img: "https://ruchirealty.com/wp-content/uploads/elementor/thumbs/VIEW_004_ELEVATION_VIEW_DAY_LIGHT_2024.01.18_HIRES-r0uodbh7ro4cp8vdge1k5i90cm98yiqhxmm5z0edmw.png",
+        kind: "project", eyebrow: "Now unveiling", title: "One Victoria", sub: "New Town · Kolkata", href: "/projects/one-victoria-new-town",
+        img: "/projects/one-victoria-new-town/hero.webp",
       },
     },
     About: {
@@ -50,11 +52,11 @@ const MEGA = (() => {
       blurb: "Nearly four decades of treating a home as a promise — built with intent, held to long after the keys change hands.",
       cols: [
         { h: "The firm", items: [["Our approach", "About.html"], ["The proof, not the promise", "#why"], ["People & culture", "About.html#team"], ["Careers", "Careers.html"]] },
-        { h: "Recognition", items: [["Awards", "Awards.html"], ["Press & media", "#press"]] },
+        { h: "Explore", items: [["Projects", "Projects.html"], ["Our team", "About.html#team"]] },
       ],
       feat: { kind: "statement", eyebrow: "Committed to you", title: "Thirty-eight years of keeping our word.", sub: "Read the story →", href: "About.html" },
     },
-    Insights: {
+    Blogs: {
       href: "Blog.html",
       blurb: "Industry insights, written plainly — materials, plans, and the relationships that begin at the keys.",
       cols: [
@@ -63,19 +65,28 @@ const MEGA = (() => {
       ],
       feat: insightFeat,
     },
+    Media: {
+      href: "Media.html",
+      blurb: "Project galleries, official press updates, events, awards, and the milestone moments that shape the Ruchi Realty story.",
+      cols: [
+        { h: "Media", items: [["Gallery", "/media/gallery"], ["Press Releases", "/media/press-releases"], ["Events & Awards", "/media/events-awards"]] },
+        { h: "Discover", items: [["Latest gallery", "/media/gallery"], ["Company updates", "/media/press-releases"], ["Recognitions", "/media/events-awards"]] },
+      ],
+      feat: { kind: "project", eyebrow: "Inside Ruchi Realty", title: "Media", sub: "Explore the collection →", href: "/media", img: "/assets/media/gallery/gallery-1.webp" },
+    },
     Contact: {
-      href: "#contact",
+      href: "Contact.html",
       blurb: "Tell us a little about what you're looking for. Someone who knows the projects — not a call centre — will write back.",
       cols: [
-        { h: "Visit", items: [["Experience Centre", "#contact"], ["Private viewings", "#contact"], ["Enquiries", "#contact"]] },
+        { h: "Visit", items: [["Experience Centre", "Contact.html#experience-centre"], ["Private viewings", "Contact.html#private-viewings"], ["Enquiries", "Contact.html#enquiries"]] },
         { h: "Reach us", items: [["+91 892 922 5275", "#contact"], ["ruchirealty.com", "#contact"], ["Tangra · Kolkata 700015", "#contact"]] },
       ],
-      feat: { kind: "cta", eyebrow: "Come and see", title: "Book a visit", sub: "A real person, not a call centre.", href: "#contact" },
+      feat: { kind: "cta", eyebrow: "Come and see", title: "Book a visit", sub: "A real person, not a call centre.", href: "Contact.html#private-viewings" },
     },
   };
 })();
 
-const MEGA_ORDER = ["Projects", "About", "Insights", "Contact"];
+const MEGA_ORDER = ["Projects", "About", "Blogs", "Media", "Contact"];
 
 function smoothTo(href) {
   const el = document.querySelector(href);
@@ -197,7 +208,7 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false }) {
 
     if (href.startsWith("#")) {
       if (e) e.preventDefault();
-      if (href === "#contact") { onContact(); return; }
+      if (href === "#contact") { if (onContact) onContact(); else navigate("/contact"); return; }
       const el = document.querySelector(href);
       if (el) {
         el.scrollIntoView({ behavior: "smooth" });
@@ -208,7 +219,8 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false }) {
     }
   };
 
-  const dark = !forceSolid && !solid && !open;
+  const routeNeedsSolidHeader = location.pathname.startsWith("/media/press-releases");
+  const dark = !forceSolid && !routeNeedsSolidHeader && !solid && !open;
 
   const isActive = (label) => {
     const href = MEGA[label]?.href;
@@ -241,7 +253,7 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false }) {
             </div>
           ))}
         </nav>
-        <button className="nav__cta" onClick={onContact}>Book a Visit<span className="ar">→</span></button>
+        <button className="nav__cta" onClick={() => onContact ? onContact() : navigate("/contact#private-viewings")}>Book a Visit<span className="ar">→</span></button>
         <button className={`nav__burger ${mobile ? "is-open" : ""}`} onClick={() => setMobile((m) => !m)} aria-label="Menu">
           <span></span><span></span><span></span>
         </button>
@@ -263,7 +275,7 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false }) {
               </div>
             </div>
           ))}
-          <button className="mobile__cta" onClick={() => { setMobile(false); onContact(); }}>Book a Visit<span className="ar">→</span></button>
+          <button className="mobile__cta" onClick={() => { setMobile(false); if (onContact) onContact(); else navigate("/contact#private-viewings"); }}>Book a Visit<span className="ar">→</span></button>
         </div>
       </div>
     </header>

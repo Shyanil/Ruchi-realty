@@ -1,0 +1,29 @@
+{
+  "project": "Ruchi Lifescapes Indore",
+  "slug": "ruchi-lifescapes-indore-project",
+  "format": "All downloaded raster assets were converted to optimized WebP for frontend use.",
+  "assets": [
+    { "original_url": "https://ruchirealty.com/ruchi-lifescapes-indore-project/images/hero.jpg", "downloaded_local_path": "public/projects/ruchi-lifescapes-indore-project/hero.webp", "final_public_path": "/projects/ruchi-lifescapes-indore-project/hero.webp", "usage_section": "hero/card" },
+    { "original_url": "https://ruchirealty.com/ruchi-lifescapes-indore-project/images/hero-sm.jpg", "downloaded_local_path": "public/projects/ruchi-lifescapes-indore-project/hero-mobile.webp", "final_public_path": "/projects/ruchi-lifescapes-indore-project/hero-mobile.webp", "usage_section": "mobile hero" },
+    { "original_url": "https://ruchirealty.com/ruchi-lifescapes-indore-project/images/logo.jpg", "downloaded_local_path": "public/projects/ruchi-lifescapes-indore-project/project-logo.webp", "final_public_path": "/projects/ruchi-lifescapes-indore-project/project-logo.webp", "usage_section": "project logo" },
+    { "original_url": "https://ruchirealty.com/ruchi-lifescapes-indore-project/images/ruchi_logo.png", "downloaded_local_path": "public/projects/ruchi-lifescapes-indore-project/company-logo.webp", "final_public_path": "/projects/ruchi-lifescapes-indore-project/company-logo.webp", "usage_section": "contact/company" },
+    { "original_url": "https://ruchirealty.com/ruchi-lifescapes-indore-project/images/amenities/a-1.jpg", "downloaded_local_path": "public/projects/ruchi-lifescapes-indore-project/amenity-1.webp", "final_public_path": "/projects/ruchi-lifescapes-indore-project/amenity-1.webp", "usage_section": "amenity reference; renderer uses existing garden icon" },
+    { "original_url": "https://ruchirealty.com/ruchi-lifescapes-indore-project/images/amenities/a-2.jpg", "downloaded_local_path": "public/projects/ruchi-lifescapes-indore-project/amenity-2.webp", "final_public_path": "/projects/ruchi-lifescapes-indore-project/amenity-2.webp", "usage_section": "amenity reference; renderer uses existing hall/building icon" },
+    { "original_url": "https://ruchirealty.com/ruchi-lifescapes-indore-project/images/amenities/a-3.jpg", "downloaded_local_path": "public/projects/ruchi-lifescapes-indore-project/amenity-3.webp", "final_public_path": "/projects/ruchi-lifescapes-indore-project/amenity-3.webp", "usage_section": "amenity reference; renderer uses existing playground icon" },
+    { "original_url": "https://ruchirealty.com/ruchi-lifescapes-indore-project/images/amenities/a-4.jpg", "downloaded_local_path": "public/projects/ruchi-lifescapes-indore-project/amenity-4.webp", "final_public_path": "/projects/ruchi-lifescapes-indore-project/amenity-4.webp", "usage_section": "amenity reference; renderer uses existing tennis icon" },
+    { "original_url": "https://ruchirealty.com/ruchi-lifescapes-indore-project/images/plans/plan-1.jpg", "downloaded_local_path": "public/projects/ruchi-lifescapes-indore-project/layout-plan.webp", "final_public_path": "/projects/ruchi-lifescapes-indore-project/layout-plan.webp", "usage_section": "layout plan" },
+    { "original_url": "https://ruchirealty.com/ruchi-lifescapes-indore-project/images/gallery/g-1.jpg", "downloaded_local_path": "public/projects/ruchi-lifescapes-indore-project/gallery-1.webp", "final_public_path": "/projects/ruchi-lifescapes-indore-project/gallery-1.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/ruchi-lifescapes-indore-project/images/gallery/g-2.jpg", "downloaded_local_path": "public/projects/ruchi-lifescapes-indore-project/gallery-2.webp", "final_public_path": "/projects/ruchi-lifescapes-indore-project/gallery-2.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/ruchi-lifescapes-indore-project/images/gallery/g-3.jpg", "downloaded_local_path": "public/projects/ruchi-lifescapes-indore-project/gallery-3.webp", "final_public_path": "/projects/ruchi-lifescapes-indore-project/gallery-3.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/ruchi-lifescapes-indore-project/images/gallery/g-4.jpg", "downloaded_local_path": "public/projects/ruchi-lifescapes-indore-project/gallery-4.webp", "final_public_path": "/projects/ruchi-lifescapes-indore-project/gallery-4.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/ruchi-lifescapes-indore-project/images/gallery/g-5.jpg", "downloaded_local_path": "public/projects/ruchi-lifescapes-indore-project/gallery-5.webp", "final_public_path": "/projects/ruchi-lifescapes-indore-project/gallery-5.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/ruchi-lifescapes-indore-project/images/gallery/g-6.jpg", "downloaded_local_path": "public/projects/ruchi-lifescapes-indore-project/gallery-6.webp", "final_public_path": "/projects/ruchi-lifescapes-indore-project/gallery-6.webp", "usage_section": "gallery" },
+    { "original_url": "https://ruchirealty.com/ruchi-lifescapes-indore-project/images/loc-1.jpg", "downloaded_local_path": "public/projects/ruchi-lifescapes-indore-project/location-map.webp", "final_public_path": "/projects/ruchi-lifescapes-indore-project/location-map.webp", "usage_section": "location" }
+  ],
+  "verify": [
+    "Brochure PDF is not exposed by the source HTML or its download buttons.",
+    "Walkthrough video URL is not present in the source HTML.",
+    "Google Maps embed is not present; the downloaded location map image is used.",
+    "Amenity image cards are not supported by the current shared renderer, so existing amenity icon keys are used."
+  ]
+}

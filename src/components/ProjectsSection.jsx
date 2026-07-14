@@ -21,8 +21,29 @@ function statusCls(s) {
 function projectUrl(p) {
   const name = String(p?.name || p?.title || "").toLowerCase();
   const city = String(p?.city || p?.location || "").toLowerCase();
+  if (name.includes("one victoria") && city.includes("kolkata")) {
+    return "/projects/one-victoria-new-town";
+  }
   if (name.includes("ruchi lifescapes") && city.includes("bhopal")) {
     return "/projects/lifescapes-bhopal";
+  }
+  if (name.includes("ruchi lifescapes") && city.includes("indore")) {
+    return "/projects/ruchi-lifescapes-indore-project";
+  }
+  if (name.includes("anand vihar") && city.includes("indore")) {
+    return "/projects/anand-vihar-indore";
+  }
+  if (name.includes("saatvik green") && city.includes("indore")) {
+    return "/projects/saatvikgreen-indore";
+  }
+  if (name.includes("saatvik vihar") && city.includes("indore")) {
+    return "/projects/saatvik-vihar-indore";
+  }
+  if (name.includes("ruchi enclave") && city.includes("indore")) {
+    return "/projects/ruchi-enclave-indore";
+  }
+  if (name.includes("oscar sanctuary") && city.includes("indore")) {
+    return "/projects/oscar-sanctuary-indore";
   }
   if (name.includes("oscar fort") && city.includes("indore")) {
     return "/projects/oscar-fort-indore";

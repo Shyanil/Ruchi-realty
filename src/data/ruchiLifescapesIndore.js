@@ -1,0 +1,45 @@
+export const RUCHI_LIFESCAPES_INDORE_FALLBACK = {
+  heroTitle: "Ruchi Lifescapes",
+  heroTagline: "Ruchi Lifescapes Indore - Big on Life",
+  heroLogo: "/projects/ruchi-lifescapes-indore-project/project-logo.webp",
+  heroBg: "/projects/ruchi-lifescapes-indore-project/hero.webp",
+  overviewParagraphs: [
+    "The big on life now gets bigger.",
+    "A premium township, Ruchi Lifescapes Indore, is nestled in the vast expanse of lush green surroundings, featuring the finest living options and top-of-the-line amenities. Thoughtfully designed elegant living spaces comprise Villas, Row Houses, and luxurious plots. Conveniently located near Phoenix Citadel and well connected to the Nagpur Highway, it is situated at Jhalaria, which is fast emerging as the choicest living destination of the city. Life at Ruchi Lifescapes Indore has emerged as a convenient, safe, and splendid location for your home.",
+    "With RUCHI LIFESCAPES, we now unveil a glorious mix of splendor and articulation. Here, you will find exclusive plots for the privileged few, so that you can design according to your specific needs. Step into this exquisite haven of luxuries to discover yourself in a completely different world, offering an unparalleled living experience.",
+  ],
+  overviewHighlights: [
+    { label: "Amenities", desc: "Ample Amenities", icon: "amenities" },
+    { label: "Type", desc: "Premium Villa Plots", icon: "infrastructure" },
+    { label: "Plot Size", desc: "1400 - 10000 sqft", icon: "size" },
+    { label: "Location", desc: "Jhalariya, Indore", icon: "location" },
+  ],
+  amenities: [
+    { name: "Garden", icon: "garden" },
+    { name: "Row House / Villa", icon: "hall" },
+    { name: "Kids Play Zone", icon: "playground" },
+    { name: "Basketball Court / Tennis Court", icon: "tennis" },
+  ],
+  specifications: [
+    { title: "Project Details", desc: "VISHAL RESORTS & HOTELS PVT. LTD. Behind Shishukunj School, Off Indore Bypass, Jhalaria Village, Indore (M.P.) - India. Registration ID: P-IND-22-3276. Phone: +91 731 401 8009. Email: emarketing@rrhlrealty.com" },
+    { title: "__hero_mobile_url__", desc: "/projects/ruchi-lifescapes-indore-project/hero-mobile.webp" },
+    { title: "__company_logo_url__", desc: "/projects/ruchi-lifescapes-indore-project/company-logo.webp" },
+    { title: "__floor_plans__", desc: JSON.stringify([{ title: "Layout Plan", desc: "/projects/ruchi-lifescapes-indore-project/layout-plan.webp" }]) },
+    { title: "__video_section__", desc: JSON.stringify({ enabled: false, videoUrl: "", thumbnailUrl: "" }) },
+  ],
+  locationImage: "/projects/ruchi-lifescapes-indore-project/location-map.webp",
+  locationMapEmbed: "",
+  locationDestinations: [
+    { name: "Hotel", dist: "2 km" }, { name: "Hospital", dist: "3 km" },
+    { name: "School", dist: "1 km" }, { name: "Mall", dist: "2 km" },
+    { name: "Airport", dist: "22 km" }, { name: "Railway Station", dist: "9 km" },
+  ],
+  walkthroughVideoId: "",
+  galleryImages: Array.from({ length: 6 }, (_, index) => ({
+    src: `/projects/ruchi-lifescapes-indore-project/gallery-${index + 1}.webp`,
+    alt: `Ruchi Lifescapes Indore gallery image ${index + 1}`,
+  })),
+  brochureUrl: "",
+  metaTitle: "Ruchi Lifescapes Indore - Big on Life | Ruchi Realty",
+  metaDescription: "Ruchi Lifescapes Indore is a premium township at Jhalariya, Indore, offering premium villa plots from 1400 to 10000 sqft, ample amenities, lush green surroundings, and excellent connectivity near Phoenix Citadel and the Indore Bypass.",
+};
