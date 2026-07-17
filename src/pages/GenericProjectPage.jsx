@@ -543,19 +543,52 @@ function AmenityIcon({ icon, name }) {
 }
 
 function SectionNav({ data }) {
-  const sections = [
-    ["overview", true],
-    ["amenities", data.amenities.length],
-    ["specifications", data.specifications.length],
-    ["floor-plans", data.floorPlans.length],
-    ["walkthrough", data.videoSection.videoUrl],
-    ["location", data.locationMapEmbed || data.locationImage || data.locationDestinations.length],
-    ["gallery", data.galleryImages.length],
-  ].filter(([, show]) => Boolean(show)).map(([id]) => id);
+  const [active, setActive] = useState("overview");
+  const sections = useMemo(() => {
+    return [
+      ["overview", "Overview", true],
+      ["amenities", "Amenities", data.amenities?.length],
+      ["specifications", "Specifications", data.specifications?.length],
+      ["floor-plans", "Floor Plans", data.floorPlans?.length],
+      ["walkthrough", "Walkthrough", data.videoSection?.videoUrl],
+      ["location", "Location", data.locationMapEmbed || data.locationImage || data.locationDestinations?.length],
+      ["gallery", "Gallery", data.galleryImages?.length],
+    ].filter(([, , show]) => Boolean(show)).map(([id, label]) => ({ id, label }));
+  }, [data]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) setActive(e.target.id);
+      });
+    }, { threshold: 0.3, rootMargin: "-80px 0px 0px 0px" });
+
+    sections.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [sections]);
+
+  const scrollTo = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <nav className="osc-sticky-nav" aria-label="Project sections">
       <div className="rr-wrap"><div className="osc-sticky-nav__inner">
-        {sections.map((id) => <button key={id} type="button" className="osc-sticky-nav__btn" onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })}>{id.split("-").map((part) => part[0].toUpperCase() + part.slice(1)).join(" ")}</button>)}
+        {sections.map(({ id, label }) => (
+          <button
+            key={id}
+            type="button"
+            className={`osc-sticky-nav__btn ${active === id ? "is-active" : ""}`}
+            onClick={() => scrollTo(id)}
+          >
+            {label}
+          </button>
+        ))}
       </div></div>
     </nav>
   );
@@ -650,6 +683,7 @@ export default function GenericProjectPage() {
   const [subpage, setSubpage] = useState(null);
   const [loaded, setLoaded] = useState(false);
   const [brochurePopup, setBrochurePopup] = useState(false);
+  const [navHidden, setNavHidden] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -670,6 +704,15 @@ export default function GenericProjectPage() {
 
   const data = useMemo(() => normalizeProjectSubpage(project, subpage), [project, subpage]);
   const onBrochure = () => setBrochurePopup(true);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setNavHidden(brochurePopup || window.scrollY > window.innerHeight - 100);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [brochurePopup]);
 
   useEffect(() => {
     document.title = data.metaTitle;
@@ -699,7 +742,7 @@ export default function GenericProjectPage() {
 
   return (
     <>
-      <Nav onContact={onBrochure} />
+      <Nav onContact={onBrochure} hidden={navHidden} />
       <main>
         <header className="osc-hero" data-screen-label={data.title}>
           <div className="osc-hero__bg"><picture>{data.heroMobileUrl ? <source media="(max-width: 720px)" srcSet={data.heroMobileUrl} /> : null}<img src={data.heroBg} alt={data.title} /></picture>{data.heroMedia?.type === "youtube_video" && data.heroMedia.url ? <iframe className="osc-hero__video" src={data.heroMedia.url} title={`${data.title} hero video`} allow="autoplay; encrypted-media" tabIndex="-1" aria-hidden="true" /> : null}</div>

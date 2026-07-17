@@ -400,7 +400,7 @@ function GallerySection({ subpage }) {
 }
 
 function BrochurePopup({ subpage, onClose }) {
-  const [f, setF] = useState({ name: "", phone: "", email: "", project: "Active Business Park — Kolkata", message: "" });
+  const [f, setF] = useState({ name: "", phone: "", email: "", project: "Active Business Park - Kolkata", message: "" });
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [err, setErr] = useState("");
@@ -550,12 +550,12 @@ export default function ActiveBusinessParkPage() {
 
   useEffect(() => {
     const onScroll = () => {
-      setNavHidden(window.scrollY > window.innerHeight - 100);
+      setNavHidden(brochurePopup || window.scrollY > window.innerHeight - 100);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [brochurePopup]);
 
   useEffect(() => {
     document.title = subpage.metaTitle || fallbackData.metaTitle;

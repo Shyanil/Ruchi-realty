@@ -758,7 +758,7 @@ function LocationSection({ subpage }) {
 }
 
 function BrochurePopup({ subpage, onClose }) {
-  const [f, setF] = useState({ name: "", phone: "", email: "", project: "Active Acres — Kolkata", message: "" });
+  const [f, setF] = useState({ name: "", phone: "", email: "", project: "Active Acres - Kolkata", message: "" });
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
@@ -928,12 +928,12 @@ export default function ActiveAcresAngelicaPage() {
 
   useEffect(() => {
     const onScroll = () => {
-      setNavHidden(window.scrollY > window.innerHeight - 100);
+      setNavHidden(brochurePopup || window.scrollY > window.innerHeight - 100);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [brochurePopup]);
 
   useEffect(() => {
     document.title = subpage.metaTitle || fallbackData.metaTitle;

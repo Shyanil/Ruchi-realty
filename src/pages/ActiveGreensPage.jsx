@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import Nav from "../components/Nav";
 import { Footer } from "../components/Footer";
@@ -296,16 +296,34 @@ function HeroSection({ subpage, onBrochureClick }) {
 }
 
 function StickyNav({ subpage }) {
-  const sections = [
-    { id: "overview", label: "Overview" },
-    subpage.amenities?.length > 0 && { id: "amenities", label: "Amenities" },
-    subpage.specifications?.length > 0 && { id: "landscape", label: "Specifications" },
-    subpage.floorPlans?.length > 0 && { id: "floor-plans", label: "Floor Plans" },
-    subpage.galleryImages?.length > 0 && { id: "gallery", label: "Gallery" },
-    subpage.locationImage && { id: "location", label: "Location" },
-    (subpage.videoSection?.enabled && subpage.videoSection?.videoUrl) && { id: "walkthrough", label: "Walkthrough" },
-    (subpage.gmbReviews?.enabled && subpage.gmbReviews?.reviews?.length > 0) && { id: "reviews", label: "Reviews" }
-  ].filter(Boolean);
+  const [active, setActive] = useState("overview");
+  const sections = useMemo(() => {
+    return [
+      { id: "overview", label: "Overview" },
+      subpage.amenities?.length > 0 && { id: "amenities", label: "Amenities" },
+      subpage.specifications?.length > 0 && { id: "landscape", label: "Specifications" },
+      subpage.floorPlans?.length > 0 && { id: "floor-plans", label: "Floor Plans" },
+      subpage.galleryImages?.length > 0 && { id: "gallery", label: "Gallery" },
+      subpage.locationImage && { id: "location", label: "Location" },
+      (subpage.videoSection?.enabled && subpage.videoSection?.videoUrl) && { id: "walkthrough", label: "Walkthrough" },
+      (subpage.gmbReviews?.enabled && subpage.gmbReviews?.reviews?.length > 0) && { id: "reviews", label: "Reviews" }
+    ].filter(Boolean);
+  }, [subpage]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) setActive(e.target.id);
+      });
+    }, { threshold: 0.3, rootMargin: "-80px 0px 0px 0px" });
+
+    sections.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [sections]);
 
   const scrollTo = (id) => {
     const el = document.getElementById(id);
@@ -326,7 +344,7 @@ function StickyNav({ subpage }) {
           <button
             key={id}
             type="button"
-            className="osc-sticky-nav__btn"
+            className={`osc-sticky-nav__btn ${active === id ? "is-active" : ""}`}
             onClick={() => scrollTo(id)}
           >
             {label}
@@ -760,7 +778,7 @@ function BrochurePopup({ subpage, onClose }) {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setLoading(true);
     try {
       if (window.RuchiBackend?.leads) {
@@ -787,38 +805,54 @@ function BrochurePopup({ subpage, onClose }) {
     }
   };
 
+  const valid = form.name.trim() && form.phone.trim() && form.email.trim();
+
   return (
-    <div className="osc-popup" onClick={onClose}>
-      <div className="osc-popup__content" onClick={(e) => e.stopPropagation()}>
+    <div className="osc-popup-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="Download brochure">
+      <div className="osc-popup" onClick={(e) => e.stopPropagation()}>
         <button type="button" className="osc-popup__close" onClick={onClose} aria-label="Close form">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </button>
         {submitted ? (
-          <div style={{ textAlign: "center", padding: "20px 0" }}>
-            <h3 style={{ fontSize: "24px", color: "var(--rr-indigo)", marginBottom: "12px" }}>Thank You!</h3>
-            <p style={{ fontSize: "14.5px", color: "var(--rr-ink)", opacity: 0.8, lineHeight: "1.6", marginBottom: "24px" }}>
-              Your details have been submitted. Your brochure download has started automatically.
-            </p>
-            <button type="button" className="submit-btn" onClick={onClose}>Close Window</button>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit}>
-            <h3 style={{ fontSize: "22px", fontWeight: "var(--rr-w-medium)", color: "var(--rr-ink)", marginBottom: "8px" }}>Enquire Now</h3>
-            <p style={{ fontSize: "13.5px", opacity: 0.6, marginBottom: "20px" }}>Enter your details below to download the brochure and speak to our sales representative.</p>
-            
-            <div style={{ display: "grid", gap: "12px", marginBottom: "20px" }}>
-              <input required type="text" placeholder="Your Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} style={{ padding: "10px 14px", border: "1px solid rgba(0,0,0,0.12)", borderRadius: "4px", fontSize: "14px" }} />
-              <input required type="email" placeholder="Email Address" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} style={{ padding: "10px 14px", border: "1px solid rgba(0,0,0,0.12)", borderRadius: "4px", fontSize: "14px" }} />
-              <input required type="tel" placeholder="Phone Number" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} style={{ padding: "10px 14px", border: "1px solid rgba(0,0,0,0.12)", borderRadius: "4px", fontSize: "14px" }} />
-              <textarea placeholder="Message / Requirements (Optional)" rows={3} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} style={{ padding: "10px 14px", border: "1px solid rgba(0,0,0,0.12)", borderRadius: "4px", fontSize: "14px", resize: "none" }} />
-            </div>
-
-            <button type="submit" className="submit-btn" style={{ width: "100%", justifyContent: "center" }} disabled={loading}>
-              {loading ? "Submitting..." : "Submit & Download Brochure"}
+          <>
+            <h3>Thank You!</h3>
+            <p>Your details have been submitted. Your brochure download has started automatically.</p>
+            <button type="button" className="submit-btn" onClick={onClose} style={{ width: "100%", justifyContent: "center" }}>
+              Close Window<span className="ar">→</span>
             </button>
-          </form>
+          </>
+        ) : (
+          <>
+            <h3>Download Brochure</h3>
+            <p>Enter your details below to receive the brochure.</p>
+            <div className="field">
+              <label>Name</label>
+              <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your full name" />
+            </div>
+            <div className="field">
+              <label>Phone</label>
+              <input required value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+91" />
+            </div>
+            <div className="field">
+              <label>Email</label>
+              <input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="you@email.com" />
+            </div>
+            <div className="field">
+              <label>Project of interest</label>
+              <select value={form.project} onChange={(e) => setForm({ ...form, project: e.target.value })}>
+                <option value="Active Greens">Active Greens</option>
+              </select>
+            </div>
+            <div className="field">
+              <label>Message</label>
+              <textarea rows={3} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="I'd like to know more about the project." />
+            </div>
+            <button className="submit-btn" onClick={handleSubmit} disabled={!valid || loading} style={{ width: "100%", justifyContent: "center", marginTop: "8px" }}>
+              {loading ? "Sending..." : "Download Now"}<span className="ar">→</span>
+            </button>
+          </>
         )}
       </div>
     </div>
@@ -841,15 +875,13 @@ export default function ActiveGreensPage() {
   const [navHidden, setNavHidden] = useState(false);
 
   useEffect(() => {
-    let lastScrollY = window.scrollY;
-    const handleScroll = () => {
-      if (window.scrollY > lastScrollY && window.scrollY > 120) setNavHidden(true);
-      else setNavHidden(false);
-      lastScrollY = window.scrollY;
+    const onScroll = () => {
+      setNavHidden(brochurePopup || window.scrollY > window.innerHeight - 100);
     };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [brochurePopup]);
 
   const onContact = useCallback(() => {
     setBrochurePopup(true);

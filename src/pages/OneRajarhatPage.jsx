@@ -794,7 +794,7 @@ function MobileFixedCta({ onBrochureClick }) {
 }
 
 function BrochurePopup({ subpage, onClose }) {
-  const [f, setF] = useState({ name: "", phone: "", email: "", project: "One Rajarhat — Serviced Suites & Residences", message: "" });
+  const [f, setF] = useState({ name: "", phone: "", email: "", project: "One Rajarhat - Kolkata", message: "" });
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
@@ -831,9 +831,9 @@ function BrochurePopup({ subpage, onClose }) {
   };
 
   return (
-    <div className="brochure-popup-overlay" onClick={onClose}>
-      <div className="brochure-popup-card" onClick={(e) => e.stopPropagation()}>
-        <button className="close-btn" onClick={onClose} aria-label="Close modal">×</button>
+    <div className="osc-popup-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="Download brochure">
+      <div className="osc-popup" onClick={(e) => e.stopPropagation()}>
+        <button className="osc-popup__close" onClick={onClose} aria-label="Close modal">×</button>
         {sent ? (
           <>
             <h3>Thank You!</h3>
