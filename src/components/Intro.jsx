@@ -16,7 +16,7 @@ export default function Intro() {
         </Reveal>
         <Reveal delay={160}>
           <p className="intro__sub">
-            For nearly four decades, across Kolkata, Indore, and Bhopal, we have treated the home as a promise — built with intent, handed over with care, and held to long after the keys change hands.
+            For nearly four decades, across Kolkata, Indore, and Bhopal, we have treated the home as a promise, built with intent, handed over with care, and held to long after the keys change hands.
           </p>
         </Reveal>
       </div>

@@ -48,7 +48,7 @@ export function Testimonials() {
               <h2 className="testi-head">The families who live<br /><span className="rr-grad">in what we promised.</span></h2>
             </div>
             <p className="testi-intro">
-              No scripts, no actors. Eight families, filmed in the homes we handed them — speaking about the part that mattered.
+              No scripts, no actors. Real families, filmed in the homes we handed them, speaking about the part that mattered.
             </p>
           </div>
         </Reveal>

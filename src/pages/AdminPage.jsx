@@ -435,7 +435,7 @@ function DashboardAdmin({ onTab }) {
               <article className="admin-row" key={lead.id}>
                 <div>
                   <strong>{lead.name}</strong>
-                  <span>{lead.interest} \u00b7 {lead.status}</span>
+                  <span>{lead.interest} - {lead.status}</span>
                 </div>
                 <button type="button" className="admin-text-btn" onClick={() => onTab("leads")}>Open</button>
               </article>
@@ -449,7 +449,7 @@ function DashboardAdmin({ onTab }) {
               <article className="admin-row" key={app.id}>
                 <div>
                   <strong>{app.full_name}</strong>
-                  <span>{app.job_title || "Career"} \u00b7 {app.status}</span>
+                  <span>{app.job_title || "Career"} - {app.status}</span>
                 </div>
                 <button type="button" className="admin-text-btn" onClick={() => onTab("careers")}>Open</button>
               </article>
@@ -1004,7 +1004,7 @@ function ProjectsAdmin() {
           <AdminField label="Location"><input required value={form.location} onChange={(event) => set("location", event.target.value)} /></AdminField>
           <AdminField label="Type">
             <select value={form.type} onChange={(event) => set("type", event.target.value)}>
-              {["Residential", "Commercial", "Township", "Land", "Leasing"].map((item) => <option key={item}>{item}</option>)}
+              {["Residential", "Commercial"].map((item) => <option key={item}>{item}</option>)}
             </select>
           </AdminField>
           <AdminField label="Status">
@@ -1113,7 +1113,7 @@ function ProjectsAdmin() {
               <img className="admin-thumb" src={project.image_url || "assets/logo-mark.png"} alt="" />
               <div>
                 <strong>{project.title}</strong>
-                <span>{project.location} \u00b7 {project.type} \u00b7 {project.status}</span>
+                <span>{project.location} - {project.type} - {project.status}</span>
               </div>
               <div className="admin-actions">
                 <button type="button" onClick={() => edit(project)}>Edit</button>
@@ -1168,8 +1168,8 @@ function LeadsAdmin() {
           <article className="admin-row admin-row--lead" key={lead.id}>
             <div>
               <strong>{lead.name}</strong>
-              <span>{lead.phone} \u00b7 {lead.email}</span>
-              <span>{lead.interest} \u00b7 {lead.source}</span>
+              <span>{lead.phone} - {lead.email}</span>
+              <span>{lead.interest} - {lead.source}</span>
               {lead.notes ? <p>{lead.notes}</p> : null}
             </div>
             <div className="admin-actions">
@@ -1369,7 +1369,7 @@ function BlogsAdmin() {
               <img className="admin-thumb" src={blog.image || "assets/logo-mark.png"} alt="" />
               <div>
                 <strong>{blog.title}</strong>
-                <span>{blog.category} \u00b7 {blog.author}</span>
+                <span>{blog.category} - {blog.author}</span>
               </div>
               <div className="admin-actions">
                 <button type="button" onClick={() => edit(blog)}>Edit</button>

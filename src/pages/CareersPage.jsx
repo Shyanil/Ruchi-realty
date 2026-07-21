@@ -10,7 +10,7 @@ const JOBS = [
     dept: "Civil Engineering",
     type: "Full-time",
     desc: "Lead civil engineering execution, site coordination, construction quality, and project delivery.",
-    dropdownVal: "Technical Head \u2014 Civil Engineering",
+    dropdownVal: "Technical Head - Civil Engineering",
     overview: "We are looking for an experienced Technical Head to lead our civil engineering division. You will supervise project execution, quality control, site coordination, and structural compliance across our active construction sites.",
     responsibilities: [
       "Supervise construction milestones, contractor execution, and material delivery schedules.",
@@ -32,7 +32,7 @@ const JOBS = [
     dept: "Customer Support",
     type: "Full-time",
     desc: "Handle customer calls, project enquiries, follow-ups, site visit coordination, and support the sales team.",
-    dropdownVal: "Telecaller \u2014 Customer Support",
+    dropdownVal: "Telecaller - Customer Support",
     overview: "Join our customer relationship team to handle incoming project enquiries, follow-ups, and coordinate customer site visits. You are the first point of contact for our potential homebuyers.",
     responsibilities: [
       "Handle customer enquiries received through digital campaigns and website forms.",
@@ -54,7 +54,7 @@ const JOBS = [
     dept: "Sales",
     type: "Full-time",
     desc: "Lead sales conversations, manage client relationships, coordinate site visits, and support business growth.",
-    dropdownVal: "Sales Manager \u2014 Sales",
+    dropdownVal: "Sales Manager - Sales",
     overview: "Lead our sales efforts by conducting site presentations, negotiating terms, and guiding homebuyers through booking procedures.",
     responsibilities: [
       "Conduct premium face-to-face site presentations and guide prospective buyers.",
@@ -76,7 +76,7 @@ const JOBS = [
     dept: "Sales",
     type: "Full-time",
     desc: "Assist customers with property enquiries, explain project details, follow up with leads, and support conversions.",
-    dropdownVal: "Sales Executive \u2014 Sales",
+    dropdownVal: "Sales Executive - Sales",
     overview: "Assist homebuyers during site visits, provide project information, and support Sales Managers in closing bookings.",
     responsibilities: [
       "Welcome walk-in clients and explain housing layout specifications.",
@@ -98,7 +98,7 @@ const JOBS = [
     dept: "Other",
     type: "Future Opportunity",
     desc: "Send your profile for future opportunities across engineering, sales, CRM, operations, and administration.",
-    dropdownVal: "Open Application \u2014 Other",
+    dropdownVal: "Open Application - Other",
     overview: "Don't see an open role that matches your profile? Submit your resume here. We are always looking for talented individuals across project planning, operations, design, finance, and CRM.",
     responsibilities: [
       "Collaborate with different departments depending on matching profiles.",
@@ -186,7 +186,7 @@ function CareersCulture() {
 
               <div className="cr-culture__quote-card">
                 <p className="cr-culture__quote">
-                  \u201cGreat spaces are built by people who keep learning, keep improving, and take pride in every detail.\u201d
+                  "Great spaces are built by people who keep learning, keep improving, and take pride in every detail."
                 </p>
               </div>
             </Reveal>
@@ -230,7 +230,7 @@ function CareersPositions({ jobs, onSelectJob }) {
                 <h3 className="cr-job-card__title">{job.title}</h3>
                 <p className="cr-job-card__desc">{job.desc}</p>
                 <button type="button" className="cr-job-card__btn">
-                  Read More & Apply <span className="ar">\u2192</span>
+                  Read More & Apply
                 </button>
               </Reveal>
             </div>
@@ -408,7 +408,7 @@ function JobDetailView({ job, onBack }) {
     <div className="cr-detail-page section-pad" style={{ background: "var(--rr-paper)", paddingTop: "140px" }}>
       <div className="rr-wrap">
         <button type="button" className="cr-back-btn" onClick={onBack}>
-          <span className="ar">\u2190</span> Back to all open positions
+          Back to all open positions
         </button>
 
         <div className="cr-detail-grid">

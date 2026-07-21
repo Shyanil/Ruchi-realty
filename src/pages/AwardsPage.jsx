@@ -52,10 +52,10 @@ function AwardsHero() {
             </p>
             <div className="awd-hero__actions">
               <button type="button" className="awd-hero__btn awd-hero__btn--primary" onClick={() => scrollToSection("#awards")}>
-                View Awards <span className="ar">\u2192</span>
+                View Awards
               </button>
               <button type="button" className="awd-hero__btn awd-hero__btn--ghost" onClick={() => { window.location.href = "/projects"; }}>
-                Our Projects <span className="ar">\u2192</span>
+                Our Projects
               </button>
             </div>
           </Reveal>
@@ -78,7 +78,7 @@ function AwardsShowcase() {
         <div className="awd-showcase__header">
           <div className="eyebrow awd-showcase__label">AWARDS &amp; RECOGNITION</div>
           <h2 className="awd-showcase__title">Celebrating milestones of trust and excellence.</h2>
-          <p className="awd-showcase__lead">Honours and recognitions that reflect Ruchi Realty\u2019s commitment to quality, innovation, and landmark development.</p>
+          <p className="awd-showcase__lead">Honours and recognitions that reflect Ruchi Realty's commitment to quality, innovation, and landmark development.</p>
         </div>
 
         <div className="awd-simple-grid" aria-label="Ruchi Realty awards">

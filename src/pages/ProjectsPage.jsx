@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Nav from "../components/Nav";
 import { Contact } from "../components/Contact";
 import { Footer } from "../components/Footer";
@@ -9,8 +10,8 @@ import { PROJECTS } from "../data/projects";
 const PP_CITIES = ["All", "Kolkata", "Indore", "Bhopal"];
 const PP_STATUS = ["All", "Ready to Move", "Ongoing", "Upcoming"];
 
-function ppHashFilter() {
-  const raw = (typeof location !== "undefined" ? location.hash : "").replace(/^#/, "");
+function ppHashFilter(hash = typeof location !== "undefined" ? location.hash : "") {
+  const raw = hash.replace(/^#/, "");
   const q = new URLSearchParams(raw);
   const city = q.get("city"), status = q.get("status"), type = q.get("type");
   return {
@@ -20,15 +21,36 @@ function ppHashFilter() {
   };
 }
 
+function scrollToProjects() {
+  const projects = document.getElementById("projects");
+  if (!projects) return;
+  const headerOffset = 80;
+  window.scrollTo({
+    top: projects.getBoundingClientRect().top + window.scrollY - headerOffset,
+    behavior: "smooth",
+  });
+}
+
 export default function ProjectsPage() {
-  const init = ppHashFilter();
+  const routeLocation = useLocation();
+  const navigate = useNavigate();
+  const init = ppHashFilter(routeLocation.hash);
   const [city, setCity] = useState(init.city);
   const [status, setStatus] = useState(init.status);
   const [items, setItems] = useState(() => PROJECTS);
   const [type, setType] = useState(init.type);
 
-  const pickCity = (c) => { setCity(c); setType("All"); };
-  const pickStatus = (s) => { setStatus(s); setType("All"); };
+  const updateFilters = (nextCity, nextStatus) => {
+    setCity(nextCity);
+    setStatus(nextStatus);
+    setType("All");
+    const params = new URLSearchParams();
+    if (nextCity !== "All") params.set("city", nextCity);
+    if (nextStatus !== "All") params.set("status", nextStatus);
+    navigate(`/projects${params.size ? `#${params.toString()}` : ""}`, { replace: true });
+  };
+  const pickCity = (c) => updateFilters(c, status);
+  const pickStatus = (s) => updateFilters(city, s);
 
   useEffect(() => {
     let active = true;
@@ -47,25 +69,15 @@ export default function ProjectsPage() {
     (type === "All" || p.type === type));
 
   useEffect(() => {
-    if (init.city !== "All" || init.status !== "All" || init.type !== "All") {
-      const t = setTimeout(() => {
-        if (window.smoothTo) window.smoothTo("#projects");
-      }, 60);
-      return () => clearTimeout(t);
+    const updated = ppHashFilter(routeLocation.hash);
+    setCity(updated.city);
+    setStatus(updated.status);
+    setType(updated.type);
+    if (routeLocation.hash) {
+      const timer = window.setTimeout(scrollToProjects, 60);
+      return () => window.clearTimeout(timer);
     }
-  }, []);
-
-  useEffect(() => {
-    const handleHashChange = () => {
-      const updated = ppHashFilter();
-      setCity(updated.city);
-      setStatus(updated.status);
-      setType(updated.type);
-      if (window.smoothTo) window.smoothTo("#projects");
-    };
-    window.addEventListener("hashchange", handleHashChange);
-    return () => window.removeEventListener("hashchange", handleHashChange);
-  }, []);
+  }, [routeLocation.hash]);
 
   const onContact = () => {
     if (window.smoothTo) window.smoothTo("#contact");
@@ -73,7 +85,7 @@ export default function ProjectsPage() {
 
   return (
     <>
-      <Nav onContact={onContact} />
+      <Nav onContact={onContact} solidAt={60} />
       <main>
         <header className="pp-hero" data-screen-label="All Projects">
           <div className="pp-hero__sig" aria-hidden="true"></div>
@@ -82,7 +94,7 @@ export default function ProjectsPage() {
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>Our Projects</div>
               <h1 className="pp-head">Every address,<br /><span className="rr-grad">across three cities.</span></h1>
               <p className="pp-lead">
-                Residences, commercial space, and townships in Kolkata, Indore, and Bhopal - each one carried from drawing to handover with the same care.
+                Residential and commercial projects in Kolkata, Indore, and Bhopal, each carried from drawing to handover with the same care.
               </p>
             </Reveal>
           </div>
@@ -93,11 +105,10 @@ export default function ProjectsPage() {
             <Reveal>
               <div className="ptabs" role="tablist" aria-label="Filter projects by city">
                 {PP_CITIES.map((c) => {
-                  const n = c === "All" ? pool.length : pool.filter((p) => cityOf(p) === c).length;
                   return (
                     <button key={c} role="tab" type="button" aria-selected={city === c}
                       className={`ptab ${city === c ? "is-active" : ""}`} onClick={() => pickCity(c)}>
-                      {c}<span className="ptab__count">{n}</span>
+                      {c}
                     </button>
                   );
                 })}
@@ -120,12 +131,6 @@ export default function ProjectsPage() {
             </div>
             {list.length === 0 ?
               <p className="pp-empty">Nothing here yet - try a different city or status.</p> : null}
-            <p className="pp-count">
-              {list.length} {list.length === 1 ? "address" : "addresses"}
-              {type === "All" ? "" : ` - ${type}s`}
-              {city === "All" ? "" : ` in ${city}`}
-              {status === "All" ? "" : ` - ${status}`}
-            </p>
           </div>
         </section>
 

@@ -4,7 +4,7 @@ import { Reveal, RImg } from "./shared";
 import { PROJECTS } from "../data/projects";
 
 const PROJECT_CITIES = ["All", "Kolkata", "Indore", "Bhopal"];
-const PROJECT_STATUSES = ["All", "Ready to Move", "Ongoing", "Upcoming"];
+const PROJECTS_PER_PAGE = 3;
 
 export function cityOf(p) {
   const c = p.city || "";
@@ -12,10 +12,6 @@ export function cityOf(p) {
   if (c.includes("Indore")) return "Indore";
   if (c.includes("Bhopal")) return "Bhopal";
   return "Other";
-}
-
-function statusCls(s) {
-  return s === "Ready to Move" ? "status--ready" : s === "Ongoing" ? "status--ongoing" : "status--upcoming";
 }
 
 function projectUrl(p) {
@@ -83,8 +79,6 @@ export function CardArrow() {
 export function ProjectTile({ p, i, n }) {
   const cls = p.status === "Ready to Move" ? "status--ready"
     : p.status === "Ongoing" ? "status--ongoing" : "status--upcoming";
-  const idx = String((n % 20) + 1).padStart(2, "0");
-
   const url = projectUrl(p);
   const isInternal = url && url.startsWith("/");
 
@@ -93,7 +87,6 @@ export function ProjectTile({ p, i, n }) {
       <Link className="ptile" data-cursor="View" to={url}>
         <RImg src={p.img} alt={`${p.name}, ${p.city}`} className="ptile__media" grade />
         <div className="ptile__scrim"></div>
-        <div className="ptile__idx">{idx}</div>
         <div className="ptile__top">
           <span className={`status ${cls}`}><span className="dot"></span>{p.status}</span>
           <span className="ptile__typetag">{p.type}</span>
@@ -112,7 +105,6 @@ export function ProjectTile({ p, i, n }) {
     <Tile className="ptile" data-cursor={url ? "View" : undefined} href={url || undefined}>
       <RImg src={p.img} alt={`${p.name}, ${p.city}`} className="ptile__media" grade />
       <div className="ptile__scrim"></div>
-      <div className="ptile__idx">{idx}</div>
       <div className="ptile__top">
         <span className={`status ${cls}`}><span className="dot"></span>{p.status}</span>
         <span className="ptile__typetag">{p.type}</span>
@@ -128,7 +120,7 @@ export function ProjectTile({ p, i, n }) {
 
 export function ProjectsSection() {
   const [city, setCity] = useState("All");
-  const [status, setStatus] = useState("All");
+  const [page, setPage] = useState(0);
   const [items, setItems] = useState(() => PROJECTS);
   useEffect(() => {
     let active = true;
@@ -140,13 +132,13 @@ export function ProjectsSection() {
     return () => { active = false; };
   }, []);
   const pool = items.length ? items : PROJECTS;
-  const filterPool = (selCity, selStatus) =>
-    pool.filter((p) =>
-      (selCity === "All" || cityOf(p) === selCity) &&
-      (selStatus === "All" || p.status === selStatus)
-    );
-  const shown = orderFeaturedProjects(filterPool(city, status)).slice(0, 3);
-  const filteredCount = filterPool(city, status).length;
+  const filterPool = (selectedCity) => pool.filter((p) => selectedCity === "All" || cityOf(p) === selectedCity);
+  const filteredProjects = orderFeaturedProjects(filterPool(city));
+  const pageCount = Math.max(1, Math.ceil(filteredProjects.length / PROJECTS_PER_PAGE));
+  const currentPage = Math.min(page, pageCount - 1);
+  const firstProject = currentPage * PROJECTS_PER_PAGE;
+  const shown = filteredProjects.slice(firstProject, firstProject + PROJECTS_PER_PAGE);
+  const changeCity = (selectedCity) => { setCity(selectedCity); setPage(0); };
   return (
     <section className="projects section-pad" id="projects">
       <div className="rr-wrap">
@@ -157,33 +149,17 @@ export function ProjectsSection() {
               <h2>Addresses we build,<br /><span className="rr-grad">and then stand by.</span></h2>
             </div>
             <p className="sec-head__lead">
-              Residences, commercial space, and townships across Kolkata, Indore, and Bhopal - each one carried from drawing to handover with the same care.
+              Residential and commercial projects across Kolkata, Indore, and Bhopal, each carried from drawing to handover with the same care.
             </p>
           </div>
         </Reveal>
         <Reveal delay={80}>
           <div className="ptabs" role="tablist" aria-label="Filter projects by city">
             {PROJECT_CITIES.map((c) => {
-              const n = filterPool(c, "All").length;
               return (
                 <button key={c} role="tab" type="button" aria-selected={city === c}
-                  className={`ptab ${city === c ? "is-active" : ""}`} onClick={() => setCity(c)}>
-                  {c}<span className="ptab__count">{n}</span>
-                </button>
-              );
-            })}
-          </div>
-        </Reveal>
-        <Reveal delay={120}>
-          <div className="ptabs ptabs--status" role="group" aria-label="Filter projects by status">
-            {PROJECT_STATUSES.map((s) => {
-              const n = filterPool(city, s).length;
-              const cls = s === "All" ? "" : statusCls(s);
-              return (
-                <button key={s} type="button" aria-pressed={status === s}
-                  className={`ptab ${status === s ? "is-active" : ""}`} onClick={() => setStatus(s)}>
-                  {s === "All" ? null : <span className={`dot ${cls}`}></span>}
-                  {s === "All" ? "All" : s}<span className="ptab__count">{n}</span>
+                  className={`ptab ${city === c ? "is-active" : ""}`} onClick={() => changeCity(c)}>
+                  {c}
                 </button>
               );
             })}
@@ -192,17 +168,22 @@ export function ProjectsSection() {
       </div>
       <div className="projects__sig" aria-hidden="true"></div>
       <div className="rr-wrap">
-        <div className="pgrid" key={`${city}-${status}`}>
-          {shown.map((p, i) =>
-            <Reveal key={`${city}-${status}-${p.name}-${p.city}`} delay={i * 80}>
-              <ProjectTile p={p} i={i} n={i} />
-            </Reveal>
-          )}
+        <div className="projects__carousel">
+          <div className="pgrid" key={`${city}-${currentPage}`} aria-live="polite">
+            {shown.map((p, i) =>
+              <Reveal key={`${city}-${p.name}-${p.city}`} delay={i * 80}>
+                <ProjectTile p={p} i={i} n={firstProject + i} />
+              </Reveal>
+            )}
+          </div>
         </div>
-        <div className="projects__legend">
-          <span className="projects__hint">
-            Showing {shown.length} of {filteredCount} {filteredCount === 1 ? "address" : "addresses"}{city === "All" ? "" : ` in ${city}`}
-          </span>
+        <div className="projects__controls" aria-label="Project carousel controls">
+          <button className="projects__arrow" type="button" aria-label="Show previous projects" disabled={currentPage === 0} onClick={() => setPage((v) => Math.max(0, v - 1))}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6" /></svg>
+          </button>
+          <button className="projects__arrow" type="button" aria-label="Show next projects" disabled={currentPage >= pageCount - 1} onClick={() => setPage((v) => Math.min(pageCount - 1, v + 1))}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+          </button>
         </div>
         <Reveal className="projects__more">
           <Link className="projects__allbtn" to="/projects">View All Projects<CardArrow /></Link>

@@ -1,6 +1,8 @@
 import { supabase } from './supabase';
 import { SEED_PROJECTS, normalizeProject, sortByOrder } from '../data/projects';
 
+const normalizeProjectType = (type) => String(type || '').toLowerCase() === 'commercial' ? 'Commercial' : 'Residential';
+
 const buildPayload = (projectData) => {
   const toOrder = (value) =>
     value === null || value === undefined || value === '' || Number.isNaN(Number(value))
@@ -13,7 +15,7 @@ const buildPayload = (projectData) => {
     image_url: projectData.image_url,
     location: projectData.location,
     description: projectData.description || null,
-    type: projectData.type,
+    type: normalizeProjectType(projectData.type),
     status: projectData.status ? projectData.status.trim() : null,
     featured: Boolean(projectData.featured),
     sort_order: toOrder(projectData.sort_order),

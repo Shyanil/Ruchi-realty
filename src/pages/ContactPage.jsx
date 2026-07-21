@@ -2,11 +2,98 @@ import Nav from "../components/Nav";
 import { Contact } from "../components/Contact";
 import { Footer } from "../components/Footer";
 import SEO from "../components/SEO";
-const options = [
-  { id: "experience-centre", number: "01", title: "Experience Centre", text: "Explore plans, material palettes, finishes, and project details with a member of our team in a calm, considered setting.", action: "Get directions", href: "https://www.google.com/maps/search/?api=1&query=Ruchi+Realty+54+10+D+C+Dey+Road+Tangra+Kolkata" },
-  { id: "private-viewings", number: "02", title: "Private viewings", text: "Arrange a personal project or ready-home viewing at a time that works for you. We will prepare the visit around what you want to understand.", action: "Schedule a viewing", href: "#contact" },
-  { id: "enquiries", number: "03", title: "Enquiries", text: "Ask about availability, pricing, specifications, possession, or investment opportunities. Your enquiry goes directly to someone who knows the projects.", action: "Send an enquiry", href: "#contact" },
+
+const offices = [
+  {
+    id: "indore-office",
+    number: "01",
+    city: "Indore Office",
+    company: "RRHL Realty Limited",
+    address: "2/1, South Tukoganj, Behind High Court, Indore – 452001 (M.P.), India.",
+    sales: "+91 89292 25275",
+    corporate: "0731-4018010 | 4018015 | 4018120",
+    action: "Call Sales",
+    href: "tel:+918929225275",
+  },
+  {
+    id: "kolkata-office",
+    number: "02",
+    city: "Kolkata Office",
+    company: "RRHL Realty Limited",
+    address: "54, 10, Debendra Chandra Dey Rd, near ITC Sonar, Tangra, Kolkata – 700015 (W.B.), India.",
+    sales: "+91 98364 18000",
+    corporate: "033-66066777",
+    action: "Call Sales",
+    href: "tel:+919836418000",
+  },
+  {
+    id: "bhopal-office",
+    number: "03",
+    city: "Bhopal Office",
+    company: "RRHL Realty Limited",
+    address: "Behind Bhabha College, Jatkhedi Hoshangabad Road, Bhopal – 462026 (M.P.), India.",
+    sales: "+91 89292 25275",
+    corporate: "Customer Care: +91 89292 25275",
+    action: "Call Customer Care",
+    href: "tel:+918929225275",
+  },
 ];
+
 export default function ContactPage() {
-  return <><SEO title="Contact Ruchi Realty | Experience Centre, Private Viewings & Enquiries" description="Contact Ruchi Realty to visit our Experience Centre, arrange a private project viewing, or enquire about premium real estate projects in Kolkata, Indore, and Bhopal." canonical="https://ruchirealty.com/contact" image="/assets/projects/one-victoria.webp" /><Nav solid /><main className="contact-page"><header className="contact-page__hero"><div className="contact-page__mark" aria-hidden="true" /><div className="rr-wrap"><span className="eyebrow">Begin a conversation</span><h1>A considered way<br /><span>to find your place.</span></h1><p>Whether you would like to experience our projects in person, arrange a private viewing, or simply ask a question, our team is here to help.</p></div></header><section className="contact-paths section-pad"><div className="rr-wrap"><div className="contact-paths__intro"><span className="eyebrow sec-eyebrow">How can we help?</span><h2>Choose how you would<br />like to connect.</h2></div><div className="contact-paths__grid">{options.map((option) => <article id={option.id} className="contact-path" key={option.id}><span className="contact-path__number">{option.number}</span><h3>{option.title}</h3><p>{option.text}</p><a href={option.href} target={option.href.startsWith("http") ? "_blank" : undefined} rel={option.href.startsWith("http") ? "noopener noreferrer" : undefined}>{option.action}<span>→</span></a></article>)}</div></div></section><Contact /></main><Footer /></>;
+  return (
+    <>
+      <SEO
+        title="Contact Ruchi Realty | Indore, Kolkata & Bhopal Offices"
+        description="Get in touch with RRHL Realty Limited across our offices in Indore, Kolkata, and Bhopal. Sales and corporate enquiry details."
+        canonical="https://ruchirealty.com/contact"
+        image="/assets/projects/one-victoria.webp"
+      />
+      <Nav solid />
+      <main className="contact-page">
+        <header className="contact-page__hero">
+          <div className="contact-page__mark" aria-hidden="true" />
+          <div className="rr-wrap">
+            <span className="eyebrow">Get In Touch</span>
+            <h1>A considered way<br /><span>to find your place.</span></h1>
+            <p>You can get in touch with us across our offices in Indore, Kolkata, and Bhopal or reach our customer care team anytime.</p>
+          </div>
+        </header>
+
+        <section className="contact-paths section-pad">
+          <div className="rr-wrap">
+            <div className="contact-paths__intro">
+              <span className="eyebrow sec-eyebrow">Get In Touch</span>
+              <h2>Our Offices &<br />Customer Care.</h2>
+            </div>
+            <div className="contact-paths__grid">
+              {offices.map((office) => (
+                <article id={office.id} className="contact-path" key={office.id}>
+                  <span className="contact-path__number">{office.number}</span>
+                  <h3>{office.city}</h3>
+                  <div className="contact-office-details">
+                    <strong className="contact-office-company">{office.company}</strong>
+                    <p className="contact-office-addr">{office.address}</p>
+                    <p className="contact-office-phone">
+                      <span>Ph. Sales: </span><a href={`tel:${office.sales.replace(/\s+/g, "")}`}>{office.sales}</a>
+                    </p>
+                    {office.corporate && (
+                      <p className="contact-office-corp">
+                        <span>Corporate: </span>{office.corporate}
+                      </p>
+                    )}
+                  </div>
+                  <a href={office.href} className="contact-office-btn">
+                    {office.action}<span>→</span>
+                  </a>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <Contact />
+      </main>
+      <Footer />
+    </>
+  );
 }

@@ -28,8 +28,9 @@ export default function Hero() {
       <a className="hero__scroll" href="#intro"
          onClick={(e) => { e.preventDefault(); document.querySelector("#intro").scrollIntoView({ behavior: "smooth" }); }}
          aria-label="Scroll to explore">
+        <div className="hero__mouse" aria-hidden="true"><span></span></div>
         <div className="dot-track"></div>
-        <span>Scroll</span>
+        <span>Scroll down</span>
       </a>
     </section>
   );

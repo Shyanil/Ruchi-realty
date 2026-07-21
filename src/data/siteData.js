@@ -30,7 +30,7 @@ const IMG_PEOPLE = [
 const STATS = [
   { num: 38, suffix: "", label: "Years building in eastern and central India." },
   { num: 12, suffix: "k", label: "Homes handed over to the families who waited for them." },
-  { num: 40, suffix: "+", label: "Residential, commercial, and township addresses delivered." },
+  { num: 40, suffix: "+", label: "Residential and commercial addresses delivered." },
   { num: 100, suffix: "%", label: "Of our projects are RERA-registered before a single visit is offered." },
 ];
 
@@ -41,7 +41,7 @@ const TRUST = [
   },
   {
     icon: "ruler", no: "02", title: "Built to the specification you were shown",
-    body: "The materials, the fittings, the finishes — written down, and met. What you are shown is what you are handed the keys to."
+    body: "The materials, the fittings, and the finishes are written down and met. What you are shown is what you are handed the keys to."
   },
   {
     icon: "handshake", no: "03", title: "We stay after the keys change hands",
@@ -89,7 +89,7 @@ const PRESS = [
   { date: "May 2023", head: "Westminster City Council clears a Ruchi Group redevelopment in Indore.", img: IMG_TOWER[1] },
   { date: "Feb 2023", head: "Innovative Marketing Concept of the Year 2022 goes to Ruchi Group.", img: IMG_LIVING[1] },
   { date: "Feb 2023", head: "Ruchi Group acquires a 60-acre land parcel in Kolkata.", img: IMG_TOWER[3] },
-  { date: "Apr 2016", head: "Active Acres named Outstanding Project of the Year — Golden Brick Awards, Dubai.", img: IMG_TOWER[2] },
+  { date: "Apr 2016", head: "Active Acres named Outstanding Project of the Year at the Golden Brick Awards, Dubai.", img: IMG_TOWER[2] },
   { date: "Mar 2015", head: "Active Acres receives the NDTV Premium Apartment Project of the Year, Central & East India.", img: IMG_TOWER[6] },
 ];
 
@@ -150,9 +150,9 @@ const BLOG = [
     imageAlt: "Plot value evaluation guide",
     img: "assets/blogs/evaluate-plot-value.webp",
     excerpt: "A practical buyer guide explaining why plot value depends on more than size and asking price.",
-    content: "This educational guide explains that plot value depends on location, accessibility, zoning, dimensions, soil, topography, utilities, and surrounding development.\n\nIt encourages buyers to check infrastructure, nearby amenities, legal documents, and market trends before committing to land or plotted developments.\n\nThe article works well as trust-building content for buyers evaluating plotted townships or long-term land investments.",
+    content: "This educational guide explains that plot value depends on location, accessibility, zoning, dimensions, soil, topography, utilities, and surrounding development.\n\nIt encourages buyers to check infrastructure, nearby amenities, legal documents, and market trends before committing to land or plotted developments.\n\nThe article works well as trust-building content for buyers evaluating plotted residential developments or long-term land investments.",
     cta: "Read Original",
-    internalLink: "Projects.html#type=Township",
+    internalLink: "Projects.html#type=Residential",
   },
   {
     cat: "Market growth / investment",
@@ -179,7 +179,7 @@ const BLOG = [
     originalImage: "https://ruchirealty.com/wp-content/uploads/2024/05/ruchi-life-min.png",
     imageAlt: "Ruchi Lifescapes Indore premium plots",
     img: "assets/blogs/ruchi-lifescapes-indore-premium-plots.webp",
-    excerpt: "A project-led article presenting Ruchi Lifescapes Indore as a premium plotted township in Jhalaria.",
+    excerpt: "A project-led article presenting Ruchi Lifescapes Indore as a premium plotted residential development in Jhalaria.",
     content: "Ruchi Lifescapes Indore is introduced as a premium plotted development in Jhalaria, Indore, with plots, villas, and row-house style lifestyle possibilities.\n\nThe article mentions amenities such as clubhouse, pool, gardens, gym, children's play areas, basketball, and tennis.\n\nIt positions the development around convenience, safety, greenery, community lifestyle, and future value.",
     cta: "Read Original",
     internalLink: "Projects.html#city=Indore",
@@ -216,7 +216,7 @@ const BLOG = [
   },
   {
     cat: "Project-led Indore content",
-    title: "Ruchi Lifescapes and serene township living",
+    title: "Ruchi Lifescapes and serene residential living",
     date: "Mar 2024",
     author: "Ruchi Realty",
     slug: "ruchi-lifescapes-serene-lifestyle",
@@ -224,10 +224,10 @@ const BLOG = [
     originalImage: "https://ruchirealty.com/wp-content/uploads/2023/09/ruchi_lifespace_blog2.webp",
     imageAlt: "Ruchi Lifescapes Bhopal",
     img: "assets/blogs/ruchi-lifescapes-serene-lifestyle.webp",
-    excerpt: "A lifestyle-led piece around peaceful living, green open spaces, and community-focused township design.",
-    content: "This article highlights peaceful living, green open spaces, and community-focused township planning at Ruchi Lifescapes.\n\nIt mentions amenities such as clubhouse, wide roads, gardens, pool, gym, children's areas, basketball, and security.\n\nThe piece connects lifestyle comfort with connectivity to highways, malls, and schools.",
+    excerpt: "A lifestyle-led piece around peaceful living, green open spaces, and community-focused residential design.",
+    content: "This article highlights peaceful living, green open spaces, and community-focused planning at Ruchi Lifescapes.\n\nIt mentions amenities such as clubhouse, wide roads, gardens, pool, gym, children's areas, basketball, and security.\n\nThe piece connects lifestyle comfort with connectivity to highways, malls, and schools.",
     cta: "Read Original",
-    internalLink: "Projects.html#type=Township",
+    internalLink: "Projects.html#type=Residential",
   },
   {
     cat: "Project-led Indore content",
@@ -270,9 +270,9 @@ const BLOG = [
     imageAlt: "Ruchi Lifescapes luxury plotted community",
     img: "assets/blogs/ruchi-lifescapes-luxury-living.webp",
     excerpt: "An aspiration-led plot-buying article about building a future home in a planned, green, amenity-rich community.",
-    content: "Ruchi Lifescapes is positioned as a luxury plotted community for buyers who want to build a dream home around future lifestyle needs.\n\nThe article highlights planned township living, green landscapes, connectivity, amenities, and peaceful surroundings.\n\nIt blends lifestyle aspiration with investment value for plot buyers.",
+    content: "Ruchi Lifescapes is positioned as a luxury plotted community for buyers who want to build a dream home around future lifestyle needs.\n\nThe article highlights planned residential living, green landscapes, connectivity, amenities, and peaceful surroundings.\n\nIt blends lifestyle aspiration with investment value for plot buyers.",
     cta: "Read Original",
-    internalLink: "Projects.html#type=Township",
+    internalLink: "Projects.html#type=Residential",
   },
   {
     cat: "Plot buyer education",
@@ -299,15 +299,15 @@ const HERO_IMG = {
 };
 
 const VIDEO_TESTIMONIALS = [
-  { name: "Ruchi Realty", project: "Active Acres", city: "Kolkata", dur: "2:14", line: "We moved in on the date in our agreement.", poster: "assets/testimonial_1.webp", video: "https://www.youtube.com/embed/GTYs3ZynAQU?feature=oembed&autoplay=1&rel=0&controls=0" },
-  { name: "Saatvik Vihar Review", project: "Oscar Billionaires", city: "Indore", dur: "1:48", line: "The same person still picks up the phone.", poster: "assets/testimonial_2.webp", video: "https://www.youtube.com/embed/S4hnOtmQA9s?feature=oembed&autoplay=1&rel=0&controls=0" },
-  { name: "Ruchi Realty", project: "Ruchi Lifescapes", city: "Bhopal", dur: "2:32", line: "Exactly what the specification showed us.", poster: "assets/testimonial_3.webp", video: "https://www.youtube.com/embed/ZDJWHNFzjXc?feature=oembed&autoplay=1&rel=0&controls=0" },
-  { name: "Ruchi Realty", project: "One Prime", city: "Kolkata", dur: "3:05", line: "A home our children grew into.", poster: "assets/testimonial_4.webp", video: "https://www.youtube.com/embed/rRzZ4gAwLjY?feature=oembed&autoplay=1&rel=0&controls=0" },
-  { name: "Ruchi Realty", project: "Oscar Fort", city: "Indore", dur: "1:57", line: "Handed over, exactly as promised.", poster: "assets/testimonial_5.webp", video: "https://www.youtube.com/embed/Gsv3Kwl4k8U?feature=oembed&autoplay=1&rel=0&controls=0" },
-  { name: "OV Review", project: "One Victoria", city: "Kolkata", dur: "2:41", line: "Light and air in every room.", poster: "assets/testimonial_6.webp", video: "https://player.vimeo.com/video/1106022712?autoplay=1&rel=0&controls=0#t=" },
-  { name: "One Victoria Review", project: "Saatvik Green", city: "Indore", dur: "2:09", line: "A township that began with shade.", poster: "assets/testimonial_7.webp", video: "https://player.vimeo.com/video/1106028174?autoplay=1&rel=0&controls=0#t=" },
-  { name: "OV Review 3", project: "Active Greens", city: "Kolkata", dur: "1:39", line: "Trust we could check before we signed.", poster: "assets/testimonial_8.webp", video: "https://player.vimeo.com/video/1106030671?autoplay=1&rel=0&controls=0#t=" },
-  { name: "rrr4", project: "One Victoria", city: "Kolkata", dur: "1:39", line: "Trust we could check before we signed.", poster: "assets/testimonial_9.webp", video: "https://player.vimeo.com/video/1106031951?autoplay=1&rel=0&controls=0#t=" },
+  { name: "Active Acres", project: "Ruchi Realty", city: "Kolkata", dur: "2:14", line: "We moved in on the date in our agreement.", poster: "assets/testimonial_1.webp", video: "https://www.youtube.com/embed/GTYs3ZynAQU?feature=oembed&autoplay=1&rel=0&controls=0" },
+  { name: "Saatvik Vihar", project: "Ruchi Realty", city: "Indore", dur: "1:48", line: "The same person still picks up the phone.", poster: "assets/testimonial_2.webp", video: "https://www.youtube.com/embed/S4hnOtmQA9s?feature=oembed&autoplay=1&rel=0&controls=0" },
+  { name: "Ruchi Lifescapes", project: "Ruchi Realty", city: "Indore", dur: "2:32", line: "Exactly what the specification showed us.", poster: "assets/testimonial_3.webp", video: "https://www.youtube.com/embed/ZDJWHNFzjXc?feature=oembed&autoplay=1&rel=0&controls=0" },
+  { name: "Ruchi Lifescapes Indore Review", project: "Ruchi Realty", city: "Indore", dur: "3:05", line: "A home our children grew into.", poster: "assets/testimonial_4.webp", video: "https://www.youtube.com/embed/rRzZ4gAwLjY?feature=oembed&autoplay=1&rel=0&controls=0" },
+  { name: "Ruchi Lifescapes Indore Review", project: "Ruchi Realty", city: "Indore", dur: "1:57", line: "Handed over, exactly as promised.", poster: "assets/testimonial_5.webp", video: "https://www.youtube.com/embed/Gsv3Kwl4k8U?feature=oembed&autoplay=1&rel=0&controls=0" },
+  { name: "One Victoria Review", project: "Ruchi Realty", city: "Kolkata", dur: "2:41", line: "Light and air in every room.", poster: "assets/testimonial_6.webp", video: "https://player.vimeo.com/video/1106022712?autoplay=1&rel=0&controls=0#t=" },
+  { name: "One Victoria Review", project: "Ruchi Realty", city: "Kolkata", dur: "2:09", line: "A community that began with shade.", poster: "assets/testimonial_7.webp", video: "https://player.vimeo.com/video/1106028174?autoplay=1&rel=0&controls=0#t=" },
+  { name: "One Victoria Review", project: "Ruchi Realty", city: "Kolkata", dur: "1:39", line: "Trust we could check before we signed.", poster: "assets/testimonial_8.webp", video: "https://player.vimeo.com/video/1106030671?autoplay=1&rel=0&controls=0#t=" },
+  { name: "One Victoria Review", project: "Ruchi Realty", city: "Kolkata", dur: "1:39", line: "Trust we could check before we signed.", poster: "assets/testimonial_9.webp", video: "https://player.vimeo.com/video/1106031951?autoplay=1&rel=0&controls=0#t=" },
 ];
 
 export const SHOWREEL = "https://ruchirealty.com/wp-content/uploads/2023/12/video_ruchi_1-1.mp4";

@@ -75,8 +75,8 @@ const fallbackData = {
   walkthroughVideoId: "HDft2VxWI9k",
   galleryImages: GALLERY_IMAGES,
   brochureUrl: `${BASE}/brochure.pdf`,
-  metaTitle: "Oscar / Oscar Billionaires — Premium Plotted Development in Indore | Ruchi Realty",
-  metaDescription: "Explore Oscar / Oscar Billionaires in Indore — a premium plotted development with prime location, world-class amenities, and plots from 4,000-12,500 sq. ft."
+  metaTitle: "Oscar / Oscar Billionaires | Premium Plotted Development in Indore | Ruchi Realty",
+  metaDescription: "Explore Oscar / Oscar Billionaires in Indore, a premium plotted development with prime location, world-class amenities, and plots from 4,000-12,500 sq. ft."
 };
 
 function HeroSection({ subpage, onBrochureClick }) {

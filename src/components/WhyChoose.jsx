@@ -11,7 +11,7 @@ export function WhyChoose() {
           <div className="eyebrow sec-eyebrow">What commitment looks like</div>
           <h2 className="why2__head">The <span className="rr-grad">proof</span>,<br />not the promise.</h2>
           <p className="why2__lead">
-            Trust is earned, never claimed. These are the things we hold ourselves to — and the things you can check for yourself, before you decide.
+            Trust is earned, never claimed. These are the things we hold ourselves to and the things you can check for yourself before you decide.
           </p>
           <div className="why2__mark" aria-hidden="true"></div>
         </Reveal>

@@ -96,7 +96,7 @@ function getVideoItems(videoSection) {
 }
 
 function CtaArrow() {
-  return <span className="ar">{"\u2192"}</span>;
+  return null;
 }
 
 function extractSpecsAndCustomData(specsArray = []) {

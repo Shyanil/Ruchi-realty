@@ -4,8 +4,8 @@ export const SAATVIK_GREEN_INDORE_FALLBACK = {
   heroLogo: "/projects/saatvikgreen-indore/project-logo.webp",
   heroBg: "/projects/saatvikgreen-indore/hero.webp",
   overviewParagraphs: [
-    "Saatvik Green Indore is an over 28 acre township which is well located on the Indore-Dewas By-pass, near Manglia toll plaza, Indore, close to all educational, recreational and shopping hubs.",
-    "Saatvik Green, Indore is designed to provide all necessary facilities within the township for the advantage of the residents, be it dedicated plots for schools, shopping area with provision of adequate water supply, electrification, well lit, wide metaled roads etc.",
+    "Saatvik Green Indore is a residential development spanning over 28 acres, well located on the Indore-Dewas Bypass near Manglia Toll Plaza and close to educational, recreational, and shopping hubs.",
+    "Saatvik Green, Indore is designed to provide necessary facilities for residents, including dedicated plots for schools, a shopping area, adequate water supply, electrification, and well-lit wide roads.",
     "Saatvik Green will offer an opportunity to live in serene surroundings with matchless connectivity with landmarks of city.",
   ],
   overviewHighlights: [
@@ -25,8 +25,8 @@ export const SAATVIK_GREEN_INDORE_FALLBACK = {
   locationMapEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4999.65613007766!2d75.93874079974611!3d22.83386000982388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39631db995c1582f%3A0x1c1ff37db299b50a!2sSaatvik%20Green!5e1!3m2!1sen!2sin!4v1750414936082!5m2!1sen!2sin",
   locationDestinations: [
     { name: "Proposed Shopping, School & Medical", dist: "Land facilities" },
-    { name: "Well Laid Out Parks", dist: "Within township" },
-    { name: "Sector-wise Township", dist: "Planned development" },
+    { name: "Well Laid Out Parks", dist: "Within the development" },
+    { name: "Sector-wise Planning", dist: "Planned development" },
     { name: "Wide Metalled Roads", dist: "Well lit" },
     { name: "Indore Railway Station", dist: "20 km" },
     { name: "Bombay Hospital", dist: "12 km" },
@@ -40,5 +40,5 @@ export const SAATVIK_GREEN_INDORE_FALLBACK = {
   })),
   brochureUrl: "",
   metaTitle: "Saatvik Green Indore - Ruchi Realty",
-  metaDescription: "Saatvik Green Indore is a 28+ acre township on the Indore-Dewas Bypass near Manglia Toll Plaza, offering residential and commercial plots from 850 to 3500 sqft with strong connectivity, township facilities, wide roads, and proposed shopping, school and medical land facilities.",
+  metaDescription: "Saatvik Green Indore is a 28+ acre residential development on the Indore-Dewas Bypass near Manglia Toll Plaza, offering residential and commercial plots from 850 to 3500 sqft with strong connectivity, wide roads, and proposed shopping, school, and medical facilities.",
 };

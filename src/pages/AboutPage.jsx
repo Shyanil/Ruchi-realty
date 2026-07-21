@@ -47,7 +47,7 @@ const ABOUT_PROJECTS = {
     { name: "One Victoria", desc: "An ongoing residential and retail development in Action Area 1, New Town, Kolkata.", status: "Ongoing", img: "/projects/one-victoria-new-town/hero.webp", url: "/projects/one-victoria-new-town" }
   ],
   Indore: [
-    { name: "Oscar The Billionaire\u2019s Destination", desc: "Ultra-premium luxury plotted development on 24 acres.", status: "Completed", img: "assets/projects/oscar-billionaires.webp" },
+    { name: "Oscar The Billionaire's Destination", desc: "Ultra-premium luxury plotted development on 24 acres.", status: "Completed", img: "assets/projects/oscar-billionaires.webp" },
     { name: "Oscar Pride", desc: "Ultra-premium luxury plots across 8 acres.", status: "Completed", img: "assets/projects/oscar-pride.webp" },
     { name: "Oscar Fort", desc: "A leisure-focused premium development designed around dreams and happiness.", status: "Completed", img: "assets/projects/oscar-fort.webp" },
     { name: "Oscar Palace", desc: "Royal-themed project designed like a majestic kingdom palace.", status: "Ongoing", img: "assets/projects/oscar-palace.webp" },
@@ -59,7 +59,7 @@ const ABOUT_PROJECTS = {
     { name: "Anand Vihar", desc: "Premium plotting project with 900 plots.", status: "Completed", img: "/projects/anand-vihar-indore/hero.webp", url: "/projects/anand-vihar-indore" }
   ],
   Bhopal: [
-    { name: "Ruchi Lifescapes", desc: "Mixed-use township on Hoshangabad Road with plots, duplexes, villas, and apartments across 85 acres.", status: "Completed", img: "assets/projects/ruchi-lifescapes-bhopal.webp" }
+    { name: "Ruchi Lifescapes", desc: "Mixed-use residential development on Hoshangabad Road with plots, duplexes, villas, and apartments across 85 acres.", status: "Completed", img: "assets/projects/ruchi-lifescapes-bhopal.webp" }
   ]
 };
 
@@ -68,8 +68,8 @@ const TEAM_MEMBERS = [
     name: "Mr. Manish Shahra",
     role: "Managing Director",
     img: "uploads/manish-shahra.webp",
-    bio: "Industrial Production Engineering graduate with a Master\u2019s in Management from IMS Indore. He brings vast experience across agri-commodities, edible oils, dairy, real estate, wind energy, infrastructure, power, mining, housing development, and international trade.",
-    fullBio: "Mr. Manish Shahra is the Managing Director of Ruchi Realty. He holds a degree in Industrial Production Engineering and a Master's in Management from IMS Indore. Over the past few decades, he has spearheaded the diversification of the Ruchi Group into real estate, infrastructure, green wind energy, power generation, mining, and international trade. His visionary leadership has been the driving force behind the company's expansion into tier-1 and tier-2 Indian cities, establishing Ruchi Realty as a pioneer in quality housing and integrated townships."
+    bio: "Industrial Production Engineering graduate with a Master's in Management from IMS Indore. He brings vast experience across agri-commodities, edible oils, dairy, real estate, wind energy, infrastructure, power, mining, housing development, and international trade.",
+    fullBio: "Mr. Manish Shahra is the Managing Director of Ruchi Realty. He holds a degree in Industrial Production Engineering and a Master's in Management from IMS Indore. Over the past few decades, he has spearheaded the diversification of the Ruchi Group into real estate, infrastructure, green wind energy, power generation, mining, and international trade. His visionary leadership has driven the company's expansion into tier-1 and tier-2 Indian cities, establishing Ruchi Realty as a pioneer in quality housing and integrated residential developments."
   },
   {
     name: "Mr. Rishabh Mahajan",
@@ -82,7 +82,7 @@ const TEAM_MEMBERS = [
     name: "Ms. Sonakshi Shahra",
     role: "Executive Director",
     img: "uploads/sonakshi-shahra.webp",
-    bio: "A new-generation real estate leader with a Bachelor\u2019s degree in Real Estate from New York University and a Master\u2019s degree from ISB Hyderabad. She brings global education, strategic thinking, and a strong understanding of modern real estate markets.",
+    bio: "A new-generation real estate leader with a Bachelor's degree in Real Estate from New York University and a Master's degree from ISB Hyderabad. She brings global education, strategic thinking, and a strong understanding of modern real estate markets.",
     fullBio: "Ms. Sonakshi Shahra brings global expertise and new-age strategy to Ruchi Realty. She completed her Bachelor's degree in Real Estate at New York University (NYU) and earned her Master's degree from the Indian School of Business (ISB), Hyderabad. At Ruchi Realty, Ms. Shahra leads project strategy, corporate communications, and digital transformation. She is dedicated to bringing architectural innovation, customer-centric software tools, and sustainable building systems to all upcoming residential developments, aligning the brand with global luxury standards."
   },
   {
@@ -101,6 +101,7 @@ const TEAM_MEMBERS = [
   },
   {
     name: "Mr. Akshay Chandre",
+    hidden: true,
     role: "Asst. V.P. Sales, Marketing & CRM",
     img: "uploads/akshay-chandre.webp",
     bio: "A real estate professional with over 20 years of expertise in sales, marketing, business strategy, and CRM across residential, commercial, retail, and plotted developments. He has worked with leading brands including Mahindra Lifespaces and Tata Realty.",
@@ -142,7 +143,7 @@ function AboutLegacy() {
                 Welcome to Ruchi Realty, where excellence in real estate meets a commitment to crafting exceptional spaces. For over 17 years, the company has developed, managed, and sold residential, commercial, and retail properties across India.
               </p>
               <p className="ab-legacy__body">
-                Founded in 2008, Ruchi Realty has built a strong presence through modern design, superior construction quality, thoughtful amenities, and a customer-first approach. The company\u2019s portfolio spans Kolkata, Indore, and Bhopal, with landmark projects across apartments, townships, commercial spaces, and plotted developments.
+                Founded in 2008, Ruchi Realty has built a strong presence through modern design, superior construction quality, thoughtful amenities, and a customer-first approach. The company's portfolio spans Kolkata, Indore, and Bhopal, with landmark residential, commercial, and plotted developments.
               </p>
             </Reveal>
           </div>
@@ -268,7 +269,7 @@ function AboutVisionMission() {
                 Transforming the real estate landscape with innovation, sustainability, and excellence, crafting spaces where joy and vibrancy thrive.
               </p>
               <blockquote className="ab-vm-card__quote">
-                &ldquo;To contribute significantly to building a stronger nation and become the country\u2019s trusted real estate company.&rdquo;
+                &ldquo;To contribute significantly to building a stronger nation and become the country's trusted real estate company.&rdquo;
               </blockquote>
             </div>
           </Reveal>
@@ -319,7 +320,7 @@ function AboutProjects() {
               <h2 className="ab-projects__title">Landmark addresses,<br /><span className="rr-grad">across key cities.</span></h2>
             </div>
             <p className="ab-projects__lead">
-              Ruchi Realty\u2019s portfolio includes landmark residential towers, commercial spaces, plotted developments, and townships across major Indian cities.
+              Ruchi Realty's portfolio includes landmark residential towers, commercial spaces, and plotted developments across major Indian cities.
             </p>
           </div>
         </Reveal>
@@ -362,7 +363,7 @@ function AboutProjects() {
                     <div className="ab-proj-tile__content">
                       <h3 className="ab-proj-tile__name">{p.name}</h3>
                       <p className="ab-proj-tile__desc">{p.desc}</p>
-                      <span className="ab-proj-tile__view">{p.url ? "View project" : "Select address"} <span className="ar">\u2192</span></span>
+                      <span className="ab-proj-tile__view">{p.url ? "View project" : "Select address"}</span>
                     </div>
                   </div>
                 </div>
@@ -405,7 +406,7 @@ function AboutProjects() {
             Showing {activeIdx + 1} of {activeProjects.length} {activeProjects.length === 1 ? "address" : "addresses"} in {city}
           </span>
           <a className="projects__allbtn ab-projects__allbtn" href={`/projects?city=${city}`}>
-            View All Projects<span className="ar">\u2192</span>
+            View All Projects
           </a>
         </div>
       </div>
@@ -463,13 +464,13 @@ function AboutTeam() {
             <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>LEADERSHIP</div>
             <h2 className="ab-team__title">Meet the people shaping Ruchi Realty</h2>
             <p className="ab-team__lead">
-              Our leaders don\u2019t just plan and strategize. They bring the expertise, discipline, and vision to execute landmark developments with consistency and care.
+              Our leaders don't just plan and strategize. They bring the expertise, discipline, and vision to execute landmark developments with consistency and care.
             </p>
           </Reveal>
         </div>
 
         <div className="ab-team-grid">
-          {TEAM_MEMBERS.map((m, i) => (
+          {TEAM_MEMBERS.filter((m) => !m.hidden).map((m, i) => (
             <Reveal key={m.name} delay={i * 80} className="ab-team-card">
               <div className="ab-team-card__media">
                 <img src={m.img} alt={m.name} className="ab-team-card__img" />
@@ -479,7 +480,7 @@ function AboutTeam() {
                 <span className="ab-team-card__role">{m.role}</span>
                 <p className="ab-team-card__bio">{m.bio}</p>
                 <button type="button" className="ab-team-card__btn" onClick={() => setSelectedMember(m)}>
-                  Read Full Bio <span className="ar">\u2192</span>
+                  Read Full Bio
                 </button>
               </div>
             </Reveal>
@@ -510,16 +511,16 @@ function AboutCTA() {
       <div className="ab-cta__overlay"></div>
       <div className="rr-wrap ab-cta__wrap">
         <Reveal className="ab-cta__content">
-          <h2 className="ab-cta__title">Let\u2019s build your next address with confidence.</h2>
+          <h2 className="ab-cta__title">Let's build your next address with confidence.</h2>
           <p className="ab-cta__lead">
-            Explore Ruchi Realty\u2019s landmark developments across Kolkata, Indore, and Bhopal \u2014 crafted with engineering excellence, thoughtful design, and long-term value.
+            Explore Ruchi Realty's landmark developments across Kolkata, Indore, and Bhopal - crafted with engineering excellence, thoughtful design, and long-term value.
           </p>
           <div className="ab-cta__buttons">
             <a href="#footprint" className="submit-btn" onClick={onExplore} style={{ background: "var(--rr-lime)", color: "var(--rr-ink)" }}>
-              Explore Projects <span className="ar">\u2192</span>
+              Explore Projects
             </a>
             <a href="#contact" className="ab-btn-outline" onClick={onContact} style={{ color: "#fff", borderColor: "rgba(255,255,255,0.4)" }}>
-              Contact Us <span className="ar">\u2192</span>
+              Contact Us
             </a>
           </div>
         </Reveal>
@@ -529,13 +530,25 @@ function AboutCTA() {
 }
 
 export default function AboutPage() {
+  const [navSolidAt, setNavSolidAt] = useState(() => window.innerHeight);
+
+  useEffect(() => {
+    const updateNavTrigger = () => {
+      const legacy = document.getElementById("legacy");
+      if (legacy) setNavSolidAt(Math.max(0, legacy.offsetTop - 80));
+    };
+    updateNavTrigger();
+    window.addEventListener("resize", updateNavTrigger);
+    return () => window.removeEventListener("resize", updateNavTrigger);
+  }, []);
+
   const onContact = () => {
     if (window.smoothTo) window.smoothTo("#contact");
   };
 
   return (
     <>
-      <Nav onContact={onContact} />
+      <Nav onContact={onContact} solidAt={navSolidAt} />
       <main>
         <AboutHero />
         <AboutLegacy />

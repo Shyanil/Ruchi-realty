@@ -21,6 +21,8 @@ import ActiveGreensPage from './pages/ActiveGreensPage'
 import OneRajarhatPage from './pages/OneRajarhatPage'
 import OnePrimeResidentialPage from './pages/OnePrimeResidentialPage'
 import GenericProjectPage from './pages/GenericProjectPage'
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
+import DisclaimerPage from './pages/DisclaimerPage'
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -97,6 +99,8 @@ export default function App() {
       <Route path="/Blog.html" element={<Navigate to="/blogs" replace />} />
       <Route path="/careers" element={<CareersPage />} />
       <Route path="/contact" element={<ContactPage />} />
+      <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+      <Route path="/disclaimer" element={<DisclaimerPage />} />
       <Route path="/Contact.html" element={<Navigate to="/contact" replace />} />
       <Route path="/media" element={<MediaPage />} />
       <Route path="/media/gallery" element={<MediaGalleryPage />} />

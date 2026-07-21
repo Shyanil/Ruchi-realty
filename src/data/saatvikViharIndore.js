@@ -12,7 +12,7 @@ export const SAATVIK_VIHAR_INDORE_FALLBACK = {
   ],
   overviewHighlights: [
     { label: "Amenities", desc: "Ample Amenities", icon: "amenities" },
-    { label: "Township", desc: "Premium Township", icon: "infrastructure" },
+    { label: "Residential", desc: "Premium Development", icon: "infrastructure" },
     { label: "Plot Size", desc: "600 to 1800 Sq.ft", icon: "size" },
     { label: "Location", desc: "Prime Location", icon: "location" },
   ],
@@ -42,5 +42,5 @@ export const SAATVIK_VIHAR_INDORE_FALLBACK = {
   })),
   brochureUrl: "",
   metaTitle: "Saatvik Vihar Indore - Ruchi Realty",
-  metaDescription: "Saatvik Vihar Indore is a premium township at Mangliya Sadak, Indore, offering residential plots from 600 to 1800 sq.ft with ample amenities, quality living solutions, and a prime location opposite Sanchi Plant on A.B. Road.",
+  metaDescription: "Saatvik Vihar Indore is a premium residential development at Mangliya Sadak, Indore, offering residential plots from 600 to 1800 sq.ft with ample amenities, quality living solutions, and a prime location opposite Sanchi Plant on A.B. Road.",
 };

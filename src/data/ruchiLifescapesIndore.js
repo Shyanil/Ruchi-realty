@@ -5,7 +5,7 @@ export const RUCHI_LIFESCAPES_INDORE_FALLBACK = {
   heroBg: "/projects/ruchi-lifescapes-indore-project/hero.webp",
   overviewParagraphs: [
     "The big on life now gets bigger.",
-    "A premium township, Ruchi Lifescapes Indore, is nestled in the vast expanse of lush green surroundings, featuring the finest living options and top-of-the-line amenities. Thoughtfully designed elegant living spaces comprise Villas, Row Houses, and luxurious plots. Conveniently located near Phoenix Citadel and well connected to the Nagpur Highway, it is situated at Jhalaria, which is fast emerging as the choicest living destination of the city. Life at Ruchi Lifescapes Indore has emerged as a convenient, safe, and splendid location for your home.",
+    "Ruchi Lifescapes Indore is a premium residential development nestled in lush green surroundings, featuring fine living options and top-of-the-line amenities. Thoughtfully designed living spaces comprise Villas, Row Houses, and luxurious plots. Conveniently located near Phoenix Citadel and well connected to the Nagpur Highway, it is situated at Jhalaria, which is fast emerging as a preferred living destination. Life at Ruchi Lifescapes Indore offers a convenient, safe, and splendid setting for your home.",
     "With RUCHI LIFESCAPES, we now unveil a glorious mix of splendor and articulation. Here, you will find exclusive plots for the privileged few, so that you can design according to your specific needs. Step into this exquisite haven of luxuries to discover yourself in a completely different world, offering an unparalleled living experience.",
   ],
   overviewHighlights: [
@@ -41,5 +41,5 @@ export const RUCHI_LIFESCAPES_INDORE_FALLBACK = {
   })),
   brochureUrl: "",
   metaTitle: "Ruchi Lifescapes Indore - Big on Life | Ruchi Realty",
-  metaDescription: "Ruchi Lifescapes Indore is a premium township at Jhalariya, Indore, offering premium villa plots from 1400 to 10000 sqft, ample amenities, lush green surroundings, and excellent connectivity near Phoenix Citadel and the Indore Bypass.",
+  metaDescription: "Ruchi Lifescapes Indore is a premium residential development at Jhalariya, Indore, offering villa plots from 1400 to 10000 sqft, ample amenities, lush green surroundings, and excellent connectivity near Phoenix Citadel and the Indore Bypass.",
 };

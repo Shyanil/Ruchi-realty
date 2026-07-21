@@ -20,7 +20,7 @@ export function About() {
             </Reveal>
             <Reveal delay={80}>
               <p className="about-lead" style={{ fontSize: "16px", color: "rgba(35, 31, 32, 0.6)", height: "89px", lineHeight: "1.65" }}>
-                We have treated that trust as the work itself for nearly four decades. Not products — environments, meant to last: chosen sites, written specifications, finishes we honour.
+                We have treated that trust as the work itself for nearly four decades. Not products, but environments meant to last: chosen sites, written specifications, and finishes we honour.
               </p>
               <p className="about-body" style={{ lineHeight: "1.9" }}>
                 Because a home should keep its promises long after the keys change hands, we build with intent and stay reachable after. That is what we mean when we say we are committed to you.

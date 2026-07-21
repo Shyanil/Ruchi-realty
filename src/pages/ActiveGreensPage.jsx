@@ -160,7 +160,7 @@ const fallbackData = {
     { src: "/projects/active-greens/gallery-5.webp", alt: "Active Greens Evening Perspective" }
   ],
   brochureUrl: "/projects/active-greens/brochure.pdf",
-  metaTitle: "Active Greens — Luxury 2 & 3 BHK Apartments off E.M. Bypass, Kolkata | Ruchi Realty",
+  metaTitle: "Active Greens | Luxury 2 & 3 BHK Apartments off E.M. Bypass, Kolkata | Ruchi Realty",
   metaDescription: "Discover Active Greens by Ruchi Realty. Offers 2 & 3 BHK premium apartments off E.M. Bypass, Kolkata, set inside a serene green environment with modern amenities.",
   isPublished: true
 };

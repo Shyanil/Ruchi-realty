@@ -158,7 +158,7 @@ const fallbackData = {
     { src: "assets/projects/active-acres-angelica/gallery-6.webp", alt: "Angelica Show Flat Living Room" }
   ],
   brochureUrl: "assets/projects/active-acres-angelica/brochure.pdf",
-  metaTitle: "Active Acres Angelica — Premium 3 & 4 BHK Apartments in Kolkata | Ruchi Realty",
+  metaTitle: "Active Acres Angelica | Premium 3 & 4 BHK Apartments in Kolkata | Ruchi Realty",
   metaDescription: "Explore Active Acres Angelica by Ruchi Realty. Located in Kolkata, this premium residential project offers luxury 3 BHK and 4 BHK apartments with world-class amenities."
 };
 

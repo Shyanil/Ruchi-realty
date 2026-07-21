@@ -26,8 +26,9 @@ const MEGA = (() => {
   };
   return {
     Projects: {
-      href: "#projects",
-      blurb: "Residences, commercial space, and townships across three cities — each carried from drawing to handover.",
+      href: "Projects.html",
+      projectNested: true,
+      blurb: "Residential and commercial projects across three cities, each carried from drawing to handover.",
       cols: [
         { h: "By city", items: [
           ["Kolkata", "Projects.html#city=Kolkata"],
@@ -35,33 +36,29 @@ const MEGA = (() => {
           ["Bhopal", "Projects.html#city=Bhopal"],
           ["All projects", "Projects.html"],
         ]},
-        { h: "By status", items: [
-          ["Ready to Move", "Projects.html#status=Ready+to+Move"],
-          ["Ongoing", "Projects.html#status=Ongoing"],
-          ["Upcoming", "Projects.html#status=Upcoming"],
-          ["Townships", "Projects.html#type=Township"],
-        ]},
       ],
       feat: {
         kind: "project", eyebrow: "Now unveiling", title: "One Victoria", sub: "New Town · Kolkata", href: "/projects/one-victoria-new-town",
         img: "/projects/one-victoria-new-town/hero.webp",
       },
+      feats: [
+        { kind: "project", eyebrow: "Discover", title: "Latest Updates", sub: "News from Ruchi Realty", href: "/media/press-releases", img: "/assets/media/gallery/bhaskar-event-1.webp" },
+        { kind: "project", eyebrow: "What's on", title: "Latest Events", sub: "Explore recent moments", href: "/media/events-awards", img: "/assets/media/gallery/credai-event-2.webp" },
+      ],
     },
     About: {
       href: "About.html",
-      blurb: "Nearly four decades of treating a home as a promise — built with intent, held to long after the keys change hands.",
+      blurb: "Nearly four decades of treating a home as a promise, built with intent and held to long after the keys change hands.",
       cols: [
         { h: "The firm", items: [["Our approach", "About.html"], ["The proof, not the promise", "#why"], ["People & culture", "About.html#team"], ["Careers", "Careers.html"]] },
-        { h: "Explore", items: [["Projects", "Projects.html"], ["Our team", "About.html#team"]] },
       ],
       feat: { kind: "statement", eyebrow: "Committed to you", title: "Thirty-eight years of keeping our word.", sub: "Read the story →", href: "About.html" },
     },
     Blogs: {
       href: "Blog.html",
-      blurb: "Industry insights, written plainly — materials, plans, and the relationships that begin at the keys.",
+      blurb: "Industry insights written plainly, covering materials, plans, and the relationships that begin at the keys.",
       cols: [
         { h: "Latest insights", items: insightItems },
-        { h: "Topics", items: [["On building", "Blog.html"], ["Materials", "Blog.html"], ["After handover", "Blog.html"]] },
       ],
       feat: insightFeat,
     },
@@ -76,12 +73,12 @@ const MEGA = (() => {
     },
     Contact: {
       href: "Contact.html",
-      blurb: "Tell us a little about what you're looking for. Someone who knows the projects — not a call centre — will write back.",
+      blurb: "Tell us a little about what you're looking for. Someone who knows the projects, not a call centre, will write back.",
       cols: [
-        { h: "Visit", items: [["Experience Centre", "Contact.html#experience-centre"], ["Private viewings", "Contact.html#private-viewings"], ["Enquiries", "Contact.html#enquiries"]] },
-        { h: "Reach us", items: [["+91 892 922 5275", "#contact"], ["ruchirealty.com", "#contact"], ["Tangra · Kolkata 700015", "#contact"]] },
+        { h: "Offices", items: [["Indore Office", "Contact.html#indore-office"], ["Kolkata Office", "Contact.html#kolkata-office"], ["Bhopal Office", "Contact.html#bhopal-office"]] },
+        { h: "Reach us", items: [["+91 89292 25275", "tel:+918929225275"], ["ruchirealty.com", "#contact"], ["Indore · Kolkata · Bhopal", "#contact"]] },
       ],
-      feat: { kind: "cta", eyebrow: "Come and see", title: "Book a visit", sub: "A real person, not a call centre.", href: "Contact.html#private-viewings" },
+      feat: { kind: "cta", eyebrow: "Get in touch", title: "Contact us", sub: "A real person, not a call centre.", href: "Contact.html#indore-office" },
     },
   };
 })();
@@ -137,9 +134,218 @@ function MegaFeat({ feat, go }) {
   );
 }
 
-function MegaPanel({ cfg, go }) {
+const PROJECT_CITIES = ["Kolkata", "Indore", "Bhopal"];
+const PROJECT_STATUSES = ["Ready to Move", "Ongoing", "Upcoming"];
+
+function projectFilterHref(city, status) {
+  const params = new URLSearchParams();
+  if (city) params.set("city", city);
+  if (status) params.set("status", status);
+  return `Projects.html#${params.toString()}`;
+}
+
+function ProjectCarouselFeature({ city, status, go }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const filteredProjects = PROJECTS.filter((p) => {
+    const cityMatch = !city || p.city.toLowerCase().includes(city.toLowerCase());
+    const statusMatch = !status || p.status.toLowerCase() === status.toLowerCase();
+    return cityMatch && statusMatch;
+  });
+
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [city, status]);
+
+  if (!filteredProjects.length) {
+    return (
+      <div className="mega-project-feature mega-project-feature--empty">
+        <p className="mega-project-empty">No projects match this selection.</p>
+      </div>
+    );
+  }
+
+  const VISIBLE_COUNT = 2;
+  const total = filteredProjects.length;
+
+  const prevSlide = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : Math.max(0, total - VISIBLE_COUNT)));
+  };
+
+  const nextSlide = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev + VISIBLE_COUNT < total ? prev + 1 : 0));
+  };
+
+  const visibleProjects = filteredProjects.slice(currentIndex, currentIndex + VISIBLE_COUNT);
+
   return (
-    <div className="mega__inner rr-wrap">
+    <div className="mega-project-carousel">
+      <div className="mega-project-carousel__header">
+        <div className="mega-project-carousel__title">
+          <span>{status ? `${status} in ` : ""}{city || "All Cities"}</span>
+          <span className="mega-project-carousel__count">({total} project{total > 1 ? "s" : ""})</span>
+        </div>
+        {total > VISIBLE_COUNT && (
+          <div className="mega-project-carousel__nav">
+            <button
+              type="button"
+              className="mega-project-carousel__arrow"
+              onClick={prevSlide}
+              aria-label="Previous projects"
+            >
+              ‹
+            </button>
+            <span className="mega-project-carousel__page">
+              {Math.floor(currentIndex / VISIBLE_COUNT) + 1} / {Math.ceil(total / VISIBLE_COUNT)}
+            </span>
+            <button
+              type="button"
+              className="mega-project-carousel__arrow"
+              onClick={nextSlide}
+              aria-label="Next projects"
+            >
+              ›
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div className="mega-project-carousel__grid">
+        {visibleProjects.map((proj) => (
+          <a
+            key={proj.name}
+            className="mega-project-card"
+            href={proj.url || "Projects.html"}
+            onClick={(e) => go(e, proj.url || "Projects.html")}
+          >
+            <div className="mega-project-card__img-wrap">
+              <RImg src={proj.img || IMG_TOWER[0]} alt={proj.name} className="mega-project-card__img" grade />
+              <span className={`mega-project-card__badge mega-project-card__badge--${proj.status?.toLowerCase().replace(/\s+/g, '-')}`}>
+                {proj.status}
+              </span>
+            </div>
+            <div className="mega-project-card__body">
+              <span className="mega-project-card__eyebrow">{proj.type || "Residential"}</span>
+              <h4 className="mega-project-card__title">{proj.name}</h4>
+              <span className="mega-project-card__loc">{proj.city}</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ProjectNestedMenu({ go, onFilterChange }) {
+  const [activeCity, setActiveCity] = useState(null);
+  const [activeStatus, setActiveStatus] = useState(null);
+
+  const handleCityHover = (city) => {
+    setActiveCity(city);
+    onFilterChange(city, activeStatus);
+  };
+
+  const handleStatusHover = (status) => {
+    setActiveStatus(status);
+    onFilterChange(activeCity, status);
+  };
+
+  const handleMouseLeave = () => {
+    setActiveCity(null);
+    setActiveStatus(null);
+    onFilterChange(null, null);
+  };
+
+  return (
+    <div className="project-menu" onMouseLeave={handleMouseLeave}>
+      <div className="mega-col__h">By City</div>
+      <ul className="project-menu__cities" aria-label="Filter projects by city">
+        {PROJECT_CITIES.map((city) => (
+          <li
+            className={`project-menu__city ${activeCity === city ? "is-active" : ""}`}
+            key={city}
+            onMouseEnter={() => handleCityHover(city)}
+            onFocus={() => handleCityHover(city)}
+          >
+            <a href={projectFilterHref(city)} onClick={(e) => go(e, projectFilterHref(city))}>
+              {city}<span aria-hidden="true">›</span>
+            </a>
+          </li>
+        ))}
+        <li className={!activeCity ? "is-active" : ""}>
+          <a
+            href="Projects.html"
+            onMouseEnter={() => handleCityHover(null)}
+            onClick={(e) => go(e, "Projects.html")}
+          >
+            All projects
+          </a>
+        </li>
+      </ul>
+      <div className={`project-menu__status-panel ${activeCity ? "is-visible" : ""}`} aria-live="polite">
+        <div className="project-menu__label">By Status{activeCity ? ` · ${activeCity}` : ""}</div>
+        {activeCity ? (
+          <>
+            <a
+              className={!activeStatus ? "is-active" : ""}
+              href={projectFilterHref(activeCity)}
+              onMouseEnter={() => handleStatusHover(null)}
+              onClick={(e) => go(e, projectFilterHref(activeCity))}
+            >
+              All statuses
+            </a>
+            {PROJECT_STATUSES.map((status) => (
+              <a
+                key={status}
+                className={activeStatus === status ? "is-active" : ""}
+                href={projectFilterHref(activeCity, status)}
+                onMouseEnter={() => handleStatusHover(status)}
+                onClick={(e) => go(e, projectFilterHref(activeCity, status))}
+              >
+                {status}
+              </a>
+            ))}
+          </>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function ProjectMobileMenu({ go }) {
+  return (
+    <div className="mobile-project-menu">
+      {PROJECT_CITIES.map((city) => (
+        <details key={city}>
+          <summary>{city}<span aria-hidden="true">+</span></summary>
+          <div>
+            <a href={projectFilterHref(city)} onClick={(e) => go(e, projectFilterHref(city))}>All statuses</a>
+            {PROJECT_STATUSES.map((status) => (
+              <a key={status} href={projectFilterHref(city, status)} onClick={(e) => go(e, projectFilterHref(city, status))}>{status}</a>
+            ))}
+          </div>
+        </details>
+      ))}
+      <a className="mobile-project-menu__all" href="Projects.html" onClick={(e) => go(e, "Projects.html")}>All projects</a>
+    </div>
+  );
+}
+
+function MegaPanel({ cfg, go }) {
+  const [filter, setFilter] = useState({ city: null, status: null });
+
+  const handleFilterChange = (city, status) => {
+    setFilter({ city, status });
+  };
+
+  const isFiltering = cfg.projectNested && (filter.city || filter.status);
+
+  return (
+    <div className={`mega__inner rr-wrap ${cfg.projectNested ? "mega__inner--projects" : ""}`}>
       <div className="mega__lead">
         <p className="mega__blurb">{cfg.blurb}</p>
         <a className="mega__all" href={cfg.href} onClick={(e) => go(e, cfg.href)}>
@@ -147,23 +353,35 @@ function MegaPanel({ cfg, go }) {
         </a>
       </div>
       <div className="mega__cols">
-        {cfg.cols.map((c) => (
-          <div className="mega-col" key={c.h}>
-            <div className="mega-col__h">{c.h}</div>
-            <ul>
-              {c.items.map(([label, href]) => (
-                <li key={label}><a href={href} onClick={(e) => go(e, href)}>{label}</a></li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        {cfg.projectNested ? (
+          <ProjectNestedMenu go={go} onFilterChange={handleFilterChange} />
+        ) : (
+          cfg.cols.map((c) => (
+            <div className="mega-col" key={c.h}>
+              <div className="mega-col__h">{c.h}</div>
+              <ul>
+                {c.items.map(([label, href]) => (
+                  <li key={label}><a href={href} onClick={(e) => go(e, href)}>{label}</a></li>
+                ))}
+              </ul>
+            </div>
+          ))
+        )}
       </div>
-      <MegaFeat feat={cfg.feat} go={go} />
+      {isFiltering ? (
+        <div className="mega-project-feature-pane">
+          <ProjectCarouselFeature city={filter.city} status={filter.status} go={go} />
+        </div>
+      ) : cfg.feats ? (
+        <div className="mega-feats">{cfg.feats.map((feat) => <MegaFeat key={feat.title} feat={feat} go={go} />)}</div>
+      ) : (
+        <MegaFeat feat={cfg.feat} go={go} />
+      )}
     </div>
   );
 }
 
-export default function Nav({ onContact, hidden, solid: forceSolid = false }) {
+export default function Nav({ onContact, hidden, solid: forceSolid = false, solidAt }) {
   const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(null);
   const [mobile, setMobile] = useState(false);
@@ -171,11 +389,13 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false }) {
   const location = useLocation();
 
   useEffect(() => {
-    const onScroll = () => setSolid(window.scrollY > (window.__NAV_SOLID_AT != null ? window.__NAV_SOLID_AT : window.innerHeight - 90));
+    const mediaRoute = location.pathname.startsWith("/media");
+    const threshold = mediaRoute ? 0 : (solidAt ?? (window.__NAV_SOLID_AT != null ? window.__NAV_SOLID_AT : window.innerHeight - 90));
+    const onScroll = () => setSolid(window.scrollY > threshold);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [solidAt, location.pathname]);
 
   useEffect(() => {
     const onKey = (e) => { if (e.key === "Escape") { setOpen(null); setMobile(false); } };
@@ -235,7 +455,7 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false }) {
       className={`nav ${dark ? "nav--top" : "nav--solid"} ${open ? "nav--mega" : ""} ${hidden ? "nav--hidden" : ""}`}
       onMouseLeave={() => setOpen(null)}>
       <div className="nav__bar">
-        <a className="nav__brand" href="#top" onClick={(e) => go(e, "#top")} aria-label="Ruchi Realty — home">
+        <a className="nav__brand" href="#top" onClick={(e) => go(e, "#top")} aria-label="Ruchi Realty home">
           <img className="nav__logo"
             src={dark ? "/assets/logo-h-white.png" : "/assets/logo-h.png"}
             alt="Ruchi Realty" />
@@ -253,7 +473,7 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false }) {
             </div>
           ))}
         </nav>
-        <button className="nav__cta" onClick={() => onContact ? onContact() : navigate("/contact#private-viewings")}>Book a Visit<span className="ar">→</span></button>
+        <button className="nav__cta" onClick={() => navigate("/#contact")}>Book a Visit</button>
         <button className={`nav__burger ${mobile ? "is-open" : ""}`} onClick={() => setMobile((m) => !m)} aria-label="Menu">
           <span></span><span></span><span></span>
         </button>
@@ -268,14 +488,14 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false }) {
           {MEGA_ORDER.map((label) => (
             <div className="mobile-group" key={label}>
               <a className="mobile-group__h" href={MEGA[label].href} onClick={(e) => go(e, MEGA[label].href)}>{label}</a>
-              <div className="mobile-group__links">
+              {label === "Projects" ? <ProjectMobileMenu go={go} /> : <div className="mobile-group__links">
                 {MEGA[label].cols.flatMap((c) => c.items).slice(0, 5).map(([l, h]) => (
                   <a key={l} href={h} onClick={(e) => go(e, h)}>{l}</a>
                 ))}
-              </div>
+              </div>}
             </div>
           ))}
-          <button className="mobile__cta" onClick={() => { setMobile(false); if (onContact) onContact(); else navigate("/contact#private-viewings"); }}>Book a Visit<span className="ar">→</span></button>
+          <button className="mobile__cta" onClick={() => { setMobile(false); navigate("/#contact"); }}>Book a Visit</button>
         </div>
       </div>
     </header>

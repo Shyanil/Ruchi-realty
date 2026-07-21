@@ -41,8 +41,8 @@ const FALLBACK_SUBPAGES = {
     ],
     "overviewHighlights": [
       {
-        "label": "Premium Township",
-        "desc": "A premium township close to the city.",
+        "label": "Residential",
+        "desc": "A premium residential development close to the city.",
         "icon": "infrastructure"
       },
       {
@@ -138,7 +138,7 @@ const FALLBACK_SUBPAGES = {
     "specifications": [
       {
         "title": "A Unique Abode for You",
-        "desc": "Your Highness: For those whose life has a distinct flavour of royalty, here's an opportunity crafted just for you. A dwelling for the privileged few, it's a limited edition. Just a few plots at this premium township close to the city. Come, live the royal life."
+        "desc": "Your Highness: For those whose life has a distinct flavour of royalty, here's an opportunity crafted just for you. A dwelling for the privileged few, it's a limited edition. Just a few plots at this premium residential development close to the city. Come, live the royal life."
       },
       {
         "title": "Rule Your Fort",
@@ -146,7 +146,7 @@ const FALLBACK_SUBPAGES = {
       },
       {
         "title": "Vast Expanses Beckon You",
-        "desc": "Your Highness: Oscar Fort sprawls over several acres with the serenity of a country township and modern amenities of city life. Functional areas for all age groups make Oscar Fort a one-in-a-kind gated community."
+        "desc": "Your Highness: Oscar Fort sprawls over several acres with peaceful surroundings and modern amenities of city life. Functional areas for all age groups make Oscar Fort a one-in-a-kind gated community."
       },
       {
         "title": "A Royal Canvas",
@@ -366,7 +366,7 @@ const FALLBACK_SUBPAGES = {
     ],
     "brochureUrl": "",
     "metaTitle": "Oscar Fort Indore - Ruchi Realty",
-    "metaDescription": "Experience royal living at Oscar Fort, a premium gated township in Indore with limited-edition plots, green open spaces, modern amenities, and a lifestyle crafted for memorable everyday moments."
+    "metaDescription": "Experience royal living at Oscar Fort, a premium gated residential development in Indore with limited-edition plots, green open spaces, modern amenities, and a lifestyle crafted for memorable everyday moments."
   },
   "lifescapes-bhopal": {
     heroTitle: "Ruchi Lifescapes",

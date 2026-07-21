@@ -135,6 +135,8 @@
     return "";
   };
 
+  const normalizeProjectType = (type) => String(type || "").toLowerCase() === "commercial" ? "Commercial" : "Residential";
+
   const normalizeProject = (project = {}) => {
     const title = project.title || project.name || "Untitled Project";
     const location = project.location || project.city || "";
@@ -150,7 +152,7 @@
       location,
       city: location,
       description: project.description || "",
-      type: project.type || "Residential",
+      type: normalizeProjectType(project.type),
       status: project.status || "Ongoing",
       featured: Boolean(project.featured),
       sort_order: toOrder(project.sort_order),
@@ -166,7 +168,7 @@
     image_url: project.image_url || project.img || "",
     location: project.location || project.city || "",
     description: project.description || null,
-    type: project.type || "Residential",
+    type: normalizeProjectType(project.type),
     status: project.status || null,
     featured: Boolean(project.featured),
     sort_order: toOrder(project.sort_order),
