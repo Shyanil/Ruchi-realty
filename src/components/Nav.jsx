@@ -194,7 +194,7 @@ function ProjectCarouselFeature({ city, status, go }) {
     <div className="mega-project-carousel">
       <div className="mega-project-carousel__header">
         <div className="mega-project-carousel__title">
-          <span>{status ? `${status} in ` : ""}{city || "All Cities"}</span>
+          <span>{status ? `${status} in ` : ""}{city || "All Projects"}</span>
           <span className="mega-project-carousel__count">({total} project{total > 1 ? "s" : ""})</span>
         </div>
         {total > VISIBLE_COUNT && (
@@ -345,8 +345,6 @@ function MegaPanel({ cfg, go }) {
     setActiveStatus(null);
   };
 
-  const isFiltering = cfg.projectNested && (activeCity || activeStatus);
-
   return (
     <div className={`mega__inner rr-wrap ${cfg.projectNested ? "mega__inner--projects" : ""}`}>
       <div className="mega__lead" onMouseEnter={handleClearFilter}>
@@ -378,7 +376,7 @@ function MegaPanel({ cfg, go }) {
           ))
         )}
       </div>
-      {isFiltering ? (
+      {cfg.projectNested ? (
         <div className="mega-project-feature-pane">
           <ProjectCarouselFeature city={activeCity} status={activeStatus} go={go} />
         </div>
