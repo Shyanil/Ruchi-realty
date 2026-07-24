@@ -1,6 +1,6 @@
 export const PROJECTS = [
   { name: "One Victoria", city: "Action Area 1, New Town, Kolkata", type: "Residential", status: "Ongoing", url: "/projects/one-victoria-new-town", img: "/projects/one-victoria-new-town/hero.webp" },
-  { name: "One Prime Residential", city: "New Town, Kolkata", type: "Residential", status: "Ongoing", url: "/projects/one-prime-residential", img: "/projects/one-prime-residential/card.webp" },
+  { name: "One Prime Residential", city: "New Town, Kolkata", type: "Residential", status: "Ready to Move", url: "/projects/one-prime-residential", img: "/projects/one-prime-residential/card.webp" },
   { name: "Oscar Billionaires", city: "Indore", type: "Residential", status: "Ready to Move", url: "/oscar-indore", img: "assets/projects/oscar-billionaires.webp" },
   { name: "Active Acres", city: "Kolkata", type: "Residential", status: "Ready to Move", url: "/active-acres-angelica", img: "assets/projects/active-acres.webp" },
   { name: "One Rajarhat", city: "Rajarhat - Kolkata", type: "Residential", status: "Ready to Move", url: "/one-rajarhat", img: "assets/projects/one-rajarhat.webp" },
@@ -16,7 +16,7 @@ export const PROJECTS = [
   { name: "Oscar Fort", city: "Indore", type: "Residential", status: "Ongoing", url: "/projects/oscar-fort-indore", img: "/projects/oscar-fort-indore/hero.jpg" },
   { name: "Oscar Sanctuary", city: "Indore", type: "Residential", status: "Ongoing", url: "/projects/oscar-sanctuary-indore", img: "/projects/oscar-sanctuary-indore/hero.webp" },
   { name: "Oscar Palace", city: "Indore", type: "Residential", status: "Upcoming", url: "/projects/oscar-palace", img: "/projects/oscar-palace/hero.jpg", mediaBadge: "Video" },
-  { name: "Ruchi Enclave", city: "Indore", type: "Residential", status: "Upcoming", url: "/projects/ruchi-enclave-indore", img: "/projects/ruchi-enclave-indore/hero.webp" },
+  { name: "Ruchi Enclave", city: "Indore", type: "Residential", status: "Ready to Move", url: "/projects/ruchi-enclave-indore", img: "/projects/ruchi-enclave-indore/hero.webp" },
   { name: "Ruchi Hills", city: "Indore", type: "Residential", status: "Upcoming", img: "assets/projects/ruchi-hills.webp" },
 ];
 

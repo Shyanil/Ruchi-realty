@@ -168,16 +168,24 @@ function ProjectCarouselFeature({ city, status, go }) {
   const VISIBLE_COUNT = 2;
   const total = filteredProjects.length;
 
+  const totalPages = Math.ceil(total / VISIBLE_COUNT);
+
   const prevSlide = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : Math.max(0, total - VISIBLE_COUNT)));
+    setCurrentIndex((prev) => {
+      const nextIdx = prev - VISIBLE_COUNT;
+      return nextIdx >= 0 ? nextIdx : (totalPages - 1) * VISIBLE_COUNT;
+    });
   };
 
   const nextSlide = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setCurrentIndex((prev) => (prev + VISIBLE_COUNT < total ? prev + 1 : 0));
+    setCurrentIndex((prev) => {
+      const nextIdx = prev + VISIBLE_COUNT;
+      return nextIdx < total ? nextIdx : 0;
+    });
   };
 
   const visibleProjects = filteredProjects.slice(currentIndex, currentIndex + VISIBLE_COUNT);
@@ -200,7 +208,7 @@ function ProjectCarouselFeature({ city, status, go }) {
               ‹
             </button>
             <span className="mega-project-carousel__page">
-              {Math.floor(currentIndex / VISIBLE_COUNT) + 1} / {Math.ceil(total / VISIBLE_COUNT)}
+              {Math.floor(currentIndex / VISIBLE_COUNT) + 1} / {totalPages}
             </span>
             <button
               type="button"
@@ -240,36 +248,17 @@ function ProjectCarouselFeature({ city, status, go }) {
   );
 }
 
-function ProjectNestedMenu({ go, onFilterChange }) {
-  const [activeCity, setActiveCity] = useState(null);
-  const [activeStatus, setActiveStatus] = useState(null);
-
-  const handleCityHover = (city) => {
-    setActiveCity(city);
-    onFilterChange(city, activeStatus);
-  };
-
-  const handleStatusHover = (status) => {
-    setActiveStatus(status);
-    onFilterChange(activeCity, status);
-  };
-
-  const handleMouseLeave = () => {
-    setActiveCity(null);
-    setActiveStatus(null);
-    onFilterChange(null, null);
-  };
-
+function ProjectNestedMenu({ go, activeCity, activeStatus, onCityHover, onStatusHover, onClearFilter }) {
   return (
-    <div className="project-menu" onMouseLeave={handleMouseLeave}>
+    <div className="project-menu">
       <div className="mega-col__h">By City</div>
       <ul className="project-menu__cities" aria-label="Filter projects by city">
         {PROJECT_CITIES.map((city) => (
           <li
             className={`project-menu__city ${activeCity === city ? "is-active" : ""}`}
             key={city}
-            onMouseEnter={() => handleCityHover(city)}
-            onFocus={() => handleCityHover(city)}
+            onMouseEnter={() => onCityHover(city)}
+            onFocus={() => onCityHover(city)}
           >
             <a href={projectFilterHref(city)} onClick={(e) => go(e, projectFilterHref(city))}>
               {city}<span aria-hidden="true">›</span>
@@ -279,7 +268,7 @@ function ProjectNestedMenu({ go, onFilterChange }) {
         <li className={!activeCity ? "is-active" : ""}>
           <a
             href="Projects.html"
-            onMouseEnter={() => handleCityHover(null)}
+            onMouseEnter={onClearFilter}
             onClick={(e) => go(e, "Projects.html")}
           >
             All projects
@@ -293,7 +282,7 @@ function ProjectNestedMenu({ go, onFilterChange }) {
             <a
               className={!activeStatus ? "is-active" : ""}
               href={projectFilterHref(activeCity)}
-              onMouseEnter={() => handleStatusHover(null)}
+              onMouseEnter={() => onStatusHover(null)}
               onClick={(e) => go(e, projectFilterHref(activeCity))}
             >
               All statuses
@@ -303,7 +292,7 @@ function ProjectNestedMenu({ go, onFilterChange }) {
                 key={status}
                 className={activeStatus === status ? "is-active" : ""}
                 href={projectFilterHref(activeCity, status)}
-                onMouseEnter={() => handleStatusHover(status)}
+                onMouseEnter={() => onStatusHover(status)}
                 onClick={(e) => go(e, projectFilterHref(activeCity, status))}
               >
                 {status}
@@ -336,17 +325,28 @@ function ProjectMobileMenu({ go }) {
 }
 
 function MegaPanel({ cfg, go }) {
-  const [filter, setFilter] = useState({ city: null, status: null });
+  const [activeCity, setActiveCity] = useState(null);
+  const [activeStatus, setActiveStatus] = useState(null);
 
-  const handleFilterChange = (city, status) => {
-    setFilter({ city, status });
+  const handleCityHover = (city) => {
+    setActiveCity(city);
+    setActiveStatus(null);
   };
 
-  const isFiltering = cfg.projectNested && (filter.city || filter.status);
+  const handleStatusHover = (status) => {
+    setActiveStatus(status);
+  };
+
+  const handleClearFilter = () => {
+    setActiveCity(null);
+    setActiveStatus(null);
+  };
+
+  const isFiltering = cfg.projectNested && (activeCity || activeStatus);
 
   return (
     <div className={`mega__inner rr-wrap ${cfg.projectNested ? "mega__inner--projects" : ""}`}>
-      <div className="mega__lead">
+      <div className="mega__lead" onMouseEnter={handleClearFilter}>
         <p className="mega__blurb">{cfg.blurb}</p>
         <a className="mega__all" href={cfg.href} onClick={(e) => go(e, cfg.href)}>
           View section<span className="ar">→</span>
@@ -354,7 +354,14 @@ function MegaPanel({ cfg, go }) {
       </div>
       <div className="mega__cols">
         {cfg.projectNested ? (
-          <ProjectNestedMenu go={go} onFilterChange={handleFilterChange} />
+          <ProjectNestedMenu
+            go={go}
+            activeCity={activeCity}
+            activeStatus={activeStatus}
+            onCityHover={handleCityHover}
+            onStatusHover={handleStatusHover}
+            onClearFilter={handleClearFilter}
+          />
         ) : (
           cfg.cols.map((c) => (
             <div className="mega-col" key={c.h}>
@@ -370,7 +377,7 @@ function MegaPanel({ cfg, go }) {
       </div>
       {isFiltering ? (
         <div className="mega-project-feature-pane">
-          <ProjectCarouselFeature city={filter.city} status={filter.status} go={go} />
+          <ProjectCarouselFeature city={activeCity} status={activeStatus} go={go} />
         </div>
       ) : cfg.feats ? (
         <div className="mega-feats">{cfg.feats.map((feat) => <MegaFeat key={feat.title} feat={feat} go={go} />)}</div>
