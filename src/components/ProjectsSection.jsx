@@ -122,6 +122,8 @@ export function ProjectsSection() {
   const [city, setCity] = useState("All");
   const [page, setPage] = useState(0);
   const [items, setItems] = useState(() => PROJECTS);
+  const [moving, setMoving] = useState(false);
+  const [paused, setPaused] = useState(false);
   useEffect(() => {
     let active = true;
     if (window.RuchiBackend?.projects) {
@@ -138,7 +140,24 @@ export function ProjectsSection() {
   const currentPage = Math.min(page, pageCount - 1);
   const firstProject = currentPage * PROJECTS_PER_PAGE;
   const shown = filteredProjects.slice(firstProject, firstProject + PROJECTS_PER_PAGE);
-  const changeCity = (selectedCity) => { setCity(selectedCity); setPage(0); };
+  const changePage = (direction = 1) => {
+    if (moving || pageCount < 2) return;
+    setMoving(true);
+    window.setTimeout(() => {
+      setPage((current) => (current + direction + pageCount) % pageCount);
+      setMoving(false);
+    }, 360);
+  };
+  const changeCity = (selectedCity) => {
+    setMoving(false);
+    setCity(selectedCity);
+    setPage(0);
+  };
+  useEffect(() => {
+    if (paused || moving || pageCount < 2) return undefined;
+    const timer = window.setTimeout(() => changePage(1), 3200);
+    return () => window.clearTimeout(timer);
+  }, [currentPage, pageCount, paused, moving, city]);
   return (
     <section className="projects section-pad" id="projects">
       <div className="rr-wrap">
@@ -168,8 +187,13 @@ export function ProjectsSection() {
       </div>
       <div className="projects__sig" aria-hidden="true"></div>
       <div className="rr-wrap">
-        <div className="projects__carousel">
-          <div className="pgrid" key={`${city}-${currentPage}`} aria-live="polite">
+        <div className="projects__carousel"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onFocusCapture={() => setPaused(true)}
+          onBlurCapture={() => setPaused(false)}>
+          <div className={`pgrid projects__page ${moving ? "projects__page--out" : "projects__page--in"}`}
+            key={`${city}-${currentPage}`} aria-live="polite">
             {shown.map((p, i) =>
               <Reveal key={`${city}-${p.name}-${p.city}`} delay={i * 80}>
                 <ProjectTile p={p} i={i} n={firstProject + i} />
@@ -177,17 +201,20 @@ export function ProjectsSection() {
             )}
           </div>
         </div>
-        <div className="projects__controls" aria-label="Project carousel controls">
-          <button className="projects__arrow" type="button" aria-label="Show previous projects" disabled={currentPage === 0} onClick={() => setPage((v) => Math.max(0, v - 1))}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6" /></svg>
-          </button>
-          <button className="projects__arrow" type="button" aria-label="Show next projects" disabled={currentPage >= pageCount - 1} onClick={() => setPage((v) => Math.min(pageCount - 1, v + 1))}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
-          </button>
+        <div className="projects__actions">
+          <div className="projects__controls" aria-label="Project carousel controls">
+            <button className="projects__arrow" type="button" aria-label="Show previous projects" disabled={pageCount < 2 || moving} onClick={() => changePage(-1)}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6" /></svg>
+            </button>
+            <span className="projects__page-count">{String(currentPage + 1).padStart(2, "0")} / {String(pageCount).padStart(2, "0")}</span>
+            <button className="projects__arrow" type="button" aria-label="Show next projects" disabled={pageCount < 2 || moving} onClick={() => changePage(1)}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+            </button>
+          </div>
+          <Reveal className="projects__more">
+            <Link className="projects__allbtn" to="/projects">View All Projects<CardArrow /></Link>
+          </Reveal>
         </div>
-        <Reveal className="projects__more">
-          <Link className="projects__allbtn" to="/projects">View All Projects<CardArrow /></Link>
-        </Reveal>
       </div>
     </section>
   );

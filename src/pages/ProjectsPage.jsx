@@ -14,9 +14,10 @@ function ppHashFilter(hash = typeof location !== "undefined" ? location.hash : "
   const raw = hash.replace(/^#/, "");
   const q = new URLSearchParams(raw);
   const city = q.get("city"), status = q.get("status"), type = q.get("type");
+  const selectedCity = PP_CITIES.includes(city) ? city : "All";
   return {
-    city: PP_CITIES.includes(city) ? city : "All",
-    status: PP_STATUS.includes(status) ? status : "All",
+    city: selectedCity,
+    status: selectedCity !== "All" && PP_STATUS.includes(status) ? status : "All",
     type: type || "All",
   };
 }
@@ -41,12 +42,13 @@ export default function ProjectsPage() {
   const [type, setType] = useState(init.type);
 
   const updateFilters = (nextCity, nextStatus) => {
+    const normalizedStatus = nextCity === "All" ? "All" : nextStatus;
     setCity(nextCity);
-    setStatus(nextStatus);
+    setStatus(normalizedStatus);
     setType("All");
     const params = new URLSearchParams();
     if (nextCity !== "All") params.set("city", nextCity);
-    if (nextStatus !== "All") params.set("status", nextStatus);
+    if (normalizedStatus !== "All") params.set("status", normalizedStatus);
     navigate(`/projects${params.size ? `#${params.toString()}` : ""}`, { replace: true });
   };
   const pickCity = (c) => updateFilters(c, status);
@@ -113,14 +115,14 @@ export default function ProjectsPage() {
                   );
                 })}
               </div>
-              <div className="pp-status" role="group" aria-label="Filter projects by status">
+              {city !== "All" ? <div className="pp-status" role="group" aria-label="Filter projects by status">
                 {PP_STATUS.map((s) =>
                   <button key={s} type="button" className={`pp-chip ${status === s ? "is-active" : ""}`}
                     aria-pressed={status === s} onClick={() => pickStatus(s)}>
                     {s === "All" ? "Any status" : s}
                   </button>
                 )}
-              </div>
+              </div> : null}
             </Reveal>
             <div className="pgrid" key={`${city}-${status}`}>
               {list.map((p, i) =>

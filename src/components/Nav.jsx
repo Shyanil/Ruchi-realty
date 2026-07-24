@@ -223,7 +223,7 @@ function ProjectCarouselFeature({ city, status, go }) {
       </div>
 
       <div className="mega-project-carousel__grid">
-        {visibleProjects.map((proj) => (
+        {visibleProjects.map((proj, index) => (
           <a
             key={proj.name}
             className="mega-project-card"
@@ -234,6 +234,9 @@ function ProjectCarouselFeature({ city, status, go }) {
               <RImg src={proj.img || IMG_TOWER[0]} alt={proj.name} className="mega-project-card__img" grade />
               <span className={`mega-project-card__badge mega-project-card__badge--${proj.status?.toLowerCase().replace(/\s+/g, '-')}`}>
                 {proj.status}
+              </span>
+              <span className="mega-project-card__number" aria-label={`Project ${currentIndex + index + 1} of ${total}`}>
+                {String(currentIndex + index + 1).padStart(2, "0")}
               </span>
             </div>
             <div className="mega-project-card__body">
