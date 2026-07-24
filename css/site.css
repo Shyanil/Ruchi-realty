@@ -250,14 +250,11 @@ body.nav-locked { overflow: hidden; }
 .hero__scroll:hover .hero__mouse { border-color:var(--rr-lime); transform:translateY(-2px); }
 .hero__scroll .dot-track { width: 1px; height: 28px; background: rgba(255,255,255,0.3); position: relative; overflow: hidden; }
 .hero__scroll .dot-track::after { content: ""; position: absolute; left: 0; top: -50%; width: 1px; height: 50%; background: var(--rr-lime); animation: scrollDot 2.4s var(--rr-ease) infinite; }
+.hero__sound-btn { position: absolute; bottom: 24px; right: 28px; z-index: 6; display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.25); background: rgba(20,18,26,0.55); backdrop-filter: blur(8px); color: #fff; font-size: 11px; font-weight: var(--rr-w-medium); letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all 200ms var(--rr-ease); }
+.hero__sound-btn:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.5); color: var(--rr-lime); }
 .hero__scroll span { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
 @keyframes scrollDot { 0%{ top:-55%; } 60%{ top:105%; } 100%{ top:105%; } }
 @keyframes mouseWheel { 0%{opacity:0;transform:translate(-50%,-2px)} 25%{opacity:1} 70%{opacity:1;transform:translate(-50%,8px)} 100%{opacity:0;transform:translate(-50%,8px)} }
-
-/* ============================================================ INTRO band */
-.intro { background: var(--rr-paper); text-align: center; position: relative; overflow: hidden; }
-.intro__sig { position: absolute; inset: 0; background: url("../assets/signature-field-rows.png") center/cover no-repeat; opacity: 0.05; pointer-events: none; }
-.intro .rr-wrap { position: relative; z-index: 1; }
 .intro__eyebrow { margin-bottom: 28px; }
 .intro__head { font-size: clamp(34px, 6vw, 84px); font-weight: var(--rr-w-light); letter-spacing: var(--rr-ls-tight); line-height: 1.04; margin: 0 auto; max-width: 16ch; }
 .intro__grad { background: var(--rr-gradient-text); -webkit-background-clip: text; background-clip: text; color: transparent; }

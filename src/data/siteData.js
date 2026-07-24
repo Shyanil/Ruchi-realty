@@ -310,7 +310,7 @@ const VIDEO_TESTIMONIALS = [
   { name: "One Victoria Review", project: "Ruchi Realty", city: "Kolkata", dur: "1:39", line: "Trust we could check before we signed.", poster: "assets/testimonial_9.webp", video: "https://player.vimeo.com/video/1106031951?autoplay=1&rel=0&controls=0#t=" },
 ];
 
-export const SHOWREEL = "https://ruchirealty.com/wp-content/uploads/2023/12/video_ruchi_1-1.mp4";
+export const SHOWREEL = "/assets/hero_video.mp4";
 
 export {
   STATS,
