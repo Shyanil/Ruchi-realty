@@ -1,3 +1,4 @@
+import ProjectSplitHero from "../components/ProjectSplitHero";
 import { useState, useEffect, useCallback } from "react";
 import Nav from "../components/Nav";
 import { Footer } from "../components/Footer";
@@ -163,106 +164,7 @@ const fallbackData = {
 };
 
 function HeroSection({ subpage, onBrochureClick }) {
-  const bg = subpage.heroBg || subpage.heroDesktopUrl || fallbackData.heroBg;
-  const mobileBg = subpage.heroMobileUrl || subpage.heroBg || fallbackData.heroMobileUrl;
-  const logo = subpage.heroLogo || fallbackData.heroLogo;
-
-  return (
-    <header className="osc-hero" data-screen-label="Active Acres Angelica" id="top">
-      <div className="osc-hero__bg">
-        <picture>
-          {mobileBg && <source media="(max-width: 640px)" srcSet={mobileBg} />}
-          <img src={bg} alt={subpage.heroTitle} />
-        </picture>
-      </div>
-      <div className="osc-hero__overlay"></div>
-      <div className="osc-hero__sig" aria-hidden="true"></div>
-      <div className="rr-wrap osc-hero__wrap">
-        <Reveal>
-          <div className="osc-hero__content">
-            {logo && (
-              <img
-                className="osc-hero__logo"
-                src={logo}
-                alt="Active Acres Angelica Logo"
-                loading="eager"
-                style={{ height: "auto", maxHeight: "80px", maxWidth: "260px", objectFit: "contain" }}
-              />
-            )}
-            <h1 className="osc-hero__title">{subpage.heroTitle}</h1>
-            <p className="osc-hero__city">Kolkata</p>
-            <p className="osc-hero__tagline">{subpage.heroTagline}</p>
-            <div className="osc-hero__actions">
-              <button className="submit-btn" onClick={() => { window.location.href = "/projects"; }}>
-                More Projects<span className="ar">→</span>
-              </button>
-              <button className="ab-btn-outline ab-btn-outline--white" onClick={onBrochureClick}>
-                Download Brochure<span className="ar">→</span>
-              </button>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-      {subpage.overviewHighlights?.length > 0 && (
-        <div className="osc-hero__chips">
-          {subpage.overviewHighlights.map((h, i) => {
-            const getHighlightIcon = (iconName) => {
-              switch (iconName) {
-                case "location":
-                case "map-pin":
-                  return (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: "24px", height: "24px", color: "var(--rr-lime)", marginBottom: "4px" }}>
-                      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z" />
-                      <circle cx="12" cy="10" r="3" />
-                    </svg>
-                  );
-                case "home":
-                case "building":
-                  return (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: "24px", height: "24px", color: "var(--rr-lime)", marginBottom: "4px" }}>
-                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                      <polyline points="9 22 9 12 15 12 15 22" />
-                    </svg>
-                  );
-                case "amenities":
-                case "gym":
-                case "star":
-                  return (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: "24px", height: "24px", color: "var(--rr-lime)", marginBottom: "4px" }}>
-                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                    </svg>
-                  );
-                case "security":
-                case "shield":
-                  return (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: "24px", height: "24px", color: "var(--rr-lime)", marginBottom: "4px" }}>
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    </svg>
-                  );
-                default:
-                  if (iconName && (iconName.startsWith("http") || iconName.includes(".") || iconName.includes("/"))) {
-                    return <img src={iconName} alt="" style={{ width: "24px", height: "24px", marginBottom: "4px", objectFit: "contain" }} />;
-                  }
-                  return (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: "24px", height: "24px", color: "var(--rr-lime)", marginBottom: "4px" }}>
-                      <circle cx="12" cy="12" r="10" />
-                      <polyline points="12 6 12 12 16 14" />
-                    </svg>
-                  );
-              }
-            };
-            return (
-              <Reveal key={h.label || i} delay={i * 80} className="osc-chip">
-                {getHighlightIcon(h.icon)}
-                <span className="osc-chip__label">{h.label}</span>
-                <span className="osc-chip__desc">{h.desc}</span>
-              </Reveal>
-            );
-          })}
-        </div>
-      )}
-    </header>
-  );
+  return <ProjectSplitHero subpage={subpage} title="Active Acres Angelica" location="Kolkata" type="Residential" slug="active-acres-angelica" onBrochure={onBrochureClick} />;
 }
 
 function StickyNav({ subpage }) {
@@ -983,7 +885,7 @@ export default function ActiveAcresAngelicaPage() {
           }
         }
       `}</style>
-      <Nav onContact={onContact} hidden={navHidden} />
+      <Nav onContact={onContact} hidden={navHidden} solid />
       <main>
         <HeroSection subpage={subpage} onBrochureClick={() => setBrochurePopup(true)} />
         <StickyNav subpage={subpage} />

@@ -238,8 +238,13 @@ function Hero() {
       <a className="hero__scroll" href="#intro"
          onClick={(e) => { e.preventDefault(); document.querySelector("#intro").scrollIntoView({ behavior: "smooth" }); }}
          aria-label="Scroll to explore">
-        <div className="dot-track"></div>
-        <span>Scroll</span>
+        <span className="hero__scroll-copy">Explore</span>
+        <span className="hero__scroll-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="M12 5v12" />
+            <path d="m7.5 13 4.5 4.5 4.5-4.5" />
+          </svg>
+        </span>
       </a>
     </section>
   );
@@ -302,7 +307,7 @@ function cityOf(p) {
   if (c.includes("Kolkata")) return "Kolkata";
   if (c.includes("Indore")) return "Indore";
   if (c.includes("Bhopal")) return "Bhopal";
-  return "Other";
+  return c.split(",")[0].trim() || "Other";
 }
 function statusCls(s) {
   return s === "Ready to Move" ? "status--ready" : s === "Ongoing" ? "status--ongoing" : "status--upcoming";
@@ -312,6 +317,9 @@ function Projects() {
   const [city, setCity] = uS1("All");
   const [status, setStatus] = uS1("All");
   const [items, setItems] = uS1(() => PROJECTS);
+  const [page, setPage] = uS1(0);
+  const [moving, setMoving] = uS1(false);
+  const [paused, setPaused] = uS1(false);
   uE1(() => {
     let active = true;
     if (window.RuchiBackend?.projects) {
@@ -322,13 +330,30 @@ function Projects() {
     return () => { active = false; };
   }, []);
   const pool = items.length ? items : PROJECTS;
+  const projectCities = ["All", ...new Set(pool.map(cityOf).filter((c) => c !== "Other"))];
   const filterPool = (selCity, selStatus) =>
     pool.filter((p) =>
       (selCity === "All" || cityOf(p) === selCity) &&
       (selStatus === "All" || p.status === selStatus)
     );
-  const shown = filterPool(city, status).slice(0, 3);
+  const filtered = filterPool(city, status);
+  const pageCount = Math.max(1, Math.ceil(filtered.length / 3));
+  const shown = filtered.slice(page * 3, page * 3 + 3);
   const filteredCount = filterPool(city, "All").length;
+  const changePage = (direction = 1) => {
+    if (moving || pageCount < 2) return;
+    setMoving(true);
+    window.setTimeout(() => {
+      setPage((current) => (current + direction + pageCount) % pageCount);
+      setMoving(false);
+    }, 360);
+  };
+  uE1(() => { setPage(0); }, [city, status, items]);
+  uE1(() => {
+    if (paused || moving || pageCount < 2) return undefined;
+    const timer = window.setTimeout(() => changePage(1), 4800);
+    return () => window.clearTimeout(timer);
+  }, [page, pageCount, paused, moving]);
   return (
     <section className="projects section-pad" id="projects">
       <div className="rr-wrap">
@@ -345,7 +370,7 @@ function Projects() {
         </Reveal>
         <Reveal delay={80}>
           <div className="ptabs" role="tablist" aria-label="Filter projects by city">
-            {PROJECT_CITIES.map((c) => {
+            {projectCities.map((c) => {
               const n = filterPool(c, "All").length;
               return (
                 <button key={c} role="tab" type="button" aria-selected={city === c}
@@ -374,12 +399,25 @@ function Projects() {
       </div>
       <div className="projects__sig" aria-hidden="true"></div>
       <div className="rr-wrap">
-        <div className="pgrid" key={`${city}-${status}`}>
+        <div className="projects__carousel" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}
+          onFocusCapture={() => setPaused(true)} onBlurCapture={() => setPaused(false)}>
+        <div className={`pgrid projects__page ${moving ? "projects__page--out" : "projects__page--in"}`} key={`${city}-${status}-${page}`}>
           {shown.map((p, i) =>
-            <Reveal key={`${city}-${status}-${p.name}-${p.city}`} delay={i * 80}>
-              <ProjectTile p={p} i={i} n={i} />
-            </Reveal>
+            <div key={`${city}-${status}-${p.name}-${p.city}`}>
+              <ProjectTile p={p} i={i} n={page * 3 + i} />
+            </div>
           )}
+        </div>
+        {pageCount > 1 ?
+          <div className="projects__controls" aria-label="Project carousel controls">
+            <button className="projects__arrow" type="button" onClick={() => changePage(-1)} aria-label="Previous three projects">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+            </button>
+            <span className="projects__page-count">{String(page + 1).padStart(2, "0")} / {String(pageCount).padStart(2, "0")}</span>
+            <button className="projects__arrow" type="button" onClick={() => changePage(1)} aria-label="Next three projects">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg>
+            </button>
+          </div> : null}
         </div>
         <div className="projects__legend">
           <span className="projects__hint">
@@ -394,4 +432,4 @@ function Projects() {
   );
 }
 
-Object.assign(window, { Nav, Hero, Intro, Projects, ProjectTile, cityOf, projectsIn, smoothTo });
+Object.assign(window, { Nav, Hero, Intro, Projects, ProjectTile, cityOf, smoothTo });

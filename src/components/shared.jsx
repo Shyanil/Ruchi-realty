@@ -28,7 +28,7 @@ export function RImg({ src, alt = "", className = "", style = {}, grade = false,
   return (
     <div className={`rimg ${className}`} style={{ background: "var(--rr-gradient-brand)", ...style }}>
       {ok ? (
-        <img src={src} alt={alt} loading="lazy" onError={() => setOk(false)}
+        <img src={!src || /^(https?:|data:|\/)/i.test(src) ? src : `/${src.replace(/^\.\//, "")}`} alt={alt} loading="lazy" onError={() => setOk(false)}
           className="rimg__img" style={grade ? { filter: "brightness(0.92)" } : null} />
       ) : (
         mono ? <div className="rimg__mono" /> : null

@@ -12,7 +12,7 @@ export const PROJECTS = [
   { name: "Saatvik Green", city: "Rahukhedi, Mangliya, Indore", type: "Residential", status: "Ready to Move", url: "/projects/saatvikgreen-indore", img: "/projects/saatvikgreen-indore/hero.webp" },
   { name: "Anand Vihar", city: "Morod, Indore", type: "Residential", status: "Ready to Move", url: "/projects/anand-vihar-indore", img: "/projects/anand-vihar-indore/hero.webp" },
   { name: "Ruchi Lifescapes", city: "Bhopal, Madhya Pradesh", type: "Residential", status: "Ready to Move", url: "/projects/lifescapes-bhopal", img: "/projects/lifescapes-bhopal/card.webp" },
-  { name: "Active Acres Angelica", city: "Active Acres - Kolkata", type: "Residential", status: "Ongoing", url: "/active-acres-angelica", img: "https://ruchirealty.com/active-acres-angelica/images/angelica-hero.webp" },
+  { name: "Active Acres Angelica", city: "Active Acres - Kolkata", type: "Residential", status: "Ongoing", url: "/active-acres-angelica", img: "/assets/projects/active-acres-angelica/hero.webp" },
   { name: "Oscar Fort", city: "Indore", type: "Residential", status: "Ongoing", url: "/projects/oscar-fort-indore", img: "/projects/oscar-fort-indore/hero.jpg" },
   { name: "Oscar Sanctuary", city: "Indore", type: "Residential", status: "Ongoing", url: "/projects/oscar-sanctuary-indore", img: "/projects/oscar-sanctuary-indore/hero.webp" },
   { name: "Oscar Palace", city: "Indore", type: "Residential", status: "Upcoming", url: "/projects/oscar-palace", img: "/projects/oscar-palace/hero.jpg", mediaBadge: "Video" },

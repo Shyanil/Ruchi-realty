@@ -1,3 +1,4 @@
+import ProjectSplitHero from "../components/ProjectSplitHero";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import Nav from "../components/Nav";
@@ -231,68 +232,7 @@ function ActiveGreensIcon({ icon, size = 48 }) {
 }
 
 function HeroSection({ subpage, onBrochureClick }) {
-  const logo = subpage.heroLogo || fallbackData.heroLogo;
-  return (
-    <header className="osc-hero" data-screen-label="Active Greens">
-      <div className="osc-hero__bg">
-        <picture>
-          <source media="(max-width: 640px)" srcSet={subpage.heroMobileUrl || fallbackData.heroMobileUrl} />
-          <img src={subpage.heroBg || fallbackData.heroBg} alt={subpage.heroTitle} />
-        </picture>
-      </div>
-      <div className="osc-hero__overlay"></div>
-      <div className="osc-hero__sig" aria-hidden="true"></div>
-      <div className="rr-wrap osc-hero__wrap">
-        <Reveal>
-          <div className="osc-hero__content">
-            {logo && (
-              logo.includes("active-acres") || logo.includes("black") || logo.includes("dark") ? (
-                <div className="osc-hero__logo-wrap">
-                  <img
-                    className="osc-hero__logo"
-                    src={logo}
-                    alt="Active Greens Logo"
-                    loading="eager"
-                    style={{ height: "auto", maxHeight: "80px", maxWidth: "260px", objectFit: "contain" }}
-                  />
-                </div>
-              ) : (
-                <img
-                  className="osc-hero__logo"
-                  src={logo}
-                  alt="Active Greens Logo"
-                  loading="eager"
-                  style={{ height: "auto", maxHeight: "80px", maxWidth: "260px", objectFit: "contain" }}
-                />
-              )
-            )}
-            <h1 className="osc-hero__title">{subpage.heroTitle}</h1>
-            <p className="osc-hero__city">Kolkata</p>
-            <p className="osc-hero__tagline">{subpage.heroTagline}</p>
-            <div className="osc-hero__actions">
-              <button className="submit-btn" onClick={() => { window.location.href = "/projects"; }}>
-                More Projects<span className="ar">→</span>
-              </button>
-              <button className="ab-btn-outline ab-btn-outline--white" onClick={onBrochureClick}>
-                Download Brochure<span className="ar">→</span>
-              </button>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-      {subpage.overviewHighlights?.length > 0 && (
-        <div className="osc-hero__chips">
-          {subpage.overviewHighlights.map((h, i) => (
-            <Reveal key={h.label || i} delay={i * 80} className="osc-chip">
-              <ActiveGreensIcon icon={h.icon} size={28} />
-              <span className="osc-chip__label">{h.label}</span>
-              <span className="osc-chip__desc">{h.desc}</span>
-            </Reveal>
-          ))}
-        </div>
-      )}
-    </header>
-  );
+  return <ProjectSplitHero subpage={subpage} title="Active Greens" location="Kolkata" type="Residential" slug="active-greens" onBrochure={onBrochureClick} />;
 }
 
 function StickyNav({ subpage }) {
@@ -990,7 +930,7 @@ export default function ActiveGreensPage() {
           }
         }
       `}</style>
-      <Nav onContact={onContact} hidden={navHidden} />
+      <Nav onContact={onContact} hidden={navHidden} solid />
       <main>
         <HeroSection subpage={subpage} onBrochureClick={() => setBrochurePopup(true)} />
         <StickyNav subpage={subpage} />

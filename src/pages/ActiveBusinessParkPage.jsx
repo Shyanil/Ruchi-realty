@@ -1,3 +1,4 @@
+import ProjectSplitHero from "../components/ProjectSplitHero";
 import { useState, useEffect, useCallback } from "react";
 import Nav from "../components/Nav";
 import { Footer } from "../components/Footer";
@@ -79,43 +80,7 @@ const fallbackData = {
 };
 
 function HeroSection({ subpage, onBrochureClick }) {
-  const bg = subpage.heroBg || fallbackData.heroBg;
-  return (
-    <header className="osc-hero" data-screen-label="Active Business Park">
-      <div className="osc-hero__bg">
-        <img src={bg} alt={subpage.heroTitle} />
-      </div>
-      <div className="osc-hero__overlay"></div>
-      <div className="osc-hero__sig" aria-hidden="true"></div>
-      <div className="rr-wrap osc-hero__wrap">
-        <Reveal>
-          <div className="osc-hero__content">
-            {subpage.heroLogo && <img className="osc-hero__logo" src={subpage.heroLogo} alt="Active Business Park Logo" loading="eager" style={{ height: "auto", maxHeight: "80px", maxWidth: "260px", objectFit: "contain" }} />}
-            <h1 className="osc-hero__title">{subpage.heroTitle}</h1>
-            <p className="osc-hero__city">Kolkata</p>
-            <p className="osc-hero__tagline">{subpage.heroTagline}</p>
-            <div className="osc-hero__actions">
-              <button className="submit-btn" onClick={() => { window.location.href = "/projects"; }}>
-                More Projects<span className="ar">→</span>
-              </button>
-              <button className="ab-btn-outline ab-btn-outline--white" onClick={onBrochureClick}>
-                Download Brochure<span className="ar">→</span>
-              </button>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-      <div className="osc-hero__chips">
-        {(subpage.overviewHighlights || []).map((h, i) => (
-          <Reveal key={h.label || i} delay={i * 80} className="osc-chip">
-            {h.icon && <img src={h.icon} alt="" style={{ width: "24px", height: "24px", marginBottom: "4px", objectFit: "contain" }} />}
-            <span className="osc-chip__label">{h.label}</span>
-            <span className="osc-chip__desc">{h.desc}</span>
-          </Reveal>
-        ))}
-      </div>
-    </header>
-  );
+  return <ProjectSplitHero subpage={subpage} title="Active Business Park" location="Kolkata" type="Commercial" slug="active-business-park" onBrochure={onBrochureClick} />;
 }
 
 function StickyNav() {
@@ -577,7 +542,7 @@ export default function ActiveBusinessParkPage() {
 
   return (
     <>
-      <Nav onContact={onContact} hidden={navHidden} />
+      <Nav onContact={onContact} hidden={navHidden} solid />
       <main>
         <HeroSection subpage={subpage} onBrochureClick={() => setBrochurePopup(true)} />
         <StickyNav />

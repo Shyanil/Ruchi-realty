@@ -495,7 +495,7 @@ function normalizeProjectSubpage(project, sp) {
     slug: project?.slug || "",
     location: project?.location || project?.city || "",
     tag: sp?.heroTagline || project?.tag || description,
-    heroLogo: assetUrl(sp?.heroLogo || ""),
+    heroLogo: project?.slug === "ruchi-lifescapes-indore-project" ? "/projects/ruchi-lifescapes-indore-project/logo.jpg" : assetUrl(sp?.heroLogo || ""),
     heroBg: assetUrl(sp?.heroBg || project?.image_url || project?.img || "assets/projects/oscar-billionaires.webp"),
     heroMobileUrl: assetUrl(custom.heroMobileUrl || ""),
     heroMedia: custom.heroMedia,
@@ -523,6 +523,19 @@ function CtaArrow() {
   return <CardArrow />;
 }
 
+function HeroEnquiryForm({ title, onSubmit }) {
+  const [form, setForm] = useState({ name: String(), phone: String(), email: String() });
+  const field = (key) => (e) => setForm({ ...form, [key]: e.target.value });
+  return <form className={`victoria-hero-form`} onSubmit={(e) => { e.preventDefault(); onSubmit(form); }}>
+    <span className={`eyebrow`}>Enquire now</span>
+    <h2>Find your place<br />at {title}.</h2>
+    <p>Share your details for pricing, plans, and availability.</p>
+    <label><span>Name</span><input value={form.name} onChange={field(`name`)} placeholder={`Your full name`} required /></label>
+    <label><span>Phone</span><input value={form.phone} onChange={field(`phone`)} placeholder={`+91`} required /></label>
+    <label><span>Email</span><input type={`email`} value={form.email} onChange={field(`email`)} placeholder={`you@email.com`} /></label>
+    <button className={`submit-btn`} type={`submit`}>Request details<CtaArrow /></button>
+  </form>;
+}
 function AmenityIcon({ icon, name }) {
   const key = String(icon || name || "").toLowerCase();
   const common = { viewBox: "0 0 48 48", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round" };
@@ -704,6 +717,12 @@ export default function GenericProjectPage() {
 
   const data = useMemo(() => normalizeProjectSubpage(project, subpage), [project, subpage]);
   const onBrochure = () => setBrochurePopup(true);
+  const useSplitHero = true;
+  const submitHeroLead = async (form) => {
+    const result = await window.RuchiBackend.leads.submitLead({ ...form, interest: data.title, source: `${data.title} hero enquiry`, project_slug: data.slug, message: `Hero enquiry` });
+    if (result?.error) window.alert(`Could not submit your enquiry. Please try again.`);
+    else window.alert(`Thank you. Our team will connect with you shortly.`);
+  };
 
   useEffect(() => {
     const onScroll = () => {
@@ -742,13 +761,13 @@ export default function GenericProjectPage() {
 
   return (
     <>
-      <Nav onContact={onBrochure} hidden={navHidden} />
+      <Nav onContact={onBrochure} hidden={navHidden} solid={useSplitHero} />
       <main>
-        <header className="osc-hero" data-screen-label={data.title}>
+        <header className={`osc-hero ${useSplitHero ? `victoria-hero project-hero--${data.slug}` : String()}`} data-screen-label={data.title}>
           <div className="osc-hero__bg"><picture>{data.heroMobileUrl ? <source media="(max-width: 720px)" srcSet={data.heroMobileUrl} /> : null}<img src={data.heroBg} alt={data.title} /></picture>{data.heroMedia?.type === "youtube_video" && data.heroMedia.url ? <iframe className="osc-hero__video" src={data.heroMedia.url} title={`${data.title} hero video`} allow="autoplay; encrypted-media" tabIndex="-1" aria-hidden="true" /> : null}</div>
           <div className="osc-hero__overlay"></div>
           <div className="osc-hero__sig" aria-hidden="true"></div>
-          <div className="rr-wrap osc-hero__wrap">
+          {useSplitHero ? <div className={`rr-wrap victoria-hero__form-wrap`}><HeroEnquiryForm title={data.title} onSubmit={submitHeroLead} /></div> : <div className="rr-wrap osc-hero__wrap">
             <Reveal><div className="osc-hero__content">
               {data.heroLogo ? <img src={data.heroLogo} alt={`${data.title} logo`} style={{ maxWidth: "min(260px,70vw)", maxHeight: 90, objectFit: "contain", marginBottom: 18 }} /> : null}
               <h1 className="osc-hero__title">{data.title}</h1>
@@ -756,9 +775,11 @@ export default function GenericProjectPage() {
               <p className="osc-hero__tagline">{data.tag}</p>
               <div className="osc-hero__actions"><Link className="submit-btn" to="/projects">More Projects<CtaArrow /></Link><button className="ab-btn-outline ab-btn-outline--white" type="button" onClick={onBrochure}>Download Brochure<CtaArrow /></button></div>
             </div></Reveal>
-          </div>
-          <div className="osc-hero__chips">{data.overviewHighlights.map((h, i) => <Reveal key={h.label || i} delay={i * 80} className="osc-chip"><img src={highlightIconSrc(h.icon, i)} alt="" style={{ width: 24, height: 24, marginBottom: 4, objectFit: "contain" }} /><span className="osc-chip__label">{h.label}</span><span className="osc-chip__desc">{h.desc}</span></Reveal>)}</div>
+          </div>}
+          {!useSplitHero ? <div className={`osc-hero__chips`}>{data.overviewHighlights.map((h, i) => <Reveal key={h.label || i} delay={i * 80} className="osc-chip"><img src={highlightIconSrc(h.icon, i)} alt="" style={{ width: 24, height: 24, marginBottom: 4, objectFit: "contain" }} /><span className="osc-chip__label">{h.label}</span><span className="osc-chip__desc">{h.desc}</span></Reveal>)}</div> : null}
         </header>
+
+        {useSplitHero ? <section className={`victoria-intro`} id={`project-details`}><div className={`rr-wrap victoria-intro__top`}><div className={`victoria-intro__identity`}>{data.heroLogo ? <img src={data.heroLogo} alt={`${data.title} logo`} /> : null}<div><span className={`eyebrow`}>{data.type}</span><h1>{data.title}</h1><p>{data.location}</p><strong>{data.tag}</strong></div></div><div className={`victoria-intro__actions`}><Link className={`ab-btn-outline ab-btn-outline--white`} to={`/projects`}>More Projects<CtaArrow /></Link><button className={`submit-btn victoria-intro__brochure`} type={`button`} onClick={onBrochure}>Download Brochure<CtaArrow /></button></div></div><div className={`rr-wrap victoria-intro__facts`}>{data.overviewHighlights.map((h, i) => <div className={`victoria-fact`} key={h.label || i}><span>{String(i + 1).padStart(2, `0`)}</span><div><small>{h.label}</small><strong>{h.desc}</strong></div></div>)}</div></section> : null}
 
         <SectionNav data={data} />
 

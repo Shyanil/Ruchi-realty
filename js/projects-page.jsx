@@ -27,7 +27,7 @@ function AllProjectsPage() {
   // Optional pre-filter from the header menu (e.g. Townships). The page has no
   // type chip, so any city/status click clears it back to the normal two-axis view.
   const [type, setType] = uSP(init.type);
-  const pickCity = (c) => { setCity(c); setType("All"); };
+  const pickCity = (c) => { setCity(c); if (c === "All") setStatus("All"); setType("All"); };
   const pickStatus = (s) => { setStatus(s); setType("All"); };
   uEP(() => {
     let active = true;
@@ -40,9 +40,10 @@ function AllProjectsPage() {
   }, []);
 
   const pool = items.length ? items : PROJECTS;
+  const projectCities = ["All", ...new Set(pool.map(cityOf).filter((c) => c !== "Other"))];
   const list = pool.filter((p) =>
     (city === "All" || cityOf(p) === city) &&
-    (status === "All" || p.status === status) &&
+    (city === "All" || status === "All" || p.status === status) &&
     (type === "All" || p.type === type));
   const onContact = () => smoothTo("#contact");
 
@@ -59,7 +60,7 @@ function AllProjectsPage() {
     const handleHashChange = () => {
       const updated = ppHashFilter();
       setCity(updated.city);
-      setStatus(updated.status);
+      setStatus(updated.city === "All" ? "All" : updated.status);
       setType(updated.type);
       smoothTo("#projects");
     };
@@ -88,7 +89,7 @@ function AllProjectsPage() {
           <div className="rr-wrap">
             <Reveal>
               <div className="ptabs" role="tablist" aria-label="Filter projects by city">
-                {PP_CITIES.map((c) => {
+                {projectCities.map((c) => {
                   const n = c === "All" ? pool.length : pool.filter((p) => cityOf(p) === c).length;
                   return (
                     <button key={c} role="tab" type="button" aria-selected={city === c}
@@ -98,14 +99,14 @@ function AllProjectsPage() {
                   );
                 })}
               </div>
-              <div className="pp-status" role="group" aria-label="Filter projects by status">
+              {city !== "All" ? <div className="pp-status" role="group" aria-label="Filter projects by status">
                 {PP_STATUS.map((s) =>
                   <button key={s} type="button" className={`pp-chip ${status === s ? "is-active" : ""}`}
                     aria-pressed={status === s} onClick={() => pickStatus(s)}>
                     {s === "All" ? "Any status" : s}
                   </button>
                 )}
-              </div>
+              </div> : null}
             </Reveal>
             <div className="pgrid" key={`${city}-${status}`}>
               {list.map((p, i) =>

@@ -127,7 +127,7 @@ p { text-wrap: pretty; }
 .mega__inner { display: grid; grid-template-columns: 0.9fr 1.35fr 0.95fr; gap: clamp(28px, 4vw, 64px); padding-top: 40px; padding-bottom: 46px; align-items: stretch; }
 .mega__inner--projects { grid-template-columns: .45fr 1.1fr 1.6fr; gap: clamp(24px, 3.5vw, 56px); }
 .mega__lead { display: flex; flex-direction: column; }
-.mega__blurb { font-size: 14.5px; color: rgba(35,31,32,0.6); line-height: 1.6; margin: 0 0 auto; max-width: 30ch; }
+.mega__blurb { font-size: 14.5px; color: rgba(35,31,32,0.6); line-height: 1.6; margin: 0 0 auto; max-width: 30ch; text-align: justify; text-align-last: left; }
 .mega__all { display: inline-flex; align-items: center; gap: 8px; margin-top: 28px; font-size: 11px; font-weight: var(--rr-w-medium); letter-spacing: 0.14em; text-transform: uppercase; color: var(--rr-indigo); }
 .mega__all .ar { transition: transform var(--rr-dur) var(--rr-ease); }
 .mega__all:hover .ar { transform: translateX(4px); }
@@ -2695,3 +2695,43 @@ body.nav-locked { overflow: hidden; }
   .media-press .press-list h3 { font-size: clamp(20px, 5.2vw, 22px); }
   .press-detail > header > h1 { font-size: 30px; }
 }
+
+/* One Victoria: image-first hero */
+.victoria-hero{min-height:calc(100svh - 70px);margin-top:70px;background:var(--rr-indigo-deep)}
+.victoria-hero .osc-hero__overlay{background:linear-gradient(90deg,rgba(20,18,26,.05) 0 48%,rgba(20,18,26,.5))}
+.victoria-hero .osc-hero__sig{display:none}
+.victoria-hero__form-wrap{position:relative;z-index:3;display:flex;justify-content:flex-end;align-items:center;width:100%;min-height:calc(100svh - 70px);padding-top:38px;padding-bottom:38px}
+.victoria-hero-form{width:min(380px,100%);padding:clamp(24px,3vw,36px);border:1px solid rgba(255,255,255,.22);border-radius:12px;background:rgba(255,255,255,.95);color:var(--rr-ink);box-shadow:0 28px 70px rgba(20,18,26,.28);backdrop-filter:blur(18px)}
+.victoria-hero-form .eyebrow{color:var(--rr-indigo)}
+.victoria-hero-form h2{margin:10px 0 8px;font-size:clamp(25px,2.3vw,34px);font-weight:var(--rr-w-light);line-height:1.08;letter-spacing:-.025em}
+.victoria-hero-form>p{margin:0 0 20px;color:rgba(35,31,32,.62);font-size:13px;line-height:1.55}
+.victoria-hero-form label{display:block;margin-top:12px}
+.victoria-hero-form label span{display:block;margin-bottom:5px;color:rgba(35,31,32,.62);font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase}
+.victoria-hero-form input{width:100%;height:43px;padding:0 12px;border:1px solid rgba(35,31,32,.15);border-radius:4px;background:#fff;font:inherit;font-size:13px}
+.victoria-hero-form input:focus{outline:2px solid rgba(46,49,146,.16);border-color:var(--rr-indigo)}
+.victoria-hero-form .submit-btn{width:100%;justify-content:center;margin-top:18px}
+.victoria-intro{position:relative;overflow:hidden;background:linear-gradient(118deg,var(--rr-indigo-deep),var(--rr-indigo));color:#fff}
+.victoria-intro:after{content:'';position:absolute;right:-5%;bottom:-62%;width:360px;aspect-ratio:1;border-radius:50%;border:80px solid rgba(190,215,71,.08)}
+.victoria-intro__top{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:40px;padding-top:clamp(38px,5vw,66px);padding-bottom:clamp(30px,4vw,52px)}
+.victoria-intro__identity{display:flex;align-items:center;gap:clamp(24px,3vw,42px)}
+.victoria-intro__identity>img{width:clamp(100px,11vw,150px);max-height:100px;object-fit:contain;filter:brightness(0) invert(1)}
+.victoria-intro__identity .eyebrow{color:var(--rr-lime)}
+.victoria-intro__identity h1{margin:7px 0 4px;font-size:clamp(36px,4.3vw,62px);font-weight:var(--rr-w-light);line-height:1;letter-spacing:-.035em}
+.victoria-intro__identity p{margin:0 0 10px;color:rgba(255,255,255,.72);font-size:14px}
+.victoria-intro__identity strong{font-size:15px;font-weight:var(--rr-w-light)}
+.victoria-intro__actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:12px}
+.victoria-intro__facts{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:clamp(34px,5vw,62px)}
+.victoria-fact{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:20px clamp(14px,2vw,26px);border-top:1px solid rgba(255,255,255,.16);border-right:1px solid rgba(255,255,255,.12)}
+.victoria-fact:last-child{border-right:0}.victoria-fact>span{color:var(--rr-lime);font-size:10px;letter-spacing:.12em}.victoria-fact small,.victoria-fact strong{display:block}.victoria-fact small{margin-bottom:6px;color:rgba(255,255,255,.55);font-size:9px;letter-spacing:.16em;text-transform:uppercase}.victoria-fact strong{font-size:clamp(13px,1.2vw,16px);font-weight:var(--rr-w-light);line-height:1.45}
+@media(max-width:900px){.victoria-intro__top{align-items:flex-start;flex-direction:column}.victoria-intro__actions{justify-content:flex-start}.victoria-intro__facts{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.victoria-hero{min-height:auto;padding-top:min(64vw,430px)}.victoria-hero .osc-hero__bg,.victoria-hero .osc-hero__overlay{height:min(64vw,430px)}.victoria-hero__form-wrap{min-height:0;padding-top:20px;padding-bottom:24px;background:var(--rr-paper)}.victoria-hero-form{width:100%;padding:24px}.victoria-intro__identity{align-items:flex-start;flex-direction:column;gap:18px}.victoria-intro__actions{width:100%}.victoria-intro__actions>*{flex:1 1 100%;justify-content:center}.victoria-intro__facts{grid-template-columns:1fr}.victoria-fact{border-right:0}}
+.victoria-intro__brochure{background:var(--rr-indigo-deep);color:#fff;border:1px solid var(--rr-lime);box-shadow:0 8px 22px rgba(15,13,60,.3)}
+.victoria-intro__brochure:hover{background:var(--rr-lime);color:var(--rr-indigo-deep);border-color:var(--rr-lime)}
+/* Project hero QA fixes: preserve full artwork and keep both CTAs aligned */
+.victoria-hero .osc-hero__bg{background:radial-gradient(circle at 28% 45%,#34304a 0,#15131e 52%,#0d0c13 100%)}
+.victoria-hero .osc-hero__bg img{object-fit:cover;object-position:center;transform:none!important}
+.project-hero--one-prime-residential .osc-hero__bg img,.project-hero--oscar-indore .osc-hero__bg img,.project-hero--one-rajarhat .osc-hero__bg img,.project-hero--active-greens .osc-hero__bg img,.project-hero--lifescapes-bhopal .osc-hero__bg img,.project-hero--oscar-sanctuary-indore .osc-hero__bg img,.project-hero--ruchi-enclave-indore .osc-hero__bg img{object-fit:contain;object-position:left center}
+@media(max-width:640px){.project-hero--one-prime-residential .osc-hero__bg img,.project-hero--oscar-indore .osc-hero__bg img,.project-hero--one-rajarhat .osc-hero__bg img,.project-hero--active-greens .osc-hero__bg img,.project-hero--lifescapes-bhopal .osc-hero__bg img,.project-hero--oscar-sanctuary-indore .osc-hero__bg img,.project-hero--ruchi-enclave-indore .osc-hero__bg img{object-position:center}}
+.victoria-intro__actions{flex-wrap:nowrap;align-items:center;flex:0 0 auto}
+.victoria-intro__actions>*{white-space:nowrap;justify-content:center}
+@media(max-width:640px){.victoria-intro__actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.victoria-intro__actions>*{min-width:0;width:100%;padding:12px 10px;font-size:10px;letter-spacing:.08em}.victoria-intro__identity>img{filter:none;max-width:180px}}
