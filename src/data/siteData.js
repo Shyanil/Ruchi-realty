@@ -47,6 +47,14 @@ const TRUST = [
     icon: "handshake", no: "03", title: "We stay after the keys change hands",
     body: "The relationship does not end at possession. Service, support, and the same people you began with remain reachable."
   },
+  {
+    icon: "calendar-check", no: "04", title: "Timelines shared clearly and honestly",
+    body: "We communicate progress in plain language, keep milestones visible, and tell you early when something changes so you are never left guessing."
+  },
+  {
+    icon: "map-pin", no: "05", title: "Locations chosen for everyday life",
+    body: "We choose addresses around real connectivity, essential conveniences, and long-term livability—not just what looks promising on a map."
+  },
 ];
 
 const QUOTES = [

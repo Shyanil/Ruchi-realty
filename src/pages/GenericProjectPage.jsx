@@ -469,9 +469,10 @@ function parseJson(value, fallback) {
 }
 
 function extractCustomSpecs(specifications = []) {
-  const custom = { specifications: [], floorPlans: [], videoSection: null, heroMedia: null, heroMobileUrl: "", locationMapUrl: "" };
+  const custom = { specifications: [], floorPlans: [], constructionUpdates: [], videoSection: null, heroMedia: null, heroMobileUrl: "", locationMapUrl: "" };
   specifications.forEach((item) => {
     if (item.title === "__floor_plans__") custom.floorPlans = parseJson(item.desc, []);
+    else if (item.title === "__construction_updates__") custom.constructionUpdates = parseJson(item.desc, []);
     else if (item.title === "__video_section__") custom.videoSection = parseJson(item.desc, null);
     else if (item.title === "__hero_media__") custom.heroMedia = parseJson(item.desc, null);
     else if (item.title === "__hero_mobile_url__") custom.heroMobileUrl = item.desc || "";
@@ -519,6 +520,13 @@ function normalizeProjectSubpage(project, sp) {
     .filter((item) => item?.videoUrl || item?.url)
     .map((item, index) => ({ title: item.title || `Project video ${index + 1}`, videoUrl: videoEmbedUrl(item.videoUrl || item.url), thumbnailUrl: assetUrl(item.thumbnailUrl || item.poster || "") }));
   const clean = (items, predicate) => (Array.isArray(items) ? items : []).filter(predicate);
+  const normalizeImages = (items) => clean(items, (img) => img?.src || img?.image)
+    .map((img) => ({ ...img, src: assetUrl(img.src || img.image) }));
+  const rawGalleryImages = normalizeImages(sp?.galleryImages || []);
+  const isConstructionImage = (img) => /construction|progress|update/i.test(String(img?.category || ""));
+  const galleryImages = rawGalleryImages.filter((img) => !isConstructionImage(img));
+  const constructionUpdates = [...normalizeImages(sp?.constructionUpdates || []), ...normalizeImages(custom.constructionUpdates), ...rawGalleryImages.filter(isConstructionImage)]
+    .filter((img, index, items) => items.findIndex((candidate) => candidate.src === img.src) === index);
   return {
     title,
     type: project?.type || "Residential",
@@ -543,7 +551,8 @@ function normalizeProjectSubpage(project, sp) {
     locationImage: assetUrl(sp?.locationImage || custom.locationMapUrl || ""),
     locationMapEmbed: embedSrc(sp?.locationMapEmbed || ""),
     locationDestinations: Array.isArray(sp?.locationDestinations) ? sp.locationDestinations : [],
-    galleryImages: [...(sp?.galleryImages || []), ...(sp?.constructionUpdates || [])].filter((img) => img?.src || img?.image).map((img) => ({ ...img, src: assetUrl(img.src || img.image) })),
+    galleryImages,
+    constructionUpdates,
     brochureUrl: assetUrl(sp?.brochureUrl || ""),
     faqs: clean(sp?.faqs, (item) => item?.question && item?.answer),
     relatedProjectSlugs: clean(sp?.relatedProjectSlugs, (item) => typeof item === "string" && item.trim()),
@@ -593,7 +602,7 @@ function AmenityIcon({ icon, name }) {
   return <svg {...common}><circle cx="24" cy="24" r="17"/><path d="M16 27l5 5 12-15"/></svg>;
 }
 
-function SectionNav({ data }) {
+function SectionNav({ data, visible = false }) {
   const [active, setActive] = useState("overview");
   const sections = useMemo(() => {
     return [
@@ -603,6 +612,7 @@ function SectionNav({ data }) {
       ["amenities", "Amenities", data.amenities?.length],
       ["walkthrough", "Walkthrough", data.videos?.length],
       ["gallery", "Gallery", data.galleryImages?.length],
+      ["construction-updates", "Construction", data.constructionUpdates?.length],
       ["floor-plans", "Floor Plans", data.floorPlans?.length],
       ["location", "Location", data.locationMapEmbed || data.locationImage || data.locationDestinations?.length],
       ["faq", "FAQ", data.faqs?.length],
@@ -627,16 +637,20 @@ function SectionNav({ data }) {
 
   const scrollTo = (id) => {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    if (el) {
+      const navHeight = document.querySelector(".osc-sticky-nav")?.offsetHeight || 0;
+      window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - navHeight - 8, behavior: "smooth" });
+    }
   };
 
   return (
-    <nav className="osc-sticky-nav" aria-label="Project sections">
+    <nav className={`osc-sticky-nav osc-sticky-nav--project-header${visible ? " is-visible" : ""}`} aria-label="Project sections" aria-hidden={!visible}>
       <div className="rr-wrap"><div className="osc-sticky-nav__inner">
         {sections.map(({ id, label }) => (
           <button
             key={id}
             type="button"
+            tabIndex={visible ? 0 : -1}
             className={`osc-sticky-nav__btn ${active === id ? "is-active" : ""}`}
             onClick={() => scrollTo(id)}
           >
@@ -746,7 +760,7 @@ function ProjectOverview({ data }) {
       <div className="project-overview__layout">
         <div className="project-overview__copy">{overviewCopy.map((text,index)=><p key={index}>{text}</p>)}</div>
         {facts.length ? <aside className="project-overview__facts" aria-label={`${data.title} overview details`}>
-          <div className="project-overview__facts-head"><span>At a glance</span><small>{String(facts.length).padStart(2, "0")} details</small></div>
+          <div className="project-overview__facts-head"><span>Project Details</span></div>
           <div className="project-overview__facts-list">{facts.map((fact, index) => <div className="project-overview__fact" key={`${fact.label}-${index}`}><span>{String(index + 1).padStart(2, "0")}</span><div><small>{fact.label}</small><strong>{fact.desc}</strong></div></div>)}</div>
         </aside> : null}
       </div>
@@ -786,16 +800,21 @@ function ProjectFaq({ data }) {
   if (!data.faqs?.length) return null;
   return <section className="section-pad project-section project-faq" id="faq"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Frequently Asked Questions</span><h2>Helpful project<br/><span className="rr-grad">information.</span></h2></div><div className="project-faq__list">{data.faqs.map((item,index)=><details key={`${item.question}-${index}`}><summary>{item.question}<span aria-hidden="true">+</span></summary><div><p>{item.answer}</p></div></details>)}</div></div></section>;
 }
-function ProjectGallery({ data }) {
-  const images=(data.galleryImages||[]).filter(image=>image?.src);
+function ProjectGallery({ data, construction = false }) {
+  const images=((construction ? data.constructionUpdates : data.galleryImages) || []).filter(image=>image?.src);
   const [galleryStart,setGalleryStart]=useState(0);
   const [lightboxIndex,setLightboxIndex]=useState(null);
   if (!images.length) return null;
+  const sectionId = construction ? "construction-updates" : "gallery";
+  const sectionLabel = construction ? "Construction Updates" : "Project Gallery";
+  const title = construction ? "See the latest progress" : "A closer look";
+  const accent = construction ? "as the project takes shape." : "at the project.";
+  const imageLabel = construction ? "construction update" : "gallery image";
   const useThreeBoxGallery=images.length>0;
   const visibleIndexes=useThreeBoxGallery?Array.from({length:Math.min(3,images.length)},(_,index)=>(galleryStart+index)%images.length):images.map((_,index)=>index);
   const moveGallery=(direction)=>setGalleryStart(index=>(index+direction+images.length)%images.length);
   const moveLightbox=(direction)=>setLightboxIndex(index=>(index+direction+images.length)%images.length);
-  return <section className="section-pad project-section project-gallery" id="gallery"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Project Gallery</span><h2>A closer look<br/><span className="rr-grad">at the project.</span></h2></div>{visibleIndexes.length?<>{<div className={useThreeBoxGallery?"project-gallery-trio":"project-gallery-grid"}>{visibleIndexes.map((imageIndex,position)=>{const image=images[imageIndex];return useThreeBoxGallery?<button type="button" onClick={()=>setLightboxIndex(imageIndex)} aria-label={`Open ${image.alt||`${data.title} gallery image ${imageIndex+1}`}`} key={`${image.src}-${imageIndex}`}><RImg src={image.src} alt={image.alt||`${data.title} gallery ${imageIndex+1}`}/></button>:<a href={image.src} target="_blank" rel="noreferrer" className={position===0?"is-featured":""} key={`${image.src}-${imageIndex}`}><RImg src={image.src} alt={image.alt||`${data.title} gallery ${imageIndex+1}`}/></a>})}</div>}{useThreeBoxGallery&&images.length>3?<div className="project-gallery-trio__controls"><span>{String(galleryStart+1).padStart(2,"0")} / {String(images.length).padStart(2,"0")}</span><button type="button" onClick={()=>moveGallery(-1)} aria-label="Previous gallery images">&#8592;</button><button type="button" onClick={()=>moveGallery(1)} aria-label="Next gallery images">&#8594;</button></div>:null}</>:null}</div>{lightboxIndex!==null?<div className="project-gallery-lightbox" role="dialog" aria-modal="true" aria-label={`${data.title} image preview`} onClick={()=>setLightboxIndex(null)}><button className="project-gallery-lightbox__close" type="button" onClick={()=>setLightboxIndex(null)} aria-label="Close image preview">&#215;</button>{images.length>1?<button className="project-gallery-lightbox__arrow is-prev" type="button" onClick={event=>{event.stopPropagation();moveLightbox(-1)}} aria-label="Previous image">&#8592;</button>:null}<div className="project-gallery-lightbox__image" onClick={event=>event.stopPropagation()}><RImg src={images[lightboxIndex].src} alt={images[lightboxIndex].alt||`${data.title} gallery ${lightboxIndex+1}`}/><span>{String(lightboxIndex+1).padStart(2,"0")} / {String(images.length).padStart(2,"0")}</span></div>{images.length>1?<button className="project-gallery-lightbox__arrow is-next" type="button" onClick={event=>{event.stopPropagation();moveLightbox(1)}} aria-label="Next image">&#8594;</button>:null}</div>:null}</section>;
+  return <section className={`section-pad project-section project-gallery${construction ? " project-construction" : ""}`} id={sectionId}><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">{sectionLabel}</span><h2>{title}<br/><span className="rr-grad">{accent}</span></h2></div>{visibleIndexes.length?<><div className={useThreeBoxGallery?"project-gallery-trio":"project-gallery-grid"}>{visibleIndexes.map((imageIndex,position)=>{const image=images[imageIndex];return useThreeBoxGallery?<button type="button" onClick={()=>setLightboxIndex(imageIndex)} aria-label={`Open ${image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}`} key={`${image.src}-${imageIndex}`}><RImg src={image.src} alt={image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}/></button>:<a href={image.src} target="_blank" rel="noreferrer" className={position===0?"is-featured":""} key={`${image.src}-${imageIndex}`}><RImg src={image.src} alt={image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}/></a>})}</div>{useThreeBoxGallery&&images.length>3?<div className="project-gallery-trio__controls"><span>{String(galleryStart+1).padStart(2,"0")} / {String(images.length).padStart(2,"0")}</span><button type="button" onClick={()=>moveGallery(-1)} aria-label={`Previous ${sectionLabel.toLowerCase()} images`}>&#8592;</button><button type="button" onClick={()=>moveGallery(1)} aria-label={`Next ${sectionLabel.toLowerCase()} images`}>&#8594;</button></div>:null}</>:null}</div>{lightboxIndex!==null?<div className="project-gallery-lightbox" role="dialog" aria-modal="true" aria-label={`${data.title} ${sectionLabel.toLowerCase()} preview`} onClick={()=>setLightboxIndex(null)}><button className="project-gallery-lightbox__close" type="button" onClick={()=>setLightboxIndex(null)} aria-label="Close image preview">&#215;</button>{images.length>1?<button className="project-gallery-lightbox__arrow is-prev" type="button" onClick={event=>{event.stopPropagation();moveLightbox(-1)}} aria-label="Previous image">&#8592;</button>:null}<div className="project-gallery-lightbox__image" onClick={event=>event.stopPropagation()}><RImg src={images[lightboxIndex].src} alt={images[lightboxIndex].alt||`${data.title} ${imageLabel} ${lightboxIndex+1}`}/><span>{String(lightboxIndex+1).padStart(2,"0")} / {String(images.length).padStart(2,"0")}</span></div>{images.length>1?<button className="project-gallery-lightbox__arrow is-next" type="button" onClick={event=>{event.stopPropagation();moveLightbox(1)}} aria-label="Next image">&#8594;</button>:null}</div>:null}</section>;
 }
 function RelatedProjects({ slug, preferredSlugs=[] }) {
   const available=PROJECTS.filter(project=>project.url&&project.url!==`/projects/${slug}`&&!project.url.endsWith(`/${slug}`));
@@ -815,7 +834,7 @@ export default function GenericProjectPage({ slugOverride = "" }) {
   const [subpage, setSubpage] = useState(null);
   const [loaded, setLoaded] = useState(false);
   const [brochurePopup, setBrochurePopup] = useState(false);
-  const [navHidden, setNavHidden] = useState(false);
+  const [heroPassed, setHeroPassed] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -860,12 +879,18 @@ export default function GenericProjectPage({ slugOverride = "" }) {
 
   useEffect(() => {
     const onScroll = () => {
-      setNavHidden(brochurePopup || window.scrollY > window.innerHeight - 100);
+      const hero = document.querySelector(".osc-hero");
+      const heroHasPassed = hero ? hero.getBoundingClientRect().bottom <= 1 : false;
+      setHeroPassed(heroHasPassed);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [brochurePopup]);
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [loaded]);
 
   useEffect(() => {
     document.title = data.metaTitle;
@@ -904,7 +929,7 @@ export default function GenericProjectPage({ slugOverride = "" }) {
 
   return (
     <>
-      <Nav onContact={onBrochure} hidden={navHidden} solid={useSplitHero} />
+      <Nav onContact={onBrochure} hidden={brochurePopup || heroPassed} solid={useSplitHero} />
       <main>
         <header className={`osc-hero ${useSplitHero ? `victoria-hero project-hero--${data.slug}` : String()}`} data-screen-label={data.title}>
           <div className={`osc-hero__bg project-hero-media project-hero-media--${data.heroImageFit}`} style={{ "--project-hero-position": data.heroImagePosition }}><picture>{data.heroMobileUrl ? <source media="(max-width: 720px)" srcSet={data.heroMobileUrl} /> : null}<img src={data.heroBg} alt={`${data.title} project view`} fetchPriority="high" /></picture>{data.heroMedia?.type === "youtube_video" && data.heroMedia.url ? <iframe className="osc-hero__video" src={data.heroMedia.url} title={`${data.title} hero video`} allow="autoplay; encrypted-media" tabIndex="-1" aria-hidden="true" /> : null}</div>
@@ -921,15 +946,17 @@ export default function GenericProjectPage({ slugOverride = "" }) {
           </div>}
         </header>
 
+        <SectionNav data={data} visible={heroPassed && !brochurePopup} />
+
         {useSplitHero ? <section className={`victoria-intro`} id={`project-details`}><div className={`rr-wrap victoria-intro__top`}><div className={`victoria-intro__identity`}>{data.heroLogo ? <img src={data.heroLogo} alt={`${data.title} logo`} onError={(event)=>{event.currentTarget.hidden=true}} /> : null}<div><span className={`eyebrow`}>{data.type}</span><h1>{data.title}</h1>{data.location?<p>{data.location}</p>:null}<strong>{data.tag}</strong></div></div><div className={`victoria-intro__actions`}><Link className={`ab-btn-outline ab-btn-outline--white`} to={`/projects`}>More Projects<CtaArrow /></Link><button className={`submit-btn victoria-intro__brochure`} type={`button`} onClick={onBrochure}>{data.brochureUrl?data.ctaLabels.brochure:data.ctaLabels.visit}<CtaArrow /></button></div></div>{data.overviewHighlights.length?<div className={`rr-wrap victoria-intro__facts`}>{data.overviewHighlights.map((h, i) => <div className={`victoria-fact`} key={h.label || i}><span>{String(i + 1).padStart(2, `0`)}</span><div><small>{h.label}</small><strong>{h.desc}</strong></div></div>)}</div>:null}</section> : null}
 
-        <SectionNav data={data} />
         <ProjectOverview data={data} />
 
         <ProjectSpecifications data={data} />
         <ProjectAmenities amenities={data.amenities} />
         <ProjectWalkthrough data={data} />
         <ProjectGallery data={data} />
+        <ProjectGallery data={data} construction />
         <FloorPlansSection plans={data.floorPlans} title={data.title} />
         <ProjectLocation data={data} />
         <ProjectEnquiryCTA data={data} onEnquire={onBrochure} />

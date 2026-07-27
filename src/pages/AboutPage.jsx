@@ -148,30 +148,18 @@ function AboutLegacy() {
             </Reveal>
           </div>
 
-          <div className="ab-legacy__right">
-            <Reveal delay={80} className="ab-legacy__media-container">
-              <div className="ab-legacy__media-stack">
-                <img className="ab-legacy__stack-img ab-legacy__stack-img--base" src="assets/projects/one-victoria.webp" alt="One Victoria" />
-                <img className="ab-legacy__stack-img ab-legacy__stack-img--1" src="uploads/hero-active-acres.webp" alt="Active Acres Concept" />
-                <img className="ab-legacy__stack-img ab-legacy__stack-img--2" src="assets/projects/active-acres.webp" alt="Active Acres Realized" />
-
-                <div className="ab-legacy__stats-glass">
-                  <div className="ab-glass-stat">
-                    <span className="ab-glass-stat__val">17+</span>
-                    <span className="ab-glass-stat__lbl">Years of Real Estate Expertise</span>
-                  </div>
-                  <div className="ab-glass-stat">
-                    <span className="ab-glass-stat__val">3</span>
-                    <span className="ab-glass-stat__lbl">Key Indian Cities</span>
-                  </div>
-                  <div className="ab-glass-stat">
-                    <span className="ab-glass-stat__val">40+</span>
-                    <span className="ab-glass-stat__lbl">Landmark Addresses Delivered</span>
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-          </div>
+          <Reveal delay={80} className="ab-legacy__showcase">
+            <div className="ab-legacy__media-grid">
+              <div className="ab-legacy__image-box"><img src="assets/projects/one-victoria.webp" alt="One Victoria" /></div>
+              <div className="ab-legacy__image-box"><img src="uploads/hero-active-acres.webp" alt="Active Acres Concept" /></div>
+              <div className="ab-legacy__image-box"><img src="assets/projects/one-rajarhat.webp" alt="One Rajarhat" /></div>
+            </div>
+            <div className="ab-legacy__stats-strip">
+              <div className="ab-glass-stat"><span className="ab-glass-stat__val">17+</span><span className="ab-glass-stat__lbl">Years of Real Estate Expertise</span></div>
+              <div className="ab-glass-stat"><span className="ab-glass-stat__val">3</span><span className="ab-glass-stat__lbl">Key Indian Cities</span></div>
+              <div className="ab-glass-stat"><span className="ab-glass-stat__val">40+</span><span className="ab-glass-stat__lbl">Landmark Addresses Delivered</span></div>
+            </div>
+          </Reveal>
         </div>
       </div>
     </section>
@@ -461,7 +449,7 @@ function AboutTeam() {
       <div className="rr-wrap">
         <div className="ab-team__header">
           <Reveal>
-            <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>LEADERSHIP</div>
+            <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>OUR TEAM</div>
             <h2 className="ab-team__title">Meet the people shaping Ruchi Realty</h2>
             <p className="ab-team__lead">
               Our leaders don't just plan and strategize. They bring the expertise, discipline, and vision to execute landmark developments with consistency and care.
@@ -530,25 +518,13 @@ function AboutCTA() {
 }
 
 export default function AboutPage() {
-  const [navSolidAt, setNavSolidAt] = useState(() => window.innerHeight);
-
-  useEffect(() => {
-    const updateNavTrigger = () => {
-      const legacy = document.getElementById("legacy");
-      if (legacy) setNavSolidAt(Math.max(0, legacy.offsetTop - 80));
-    };
-    updateNavTrigger();
-    window.addEventListener("resize", updateNavTrigger);
-    return () => window.removeEventListener("resize", updateNavTrigger);
-  }, []);
-
   const onContact = () => {
     if (window.smoothTo) window.smoothTo("#contact");
   };
 
   return (
     <>
-      <Nav onContact={onContact} solidAt={navSolidAt} />
+      <Nav onContact={onContact} solidAt={1} />
       <main>
         <AboutHero />
         <AboutLegacy />

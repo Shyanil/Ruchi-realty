@@ -34,11 +34,11 @@ export function Footer() {
   const email = "emarketing@rrhlrealty.com";
 
   const firmLinks = [
-    ["Approach", "About.html"],
-    ["People", "About.html#team"],
+    ["About Us", "About.html"],
+    ["Team", "About.html#team"],
     ["Careers", "Careers.html"],
-    ["Media", "Media.html"],
-    ["Insights", "Blog.html"],
+    ["Gallery & Events", "Media.html"],
+    ["Blogs", "Blog.html"],
   ];
 
   const socialLinks = [
@@ -130,7 +130,7 @@ export function Footer() {
           </div>
 
           <div className="footer__col">
-            <h6>The Firm</h6>
+            <h6>Company</h6>
             <ul>
               {firmLinks.map(([it, href]) => (
                 <li key={it}>{renderLink(it, href)}</li>

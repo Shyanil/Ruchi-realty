@@ -50,7 +50,7 @@ const MEGA = (() => {
       href: "About.html",
       blurb: "Nearly four decades of treating a home as a promise, built with intent and held to long after the keys change hands.",
       cols: [
-        { h: "The firm", items: [["Our approach", "About.html"], ["The proof, not the promise", "#why"], ["People & culture", "About.html#team"], ["Careers", "Careers.html"]] },
+        { h: "Company", items: [["About Us", "About.html"], ["The proof, not the promise", "#why"], ["Our Team", "About.html#team"], ["Careers", "Careers.html"]] },
       ],
       feat: { kind: "statement", eyebrow: "Committed to you", title: "Thirty-eight years of keeping our word.", sub: "Read the story →", href: "About.html" },
     },
@@ -251,7 +251,7 @@ function ProjectCarouselFeature({ city, status, go }) {
   );
 }
 
-function ProjectNestedMenu({ go, activeCity, activeStatus, onCityHover, onStatusHover, onClearFilter }) {
+function ProjectNestedMenu({ go, activeCity, activeStatus, onCityHover, onStatusHover, onAllProjectsHover }) {
   return (
     <div className="project-menu">
       <div className="mega-col__h">By City</div>
@@ -271,7 +271,8 @@ function ProjectNestedMenu({ go, activeCity, activeStatus, onCityHover, onStatus
         <li className={!activeCity ? "is-active" : ""}>
           <a
             href="Projects.html"
-            onMouseEnter={onClearFilter}
+            onMouseEnter={onAllProjectsHover}
+            onFocus={onAllProjectsHover}
             onClick={(e) => go(e, "Projects.html")}
           >
             All projects
@@ -330,24 +331,33 @@ function ProjectMobileMenu({ go }) {
 function MegaPanel({ cfg, go }) {
   const [activeCity, setActiveCity] = useState(null);
   const [activeStatus, setActiveStatus] = useState(null);
+  const [showProjectCards, setShowProjectCards] = useState(false);
 
   const handleCityHover = (city) => {
     setActiveCity(city);
     setActiveStatus(null);
+    setShowProjectCards(true);
   };
 
   const handleStatusHover = (status) => {
     setActiveStatus(status);
   };
 
-  const handleClearFilter = () => {
+  const handleAllProjectsHover = () => {
     setActiveCity(null);
     setActiveStatus(null);
+    setShowProjectCards(true);
+  };
+
+  const handleDefaultPreview = () => {
+    setActiveCity(null);
+    setActiveStatus(null);
+    setShowProjectCards(false);
   };
 
   return (
     <div className={`mega__inner rr-wrap ${cfg.projectNested ? "mega__inner--projects" : ""}`}>
-      <div className="mega__lead" onMouseEnter={handleClearFilter}>
+      <div className="mega__lead" onMouseEnter={handleDefaultPreview}>
         <p className="mega__blurb">{cfg.blurb}</p>
         <a className="mega__all" href={cfg.href} onClick={(e) => go(e, cfg.href)}>
           View section<span className="ar">→</span>
@@ -361,7 +371,7 @@ function MegaPanel({ cfg, go }) {
             activeStatus={activeStatus}
             onCityHover={handleCityHover}
             onStatusHover={handleStatusHover}
-            onClearFilter={handleClearFilter}
+            onAllProjectsHover={handleAllProjectsHover}
           />
         ) : (
           cfg.cols.map((c) => (
@@ -378,7 +388,7 @@ function MegaPanel({ cfg, go }) {
       </div>
       {cfg.projectNested ? (
         <div className="mega-project-feature-pane">
-          <ProjectCarouselFeature city={activeCity} status={activeStatus} go={go} />
+          {showProjectCards ? <ProjectCarouselFeature city={activeCity} status={activeStatus} go={go} /> : <div className="mega-feats">{cfg.feats.map((feat) => <MegaFeat key={feat.title} feat={feat} go={go} />)}</div>}
         </div>
       ) : cfg.feats ? (
         <div className="mega-feats">{cfg.feats.map((feat) => <MegaFeat key={feat.title} feat={feat} go={go} />)}</div>

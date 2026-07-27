@@ -18,6 +18,7 @@ function extractSpecsAndCustomData(specifications) {
   let gmbStarIconUrl = "";
   let locationMapUrl = "";
   let floorPlans = [];
+  let constructionUpdates = [];
 
   (specifications || []).forEach((s) => {
     if (s.title === "__gmb_reviews__") {
@@ -36,6 +37,8 @@ function extractSpecsAndCustomData(specifications) {
       locationMapUrl = s.desc;
     } else if (s.title === "__floor_plans__") {
       try { floorPlans = JSON.parse(s.desc); } catch (e) {}
+    } else if (s.title === "__construction_updates__") {
+      try { constructionUpdates = JSON.parse(s.desc); } catch (e) {}
     } else {
       specs.push(s);
     }
@@ -51,6 +54,7 @@ function extractSpecsAndCustomData(specifications) {
     gmbStarIconUrl,
     locationMapUrl,
     floorPlans,
+    constructionUpdates,
   };
 }
 
@@ -89,6 +93,7 @@ const emptyProject = {
   locationDestinations: [],
   walkthroughVideoId: "",
   galleryImages: [],
+  constructionUpdates: [],
   brochureUrl: "",
   faqs: [],
   relatedProjectSlugs: [],
@@ -193,6 +198,7 @@ function collectProjectAssetUrls(project = {}, subpage = null) {
   if (!subpage) return urls.filter(Boolean);
   urls.push(subpage.heroLogo, subpage.heroBg, subpage.locationImage, subpage.brochureUrl);
   (subpage.galleryImages || []).forEach((item) => urls.push(item.src));
+  (subpage.constructionUpdates || []).forEach((item) => urls.push(item.src));
   (subpage.specifications || []).forEach((item) => {
     if (item.title === "__floor_plans__") {
       try { JSON.parse(item.desc || "[]").forEach((plan) => urls.push(plan.desc)); } catch {}
@@ -647,7 +653,7 @@ function FloorPlansEditor({ items, onChange }) {
     </div>
   );
 }
-function GalleryListEditor({ items, onChange }) {
+function GalleryListEditor({ items, onChange, title = "Gallery Images", addLabel = "+ Add Gallery Image", uploadKind = "gallery image" }) {
   const list = Array.isArray(items) ? items : [];
   const updateRow = (index, prop, val) => {
     const newList = [...list];
@@ -666,20 +672,20 @@ function GalleryListEditor({ items, onChange }) {
     event.target.value = "";
     if (!file) return;
     try {
-      if (!file.type.startsWith("image/")) throw new Error("Gallery item must be an image file.");
+      if (!file.type.startsWith("image/")) throw new Error(`${title} must contain image files only.`);
       const webpBlob = await compressAndConvertToWebP(file, 140);
       const safeName = file.name.replace(/\.[^.]+$/, "") + ".webp";
       const webpFile = new File([webpBlob], safeName, { type: "image/webp" });
       const url = await window.RuchiBackend.uploadImage(webpFile, "project-images");
       updateRow(index, "src", url);
     } catch (err) {
-      alert(uploadErrorMessage(err, "gallery image"));
+      alert(uploadErrorMessage(err, uploadKind));
     }
   };
 
   return (
     <div className="admin-list-editor" style={{ marginBottom: "18px", padding: "12px", border: "1px solid rgba(35, 31, 32, 0.15)", borderRadius: "6px" }}>
-      <h4 style={{ margin: "0 0 10px 0", fontSize: "13px", fontWeight: "600", textTransform: "uppercase", opacity: 0.7 }}>Gallery Images</h4>
+      <h4 style={{ margin: "0 0 10px 0", fontSize: "13px", fontWeight: "600", textTransform: "uppercase", opacity: 0.7 }}>{title}</h4>
       {list.map((item, index) => (
         <div key={index} style={{ display: "flex", flexDirection: "column", gap: "6px", padding: "10px", background: "rgba(0,0,0,0.02)", border: "1px dashed rgba(35, 31, 32, 0.2)", borderRadius: "4px", marginBottom: "10px" }}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", alignItems: "center" }}>
@@ -739,7 +745,7 @@ function GalleryListEditor({ items, onChange }) {
           fontSize: "12px"
         }}
       >
-        + Add Gallery Image
+        {addLabel}
       </button>
     </div>
   );
@@ -873,6 +879,7 @@ function ProjectsAdmin() {
       locationDestinations: sp?.locationDestinations || [],
       walkthroughVideoId: extracted.videoSection?.videoUrl || sp?.walkthroughVideoId || "",
       galleryImages: sp?.galleryImages || [],
+      constructionUpdates: sp?.constructionUpdates?.length ? sp.constructionUpdates : extracted.constructionUpdates || [],
       brochureUrl: sp?.brochureUrl || "",
       specificationImage: sp?.specificationImage || "",
       faqs: sp?.faqs || [],
@@ -935,6 +942,7 @@ function ProjectsAdmin() {
         walkthroughVideoId: vidUrl,
         videos: vidUrl ? [videoSectionPayload] : [],
         galleryImages: form.galleryImages,
+        constructionUpdates: form.constructionUpdates,
         brochureUrl: form.brochureUrl || "",
         faqs: form.faqs || [],
         relatedProjectSlugs: form.relatedProjectSlugs || [],
@@ -1114,6 +1122,9 @@ function ProjectsAdmin() {
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Gallery</h3>
             <GalleryListEditor items={form.galleryImages} onChange={(list) => set("galleryImages", list)} />
+
+            <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Construction Updates</h3>
+            <GalleryListEditor items={form.constructionUpdates} onChange={(list) => set("constructionUpdates", list)} title="Construction Update Images" addLabel="+ Add Construction Image" uploadKind="construction update image" />
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Brochure</h3>
             <AdminField label="Brochure URL"><input value={form.brochureUrl} onChange={(e) => set("brochureUrl", e.target.value)} placeholder="Optional. Leave blank to keep the brochure CTA and send users to enquiry." /></AdminField>
