@@ -75,7 +75,7 @@ function extractSpecsAndCustomData(specsArray = []) {
   return result;
 }
 
-const fallbackData = {
+export const ACTIVE_GREENS_FALLBACK = {
   heroTitle: "Active Greens",
   heroTagline: "In the heart of the city, away from the concrete jungle",
   heroLogo: "/projects/active-greens/logo.webp",
@@ -373,7 +373,7 @@ function LandscapeFeaturesSection({ subpage }) {
         </Reveal>
         <div className="osc-specs__layout">
           <Reveal className="osc-specs__visual">
-            <img src={subpage.galleryImages?.[0]?.src || subpage.heroBg || fallbackData.heroBg} alt="Active Greens Specifications Visual" loading="lazy" className="osc-specs__img" />
+            <img src={subpage.galleryImages?.[0]?.src || subpage.heroBg || ACTIVE_GREENS_FALLBACK.heroBg} alt="Active Greens Specifications Visual" loading="lazy" className="osc-specs__img" />
           </Reveal>
           <div className="osc-specs__cards">
             {subpage.specifications.map((s, i) => (
@@ -449,68 +449,131 @@ function FloorPlansSection({ subpage }) {
 }
 
 function GallerySection({ subpage }) {
-  const [lightbox, setLightbox] = useState(null);
-  const images = subpage.galleryImages || [];
+  const images = (subpage.galleryImages || []).filter((img) => img?.src);
+  const [galleryStart, setGalleryStart] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
 
   useEffect(() => {
-    if (lightbox !== null) {
+    if (lightboxIndex !== null) {
       document.body.classList.add("nav-locked");
-      const onKey = (e) => { if (e.key === "Escape") setLightbox(null); };
+      const onKey = (e) => {
+        if (e.key === "Escape") setLightboxIndex(null);
+        if (e.key === "ArrowLeft") setLightboxIndex((p) => (p === 0 ? images.length - 1 : p - 1));
+        if (e.key === "ArrowRight") setLightboxIndex((p) => (p === images.length - 1 ? 0 : p + 1));
+      };
       window.addEventListener("keydown", onKey);
-      return () => { document.body.classList.remove("nav-locked"); window.removeEventListener("keydown", onKey); };
+      return () => {
+        document.body.classList.remove("nav-locked");
+        window.removeEventListener("keydown", onKey);
+      };
     }
-  }, [lightbox]);
+  }, [lightboxIndex, images.length]);
 
   if (!images.length) return null;
 
+  const visibleIndexes = Array.from(
+    { length: Math.min(3, images.length) },
+    (_, idx) => (galleryStart + idx) % images.length
+  );
+
+  const moveGallery = (dir) => {
+    setGalleryStart((prev) => (prev + dir + images.length) % images.length);
+  };
+
+  const moveLightbox = (dir) => {
+    setLightboxIndex((prev) => (prev + dir + images.length) % images.length);
+  };
+
   return (
-    <section className="section-pad osc-section osc-section--dark" id="gallery">
+    <section className="section-pad project-section project-gallery osc-section osc-section--dark" id="gallery">
       <div className="rr-wrap">
         <Reveal>
-          <div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}>
+          <div className="sec-head sec-head--dark" style={{ marginBottom: "40px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>GALLERY</div>
-              <h2>A glimpse into<br /><span className="rr-grad">the Active Greens lifestyle.</span></h2>
+              <h2>A closer look<br /><span className="rr-grad">at the Active Greens lifestyle.</span></h2>
             </div>
           </div>
         </Reveal>
-        <div className="osc-gallery__grid">
-          {images.map((img, i) => (
-            <Reveal key={img.src || i} delay={(i % 4) * 60} className={`osc-gallery__item ${i === 0 ? "osc-gallery__item--wide" : ""}`}>
-              <button type="button" className="osc-gallery__btn" onClick={() => setLightbox(i)} aria-label={`View ${img.alt}`}>
-                <img src={img.src} alt={img.alt} loading="lazy" className="osc-gallery__img" />
-                <span className="osc-gallery__zoom">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /><path d="M11 8v6M8 11h6" />
-                  </svg>
-                </span>
+
+        <Reveal className="project-gallery-trio">
+          {visibleIndexes.map((imgIdx) => {
+            const img = images[imgIdx];
+            return (
+              <button
+                type="button"
+                key={`${img.src}-${imgIdx}`}
+                onClick={() => setLightboxIndex(imgIdx)}
+                aria-label={`Open ${img.alt || `Active Greens gallery image ${imgIdx + 1}`}`}
+              >
+                <div className="rimg" style={{ width: "100%", height: "100%", borderRadius: "10px", overflow: "hidden" }}>
+                  <img
+                    src={img.src}
+                    alt={img.alt || `Active Greens gallery ${imgIdx + 1}`}
+                    loading="lazy"
+                    className="rimg__img"
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                </div>
               </button>
-            </Reveal>
-          ))}
-        </div>
+            );
+          })}
+        </Reveal>
+
+        {images.length > 3 && (
+          <Reveal className="project-gallery-trio__controls">
+            <span>
+              {String(galleryStart + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
+            </span>
+            <button
+              type="button"
+              onClick={() => moveGallery(-1)}
+              aria-label="Previous gallery images"
+            >
+              ←
+            </button>
+            <button
+              type="button"
+              onClick={() => moveGallery(1)}
+              aria-label="Next gallery images"
+            >
+              →
+            </button>
+          </Reveal>
+        )}
       </div>
 
-      {lightbox !== null && images[lightbox] && (
-        <div className="osc-lightbox" onClick={() => setLightbox(null)}>
-          <button type="button" className="osc-lightbox__close" onClick={() => setLightbox(null)} aria-label="Close gallery">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
+      {lightboxIndex !== null && images[lightboxIndex] && (
+        <div className="project-gallery-lightbox" role="dialog" aria-modal="true" onClick={() => setLightboxIndex(null)}>
+          <button type="button" className="project-gallery-lightbox__close" onClick={() => setLightboxIndex(null)} aria-label="Close">
+            ×
           </button>
-          <button type="button" className="osc-lightbox__arrow osc-lightbox__arrow--prev" onClick={(e) => { e.stopPropagation(); setLightbox((p) => (p === 0 ? images.length - 1 : p - 1)); }} aria-label="Previous">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
-            </svg>
-          </button>
-          <div className="osc-lightbox__content" onClick={(e) => e.stopPropagation()}>
-            <img src={images[lightbox].src} alt={images[lightbox].alt} className="osc-lightbox__img" />
-            <p className="osc-lightbox__caption">{images[lightbox].alt}</p>
+          {images.length > 1 && (
+            <button
+              type="button"
+              className="project-gallery-lightbox__arrow is-prev"
+              onClick={(e) => { e.stopPropagation(); moveLightbox(-1); }}
+              aria-label="Previous image"
+            >
+              ←
+            </button>
+          )}
+          <div className="project-gallery-lightbox__image" onClick={(e) => e.stopPropagation()}>
+            <img src={images[lightboxIndex].src} alt={images[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            <span>
+              {String(lightboxIndex + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
+            </span>
           </div>
-          <button type="button" className="osc-lightbox__arrow osc-lightbox__arrow--next" onClick={(e) => { e.stopPropagation(); setLightbox((p) => (p === images.length - 1 ? 0 : p + 1)); }} aria-label="Next">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
-            </svg>
-          </button>
+          {images.length > 1 && (
+            <button
+              type="button"
+              className="project-gallery-lightbox__arrow is-next"
+              onClick={(e) => { e.stopPropagation(); moveLightbox(1); }}
+              aria-label="Next image"
+            >
+              →
+            </button>
+          )}
         </div>
       )}
     </section>
@@ -614,8 +677,8 @@ function GmbReviewsSection({ subpage }) {
 }
 
 function LocationSection({ subpage }) {
-  const visualUrl = subpage.locationImage || fallbackData.locationImage;
-  const detailedMapUrl = subpage.locationMapUrl || fallbackData.locationMapUrl;
+  const visualUrl = subpage.locationImage || ACTIVE_GREENS_FALLBACK.locationImage;
+  const detailedMapUrl = subpage.locationMapUrl || ACTIVE_GREENS_FALLBACK.locationMapUrl;
 
   return (
     <section className="section-pad osc-section osc-section--dark" id="location">
@@ -731,7 +794,7 @@ function BrochurePopup({ subpage, onClose }) {
       setSubmitted(true);
       // Trigger brochure download
       const link = document.createElement("a");
-      link.href = subpage.brochureUrl || fallbackData.brochureUrl;
+      link.href = subpage.brochureUrl || ACTIVE_GREENS_FALLBACK.brochureUrl;
       link.download = "Active_Greens_Brochure.pdf";
       link.target = "_blank";
       document.body.appendChild(link);
@@ -810,7 +873,7 @@ function MobileFixedCta({ onBrochureClick }) {
 }
 
 export default function ActiveGreensPage() {
-  const [subpage, setSubpage] = useState(fallbackData);
+  const [subpage, setSubpage] = useState(ACTIVE_GREENS_FALLBACK);
   const [brochurePopup, setBrochurePopup] = useState(false);
   const [navHidden, setNavHidden] = useState(false);
 
@@ -846,29 +909,29 @@ export default function ActiveGreensPage() {
             const extracted = extractSpecsAndCustomData(sp.specifications);
 
             setSubpage({
-              heroTitle: sp.heroTitle || fallbackData.heroTitle,
-              heroTagline: sp.heroTagline || fallbackData.heroTagline,
-              heroLogo: sp.heroLogo || fallbackData.heroLogo,
-              heroBg: sp.heroBg || fallbackData.heroBg,
-              heroMobileUrl: extracted.heroMobileUrl || fallbackData.heroMobileUrl,
-              companyLogoUrl: extracted.companyLogoUrl || fallbackData.companyLogoUrl,
-              locationMapUrl: extracted.locationMapUrl || fallbackData.locationMapUrl,
-              gmbGoogleIconUrl: extracted.gmbGoogleIconUrl || fallbackData.gmbGoogleIconUrl,
-              gmbStarIconUrl: extracted.gmbStarIconUrl || fallbackData.gmbStarIconUrl,
-              overviewParagraphs: sp.overviewParagraphs?.length ? sp.overviewParagraphs : fallbackData.overviewParagraphs,
-              overviewHighlights: sp.overviewHighlights?.length ? sp.overviewHighlights : fallbackData.overviewHighlights,
-              amenities: sp.amenities?.length ? sp.amenities : fallbackData.amenities,
-              specifications: extracted.specifications?.length ? extracted.specifications : fallbackData.specifications,
-              floorPlans: extracted.floorPlans?.length ? extracted.floorPlans : fallbackData.floorPlans,
-              locationImage: sp.locationImage || fallbackData.locationImage,
-              locationMapEmbed: sp.locationMapEmbed || fallbackData.locationMapEmbed,
-              locationDestinations: sp.locationDestinations?.length ? sp.locationDestinations : fallbackData.locationDestinations,
-              videoSection: extracted.videoSection || fallbackData.videoSection,
-              gmbReviews: extracted.gmbReviews || fallbackData.gmbReviews,
-              galleryImages: sp.galleryImages?.length ? sp.galleryImages : fallbackData.galleryImages,
-              brochureUrl: sp.brochureUrl || fallbackData.brochureUrl,
-              metaTitle: sp.metaTitle || fallbackData.metaTitle,
-              metaDescription: sp.metaDescription || fallbackData.metaDescription,
+              heroTitle: sp.heroTitle || ACTIVE_GREENS_FALLBACK.heroTitle,
+              heroTagline: sp.heroTagline || ACTIVE_GREENS_FALLBACK.heroTagline,
+              heroLogo: sp.heroLogo || ACTIVE_GREENS_FALLBACK.heroLogo,
+              heroBg: sp.heroBg || ACTIVE_GREENS_FALLBACK.heroBg,
+              heroMobileUrl: extracted.heroMobileUrl || ACTIVE_GREENS_FALLBACK.heroMobileUrl,
+              companyLogoUrl: extracted.companyLogoUrl || ACTIVE_GREENS_FALLBACK.companyLogoUrl,
+              locationMapUrl: extracted.locationMapUrl || ACTIVE_GREENS_FALLBACK.locationMapUrl,
+              gmbGoogleIconUrl: extracted.gmbGoogleIconUrl || ACTIVE_GREENS_FALLBACK.gmbGoogleIconUrl,
+              gmbStarIconUrl: extracted.gmbStarIconUrl || ACTIVE_GREENS_FALLBACK.gmbStarIconUrl,
+              overviewParagraphs: sp.overviewParagraphs?.length ? sp.overviewParagraphs : ACTIVE_GREENS_FALLBACK.overviewParagraphs,
+              overviewHighlights: sp.overviewHighlights?.length ? sp.overviewHighlights : ACTIVE_GREENS_FALLBACK.overviewHighlights,
+              amenities: sp.amenities?.length ? sp.amenities : ACTIVE_GREENS_FALLBACK.amenities,
+              specifications: extracted.specifications?.length ? extracted.specifications : ACTIVE_GREENS_FALLBACK.specifications,
+              floorPlans: extracted.floorPlans?.length ? extracted.floorPlans : ACTIVE_GREENS_FALLBACK.floorPlans,
+              locationImage: sp.locationImage || ACTIVE_GREENS_FALLBACK.locationImage,
+              locationMapEmbed: sp.locationMapEmbed || ACTIVE_GREENS_FALLBACK.locationMapEmbed,
+              locationDestinations: sp.locationDestinations?.length ? sp.locationDestinations : ACTIVE_GREENS_FALLBACK.locationDestinations,
+              videoSection: extracted.videoSection || ACTIVE_GREENS_FALLBACK.videoSection,
+              gmbReviews: extracted.gmbReviews || ACTIVE_GREENS_FALLBACK.gmbReviews,
+              galleryImages: sp.galleryImages?.length ? sp.galleryImages : ACTIVE_GREENS_FALLBACK.galleryImages,
+              brochureUrl: sp.brochureUrl || ACTIVE_GREENS_FALLBACK.brochureUrl,
+              metaTitle: sp.metaTitle || ACTIVE_GREENS_FALLBACK.metaTitle,
+              metaDescription: sp.metaDescription || ACTIVE_GREENS_FALLBACK.metaDescription,
             });
           }
         }
@@ -883,7 +946,7 @@ export default function ActiveGreensPage() {
 
   // Sync tab/doc meta title and description
   useEffect(() => {
-    document.title = subpage.metaTitle || fallbackData.metaTitle;
+    document.title = subpage.metaTitle || ACTIVE_GREENS_FALLBACK.metaTitle;
     let meta = document.querySelector('meta[name="description"]');
     let created = false;
     if (!meta) {
@@ -891,7 +954,7 @@ export default function ActiveGreensPage() {
       meta.name = "description";
       created = true;
     }
-    meta.content = subpage.metaDescription || fallbackData.metaDescription;
+    meta.content = subpage.metaDescription || ACTIVE_GREENS_FALLBACK.metaDescription;
     if (created) {
       document.head.appendChild(meta);
     }

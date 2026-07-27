@@ -2,8 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Nav from "../components/Nav";
 import { Footer } from "../components/Footer";
-import { Reveal } from "../components/shared";
-import { CardArrow } from "../components/ProjectsSection";
+import { Reveal, RImg } from "../components/shared";
+import { CardArrow, ProjectTile } from "../components/ProjectsSection";
+import { PROJECTS } from "../data/projects";
 import { OSCAR_PRIDE_FALLBACK } from "../data/oscarPride";
 import { OSCAR_PALACE_FALLBACK } from "../data/oscarPalace";
 import { RUCHI_LIFESCAPES_INDORE_FALLBACK } from "../data/ruchiLifescapesIndore";
@@ -13,7 +14,21 @@ import { SAATVIK_VIHAR_INDORE_FALLBACK } from "../data/saatvikViharIndore";
 import { RUCHI_ENCLAVE_INDORE_FALLBACK } from "../data/ruchiEnclaveIndore";
 import { ONE_VICTORIA_FALLBACK } from "../data/oneVictoria";
 import { OSCAR_SANCTUARY_INDORE_FALLBACK } from "../data/oscarSanctuaryIndore";
+import { OSCAR_FALLBACK } from "./OscarPage";
+import { ACTIVE_BUSINESS_PARK_FALLBACK } from "./ActiveBusinessParkPage";
+import { ACTIVE_ACRES_ANGELICA_FALLBACK } from "./ActiveAcresAngelicaPage";
+import { ACTIVE_GREENS_FALLBACK } from "./ActiveGreensPage";
+import { ONE_RAJARHAT_FALLBACK } from "./OneRajarhatPage";
+import { ONE_PRIME_RESIDENTIAL_FALLBACK } from "./OnePrimeResidentialPage";
 
+const PROJECT_LEGACY_META = {
+  "oscar-indore": { city: "Indore", type: "Premium Plotted Development" },
+  "active-business-park": { city: "Kolkata", type: "Commercial" },
+  "active-acres-angelica": { city: "Kolkata", type: "Residential" },
+  "active-greens": { city: "Kolkata", type: "Residential" },
+  "one-rajarhat": { city: "Rajarhat, Kolkata", type: "Residential" },
+  "one-prime-residential": { city: "New Town, Kolkata", type: "Residential" },
+};
 const ICONS = {
   location: "assets/projects/oscar/icon-location.webp",
   amenities: "assets/projects/oscar/icon-amenities.webp",
@@ -22,6 +37,12 @@ const ICONS = {
 };
 
 const FALLBACK_SUBPAGES = {
+  "oscar-indore": OSCAR_FALLBACK,
+  "active-business-park": ACTIVE_BUSINESS_PARK_FALLBACK,
+  "active-acres-angelica": ACTIVE_ACRES_ANGELICA_FALLBACK,
+  "active-greens": ACTIVE_GREENS_FALLBACK,
+  "one-rajarhat": ONE_RAJARHAT_FALLBACK,
+  "one-prime-residential": ONE_PRIME_RESIDENTIAL_FALLBACK,
   "oscar-sanctuary-indore": OSCAR_SANCTUARY_INDORE_FALLBACK,
   "one-victoria-new-town": ONE_VICTORIA_FALLBACK,
   "oscar-pride-indore": OSCAR_PRIDE_FALLBACK,
@@ -439,6 +460,7 @@ function assetUrl(src = "") {
 
 function parseJson(value, fallback) {
   try {
+    if (typeof value === "object" && value !== null) return value;
     const parsed = JSON.parse(value || "");
     return parsed ?? fallback;
   } catch {
@@ -469,10 +491,14 @@ function embedSrc(value = "") {
 function videoEmbedUrl(value = "") {
   const text = String(value || "").trim();
   if (!text) return "";
-  if (/youtube\.com\/embed\//i.test(text)) return text;
+  if (/youtube\.com\/embed\//i.test(text) || /player\.vimeo\.com\/video\//i.test(text)) return text;
+  const vimeo = text.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
+  if (vimeo?.[1]) return `https://player.vimeo.com/video/${vimeo[1]}`;
   const watch = text.match(/[?&]v=([^&]+)/i);
   const short = text.match(/youtu\.be\/([^?&]+)/i);
-  const id = watch?.[1] || short?.[1] || (/^[A-Za-z0-9_-]{8,}$/.test(text) ? text : "");
+  const shorts = text.match(/youtube\.com\/shorts\/([^?&]+)/i);
+  const embed = text.match(/youtube\.com\/embed\/([^?&]+)/i);
+  const id = watch?.[1] || short?.[1] || shorts?.[1] || embed?.[1] || (/^[A-Za-z0-9_-]{8,}$/.test(text) ? text : "");
   return id ? `https://www.youtube.com/embed/${id}` : text;
 }
 
@@ -488,7 +514,11 @@ function normalizeProjectSubpage(project, sp) {
   const title = sp?.heroTitle || project?.title || project?.name || "Project";
   const description = project?.description || "Explore this Ruchi Realty project with thoughtfully planned spaces, dependable execution, and a location selected for everyday convenience.";
   const videoSection = custom.videoSection || {};
-  const videoUrl = videoSection.enabled === false ? "" : (videoSection.videoUrl || sp?.walkthroughVideoId || "");
+  const legacyVideoUrl = (videoSection.videoUrl || "").trim() || (sp?.walkthroughVideoId || "").trim();
+  const videos = (Array.isArray(sp?.videos) && sp.videos.length ? sp.videos : legacyVideoUrl ? [{ ...videoSection, videoUrl: legacyVideoUrl }] : [])
+    .filter((item) => item?.videoUrl || item?.url)
+    .map((item, index) => ({ title: item.title || `Project video ${index + 1}`, videoUrl: videoEmbedUrl(item.videoUrl || item.url), thumbnailUrl: assetUrl(item.thumbnailUrl || item.poster || "") }));
+  const clean = (items, predicate) => (Array.isArray(items) ? items : []).filter(predicate);
   return {
     title,
     type: project?.type || "Residential",
@@ -497,23 +527,28 @@ function normalizeProjectSubpage(project, sp) {
     tag: sp?.heroTagline || project?.tag || description,
     heroLogo: project?.slug === "ruchi-lifescapes-indore-project" ? "/projects/ruchi-lifescapes-indore-project/logo.jpg" : assetUrl(sp?.heroLogo || ""),
     heroBg: assetUrl(sp?.heroBg || project?.image_url || project?.img || "assets/projects/oscar-billionaires.webp"),
-    heroMobileUrl: assetUrl(custom.heroMobileUrl || ""),
+    heroMobileUrl: assetUrl(custom.heroMobileUrl || sp?.heroMobileUrl || ""),
+    heroImagePosition: sp?.heroImagePosition || "center center",
+    heroImageFit: ["cover", "contain"].includes(sp?.heroImageFit) ? sp.heroImageFit : "cover",
     heroMedia: custom.heroMedia,
-    overviewParagraphs: sp?.overviewParagraphs?.length ? sp.overviewParagraphs : [description],
-    overviewHighlights: Array.isArray(sp?.overviewHighlights) ? sp.overviewHighlights.slice(0, 4) : DEFAULT_HIGHLIGHTS,
-    amenities: Array.isArray(sp?.amenities) ? sp.amenities : [],
-    specifications: custom.specifications,
-    floorPlans: (custom.floorPlans || []).filter((plan) => plan?.desc).map((plan) => ({ ...plan, desc: assetUrl(plan.desc) })),
-    videoSection: {
-      title: videoSection.title || "Construction Walkthrough",
-      videoUrl: videoEmbedUrl(videoUrl),
-      thumbnailUrl: assetUrl(videoSection.thumbnailUrl || ""),
-    },
+    status: project?.status || sp?.status || "",
+    overviewParagraphs: clean(sp?.overviewParagraphs, (item) => typeof item === "string" && item.trim()),
+    overviewHighlights: clean(sp?.overviewHighlights, (item) => item?.label || item?.desc).slice(0, 4),
+    amenities: clean(sp?.amenities, (item) => item?.name),
+    specifications: clean(custom.specifications, (item) => item?.title && (item?.desc || item?.details || item?.value)),
+    specificationImage: assetUrl(sp?.specificationImage || ""),
+    floorPlans: (custom.floorPlans?.length ? custom.floorPlans : (sp?.floorPlans || [])).filter((plan) => plan?.desc || plan?.image).map((plan) => ({ ...plan, desc: assetUrl(plan.desc || plan.image) })),
+    videos,
+    videoSection: videos[0] || { title: "", videoUrl: "", thumbnailUrl: "" },
     locationImage: assetUrl(sp?.locationImage || custom.locationMapUrl || ""),
     locationMapEmbed: embedSrc(sp?.locationMapEmbed || ""),
     locationDestinations: Array.isArray(sp?.locationDestinations) ? sp.locationDestinations : [],
-    galleryImages: (sp?.galleryImages || []).map((img) => ({ ...img, src: assetUrl(img.src) })),
+    galleryImages: [...(sp?.galleryImages || []), ...(sp?.constructionUpdates || [])].filter((img) => img?.src || img?.image).map((img) => ({ ...img, src: assetUrl(img.src || img.image) })),
     brochureUrl: assetUrl(sp?.brochureUrl || ""),
+    faqs: clean(sp?.faqs, (item) => item?.question && item?.answer),
+    relatedProjectSlugs: clean(sp?.relatedProjectSlugs, (item) => typeof item === "string" && item.trim()),
+    ctaLabels: { brochure: sp?.ctaLabels?.brochure || "Download Brochure", visit: sp?.ctaLabels?.visit || "Book a Visit" },
+    ogImage: assetUrl(sp?.ogImage || sp?.heroBg || project?.image_url || ""),
     metaTitle: sp?.metaTitle || `${title} | Ruchi Realty`,
     metaDescription: sp?.metaDescription || description,
   };
@@ -527,13 +562,16 @@ function HeroEnquiryForm({ title, onSubmit }) {
   const [form, setForm] = useState({ name: String(), phone: String(), email: String() });
   const field = (key) => (e) => setForm({ ...form, [key]: e.target.value });
   return <form className={`victoria-hero-form`} onSubmit={(e) => { e.preventDefault(); onSubmit(form); }}>
-    <span className={`eyebrow`}>Enquire now</span>
-    <h2>Find your place<br />at {title}.</h2>
-    <p>Share your details for pricing, plans, and availability.</p>
-    <label><span>Name</span><input value={form.name} onChange={field(`name`)} placeholder={`Your full name`} required /></label>
-    <label><span>Phone</span><input value={form.phone} onChange={field(`phone`)} placeholder={`+91`} required /></label>
-    <label><span>Email</span><input type={`email`} value={form.email} onChange={field(`email`)} placeholder={`you@email.com`} /></label>
-    <button className={`submit-btn`} type={`submit`}>Request details<CtaArrow /></button>
+    <div className="victoria-hero-form__head"><span className="victoria-hero-form__mark" aria-hidden="true"></span><span className={`eyebrow`}>Private Enquiry</span></div>
+    <h2>Discover life<br />at {title}.</h2>
+    <p>Receive current pricing, plans and availability directly from our project team.</p>
+    <div className="victoria-hero-form__fields">
+      <label className="is-wide"><span>Full name</span><input value={form.name} onChange={field(`name`)} placeholder={`Enter your name`} autoComplete="name" required /></label>
+      <label><span>Phone number</span><input type="tel" value={form.phone} onChange={field(`phone`)} placeholder={`+91 00000 00000`} autoComplete="tel" required /></label>
+      <label><span>Email address</span><input type={`email`} value={form.email} onChange={field(`email`)} placeholder={`name@email.com`} autoComplete="email" /></label>
+    </div>
+    <button className={`submit-btn`} type={`submit`}>Request Project Details<CtaArrow /></button>
+    <small className="victoria-hero-form__privacy">Your information remains private and is only used to respond to this enquiry.</small>
   </form>;
 }
 function AmenityIcon({ icon, name }) {
@@ -559,13 +597,16 @@ function SectionNav({ data }) {
   const [active, setActive] = useState("overview");
   const sections = useMemo(() => {
     return [
-      ["overview", "Overview", true],
-      ["amenities", "Amenities", data.amenities?.length],
+      ["overview", "Overview", data.overviewParagraphs?.length],
+
       ["specifications", "Specifications", data.specifications?.length],
-      ["floor-plans", "Floor Plans", data.floorPlans?.length],
-      ["walkthrough", "Walkthrough", data.videoSection?.videoUrl],
-      ["location", "Location", data.locationMapEmbed || data.locationImage || data.locationDestinations?.length],
+      ["amenities", "Amenities", data.amenities?.length],
+      ["walkthrough", "Walkthrough", data.videos?.length],
       ["gallery", "Gallery", data.galleryImages?.length],
+      ["floor-plans", "Floor Plans", data.floorPlans?.length],
+      ["location", "Location", data.locationMapEmbed || data.locationImage || data.locationDestinations?.length],
+      ["faq", "FAQ", data.faqs?.length],
+
     ].filter(([, , show]) => Boolean(show)).map(([id, label]) => ({ id, label }));
   }, [data]);
 
@@ -687,11 +728,89 @@ function FloorPlansSection({ plans, title }) {
 
 function WalkthroughSection({ video }) {
   if (!video?.videoUrl) return null;
-  return <section className="section-pad osc-section osc-section--dark" id="walkthrough"><div className="rr-wrap"><Reveal><div className="sec-head sec-head--dark" style={{ marginBottom: 40 }}><div><div className="eyebrow" style={{ color: "var(--rr-lime)" }}>Walkthrough</div><h2>{video.title || "Construction Walkthrough"}<br /><span className="rr-grad">project video.</span></h2></div></div></Reveal><Reveal><div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", background: "#111", borderRadius: 8, overflow: "hidden", boxShadow: "0 24px 70px rgba(0,0,0,.28)" }}><iframe title={video.title || "Project walkthrough"} src={video.videoUrl} width="100%" height="100%" style={{ border: 0, position: "absolute", inset: 0 }} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen loading="lazy" /></div></Reveal></div></section>;
+  return <section className="section-pad osc-section osc-section--dark" id="walkthrough"><div className="rr-wrap"><Reveal><div className="sec-head sec-head--dark" style={{ marginBottom: 40 }}><div><div className="eyebrow" style={{ color: "var(--rr-lime)" }}>Walkthrough</div><h2>{video.title || "Construction Walkthrough"}<br /><span className="rr-grad">project video.</span></h2></div></div></Reveal><Reveal><div className="osc-modern-video-frame" style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", background: "#111", borderRadius: 8, overflow: "hidden", boxShadow: "0 24px 70px rgba(0,0,0,.28)" }}><iframe title={video.title || "Project walkthrough"} src={video.videoUrl} width="100%" height="100%" style={{ border: 0, position: "absolute", inset: 0 }} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen loading="lazy" /></div></Reveal></div></section>;
 }
 
-export default function GenericProjectPage() {
-  const { slug } = useParams();
+function ProjectOverview({ data }) {
+  const paragraphs = (data.overviewParagraphs || []).filter(Boolean);
+  if (!paragraphs.length) return null;
+  const substantiveCopy = paragraphs.filter((text) => text.trim().length > 80);
+  const overviewCopy = (substantiveCopy.length ? substantiveCopy : paragraphs).slice(0, 2);
+  const fallbackFacts = [{ label: "Project Type", desc: data.type }, { label: "Location", desc: data.location }, { label: "Status", desc: data.status }];
+  const facts = [...(data.overviewHighlights || []), ...fallbackFacts]
+    .filter((item, index, items) => item?.desc && items.findIndex((candidate) => candidate?.label === item.label) === index)
+    .slice(0, 4);
+  return (
+    <section className="section-pad project-section" id="overview"><div className="rr-wrap">
+      <div className="project-section__head project-section__head--overview"><span className="eyebrow">Project Overview</span><h2>Designed with purpose,<br/><span className="rr-grad">made for everyday life.</span></h2></div>
+      <div className="project-overview__layout">
+        <div className="project-overview__copy">{overviewCopy.map((text,index)=><p key={index}>{text}</p>)}</div>
+        {facts.length ? <aside className="project-overview__facts" aria-label={`${data.title} overview details`}>
+          <div className="project-overview__facts-head"><span>At a glance</span><small>{String(facts.length).padStart(2, "0")} details</small></div>
+          <div className="project-overview__facts-list">{facts.map((fact, index) => <div className="project-overview__fact" key={`${fact.label}-${index}`}><span>{String(index + 1).padStart(2, "0")}</span><div><small>{fact.label}</small><strong>{fact.desc}</strong></div></div>)}</div>
+        </aside> : null}
+      </div>
+    </div></section>
+  );
+}
+
+function specificationParts(value) {
+  return String(value||"").split(/\n+|\s*[•;]\s*/).map(part=>part.trim()).filter(Boolean);
+}
+
+function ProjectSpecifications({ data }) {
+  const specs=(data.specifications||[]).filter(item=>item?.title&&(item?.desc||item?.details));
+  if (!specs.length) return null;
+  const content=<div className="project-spec-grid">{specs.map((spec,index)=>{const parts=specificationParts(spec.desc||spec.details||spec.value);return <article className="project-spec-card" key={`${spec.title}-${index}`}><span>{String(index+1).padStart(2,"0")}</span><h3>{spec.title}</h3><div className="project-spec-points">{parts.map((part,partIndex)=>{const colon=part.indexOf(":");return colon>0?<p key={partIndex}><strong>{part.slice(0,colon)}</strong><em>{part.slice(colon+1).trim()}</em></p>:<p key={partIndex}><em>{part}</em></p>})}</div></article>})}</div>;
+  return <section className="section-pad project-section project-specifications" id="specifications"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Specifications</span><h2>Materials and details,<br/><span className="rr-grad">presented clearly.</span></h2></div>{data.specificationImage?<div className="project-spec-layout"><RImg className="project-spec-layout__image" src={data.specificationImage} alt={`${data.title} specifications`}/>{content}</div>:content}</div></section>;
+}
+
+function ProjectAmenities({ amenities }) {
+  const valid=(amenities||[]).filter(item=>item?.name);
+  if (!valid.length) return null;
+  return <section className="section-pad project-section project-amenities" id="amenities"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Amenities</span><h2>Spaces that support<br/><span className="rr-grad">better everyday living.</span></h2></div><div className="project-amenities-grid">{valid.map((item,index)=><article className="project-amenity-card" key={`${item.name}-${index}`}><div className="project-amenity-card__icon"><AmenityIcon icon={item.icon} name={item.name}/></div><h3>{item.name}</h3></article>)}</div></div></section>;
+}
+function ProjectLocation({ data }) {
+  const destinations=(data.locationDestinations||[]).filter(item=>item?.name);
+  if (!data.locationImage&&!data.locationMapEmbed&&!destinations.length) return null;
+  return <section className="section-pad project-section project-location" id="location"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Location &amp; Connectivity</span><h2>A connected address,<br/><span className="rr-grad">close to what matters.</span></h2></div><div className="project-location__grid">{data.locationImage?<RImg className="project-location__image" src={data.locationImage} alt={`${data.title} location map`} mono/>:null}<div className="project-location__content">{destinations.length?<div className="project-location__list">{destinations.map((item,index)=><div key={`${item.name}-${index}`}><span>{item.name}</span><strong>{item.dist||item.distance||"Nearby"}</strong></div>)}</div>:null}{data.locationMapEmbed?<iframe title={`${data.title} map`} src={data.locationMapEmbed} loading="lazy" referrerPolicy="no-referrer-when-downgrade"/>:null}</div></div></div></section>;
+}
+
+function ProjectWalkthrough({ data }) {
+  const videos=data.videos||[];
+  if (!videos.length) return null;
+  return <section className="section-pad project-section project-walkthrough" id="walkthrough"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">{videos.length>1?"Project Videos":"Walkthrough Video"}</span><h2>Explore the project<br/><span className="rr-grad">from wherever you are.</span></h2></div><div className={`project-video-grid ${videos.length===1?"is-single":""}`}>{videos.map((video,index)=><article className="project-video-card" key={`${video.videoUrl}-${index}`}>{videos.length>1?<h3>{video.title}</h3>:null}<div className="project-walkthrough__frame">{video.thumbnailUrl?<img src={video.thumbnailUrl} alt=""/>:null}<iframe title={video.title||`${data.title} walkthrough ${index+1}`} src={video.videoUrl} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen/></div></article>)}</div></div></section>;
+}
+
+function ProjectFaq({ data }) {
+  if (!data.faqs?.length) return null;
+  return <section className="section-pad project-section project-faq" id="faq"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Frequently Asked Questions</span><h2>Helpful project<br/><span className="rr-grad">information.</span></h2></div><div className="project-faq__list">{data.faqs.map((item,index)=><details key={`${item.question}-${index}`}><summary>{item.question}<span aria-hidden="true">+</span></summary><div><p>{item.answer}</p></div></details>)}</div></div></section>;
+}
+function ProjectGallery({ data }) {
+  const images=(data.galleryImages||[]).filter(image=>image?.src);
+  const [galleryStart,setGalleryStart]=useState(0);
+  const [lightboxIndex,setLightboxIndex]=useState(null);
+  if (!images.length) return null;
+  const useThreeBoxGallery=images.length>0;
+  const visibleIndexes=useThreeBoxGallery?Array.from({length:Math.min(3,images.length)},(_,index)=>(galleryStart+index)%images.length):images.map((_,index)=>index);
+  const moveGallery=(direction)=>setGalleryStart(index=>(index+direction+images.length)%images.length);
+  const moveLightbox=(direction)=>setLightboxIndex(index=>(index+direction+images.length)%images.length);
+  return <section className="section-pad project-section project-gallery" id="gallery"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Project Gallery</span><h2>A closer look<br/><span className="rr-grad">at the project.</span></h2></div>{visibleIndexes.length?<>{<div className={useThreeBoxGallery?"project-gallery-trio":"project-gallery-grid"}>{visibleIndexes.map((imageIndex,position)=>{const image=images[imageIndex];return useThreeBoxGallery?<button type="button" onClick={()=>setLightboxIndex(imageIndex)} aria-label={`Open ${image.alt||`${data.title} gallery image ${imageIndex+1}`}`} key={`${image.src}-${imageIndex}`}><RImg src={image.src} alt={image.alt||`${data.title} gallery ${imageIndex+1}`}/></button>:<a href={image.src} target="_blank" rel="noreferrer" className={position===0?"is-featured":""} key={`${image.src}-${imageIndex}`}><RImg src={image.src} alt={image.alt||`${data.title} gallery ${imageIndex+1}`}/></a>})}</div>}{useThreeBoxGallery&&images.length>3?<div className="project-gallery-trio__controls"><span>{String(galleryStart+1).padStart(2,"0")} / {String(images.length).padStart(2,"0")}</span><button type="button" onClick={()=>moveGallery(-1)} aria-label="Previous gallery images">&#8592;</button><button type="button" onClick={()=>moveGallery(1)} aria-label="Next gallery images">&#8594;</button></div>:null}</>:null}</div>{lightboxIndex!==null?<div className="project-gallery-lightbox" role="dialog" aria-modal="true" aria-label={`${data.title} image preview`} onClick={()=>setLightboxIndex(null)}><button className="project-gallery-lightbox__close" type="button" onClick={()=>setLightboxIndex(null)} aria-label="Close image preview">&#215;</button>{images.length>1?<button className="project-gallery-lightbox__arrow is-prev" type="button" onClick={event=>{event.stopPropagation();moveLightbox(-1)}} aria-label="Previous image">&#8592;</button>:null}<div className="project-gallery-lightbox__image" onClick={event=>event.stopPropagation()}><RImg src={images[lightboxIndex].src} alt={images[lightboxIndex].alt||`${data.title} gallery ${lightboxIndex+1}`}/><span>{String(lightboxIndex+1).padStart(2,"0")} / {String(images.length).padStart(2,"0")}</span></div>{images.length>1?<button className="project-gallery-lightbox__arrow is-next" type="button" onClick={event=>{event.stopPropagation();moveLightbox(1)}} aria-label="Next image">&#8594;</button>:null}</div>:null}</section>;
+}
+function RelatedProjects({ slug, preferredSlugs=[] }) {
+  const available=PROJECTS.filter(project=>project.url&&project.url!==`/projects/${slug}`&&!project.url.endsWith(`/${slug}`));
+  const preferred=preferredSlugs.map(item=>available.find(project=>project.url.endsWith(`/${item}`))).filter(Boolean);
+  const items=[...preferred,...available.filter(item=>!preferred.includes(item))].slice(0,3);
+  if (!items.length) return null;
+  return <section className="section-pad project-section project-related" id="more-projects"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">More Projects</span><h2>Continue exploring<br/><span className="rr-grad">Ruchi Realty.</span></h2></div><div className="pgrid">{items.map((item,index)=><ProjectTile p={item} i={index} n={index} key={`${item.name}-${item.url}`}/>)}</div></div></section>;
+}
+
+function ProjectEnquiryCTA({ data, onEnquire }) {
+  return <section className="section-pad project-final-cta" id="enquire"><div className="rr-wrap project-final-cta__inner"><span className="eyebrow">Take a Closer Look</span><h2>Discover {data.title}<br/><span>in complete detail.</span></h2><p>{data.brochureUrl?"Download the project brochure for plans, amenities, specifications and location highlights—all in one place.":"Share your details and our project team will help with plans, availability and a site visit."}</p><button className="submit-btn" type="button" onClick={onEnquire}>{data.brochureUrl?data.ctaLabels.brochure:data.ctaLabels.visit}<CtaArrow/></button></div></section>;
+}
+export default function GenericProjectPage({ slugOverride = "" }) {
+  const params = useParams();
+  const slug = slugOverride || params.slug;
   const [project, setProject] = useState(null);
   const [subpage, setSubpage] = useState(null);
   const [loaded, setLoaded] = useState(false);
@@ -702,14 +821,29 @@ export default function GenericProjectPage() {
     let active = true;
     async function load() {
       setLoaded(false);
-      const { data: found } = await window.RuchiBackend.projects.getProjectBySlug(slug);
-      if (!active) return;
-      setProject(found);
-      if (found?.id) {
-        const { data: sp } = await window.RuchiBackend.projectSubpages.getByProjectId(found.id);
-        if (active) setSubpage(sp || FALLBACK_SUBPAGES[slug] || null);
+      try {
+        const fallback = FALLBACK_SUBPAGES[slug] || null;
+        const meta = PROJECT_LEGACY_META[slug] || {};
+        const { data: found } = await window.RuchiBackend.projects.getProjectBySlug(slug);
+        if (!active) return;
+        setProject(found || (fallback ? { slug, title: fallback.heroTitle, name: fallback.heroTitle, city: meta.city || "", location: meta.city || "", type: meta.type || "Residential" } : null));
+        if (found?.id) {
+          const { data: sp } = await window.RuchiBackend.projectSubpages.getByProjectId(found.id);
+          if (active) setSubpage(sp || fallback);
+        } else if (active) {
+          setSubpage(fallback);
+        }
+      } catch (err) {
+        console.error("Error loading project subpage:", err);
+        const fallback = FALLBACK_SUBPAGES[slug] || null;
+        const meta = PROJECT_LEGACY_META[slug] || {};
+        if (active) {
+          setProject(fallback ? { slug, title: fallback.heroTitle, name: fallback.heroTitle, city: meta.city || "", location: meta.city || "", type: meta.type || "Residential" } : null);
+          setSubpage(fallback);
+        }
+      } finally {
+        if (active) setLoaded(true);
       }
-      if (active) setLoaded(true);
     }
     load();
     return () => { active = false; };
@@ -742,6 +876,15 @@ export default function GenericProjectPage() {
       document.head.appendChild(meta);
     }
     meta.content = data.metaDescription;
+    const setOg = (property, content) => {
+      if (!content) return;
+      let element = document.querySelector(`meta[property="${property}"]`);
+      if (!element) { element = document.createElement("meta"); element.setAttribute("property", property); document.head.appendChild(element); }
+      element.content = content;
+    };
+    setOg("og:title", data.metaTitle);
+    setOg("og:description", data.metaDescription);
+    setOg("og:image", data.ogImage);
     let canonical = document.querySelector('link[rel="canonical"]');
     if (!canonical) {
       canonical = document.createElement("link");
@@ -749,7 +892,7 @@ export default function GenericProjectPage() {
       document.head.appendChild(canonical);
     }
     canonical.href = `${window.location.origin}/projects/${slug}`;
-  }, [data.metaTitle, data.metaDescription, slug]);
+  }, [data.metaTitle, data.metaDescription, data.ogImage, slug]);
 
   if (!loaded) {
     return <><Nav onContact={onBrochure} /><main className="section-pad rr-light"><div className="rr-wrap" style={{ paddingTop: 120 }}><p className="eyebrow" style={{ color: "var(--rr-indigo)" }}>Project</p><h1 className="osc-section__title">Loading project...</h1></div></main><Footer /></>;
@@ -764,7 +907,7 @@ export default function GenericProjectPage() {
       <Nav onContact={onBrochure} hidden={navHidden} solid={useSplitHero} />
       <main>
         <header className={`osc-hero ${useSplitHero ? `victoria-hero project-hero--${data.slug}` : String()}`} data-screen-label={data.title}>
-          <div className="osc-hero__bg"><picture>{data.heroMobileUrl ? <source media="(max-width: 720px)" srcSet={data.heroMobileUrl} /> : null}<img src={data.heroBg} alt={data.title} /></picture>{data.heroMedia?.type === "youtube_video" && data.heroMedia.url ? <iframe className="osc-hero__video" src={data.heroMedia.url} title={`${data.title} hero video`} allow="autoplay; encrypted-media" tabIndex="-1" aria-hidden="true" /> : null}</div>
+          <div className={`osc-hero__bg project-hero-media project-hero-media--${data.heroImageFit}`} style={{ "--project-hero-position": data.heroImagePosition }}><picture>{data.heroMobileUrl ? <source media="(max-width: 720px)" srcSet={data.heroMobileUrl} /> : null}<img src={data.heroBg} alt={`${data.title} project view`} fetchPriority="high" /></picture>{data.heroMedia?.type === "youtube_video" && data.heroMedia.url ? <iframe className="osc-hero__video" src={data.heroMedia.url} title={`${data.title} hero video`} allow="autoplay; encrypted-media" tabIndex="-1" aria-hidden="true" /> : null}</div>
           <div className="osc-hero__overlay"></div>
           <div className="osc-hero__sig" aria-hidden="true"></div>
           {useSplitHero ? <div className={`rr-wrap victoria-hero__form-wrap`}><HeroEnquiryForm title={data.title} onSubmit={submitHeroLead} /></div> : <div className="rr-wrap osc-hero__wrap">
@@ -776,27 +919,22 @@ export default function GenericProjectPage() {
               <div className="osc-hero__actions"><Link className="submit-btn" to="/projects">More Projects<CtaArrow /></Link><button className="ab-btn-outline ab-btn-outline--white" type="button" onClick={onBrochure}>Download Brochure<CtaArrow /></button></div>
             </div></Reveal>
           </div>}
-          {!useSplitHero ? <div className={`osc-hero__chips`}>{data.overviewHighlights.map((h, i) => <Reveal key={h.label || i} delay={i * 80} className="osc-chip"><img src={highlightIconSrc(h.icon, i)} alt="" style={{ width: 24, height: 24, marginBottom: 4, objectFit: "contain" }} /><span className="osc-chip__label">{h.label}</span><span className="osc-chip__desc">{h.desc}</span></Reveal>)}</div> : null}
         </header>
 
-        {useSplitHero ? <section className={`victoria-intro`} id={`project-details`}><div className={`rr-wrap victoria-intro__top`}><div className={`victoria-intro__identity`}>{data.heroLogo ? <img src={data.heroLogo} alt={`${data.title} logo`} /> : null}<div><span className={`eyebrow`}>{data.type}</span><h1>{data.title}</h1><p>{data.location}</p><strong>{data.tag}</strong></div></div><div className={`victoria-intro__actions`}><Link className={`ab-btn-outline ab-btn-outline--white`} to={`/projects`}>More Projects<CtaArrow /></Link><button className={`submit-btn victoria-intro__brochure`} type={`button`} onClick={onBrochure}>Download Brochure<CtaArrow /></button></div></div><div className={`rr-wrap victoria-intro__facts`}>{data.overviewHighlights.map((h, i) => <div className={`victoria-fact`} key={h.label || i}><span>{String(i + 1).padStart(2, `0`)}</span><div><small>{h.label}</small><strong>{h.desc}</strong></div></div>)}</div></section> : null}
+        {useSplitHero ? <section className={`victoria-intro`} id={`project-details`}><div className={`rr-wrap victoria-intro__top`}><div className={`victoria-intro__identity`}>{data.heroLogo ? <img src={data.heroLogo} alt={`${data.title} logo`} onError={(event)=>{event.currentTarget.hidden=true}} /> : null}<div><span className={`eyebrow`}>{data.type}</span><h1>{data.title}</h1>{data.location?<p>{data.location}</p>:null}<strong>{data.tag}</strong></div></div><div className={`victoria-intro__actions`}><Link className={`ab-btn-outline ab-btn-outline--white`} to={`/projects`}>More Projects<CtaArrow /></Link><button className={`submit-btn victoria-intro__brochure`} type={`button`} onClick={onBrochure}>{data.brochureUrl?data.ctaLabels.brochure:data.ctaLabels.visit}<CtaArrow /></button></div></div>{data.overviewHighlights.length?<div className={`rr-wrap victoria-intro__facts`}>{data.overviewHighlights.map((h, i) => <div className={`victoria-fact`} key={h.label || i}><span>{String(i + 1).padStart(2, `0`)}</span><div><small>{h.label}</small><strong>{h.desc}</strong></div></div>)}</div>:null}</section> : null}
 
         <SectionNav data={data} />
+        <ProjectOverview data={data} />
 
-        <section className="section-pad osc-section" id="overview"><div className="rr-wrap"><Reveal><div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: 16 }}>Overview</div><h2 className="osc-section__title">Designed for everyday living,<br /><span className="rr-grad">backed by Ruchi Realty.</span></h2></Reveal><div className="osc-overview__grid"><Reveal className="osc-overview__text">{data.overviewParagraphs.map((p, i) => <p key={i}>{p}</p>)}</Reveal><div className="osc-overview__stats">{data.overviewHighlights.map((h, i) => <Reveal key={h.label || i} delay={i * 70} className="osc-stat-card"><span className="osc-stat-card__label">{h.label}</span><span className="osc-stat-card__desc">{h.desc}</span></Reveal>)}</div></div></div></section>
-
-        {data.amenities.length ? <section className="section-pad osc-section osc-section--dark" id="amenities"><div className="rr-wrap"><div className="sec-head sec-head--dark" style={{ marginBottom: 48 }}><div><div className="eyebrow" style={{ color: "var(--rr-lime)" }}>Amenities</div><h2>Project amenities,<br /><span className="rr-grad">planned around daily life.</span></h2></div></div><div className="osc-amenities__grid">{data.amenities.map((a, i) => <Reveal key={a.name || i} delay={i * 50} className="osc-amenity-card"><div className="osc-amenity-card__icon"><AmenityIcon icon={a.icon} name={a.name} /></div><h4 className="osc-amenity-card__name">{a.name}</h4></Reveal>)}</div></div></section> : null}
-
-        {data.specifications.length ? <section className="section-pad osc-section" id="specifications"><div className="rr-wrap"><div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: 16 }}>Specifications</div><h2 className="osc-section__title">Built with practical,<br /><span className="rr-grad">durable specifications.</span></h2><div className="osc-specs__cards" style={{ marginTop: 32 }}>{data.specifications.map((s, i) => <Reveal key={s.title || i} delay={i * 50} className="osc-spec-card"><h4 className="osc-spec-card__title">{s.title}</h4><p className="osc-spec-card__desc">{s.desc}</p></Reveal>)}</div></div></section> : null}
-
+        <ProjectSpecifications data={data} />
+        <ProjectAmenities amenities={data.amenities} />
+        <ProjectWalkthrough data={data} />
+        <ProjectGallery data={data} />
         <FloorPlansSection plans={data.floorPlans} title={data.title} />
-        <WalkthroughSection video={data.videoSection} />
-
-        {(data.locationImage || data.locationMapEmbed || data.locationDestinations.length) ? <section className="section-pad osc-section osc-section--dark" id="location"><div className="rr-wrap"><div className="sec-head sec-head--dark" style={{ marginBottom: 48 }}><div><div className="eyebrow" style={{ color: "var(--rr-lime)" }}>Location</div><h2>Connected location,<br /><span className="rr-grad">made for everyday access.</span></h2></div></div><div className="osc-location__grid">{data.locationImage ? <Reveal className="osc-location__visual"><img src={data.locationImage} alt={`${data.title} location`} className="osc-location__img" /></Reveal> : null}<Reveal className="osc-location__info"><div className="osc-location__list">{data.locationDestinations.map((d, i) => <div key={d.name || i} className="osc-location__item"><span className="osc-location__name">{d.name}</span><span className="osc-location__dist">{d.dist}</span></div>)}</div>{data.locationMapEmbed ? <div className="osc-location__map-wrap"><iframe title={`${data.title} location map`} src={data.locationMapEmbed} width="100%" height="300" style={{ border: 0 }} loading="lazy" referrerPolicy="no-referrer-when-downgrade" /></div> : null}</Reveal></div></div></section> : null}
-
-        {data.galleryImages.length ? <section className="section-pad osc-section" id="gallery"><div className="rr-wrap"><div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: 16 }}>Gallery</div><h2 className="osc-section__title">A closer look<br /><span className="rr-grad">at the project.</span></h2><div className="osc-gallery__grid" style={{ marginTop: 32 }}>{data.galleryImages.map((img, i) => <Reveal key={img.src || i} delay={(i % 4) * 50} className={`osc-gallery__item ${i === 0 ? "osc-gallery__item--wide" : ""}`}><div className="osc-gallery__btn"><img src={img.src} alt={img.alt || data.title} className="osc-gallery__img" loading="lazy" /></div></Reveal>)}</div></div></section> : null}
-
-        <BrochureCta data={data} onBrochure={onBrochure} />
+        <ProjectLocation data={data} />
+        <ProjectEnquiryCTA data={data} onEnquire={onBrochure} />
+        <ProjectFaq data={data} />
+        <RelatedProjects slug={data.slug} preferredSlugs={data.relatedProjectSlugs} />
       </main>
       <Footer />
       {brochurePopup ? <BrochurePopup data={data} onClose={() => setBrochurePopup(false)} /> : null}

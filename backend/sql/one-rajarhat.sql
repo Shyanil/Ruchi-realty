@@ -1,21 +1,21 @@
 -- ============================================================
--- SQL Setup & Seeding: "One Rajarhat" Project + Subpage
--- 1. Inserts the project row if missing
--- 2. Inserts or updates the subpage content (using local paths)
+-- SQL Setup & Seeding: One Rajarhat Editable Sections
 -- Run this in your Supabase SQL Editor.
+-- Safe to re-run: upserts by project_id.
+-- Enables editing of all sections (Overview, Specifications, Amenities,
+-- Location, Floor Plans, Gallery, Walkthrough, Reviews, Brochure) directly from Admin panel (/admin).
 -- ============================================================
 
 DO $$
 DECLARE
   v_project_id uuid;
 BEGIN
-  -- 1. Check if the project "One Rajarhat" already exists
+  -- 1. Get or create the "One Rajarhat" project row
   SELECT id INTO v_project_id 
   FROM public.projects 
   WHERE title ILIKE '%One Rajarhat%' 
   LIMIT 1;
 
-  -- 2. If it doesn't exist, create it
   IF v_project_id IS NULL THEN
     INSERT INTO public.projects (
       id,
@@ -34,9 +34,9 @@ BEGIN
       gen_random_uuid(),
       'One Rajarhat',
       'Ready to Move',
-      '/projects/one-rajarhat/hero.webp',
+      'assets/projects/one-rajarhat/hero.jpg',
       'Rajarhat, Kolkata',
-      'The lavish property of ONE RAJARHAT is situated in the smart and planned area of Rajarhat, Kolkata. The luxury residential apartments consist of 3 BHK and 4 BHK apartments and the serviced apartments consist of 1 BHK, 2 BHK and 3 BHK apartments and come with premium floorings and furnishings, making the destination a plush home for one and all.',
+      'The lavish property of ONE RAJARHAT is situated in the smart and planned area of Rajarhat, Kolkata.',
       'Residential',
       'Ready to Move',
       true,
@@ -46,7 +46,7 @@ BEGIN
     RETURNING id INTO v_project_id;
   END IF;
 
-  -- 3. Insert or update the project subpage mapping
+  -- 2. Upsert project subpage details
   INSERT INTO public.project_subpages (
     project_id, 
     hero_title, 
@@ -72,7 +72,7 @@ BEGIN
     'One Rajarhat',
     'For a world-class living at the heart of the city of joy, step into the one!',
     '/projects/one-rajarhat/logo.webp',
-    '/projects/one-rajarhat/hero.webp',
+    'assets/projects/one-rajarhat/hero.jpg',
     
     $json$[
       "The lavish property of ONE RAJARHAT is situated in the smart and planned area of Rajarhat, Kolkata. The luxury residential apartments consist of 3 BHK and 4 BHK apartments and the serviced apartments consist of 1 BHK, 2 BHK and 3 BHK apartments and come with premium floorings and furnishings, making the destination a plush home for one and all.",
@@ -99,25 +99,35 @@ BEGIN
     ]$json$::jsonb,
     
     $json$[
-      {"title": "STRUCTURE", "desc": "Earthquake resistant RCC frame structure."},
-      {"title": "WALLS", "desc": "Brickwork / AAC Block walls with plastering."},
-      {"title": "CEILING", "desc": "Plaster of Paris finish."},
-      {"title": "FLOORING", "desc": "Imported Marble / Premium Vitrified tiles in living/dining. Wooden flooring in master bedroom. Anti-skid ceramic tiles in toilets and kitchen."},
-      {"title": "KITCHEN", "desc": "Granite counter top with stainless steel sink. Premium ceramic tile dado up to 2 feet above counter."},
-      {"title": "TOILET", "desc": "Premium sanitary ware (Kohler/Toto or equivalent). CP fittings of Jaguar/Kohler or equivalent. Designer ceramic tiles on walls up to 7 feet."},
-      {"title": "DOORS & WINDOWS", "desc": "Main entrance door in solid flush door with veneer. Internal flush doors. Powder-coated aluminum windows."},
-      {"title": "WALL FINISH", "desc": "Interior - Plaster of Paris. Exterior - Combination of Textured Paint / Paint Finish."},
-      {"title": "ELECTRICAL", "desc": "Concealed copper wiring with modular switches of Havells/Legrand or equivalent. AC points in all bedrooms and living room."},
-      {"title": "COMMON FACILITIES", "desc": "Double height decorated entrance lobby. 24x7 security with CCTV surveillance. Advanced fire detection and fighting systems. High-speed elevators. 100% power backup for common areas."},
-      {"title": "__hero_mobile_url__", "desc": "/projects/one-rajarhat/hero.webp"},
+      {
+        "title": "Earthquake-Resistant Structure & Masonry",
+        "desc": "Engineered RCC frame structure built for maximum earthquake safety. Precision brickwork and AAC block walls with smooth Plaster of Paris interior finishing.",
+        "image": "/projects/one-rajarhat/gallery-aerial-photo.webp"
+      },
+      {
+        "title": "Imported Marble & Hardwood Flooring",
+        "desc": "Living and dining areas featuring imported marble and premium vitrified tiles. Master bedrooms with warm wooden laminate flooring, anti-skid ceramic tiles in kitchens and bathrooms, and veneer finish main entrance doors.",
+        "image": "/projects/one-rajarhat/gallery-living-room.webp"
+      },
+      {
+        "title": "High-End Sanitary & Modular Fittings",
+        "desc": "Premium sanitary ware and CP fittings from Kohler/Toto/Jaquar. Polished granite kitchen countertops with stainless steel sinks and designer ceramic wall tiles up to 7 feet.",
+        "image": "/projects/one-rajarhat/gallery-master-bedroom.webp"
+      },
+      {
+        "title": "Advanced Electrification & Common Facilities",
+        "desc": "Concealed copper wiring with modular switches (Havells/Legrand), VRV/split AC provision, double-height grand entrance lobby, 24/7 CCTV surveillance, high-speed elevators, and 100% power backup for common areas.",
+        "image": "/projects/one-rajarhat/gallery-lobby.webp"
+      },
+      {"title": "__hero_mobile_url__", "desc": "assets/projects/one-rajarhat/hero.jpg"},
       {"title": "__company_logo_url__", "desc": "/projects/one-rajarhat/ruchi-logo.webp"},
-      {"title": "__location_map_url__", "desc": "/projects/one-rajarhat/seo-image.webp"},
+      {"title": "__location_map_url__", "desc": "/projects/one-rajarhat/location-map.webp"},
       {"title": "__floor_plans__", "desc": "[{\"title\":\"Master Plan\",\"desc\":\"/projects/one-rajarhat/master-plan.webp\"},{\"title\":\"Typical Floor Plan\",\"desc\":\"/projects/one-rajarhat/floor-plan.webp\"}]"},
       {"title": "__video_section__", "desc": "{\"enabled\":true,\"videoUrl\":\"https://youtu.be/sathFPYaJ6A\",\"thumbnailUrl\":\"\"}"},
       {"title": "__gmb_reviews__", "desc": "{\"enabled\":false,\"googleIconUrl\":\"\",\"starIconUrl\":\"\",\"reviews\":[]}"}
     ]$json$::jsonb,
     
-    '/projects/one-rajarhat/seo-image.webp',
+    '/projects/one-rajarhat/location-map.webp',
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3684.0931557008127!2d88.47352331535198!3d22.57608198518174!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02753a8cca9bbf%3A0xb351b88e1465e94b!2sOne%20Rajarhat!5e0!3m2!1sen!2sin!4v1691753123456!5m2!1sen!2sin',
     
     $json$[
@@ -131,24 +141,24 @@ BEGIN
       {"name": "DLF IT Park", "dist": "2.2 km"}
     ]$json$::jsonb,
     
-    '',
+    'https://youtu.be/sathFPYaJ6A',
     
     $json$[
       {"src": "/projects/one-rajarhat/gallery-swimming-pool.webp", "alt": "Swimming Pool"},
       {"src": "/projects/one-rajarhat/gallery-car-parking.webp", "alt": "Car Parking"},
       {"src": "/projects/one-rajarhat/gallery-terrace-view.webp", "alt": "Terrace View"},
       {"src": "/projects/one-rajarhat/gallery-badminton-court.webp", "alt": "Badminton Court"},
-      {"src": "/projects/one-rajarhat/gallery-banquet.webp", "alt": "Banquet"},
-      {"src": "/projects/one-rajarhat/gallery-gym.webp", "alt": "Gymnasium"},
-      {"src": "/projects/one-rajarhat/gallery-living-room.webp", "alt": "Living Room"},
-      {"src": "/projects/one-rajarhat/gallery-lobby.webp", "alt": "Lobby"},
-      {"src": "/projects/one-rajarhat/gallery-master-bedroom.webp", "alt": "Master Bedroom"},
-      {"src": "/projects/one-rajarhat/gallery-aerial-photo.webp", "alt": "Aerial Photo"},
-      {"src": "/projects/one-rajarhat/gallery-night-view.webp", "alt": "Night View"}
+      {"src": "/projects/one-rajarhat/gallery-banquet.webp", "alt": "Banquet Hall"},
+      {"src": "/projects/one-rajarhat/gallery-gym.webp", "alt": "State-of-the-Art Gymnasium"},
+      {"src": "/projects/one-rajarhat/gallery-living-room.webp", "alt": "Spacious Living Room"},
+      {"src": "/projects/one-rajarhat/gallery-lobby.webp", "alt": "Double Height Entrance Lobby"},
+      {"src": "/projects/one-rajarhat/gallery-master-bedroom.webp", "alt": "Luxury Master Bedroom"},
+      {"src": "/projects/one-rajarhat/gallery-aerial-photo.webp", "alt": "Aerial View of One Rajarhat"},
+      {"src": "/projects/one-rajarhat/gallery-night-view.webp", "alt": "Night Elevation View"}
     ]$json$::jsonb,
     
     '/projects/one-rajarhat/brochure.pdf',
-    'One Rajarhat â€” Luxury Residential & Serviced Apartments in Rajarhat, Kolkata | Ruchi Realty',
+    'One Rajarhat — Luxury Residential & Serviced Apartments in Rajarhat, Kolkata | Ruchi Realty',
     'Discover One Rajarhat by Ruchi Realty. Offers ultra-luxury 1, 2, 3 & 4 BHK residential and serviced apartments in Rajarhat, Kolkata, featuring world-class amenities.',
     true
   )
@@ -169,5 +179,6 @@ BEGIN
     brochure_url = EXCLUDED.brochure_url,
     meta_title = EXCLUDED.meta_title,
     meta_description = EXCLUDED.meta_description,
-    is_published = EXCLUDED.is_published;
+    is_published = EXCLUDED.is_published,
+    updated_at = timezone('utc'::text, now());
 END $$;

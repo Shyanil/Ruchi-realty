@@ -98,6 +98,11 @@
   const projectSlugForTitle = (title = "", location = "") => {
     const key = title.toLowerCase().trim();
     const place = location.toLowerCase().trim();
+    if (key.includes("active business park")) return "active-business-park";
+    if (key.includes("active acres") || key.includes("angelica")) return "active-acres-angelica";
+    if (key.includes("active greens") || key.includes("active green")) return "active-greens";
+    if (key.includes("one rajarhat")) return "one-rajarhat";
+    if (key.includes("one prime")) return "one-prime-residential";
     if (key.includes("one victoria") && place.includes("kolkata")) return "one-victoria-new-town";
     if (key.includes("ruchi lifescapes") && place.includes("bhopal")) return "lifescapes-bhopal";
     if (key.includes("ruchi lifescapes") && place.includes("indore")) return "ruchi-lifescapes-indore-project";
@@ -116,11 +121,11 @@
     const key = title.toLowerCase().trim();
     const place = location.toLowerCase().trim();
     if (key.includes("one victoria") && place.includes("kolkata")) return "/projects/one-victoria-new-town";
-    if (key.includes("oscar") && key.includes("billion")) return "/oscar-indore";
-    if (key.includes("active greens") || key.includes("active green")) return "/active-greens";
-    if (key.includes("one rajarhat")) return "/one-rajarhat";
+    if (key.includes("oscar") && key.includes("billion")) return "/projects/oscar-indore";
+    if (key.includes("active greens") || key.includes("active green")) return "/projects/active-greens";
+    if (key.includes("one rajarhat")) return "/projects/one-rajarhat";
     if (key.includes("one prime")) return "/projects/one-prime-residential";
-    if (key.includes("active business park")) return "/active-business-park";
+    if (key.includes("active business park")) return "/projects/active-business-park";
     if (key.includes("ruchi lifescapes") && place.includes("bhopal")) return "/projects/lifescapes-bhopal";
     if (key.includes("ruchi lifescapes") && place.includes("indore")) return "/projects/ruchi-lifescapes-indore-project";
     if (key.includes("anand vihar") && place.includes("indore")) return "/projects/anand-vihar-indore";
@@ -131,7 +136,7 @@
     if (key.includes("oscar fort") && place.includes("indore")) return "/projects/oscar-fort-indore";
     if (key.includes("oscar pride") && place.includes("indore")) return "/projects/oscar-pride-indore";
     if (key.includes("oscar palace") && place.includes("indore")) return "/projects/oscar-palace";
-    if (key.includes("active acres") || key.includes("angelica")) return "/active-acres-angelica";
+    if (key.includes("active acres") || key.includes("angelica")) return "/projects/active-acres-angelica";
     return "";
   };
 
@@ -632,16 +637,26 @@
     heroTagline: sp.hero_tagline || "",
     heroLogo: sp.hero_logo || "",
     heroBg: sp.hero_bg || "",
+    heroMobileUrl: sp.hero_mobile_url || "",
+    heroImagePosition: sp.hero_image_position || "center center",
+    heroImageFit: sp.hero_image_fit || "cover",
     overviewParagraphs: Array.isArray(sp.overview_paragraphs) ? sp.overview_paragraphs : [],
     overviewHighlights: Array.isArray(sp.overview_highlights) ? sp.overview_highlights : [],
     amenities: Array.isArray(sp.amenities) ? sp.amenities : [],
     specifications: Array.isArray(sp.specifications) ? sp.specifications : [],
+    specificationImage: sp.specification_image || "",
+    floorPlans: Array.isArray(sp.floor_plans) ? sp.floor_plans : [],
     locationImage: sp.location_image || "",
     locationMapEmbed: sp.location_map_embed || "",
     locationDestinations: Array.isArray(sp.location_destinations) ? sp.location_destinations : [],
     walkthroughVideoId: sp.walkthrough_video_id || "",
+    videos: Array.isArray(sp.videos) ? sp.videos : [],
     galleryImages: Array.isArray(sp.gallery_images) ? sp.gallery_images : [],
     brochureUrl: sp.brochure_url || "",
+    faqs: Array.isArray(sp.faqs) ? sp.faqs : [],
+    relatedProjectSlugs: Array.isArray(sp.related_project_slugs) ? sp.related_project_slugs : [],
+    ctaLabels: sp.cta_labels && typeof sp.cta_labels === "object" ? sp.cta_labels : {},
+    ogImage: sp.og_image || "",
     metaTitle: sp.meta_title || "",
     metaDescription: sp.meta_description || "",
     isPublished: Boolean(sp.is_published),
@@ -653,28 +668,38 @@
     hero_tagline: sp.heroTagline || "",
     hero_logo: sp.heroLogo || "",
     hero_bg: sp.heroBg || "",
+    hero_mobile_url: sp.heroMobileUrl || "",
+    hero_image_position: sp.heroImagePosition || "center center",
+    hero_image_fit: sp.heroImageFit || "cover",
     overview_paragraphs: Array.isArray(sp.overviewParagraphs) ? sp.overviewParagraphs : [],
     overview_highlights: Array.isArray(sp.overviewHighlights) ? sp.overviewHighlights : [],
     amenities: Array.isArray(sp.amenities) ? sp.amenities : [],
     specifications: Array.isArray(sp.specifications) ? sp.specifications : [],
+    specification_image: sp.specificationImage || "",
+    floor_plans: Array.isArray(sp.floorPlans) ? sp.floorPlans : [],
     location_image: sp.locationImage || "",
     location_map_embed: sp.locationMapEmbed || "",
     location_destinations: Array.isArray(sp.locationDestinations) ? sp.locationDestinations : [],
     walkthrough_video_id: sp.walkthroughVideoId || "",
+    videos: Array.isArray(sp.videos) ? sp.videos : [],
     gallery_images: Array.isArray(sp.galleryImages) ? sp.galleryImages : [],
     brochure_url: sp.brochureUrl || "",
+    faqs: Array.isArray(sp.faqs) ? sp.faqs : [],
+    related_project_slugs: Array.isArray(sp.relatedProjectSlugs) ? sp.relatedProjectSlugs : [],
+    cta_labels: sp.ctaLabels && typeof sp.ctaLabels === "object" ? sp.ctaLabels : {},
+    og_image: sp.ogImage || "",
     meta_title: sp.metaTitle || "",
     meta_description: sp.metaDescription || "",
     is_published: sp.isPublished ?? false,
   });
 
   const projectSubpagesService = {
-    async getByProjectId(projectId) {
+    async getByProjectId(projectId, options = {}) {
       const result = await rest("project_subpages", {
         select: "*",
         project_id: `eq.${projectId}`,
         limit: "1",
-      });
+      }, options);
       return result.error ? result : { data: result.data?.[0] ? normalizeSubpage(result.data[0]) : null, error: null };
     },
     async upsert(subpage) {
@@ -684,7 +709,7 @@
         select: "id",
         project_id: `eq.${project_id}`,
         limit: "1",
-      });
+      }, { auth: true });
       if (existing.data?.[0]) {
         const result = await rest("project_subpages", {
           project_id: `eq.${project_id}`,

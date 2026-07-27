@@ -101,12 +101,10 @@ export default function Hero() {
 
   return (
     <section className={`hero${videoReady ? " hero--video-ready" : ""}${videoFailed ? " hero--video-fallback" : ""}`} id="top">
-      <div className="hero__poster" aria-hidden="true"></div>
       <video
         ref={vid}
         className="hero__video"
         src={SHOWREEL}
-        poster="/uploads/hero-active-acres.webp"
         autoPlay
         loop
         playsInline

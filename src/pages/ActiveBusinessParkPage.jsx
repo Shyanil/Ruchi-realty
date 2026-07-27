@@ -2,16 +2,31 @@ import ProjectSplitHero from "../components/ProjectSplitHero";
 import { useState, useEffect, useCallback } from "react";
 import Nav from "../components/Nav";
 import { Footer } from "../components/Footer";
-import { Reveal } from "../components/shared";
+import { Reveal, RImg } from "../components/shared";
 import { PROJECT_OPTIONS } from "../data/projects";
 
 const BASE = "assets/projects/active-business-park";
 
+function videoEmbedUrl(value = "") {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  if (/youtube\.com\/embed\//i.test(text) || /player\.vimeo\.com\/video\//i.test(text)) return text;
+  const vimeo = text.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
+  if (vimeo?.[1]) return `https://player.vimeo.com/video/${vimeo[1]}`;
+  const watch = text.match(/[?&]v=([^&]+)/i);
+  const short = text.match(/youtu\.be\/([^?&]+)/i);
+  const shorts = text.match(/youtube\.com\/shorts\/([^?&]+)/i);
+  const embed = text.match(/youtube\.com\/embed\/([^?&]+)/i);
+  const id = watch?.[1] || short?.[1] || shorts?.[1] || embed?.[1] || (/^[A-Za-z0-9_-]{8,}$/.test(text) ? text : "");
+  return id ? `https://www.youtube.com/embed/${id}` : text;
+}
+
 const SECTIONS = [
   { id: "overview", label: "Overview" },
+  { id: "specifications", label: "Specifications" },
   { id: "amenities", label: "Amenities" },
-  { id: "floor-plans", label: "Floor Plans" },
   { id: "location", label: "Location" },
+  { id: "floor-plans", label: "Floor Plans" },
   { id: "gallery", label: "Gallery" },
 ];
 
@@ -20,6 +35,29 @@ const HIGHLIGHTS = [
   { label: "Ample Amenities", desc: "Modern infrastructure, backup power and parking.", icon: `${BASE}/icon-amenities.webp` },
   { label: "Prime Location", desc: "Centrally located in Kolkata, 1.2 km off E.M. Bypass.", icon: `${BASE}/icon-location.webp` },
   { label: "Value Package", desc: "Office spaces starting at competitive pricing.", icon: `${BASE}/icon-value.webp` },
+];
+
+const SPECIFICATIONS = [
+  {
+    title: "Commercial & Business Hub",
+    desc: "Designed for a diverse mix of business activities including offices, banks, retail, health & wellness centers, food, IT/ITES, and green industries. Clear floor height of 3.4 metres with a hypermarket on the ground floor.",
+    image: `${BASE}/hero-1.webp`
+  },
+  {
+    title: "Strategic Connectivity",
+    desc: "Centrally located 1.2 km off E.M. Bypass, right off the Ma flyover connecting Park Street, Esplanade, Alipore to Salt Lake Sector 5, Rajarhat, and the Airport. Over 5,000 premium residences within a 2 km radius.",
+    image: `${BASE}/location-map.webp`
+  },
+  {
+    title: "Infrastructure & Logistics",
+    desc: "Modern passenger and freight lifts, 24x7 security with CCTV surveillance, intercom facility, 100% power backup, water treatment plant, facility management system, fire alarm & suppression, and dedicated truck bay for unloading goods.",
+    image: `${BASE}/hero-2.webp`
+  },
+  {
+    title: "Flexible Workspaces & Value Pricing",
+    desc: "Office spaces starting from 652 sq. ft. area at Rs 30 lakhs only, with single floor plate availability extending up to 33,000 sq. ft.",
+    image: `${BASE}/hero-1.webp`
+  }
 ];
 
 const AMENITIES = [
@@ -51,24 +89,26 @@ const DESTINATIONS = [
 const GALLERY_IMAGES = [
   { src: `${BASE}/hero-1.webp`, alt: "Active Business Park - Main Exterior View" },
   { src: `${BASE}/hero-2.webp`, alt: "Active Business Park - Perspective View" },
-  { src: `${BASE}/floor-ground.webp`, alt: "Ground Floor Plan" },
-  { src: `${BASE}/floor-1st.webp`, alt: "First Floor Plan" },
-  { src: `${BASE}/floor-2nd.webp`, alt: "Second Floor Plan" },
-  { src: `${BASE}/floor-3rd-6th.webp`, alt: "3rd - 6th Floor Plan" },
 ];
 
-const fallbackData = {
+export const ACTIVE_BUSINESS_PARK_FALLBACK = {
   heroTitle: "Active Business Park",
   heroTagline: "Designed for your business to reach new heights",
   heroLogo: `${BASE}/logo.webp`,
   heroBg: `${BASE}/hero-1.webp`,
   overviewParagraphs: [
-    "Active Business Park is designed not only as a commercial space, but as a space for business activities: offices, banks, retail, health, wellness centers, food, IT/ITES, green industries, etc. It is conceived as a workplace for growing corporate and business entrepreneurs in the city.",
-    "Strategic location near 5-star hotels, shopping malls, schools, airport, railway station, and CBDs. Centrally located in Kolkata, 1.2 km off Eastern Metropolitan Bypass, just off the Ma flyover. Connects Park Street, Esplanade, Alipore, Salt Lake Sector 5, Rajarhat, and airport route. Around 5000 premium residences within 2 km radius. Office spaces start from 652 sq ft at Rs 30 lakhs. Spaces can stretch up to 33,000 sq ft on a single floor."
+    "Active Business Park is designed not only as a commercial space, but as a space for concoction of business activities: offices, banks, retail, health, wellness centers, food, IT/ITES, green industries, etc. It is conceived as a workplace for growing corporate and business entrepreneurs in the city.",
+    "A strategic location, in the centre of various external economies, i.e., proximity of their business location to 5 star hotels, shopping malls, schools, airport, railway station and CBDs. Centrally located in the city, 1.2 km off Eastern Metropolitan Bypass, just off the “Ma” flyover, the speedway – which links the old CBD - Park Street, Esplanade, Alipore to the IT Hub in Salt Lake Sector 5, Rajarhat extending straight up to the airport. The area as on date has 5000 premium residences within a radius of 2 km.",
+    "Modern day amenities like: passenger and freight lift, CCTV cameras, intercom facility, power back up, water treatment plant, open and multi level car parking, 24 x 7 security, facility management system, clear floor height of 3.4 metres, fire alarm & truck bay for unloading of goods, Hypermarket on the ground floor will meet the daily needs of the neighboring populace.",
+    "Finally, all of the above in a value package: office spaces start from 652 sq ft area at the price of Rs 30 lakhs only. Spaces can stretch up to 33,000 sq ft on a single floor."
   ],
   overviewHighlights: HIGHLIGHTS,
   amenities: AMENITIES,
-  specifications: FLOOR_PLANS,
+  specifications: [
+    ...SPECIFICATIONS,
+    { title: "__floor_plans__", desc: JSON.stringify(FLOOR_PLANS) }
+  ],
+  floorPlans: FLOOR_PLANS,
   locationImage: `${BASE}/location-map.webp`,
   locationMapEmbed: "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7369.203955889171!2d88.390084!3d22.556578!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02768ef7551e65%3A0xd82fba81a29c5969!2sActive%20Business%20Park!5e0!3m2!1sen!2sin!4v1691752959217!5m2!1sen!2sin",
   locationDestinations: DESTINATIONS,
@@ -83,8 +123,18 @@ function HeroSection({ subpage, onBrochureClick }) {
   return <ProjectSplitHero subpage={subpage} title="Active Business Park" location="Kolkata" type="Commercial" slug="active-business-park" onBrochure={onBrochureClick} />;
 }
 
-function StickyNav() {
+function StickyNav({ subpage }) {
   const [active, setActive] = useState("overview");
+  const hasVideo = Boolean(videoEmbedUrl(subpage?.videoSection?.videoUrl || subpage?.walkthroughVideoId));
+  const sections = [
+    { id: "overview", label: "Overview" },
+    { id: "specifications", label: "Specifications" },
+    { id: "amenities", label: "Amenities" },
+    { id: "location", label: "Location" },
+    { id: "floor-plans", label: "Floor Plans" },
+    ...(hasVideo ? [{ id: "walkthrough", label: "Walkthrough" }] : []),
+    { id: "gallery", label: "Gallery" },
+  ];
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -93,13 +143,13 @@ function StickyNav() {
       });
     }, { threshold: 0.3, rootMargin: "-80px 0px 0px 0px" });
 
-    SECTIONS.forEach(({ id }) => {
+    sections.forEach(({ id }) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [sections]);
 
   const scrollTo = (id) => {
     const el = document.getElementById(id);
@@ -110,7 +160,7 @@ function StickyNav() {
     <nav className="osc-sticky-nav" aria-label="Section navigation">
       <div className="rr-wrap">
         <div className="osc-sticky-nav__inner">
-          {SECTIONS.map(({ id, label }) => (
+          {sections.map(({ id, label }) => (
             <button
               key={id}
               type="button"
@@ -156,6 +206,47 @@ function OverviewSection({ subpage }) {
   );
 }
 
+function SpecificationsSection({ subpage }) {
+  const rawSpecs = subpage.specifications || [];
+  const specs = rawSpecs.filter(
+    (item) => item?.title && !String(item.title).startsWith("__") && (item.desc || item.details)
+  );
+  if (!specs.length) return null;
+
+  return (
+    <section className="section-pad project-section project-specifications" id="specifications">
+      <div className="rr-wrap">
+        <Reveal>
+          <div className="project-section__head">
+            <span className="eyebrow">Specifications</span>
+            <h2>Materials and details,<br /><span className="rr-grad">presented clearly.</span></h2>
+          </div>
+        </Reveal>
+        <div className="project-spec-list">
+          {specs.map((spec, index) => {
+            const image = spec.image || spec.img || spec.src || `${BASE}/hero-1.webp`;
+            const descText = spec.desc || spec.details || "";
+            return (
+              <article className={`project-spec-row ${index % 2 ? "is-reversed" : ""}`} key={spec.title || index}>
+                <div className="project-spec-row__visual">
+                  <RImg src={image} alt={`Active Business Park ${spec.title}`} />
+                </div>
+                <div className="project-spec-row__content">
+                  <span className="project-spec-row__number">{String(index + 1).padStart(2, "0")}</span>
+                  <h3>{spec.title}</h3>
+                  <div className="project-spec-points">
+                    <p><span>{descText}</span></p>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function AmenitiesSection({ subpage }) {
   return (
     <section className="section-pad osc-section osc-section--dark" id="amenities">
@@ -194,7 +285,7 @@ function AmenitiesSection({ subpage }) {
 
 function FloorPlansSection({ subpage }) {
   const [activePlanIdx, setActivePlanIdx] = useState(0);
-  const plans = subpage.specifications || [];
+  const plans = subpage.floorPlans?.length ? subpage.floorPlans : FLOOR_PLANS;
 
   if (!plans.length) return null;
 
@@ -249,6 +340,41 @@ function FloorPlansSection({ subpage }) {
   );
 }
 
+function WalkthroughSection({ subpage }) {
+  const videoUrl = subpage.videoSection?.videoUrl || subpage.walkthroughVideoId || "";
+  const embed = videoEmbedUrl(videoUrl);
+  if (!embed) return null;
+
+  return (
+    <section className="section-pad osc-section osc-section--dark" id="walkthrough">
+      <div className="rr-wrap">
+        <Reveal>
+          <div className="sec-head sec-head--dark" style={{ marginBottom: 40 }}>
+            <div>
+              <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>Walkthrough</div>
+              <h2>{subpage.videoSection?.title || "Construction Walkthrough"}<br /><span className="rr-grad">project video.</span></h2>
+            </div>
+          </div>
+        </Reveal>
+        <Reveal>
+          <div className="osc-modern-video-frame" style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", background: "#111", borderRadius: 8, overflow: "hidden", boxShadow: "0 24px 70px rgba(0,0,0,.28)" }}>
+            <iframe
+              title={subpage.videoSection?.title || "Active Business Park Walkthrough"}
+              src={embed}
+              width="100%"
+              height="100%"
+              style={{ border: 0, position: "absolute", inset: 0 }}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              loading="lazy"
+            />
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 function LocationSection({ subpage }) {
   return (
     <section className="section-pad osc-section osc-section--dark" id="location">
@@ -296,68 +422,131 @@ function LocationSection({ subpage }) {
 }
 
 function GallerySection({ subpage }) {
-  const [lightbox, setLightbox] = useState(null);
-  const images = subpage.galleryImages || [];
+  const images = (subpage.galleryImages || []).filter((img) => img?.src);
+  const [galleryStart, setGalleryStart] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
 
   useEffect(() => {
-    if (lightbox !== null) {
+    if (lightboxIndex !== null) {
       document.body.classList.add("nav-locked");
-      const onKey = (e) => { if (e.key === "Escape") setLightbox(null); };
+      const onKey = (e) => {
+        if (e.key === "Escape") setLightboxIndex(null);
+        if (e.key === "ArrowLeft") setLightboxIndex((p) => (p === 0 ? images.length - 1 : p - 1));
+        if (e.key === "ArrowRight") setLightboxIndex((p) => (p === images.length - 1 ? 0 : p + 1));
+      };
       window.addEventListener("keydown", onKey);
-      return () => { document.body.classList.remove("nav-locked"); window.removeEventListener("keydown", onKey); };
+      return () => {
+        document.body.classList.remove("nav-locked");
+        window.removeEventListener("keydown", onKey);
+      };
     }
-  }, [lightbox]);
+  }, [lightboxIndex, images.length]);
 
   if (!images.length) return null;
 
+  const visibleIndexes = Array.from(
+    { length: Math.min(3, images.length) },
+    (_, idx) => (galleryStart + idx) % images.length
+  );
+
+  const moveGallery = (dir) => {
+    setGalleryStart((prev) => (prev + dir + images.length) % images.length);
+  };
+
+  const moveLightbox = (dir) => {
+    setLightboxIndex((prev) => (prev + dir + images.length) % images.length);
+  };
+
   return (
-    <section className="section-pad osc-section" id="gallery">
+    <section className="section-pad project-section project-gallery osc-section" id="gallery">
       <div className="rr-wrap">
         <Reveal>
-          <div className="sec-head" style={{ marginBottom: "48px" }}>
+          <div className="sec-head" style={{ marginBottom: "40px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-indigo)" }}>GALLERY</div>
-              <h2>A glimpse into<br /><span className="rr-grad">Active Business Park.</span></h2>
+              <h2>A closer look<br /><span className="rr-grad">at Active Business Park.</span></h2>
             </div>
           </div>
         </Reveal>
-        <div className="osc-gallery__grid">
-          {images.map((img, i) => (
-            <Reveal key={img.src || i} delay={(i % 4) * 60} className={`osc-gallery__item ${i === 0 ? "osc-gallery__item--wide" : ""}`}>
-              <button type="button" className="osc-gallery__btn" onClick={() => setLightbox(i)} aria-label={`View ${img.alt}`}>
-                <img src={img.src} alt={img.alt} loading="lazy" className="osc-gallery__img" />
-                <span className="osc-gallery__zoom">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /><path d="M11 8v6M8 11h6" />
-                  </svg>
-                </span>
+
+        <Reveal className="project-gallery-trio">
+          {visibleIndexes.map((imgIdx) => {
+            const img = images[imgIdx];
+            return (
+              <button
+                type="button"
+                key={`${img.src}-${imgIdx}`}
+                onClick={() => setLightboxIndex(imgIdx)}
+                aria-label={`Open ${img.alt || `Active Business Park gallery image ${imgIdx + 1}`}`}
+              >
+                <div className="rimg" style={{ width: "100%", height: "100%", borderRadius: "10px", overflow: "hidden" }}>
+                  <img
+                    src={img.src}
+                    alt={img.alt || `Active Business Park gallery ${imgIdx + 1}`}
+                    loading="lazy"
+                    className="rimg__img"
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                </div>
               </button>
-            </Reveal>
-          ))}
-        </div>
+            );
+          })}
+        </Reveal>
+
+        {images.length > 3 && (
+          <Reveal className="project-gallery-trio__controls">
+            <span>
+              {String(galleryStart + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
+            </span>
+            <button
+              type="button"
+              onClick={() => moveGallery(-1)}
+              aria-label="Previous gallery images"
+            >
+              ←
+            </button>
+            <button
+              type="button"
+              onClick={() => moveGallery(1)}
+              aria-label="Next gallery images"
+            >
+              →
+            </button>
+          </Reveal>
+        )}
       </div>
 
-      {lightbox !== null && images[lightbox] && (
-        <div className="osc-lightbox" onClick={() => setLightbox(null)}>
-          <button type="button" className="osc-lightbox__close" onClick={() => setLightbox(null)} aria-label="Close gallery">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
+      {lightboxIndex !== null && images[lightboxIndex] && (
+        <div className="project-gallery-lightbox" role="dialog" aria-modal="true" onClick={() => setLightboxIndex(null)}>
+          <button type="button" className="project-gallery-lightbox__close" onClick={() => setLightboxIndex(null)} aria-label="Close">
+            ×
           </button>
-          <button type="button" className="osc-lightbox__arrow osc-lightbox__arrow--prev" onClick={(e) => { e.stopPropagation(); setLightbox(lightbox === 0 ? images.length - 1 : lightbox - 1); }} aria-label="Previous">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
-            </svg>
-          </button>
-          <div className="osc-lightbox__content" onClick={(e) => e.stopPropagation()}>
-            <img src={images[lightbox].src} alt={images[lightbox].alt} className="osc-lightbox__img" />
-            <p className="osc-lightbox__caption">{images[lightbox].alt}</p>
+          {images.length > 1 && (
+            <button
+              type="button"
+              className="project-gallery-lightbox__arrow is-prev"
+              onClick={(e) => { e.stopPropagation(); moveLightbox(-1); }}
+              aria-label="Previous image"
+            >
+              ←
+            </button>
+          )}
+          <div className="project-gallery-lightbox__image" onClick={(e) => e.stopPropagation()}>
+            <img src={images[lightboxIndex].src} alt={images[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            <span>
+              {String(lightboxIndex + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
+            </span>
           </div>
-          <button type="button" className="osc-lightbox__arrow osc-lightbox__arrow--next" onClick={(e) => { e.stopPropagation(); setLightbox(lightbox === images.length - 1 ? 0 : lightbox + 1); }} aria-label="Next">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
-            </svg>
-          </button>
+          {images.length > 1 && (
+            <button
+              type="button"
+              className="project-gallery-lightbox__arrow is-next"
+              onClick={(e) => { e.stopPropagation(); moveLightbox(1); }}
+              aria-label="Next image"
+            >
+              →
+            </button>
+          )}
         </div>
       )}
     </section>
@@ -462,7 +651,7 @@ function CtaSection({ subpage, onBrochureClick }) {
 export default function ActiveBusinessParkPage() {
   const [brochurePopup, setBrochurePopup] = useState(false);
   const [navHidden, setNavHidden] = useState(false);
-  const [subpage, setSubpage] = useState(fallbackData);
+  const [subpage, setSubpage] = useState(ACTIVE_BUSINESS_PARK_FALLBACK);
 
   const onContact = useCallback(() => {
     setBrochurePopup(true);
@@ -477,30 +666,45 @@ export default function ActiveBusinessParkPage() {
         if (!active) return;
         
         const project = (projects || []).find(
-          (p) => p.url === "/active-business-park" || p.title === "Active Business Park"
+          (p) => p.url === "/active-business-park" || p.url === "/projects/active-business-park" || p.title === "Active Business Park"
         );
         
         if (project) {
           const { data: sp } = await window.RuchiBackend.projectSubpages.getByProjectId(project.id);
           if (!active) return;
           if (sp) {
+            const custom = { specifications: [], floorPlans: [], videoSection: null };
+            (sp.specifications || []).forEach((item) => {
+              if (item.title === "__floor_plans__") {
+                try { custom.floorPlans = JSON.parse(item.desc || "[]"); } catch {}
+              } else if (item.title === "__video_section__") {
+                try { custom.videoSection = JSON.parse(item.desc || "{}"); } catch {}
+              } else if (!String(item.title || "").startsWith("__")) {
+                custom.specifications.push(item);
+              }
+            });
+
+            const videoUrl = custom.videoSection?.videoUrl || sp.walkthroughVideoId || "";
+
             setSubpage({
-              heroTitle: sp.heroTitle || fallbackData.heroTitle,
-              heroTagline: sp.heroTagline || fallbackData.heroTagline,
-              heroLogo: sp.heroLogo || fallbackData.heroLogo,
-              heroBg: sp.heroBg || fallbackData.heroBg,
-              overviewParagraphs: sp.overviewParagraphs?.length ? sp.overviewParagraphs : fallbackData.overviewParagraphs,
-              overviewHighlights: sp.overviewHighlights?.length ? sp.overviewHighlights : fallbackData.overviewHighlights,
-              amenities: sp.amenities?.length ? sp.amenities : fallbackData.amenities,
-              specifications: sp.specifications?.length ? sp.specifications : fallbackData.specifications,
-              locationImage: sp.locationImage || fallbackData.locationImage,
-              locationMapEmbed: sp.locationMapEmbed || fallbackData.locationMapEmbed,
-              locationDestinations: sp.locationDestinations?.length ? sp.locationDestinations : fallbackData.locationDestinations,
-              walkthroughVideoId: sp.walkthroughVideoId || fallbackData.walkthroughVideoId,
-              galleryImages: sp.galleryImages?.length ? sp.galleryImages : fallbackData.galleryImages,
-              brochureUrl: sp.brochureUrl || fallbackData.brochureUrl,
-              metaTitle: sp.metaTitle || fallbackData.metaTitle,
-              metaDescription: sp.metaDescription || fallbackData.metaDescription,
+              heroTitle: sp.heroTitle || ACTIVE_BUSINESS_PARK_FALLBACK.heroTitle,
+              heroTagline: sp.heroTagline || ACTIVE_BUSINESS_PARK_FALLBACK.heroTagline,
+              heroLogo: sp.heroLogo || ACTIVE_BUSINESS_PARK_FALLBACK.heroLogo,
+              heroBg: sp.heroBg || ACTIVE_BUSINESS_PARK_FALLBACK.heroBg,
+              overviewParagraphs: sp.overviewParagraphs?.length ? sp.overviewParagraphs : ACTIVE_BUSINESS_PARK_FALLBACK.overviewParagraphs,
+              overviewHighlights: sp.overviewHighlights?.length ? sp.overviewHighlights : ACTIVE_BUSINESS_PARK_FALLBACK.overviewHighlights,
+              amenities: sp.amenities?.length ? sp.amenities : ACTIVE_BUSINESS_PARK_FALLBACK.amenities,
+              specifications: custom.specifications.length ? custom.specifications : (sp.specifications?.length ? sp.specifications : ACTIVE_BUSINESS_PARK_FALLBACK.specifications),
+              floorPlans: custom.floorPlans.length ? custom.floorPlans : (sp.floorPlans?.length ? sp.floorPlans : ACTIVE_BUSINESS_PARK_FALLBACK.floorPlans),
+              locationImage: sp.locationImage || ACTIVE_BUSINESS_PARK_FALLBACK.locationImage,
+              locationMapEmbed: sp.locationMapEmbed || ACTIVE_BUSINESS_PARK_FALLBACK.locationMapEmbed,
+              locationDestinations: sp.locationDestinations?.length ? sp.locationDestinations : ACTIVE_BUSINESS_PARK_FALLBACK.locationDestinations,
+              walkthroughVideoId: videoUrl,
+              videoSection: custom.videoSection || { enabled: Boolean(videoUrl), title: "Construction Walkthrough", videoUrl },
+              galleryImages: sp.galleryImages?.length ? sp.galleryImages.filter(img => !img.src?.includes("floor-")) : ACTIVE_BUSINESS_PARK_FALLBACK.galleryImages,
+              brochureUrl: sp.brochureUrl || ACTIVE_BUSINESS_PARK_FALLBACK.brochureUrl,
+              metaTitle: sp.metaTitle || ACTIVE_BUSINESS_PARK_FALLBACK.metaTitle,
+              metaDescription: sp.metaDescription || ACTIVE_BUSINESS_PARK_FALLBACK.metaDescription,
             });
           }
         }
@@ -523,7 +727,7 @@ export default function ActiveBusinessParkPage() {
   }, [brochurePopup]);
 
   useEffect(() => {
-    document.title = subpage.metaTitle || fallbackData.metaTitle;
+    document.title = subpage.metaTitle || ACTIVE_BUSINESS_PARK_FALLBACK.metaTitle;
     let meta = document.querySelector('meta[name="description"]');
     let created = false;
     if (!meta) {
@@ -531,7 +735,7 @@ export default function ActiveBusinessParkPage() {
       meta.name = "description";
       created = true;
     }
-    meta.content = subpage.metaDescription || fallbackData.metaDescription;
+    meta.content = subpage.metaDescription || ACTIVE_BUSINESS_PARK_FALLBACK.metaDescription;
     if (created) {
       document.head.appendChild(meta);
     }
@@ -545,11 +749,13 @@ export default function ActiveBusinessParkPage() {
       <Nav onContact={onContact} hidden={navHidden} solid />
       <main>
         <HeroSection subpage={subpage} onBrochureClick={() => setBrochurePopup(true)} />
-        <StickyNav />
+        <StickyNav subpage={subpage} />
         <OverviewSection subpage={subpage} />
+        <SpecificationsSection subpage={subpage} />
         <AmenitiesSection subpage={subpage} />
-        <FloorPlansSection subpage={subpage} />
         <LocationSection subpage={subpage} />
+        <FloorPlansSection subpage={subpage} />
+        <WalkthroughSection subpage={subpage} />
         <GallerySection subpage={subpage} />
         <CtaSection subpage={subpage} onBrochureClick={() => setBrochurePopup(true)} />
       </main>

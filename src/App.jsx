@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useLayoutEffect } from 'react'
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import ProjectsPage from './pages/ProjectsPage'
@@ -14,23 +14,26 @@ import PressReleaseDetailPage from './pages/PressReleaseDetailPage'
 import EventsAwardsPage from './pages/EventsAwardsPage'
 import AwardsPage from './pages/AwardsPage'
 import AdminPage from './pages/AdminPage'
-import OscarPage from './pages/OscarPage'
-import ActiveBusinessParkPage from './pages/ActiveBusinessParkPage'
-import ActiveAcresAngelicaPage from './pages/ActiveAcresAngelicaPage'
-import ActiveGreensPage from './pages/ActiveGreensPage'
-import OneRajarhatPage from './pages/OneRajarhatPage'
-import OnePrimeResidentialPage from './pages/OnePrimeResidentialPage'
 import GenericProjectPage from './pages/GenericProjectPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import DisclaimerPage from './pages/DisclaimerPage'
 
 function ScrollToTop() {
-  const { pathname, hash } = useLocation();
+  const { pathname, hash, key } = useLocation();
 
   useEffect(() => {
+    if (!("scrollRestoration" in window.history)) return undefined;
+    window.history.scrollRestoration = "manual";
+    return () => { window.history.scrollRestoration = "auto"; };
+  }, []);
+
+  useLayoutEffect(() => {
     if (!hash) {
-      window.scrollTo(0, 0);
-      return;
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      const frame = window.requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      });
+      return () => window.cancelAnimationFrame(frame);
     }
 
     const targetId = decodeURIComponent(hash.slice(1));
@@ -47,7 +50,8 @@ function ScrollToTop() {
     };
 
     window.setTimeout(scrollToHash, 0);
-  }, [pathname, hash]);
+    return undefined;
+  }, [pathname, hash, key]);
 
   return null;
 }
@@ -58,18 +62,18 @@ export default function App() {
       <ScrollToTop />
       <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/oscar-indore" element={<OscarPage />} />
-      <Route path="/Oscar.html" element={<OscarPage />} />
-      <Route path="/active-business-park" element={<ActiveBusinessParkPage />} />
-      <Route path="/ActiveBusinessPark.html" element={<ActiveBusinessParkPage />} />
-      <Route path="/active-acres-angelica" element={<ActiveAcresAngelicaPage />} />
-      <Route path="/ActiveAcresAngelica.html" element={<ActiveAcresAngelicaPage />} />
-      <Route path="/active-greens" element={<ActiveGreensPage />} />
-      <Route path="/ActiveGreens.html" element={<ActiveGreensPage />} />
-      <Route path="/one-rajarhat" element={<OneRajarhatPage />} />
-      <Route path="/one-prime-residential" element={<OnePrimeResidentialPage />} />
-      <Route path="/projects/one-prime-residential" element={<OnePrimeResidentialPage />} />
-      <Route path="/OneRajarhat.html" element={<OneRajarhatPage />} />
+      <Route path="/oscar-indore" element={<Navigate to="/projects/oscar-indore" replace />} />
+      <Route path="/Oscar.html" element={<Navigate to="/projects/oscar-indore" replace />} />
+      <Route path="/active-business-park" element={<Navigate to="/projects/active-business-park" replace />} />
+      <Route path="/ActiveBusinessPark.html" element={<Navigate to="/projects/active-business-park" replace />} />
+      <Route path="/active-acres-angelica" element={<Navigate to="/projects/active-acres-angelica" replace />} />
+      <Route path="/ActiveAcresAngelica.html" element={<Navigate to="/projects/active-acres-angelica" replace />} />
+      <Route path="/active-greens" element={<Navigate to="/projects/active-greens" replace />} />
+      <Route path="/ActiveGreens.html" element={<Navigate to="/projects/active-greens" replace />} />
+      <Route path="/one-rajarhat" element={<Navigate to="/projects/one-rajarhat" replace />} />
+      <Route path="/one-prime-residential" element={<Navigate to="/projects/one-prime-residential" replace />} />
+      <Route path="/projects/one-prime-residential" element={<GenericProjectPage slugOverride="one-prime-residential" />} />
+      <Route path="/OneRajarhat.html" element={<Navigate to="/projects/one-rajarhat" replace />} />
       <Route path="/projects" element={<ProjectsPage />} />
       <Route path="/one-victoria" element={<Navigate to="/projects/one-victoria-new-town" replace />} />
       <Route path="/one-victoria-new-town" element={<Navigate to="/projects/one-victoria-new-town" replace />} />

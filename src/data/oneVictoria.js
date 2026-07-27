@@ -34,8 +34,8 @@ export const ONE_VICTORIA_FALLBACK = {
     { name: "Star Gazing Deck", icon: "lounge" },
   ],
   specifications: [
-    { title: "Location Context", desc: "At One Victoria, the best of East Kolkata is outside your doorstep. Whether you travel by metro, cab or flight, commuting from one place to another will be simplified beyond your expectations." },
-    { title: "Project Details", desc: "Residential + Retail / Apartment Complex. RERA: WBRERA/P/NOR/2024/001080. Phone: 033 6902 9144. Email: info@ruchirealty.com" },
+    { title: "Location Context", desc: "At One Victoria, the best of East Kolkata is outside your doorstep. Whether you travel by metro, cab or flight, commuting from one place to another will be simplified beyond your expectations.", image: `${BASE}/gallery/gallery-1.webp` },
+    { title: "Project Details", desc: "Residential + Retail / Apartment Complex. RERA: WBRERA/P/NOR/2024/001080. Phone: 033 6902 9144. Email: info@ruchirealty.com", image: `${BASE}/gallery/gallery-2.webp` },
     { title: "__hero_mobile_url__", desc: `${BASE}/hero-mobile.webp` },
     { title: "__company_logo_url__", desc: `${BASE}/company-logo.png` },
     { title: "__floor_plans__", desc: JSON.stringify([
@@ -43,7 +43,7 @@ export const ONE_VICTORIA_FALLBACK = {
       { title: "Star Gazing Deck", desc: `${BASE}/plans/star-gazing-deck.jpg` },
       { title: "Podium Plan", desc: `${BASE}/plans/podium-plan.jpg` },
     ]) },
-    { title: "__video_section__", desc: JSON.stringify({ enabled: false, videoUrl: "", thumbnailUrl: "" }) },
+    { title: "__video_section__", desc: JSON.stringify({ enabled: false, title: "Project Walkthrough", videoUrl: "", thumbnailUrl: "" }) },
   ],
   locationImage: `${BASE}/location.webp`,
   locationMapEmbed: "",

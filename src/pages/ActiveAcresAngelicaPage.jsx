@@ -91,9 +91,9 @@ function extractSpecsAndCustomData(specifications) {
   };
 }
 
-const fallbackData = {
-  heroTitle: "Active Acres Angelica",
-  heroTagline: "Premium High-Rise Residential Living",
+export const ACTIVE_ACRES_ANGELICA_FALLBACK = {
+  heroTitle: "Angelica Active Acres",
+  heroTagline: "Spread over 16.38 Acres with 6 towers of G+22 comprising 1050 Apartments",
   heroLogo: "assets/projects/active-acres-angelica/logo.png",
   heroBg: "assets/projects/active-acres-angelica/hero.webp",
   heroMobileUrl: "assets/projects/active-acres-angelica/hero-sm.webp",
@@ -102,38 +102,66 @@ const fallbackData = {
   gmbGoogleIconUrl: "assets/projects/active-acres-angelica/g-icon.png",
   gmbStarIconUrl: "assets/projects/active-acres-angelica/5-star.png",
   overviewParagraphs: [
-    "Angelica is the premium high-rise residential tower at Active Acres, Kolkata. Located strategically in Tangra, it offers beautifully crafted 3 BHK and 4 BHK residences designed for modern families seeking a balance of luxury, community, and serenity.",
-    "With sprawling green landscape features, state-of-the-art amenities, and unmatched connectivity to E.M. Bypass, Salt Lake Sector V, and Park Street, Angelica is the ultimate address to grow, live, and create beautiful memories with your loved ones."
+    "One of the largest condominium projects of Kolkata, Active Acres, is spread over 16.38 Acres. It has 6 towers of G+22 comprising of 1050 Apartments, containing a mix of 2, 3 & 4 BHK apartments with Penthouses. The idea behind ‘Active Acres’ has been to provide the residents with a superior quality of life. Architects at Agarwal and Agarwal have utilized all their skill and innovation to bring to life the dream of a revolutionary residential complex.",
+    "Located strategically behind JW Marriott in Tangra, Kolkata, Active Acres Angelica offers unmatched connectivity to E.M. Bypass, Salt Lake Sector V, Park Street, top schools, and international healthcare facilities. With over 6 acres of dedicated outdoor recreational space and world-class clubhouse amenities, it provides an elevated lifestyle for discerning homeowners."
   ],
   overviewHighlights: [
-    { label: "Prime Location", desc: "Located in Tangra, just off the E.M. Bypass connector.", icon: "location" },
-    { label: "Spacious Living", desc: "Thoughtfully designed 3 BHK & 4 BHK apartments.", icon: "home" },
-    { label: "Rich Amenities", desc: "Exclusive gymnasium, library, and table tennis.", icon: "amenities" },
-    { label: "Secure Living", desc: "24/7 gated security with CCTV surveillance.", icon: "security" }
+    { label: "Possession", desc: "September' 2026", icon: "location" },
+    { label: "Location", desc: "Behind JW Marriott, Kolkata", icon: "home" },
+    { label: "Flats Type", desc: "4 BHK 2.30 Cr* onwards", icon: "amenities" },
+    { label: "Outdoor Space", desc: "6 Acres", icon: "security" },
+    { label: "Total Land Area", desc: "16.38 Acres", icon: "size" },
+    { label: "Towers & Height", desc: "6 Towers (G+22)", icon: "infrastructure" },
+    { label: "Total Units", desc: "1050 Apartments", icon: "home" },
+    { label: "Architects", desc: "Agarwal & Agarwal", icon: "infrastructure" }
   ],
   amenities: [
     { name: "Gymnasium", icon: "gym" },
     { name: "Library", icon: "library" },
-    { name: "Table Tennis", icon: "table-tennis" }
+    { name: "Table Tennis", icon: "table-tennis" },
+    { name: "Meditation Room", icon: "meditation" },
+    { name: "Lounge", icon: "lounge" },
+    { name: "Squash Courts", icon: "squash" },
+    { name: "Pool Table", icon: "pool" },
+    { name: "Air Hockey", icon: "hockey" },
+    { name: "Football Ground", icon: "football" },
+    { name: "Play Zone – Billiards Table", icon: "billiards" }
   ],
   specifications: [
-    { title: "Lush Central Lawn", desc: "Beautifully manicured lawns providing open green spaces for residents." },
-    { title: "Kids Play Area", desc: "A safe and vibrant outdoor play area designed for children." },
-    { title: "Senior Citizen Corner", desc: "Quiet, comfortable seating zones set in landscaped surroundings." },
-    { title: "Paved Walkways", desc: "Dedicated jogging and walking tracks running throughout the community." }
+    {
+      title: "High Speed Elevators & Infrastructure",
+      desc: "Equipped with high-speed passenger elevators, 24 Hours treated water supply, 100% power backup for common areas, underground electric cabling, concrete and interlocking pebble roads, and advanced fire fighting arrangements.",
+      image: "assets/projects/active-acres-angelica/gallery-1.webp"
+    },
+    {
+      title: "Round-the-Clock CCTV & Safety",
+      desc: "Gated residential community with 24/7 security personnel, comprehensive CCTV surveillance, and intercom facility connecting every apartment to the main security entrance.",
+      image: "assets/projects/active-acres-angelica/gallery-2.webp"
+    },
+    {
+      title: "Sprawling 6-Acre Outdoor Recreation",
+      desc: "Features 6 acres of landscaped outdoor spaces including manicured lawns, football ground, play zones, paved walking tracks, and peaceful seating areas.",
+      image: "assets/projects/active-acres-angelica/gallery-3.webp"
+    },
+    {
+      title: "Grand Condominium Architecture",
+      desc: "Designed by renowned architects Agarwal & Agarwal across 16.38 acres featuring 6 towers of G+22 with 1050 apartments, offering a blend of 2, 3 & 4 BHK apartments and penthouses.",
+      image: "assets/projects/active-acres-angelica/gallery-4.webp"
+    }
   ],
   floorPlans: [
-    { title: "3 BHK Unit Plan", desc: "assets/projects/active-acres-angelica/location-map.jpg" },
-    { title: "4 BHK Unit Plan", desc: "assets/projects/active-acres-angelica/location-map.jpg" }
+    { title: "Master Plan", desc: "assets/projects/active-acres-angelica/location-map.jpg" },
+    { title: "4 BHK Unit Plan", desc: "assets/projects/active-acres-angelica/location-map.jpg" },
+    { title: "3 BHK Unit Plan", desc: "assets/projects/active-acres-angelica/location-map.jpg" }
   ],
   locationImage: "assets/projects/active-acres-angelica/location-map.jpg",
   locationMapEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3684.636603099951!2d88.38883597603706!3d22.555291233633633!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02768f51a44c79%3A0xe5a13318281cb9f2!2sActive%20Acres!5e0!3m2!1sen!2sin!4v1691752959217!5m2!1sen!2sin",
   locationDestinations: [
-    { name: "E.M. Bypass", dist: "1.0 km" },
-    { name: "ITC Sonar", dist: "1.5 km" },
-    { name: "Science City", dist: "2.0 km" },
-    { name: "Park Street", dist: "4.5 km" },
-    { name: "Kolkata Airport", dist: "16.0 km" }
+    { name: "JW Marriott", dist: "1 km" },
+    { name: "Hospital", dist: "3 km" },
+    { name: "Well Known Schools", dist: "2 km" },
+    { name: "Mall", dist: "2 km" },
+    { name: "International Airport", dist: "20 km" }
   ],
   videoSection: {
     enabled: true,
@@ -160,7 +188,7 @@ const fallbackData = {
   ],
   brochureUrl: "assets/projects/active-acres-angelica/brochure.pdf",
   metaTitle: "Active Acres Angelica | Premium 3 & 4 BHK Apartments in Kolkata | Ruchi Realty",
-  metaDescription: "Explore Active Acres Angelica by Ruchi Realty. Located in Kolkata, this premium residential project offers luxury 3 BHK and 4 BHK apartments with world-class amenities."
+  metaDescription: "Explore Active Acres Angelica by Ruchi Realty. Located behind JW Marriott, Kolkata, this premium residential project offers luxury 3 BHK and 4 BHK apartments with 6 acres of outdoor space."
 };
 
 function HeroSection({ subpage, onBrochureClick }) {
@@ -172,8 +200,8 @@ function StickyNav({ subpage }) {
 
   const sections = [
     { id: "overview", label: "Overview" },
+    subpage.specifications?.length > 0 && { id: "specifications", label: "Specifications" },
     subpage.amenities?.length > 0 && { id: "amenities", label: "Amenities" },
-    subpage.specifications?.length > 0 && { id: "landscape", label: "Landscape" },
     subpage.floorPlans?.length > 0 && { id: "floor-plans", label: "Floor Plans" },
     subpage.galleryImages?.length > 0 && { id: "gallery", label: "Gallery" },
     (subpage.videoSection?.enabled && subpage.videoSection?.videoUrl) && { id: "walkthrough", label: "Walkthrough" },
@@ -228,7 +256,7 @@ function OverviewSection({ subpage }) {
         <Reveal>
           <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>OVERVIEW</div>
           <h2 className="osc-section__title">
-            Spacious residences<br /><span className="rr-grad">crafted for elevated living.</span>
+            One of Kolkata's Largest Condominiums,<br /><span className="rr-grad">spread over 16.38 Acres.</span>
           </h2>
         </Reveal>
         <div className="osc-overview__grid">
@@ -253,6 +281,47 @@ function OverviewSection({ subpage }) {
   );
 }
 
+function SpecificationsSection({ subpage }) {
+  const rawSpecs = subpage.specifications || [];
+  const specs = rawSpecs.filter(
+    (item) => item?.title && !String(item.title).startsWith("__") && (item.desc || item.details)
+  );
+  if (!specs.length) return null;
+
+  return (
+    <section className="section-pad project-section project-specifications" id="specifications">
+      <div className="rr-wrap">
+        <Reveal>
+          <div className="project-section__head">
+            <span className="eyebrow">Specifications</span>
+            <h2>Architecture and features,<br /><span className="rr-grad">crafted to perfection.</span></h2>
+          </div>
+        </Reveal>
+        <div className="project-spec-list">
+          {specs.map((spec, index) => {
+            const image = spec.image || spec.img || spec.src || `assets/projects/active-acres-angelica/gallery-${(index % 4) + 1}.webp`;
+            const descText = spec.desc || spec.details || "";
+            return (
+              <article className={`project-spec-row ${index % 2 ? "is-reversed" : ""}`} key={spec.title || index}>
+                <div className="project-spec-row__visual">
+                  <img src={image} alt={`Angelica ${spec.title}`} loading="lazy" />
+                </div>
+                <div className="project-spec-row__content">
+                  <span className="project-spec-row__number">{String(index + 1).padStart(2, "0")}</span>
+                  <h3>{spec.title}</h3>
+                  <div className="project-spec-points">
+                    <p><span>{descText}</span></p>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function AmenitiesSection({ subpage }) {
   if (!subpage.amenities || !subpage.amenities.length) return null;
 
@@ -263,10 +332,10 @@ function AmenitiesSection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>AMENITIES</div>
-              <h2>Premium leisure,<br /><span className="rr-grad">tailored for you.</span></h2>
+              <h2>World-class amenities,<br /><span className="rr-grad">tailored for complete luxury.</span></h2>
             </div>
             <p className="sec-head__lead">
-              Active Acres Angelica features a thoughtful array of modern amenities designed to refresh, connect, and elevate your daily routine.
+              Active Acres Angelica features a rich array of indoor and outdoor leisure facilities designed for wellness, sports, and recreation.
             </p>
           </div>
         </Reveal>
@@ -282,60 +351,8 @@ function AmenitiesSection({ subpage }) {
                     <img src={iconKey} alt={a.name} style={{ width: "32px", height: "32px", objectFit: "contain" }} />
                   ) : (
                     <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: "24px", height: "24px" }}>
-                      {iconKey === "pool" && (
-                        <>
-                          <path d="M6 40h36M6 36h36" />
-                          <path d="M10 36V20a6 6 0 0 1 12 0v16M26 36V20a6 6 0 0 1 12 0v16" />
-                          <path d="M10 28h12M26 28h12" />
-                        </>
-                      )}
-                      {iconKey === "gym" && (
-                        <>
-                          <path d="M6 26h36" />
-                          <path d="M10 22v8" />
-                          <path d="M14 18v12" />
-                          <path d="M24 14v20" />
-                          <path d="M34 18v12" />
-                          <path d="M38 22v8" />
-                        </>
-                      )}
-                      {iconKey === "library" && (
-                        <path d="M8 39.5A2.5 2.5 0 0 1 10.5 37H40M8 39.5A2.5 2.5 0 0 0 10.5 42H40M8 39.5v-30A2.5 2.5 0 0 1 10.5 7H40v30H10.5A2.5 2.5 0 0 1 8 39.5z" />
-                      )}
-                      {iconKey === "table-tennis" && (
-                        <>
-                          <circle cx="20" cy="20" r="6" />
-                          <path d="M14 26l-5 5M20 20l4 4" />
-                          <circle cx="34" cy="14" r="3" />
-                        </>
-                      )}
-                      {iconKey === "hall" && (
-                        <>
-                          <rect x="6" y="14" width="36" height="20" rx="2" />
-                          <path d="M6 34v4h36v-4" />
-                          <path d="M22 20h4v8h-4z" />
-                        </>
-                      )}
-                      {iconKey === "badminton" && (
-                        <>
-                          <circle cx="24" cy="24" r="2" fill="currentColor" />
-                          <path d="M24 22V6M24 26v16M14 14l14 14M20 10l14 14" />
-                          <path d="M34 14l-14 14" />
-                        </>
-                      )}
-                      {iconKey === "tennis" && (
-                        <>
-                          <circle cx="24" cy="24" r="18" />
-                          <path d="M24 6a18 18 0 0 0 0 36" />
-                          <path d="M6 24h36" />
-                        </>
-                      )}
-                      {!["pool", "gym", "library", "table-tennis", "hall", "badminton", "tennis"].includes(iconKey) && (
-                        <>
-                          <circle cx="24" cy="24" r="18" />
-                          <path d="M12 24h24M24 12v24" />
-                        </>
-                      )}
+                      <circle cx="24" cy="24" r="18" />
+                      <path d="M12 24h24M24 12v24" />
                     </svg>
                   )}
                 </div>
@@ -343,36 +360,6 @@ function AmenitiesSection({ subpage }) {
               </Reveal>
             );
           })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function LandscapeFeaturesSection({ subpage }) {
-  if (!subpage.specifications || !subpage.specifications.length) return null;
-
-  return (
-    <section className="section-pad osc-section" id="landscape">
-      <div className="rr-wrap">
-        <Reveal>
-          <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>LANDSCAPE</div>
-          <h2 className="osc-section__title">
-            Natural landscape<br /><span className="rr-grad">and modern features.</span>
-          </h2>
-        </Reveal>
-        <div className="osc-specs__layout">
-          <Reveal className="osc-specs__visual">
-            <img src={subpage.galleryImages?.[2]?.src || subpage.heroBg || fallbackData.heroBg} alt="Angelica Landscape" loading="lazy" className="osc-specs__img" />
-          </Reveal>
-          <div className="osc-specs__cards">
-            {subpage.specifications.map((s, i) => (
-              <Reveal key={s.title || i} delay={i * 70} className="osc-spec-card">
-                <h4 className="osc-spec-card__title">{s.title}</h4>
-                <p className="osc-spec-card__desc">{s.desc}</p>
-              </Reveal>
-            ))}
-          </div>
         </div>
       </div>
     </section>
@@ -439,68 +426,131 @@ function FloorPlansSection({ subpage }) {
 }
 
 function GallerySection({ subpage }) {
-  const [lightbox, setLightbox] = useState(null);
-  const images = subpage.galleryImages || [];
+  const images = (subpage.galleryImages || []).filter((img) => img?.src);
+  const [galleryStart, setGalleryStart] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
 
   useEffect(() => {
-    if (lightbox !== null) {
+    if (lightboxIndex !== null) {
       document.body.classList.add("nav-locked");
-      const onKey = (e) => { if (e.key === "Escape") setLightbox(null); };
+      const onKey = (e) => {
+        if (e.key === "Escape") setLightboxIndex(null);
+        if (e.key === "ArrowLeft") setLightboxIndex((p) => (p === 0 ? images.length - 1 : p - 1));
+        if (e.key === "ArrowRight") setLightboxIndex((p) => (p === images.length - 1 ? 0 : p + 1));
+      };
       window.addEventListener("keydown", onKey);
-      return () => { document.body.classList.remove("nav-locked"); window.removeEventListener("keydown", onKey); };
+      return () => {
+        document.body.classList.remove("nav-locked");
+        window.removeEventListener("keydown", onKey);
+      };
     }
-  }, [lightbox]);
+  }, [lightboxIndex, images.length]);
 
   if (!images.length) return null;
 
+  const visibleIndexes = Array.from(
+    { length: Math.min(3, images.length) },
+    (_, idx) => (galleryStart + idx) % images.length
+  );
+
+  const moveGallery = (dir) => {
+    setGalleryStart((prev) => (prev + dir + images.length) % images.length);
+  };
+
+  const moveLightbox = (dir) => {
+    setLightboxIndex((prev) => (prev + dir + images.length) % images.length);
+  };
+
   return (
-    <section className="section-pad osc-section osc-section--dark" id="gallery">
+    <section className="section-pad project-section project-gallery osc-section osc-section--dark" id="gallery">
       <div className="rr-wrap">
         <Reveal>
-          <div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}>
+          <div className="sec-head sec-head--dark" style={{ marginBottom: "40px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>GALLERY</div>
               <h2>A glimpse into<br /><span className="rr-grad">the Angelica lifestyle.</span></h2>
             </div>
           </div>
         </Reveal>
-        <div className="osc-gallery__grid">
-          {images.map((img, i) => (
-            <Reveal key={img.src || i} delay={(i % 4) * 60} className={`osc-gallery__item ${i === 0 ? "osc-gallery__item--wide" : ""}`}>
-              <button type="button" className="osc-gallery__btn" onClick={() => setLightbox(i)} aria-label={`View ${img.alt}`}>
-                <img src={img.src} alt={img.alt} loading="lazy" className="osc-gallery__img" />
-                <span className="osc-gallery__zoom">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /><path d="M11 8v6M8 11h6" />
-                  </svg>
-                </span>
+
+        <Reveal className="project-gallery-trio">
+          {visibleIndexes.map((imgIdx) => {
+            const img = images[imgIdx];
+            return (
+              <button
+                type="button"
+                key={`${img.src}-${imgIdx}`}
+                onClick={() => setLightboxIndex(imgIdx)}
+                aria-label={`Open ${img.alt || `Angelica gallery image ${imgIdx + 1}`}`}
+              >
+                <div className="rimg" style={{ width: "100%", height: "100%", borderRadius: "10px", overflow: "hidden" }}>
+                  <img
+                    src={img.src}
+                    alt={img.alt || `Angelica gallery ${imgIdx + 1}`}
+                    loading="lazy"
+                    className="rimg__img"
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                </div>
               </button>
-            </Reveal>
-          ))}
-        </div>
+            );
+          })}
+        </Reveal>
+
+        {images.length > 3 && (
+          <Reveal className="project-gallery-trio__controls">
+            <span>
+              {String(galleryStart + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
+            </span>
+            <button
+              type="button"
+              onClick={() => moveGallery(-1)}
+              aria-label="Previous gallery images"
+            >
+              ←
+            </button>
+            <button
+              type="button"
+              onClick={() => moveGallery(1)}
+              aria-label="Next gallery images"
+            >
+              →
+            </button>
+          </Reveal>
+        )}
       </div>
 
-      {lightbox !== null && images[lightbox] && (
-        <div className="osc-lightbox" onClick={() => setLightbox(null)}>
-          <button type="button" className="osc-lightbox__close" onClick={() => setLightbox(null)} aria-label="Close gallery">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
+      {lightboxIndex !== null && images[lightboxIndex] && (
+        <div className="project-gallery-lightbox" role="dialog" aria-modal="true" onClick={() => setLightboxIndex(null)}>
+          <button type="button" className="project-gallery-lightbox__close" onClick={() => setLightboxIndex(null)} aria-label="Close">
+            ×
           </button>
-          <button type="button" className="osc-lightbox__arrow osc-lightbox__arrow--prev" onClick={(e) => { e.stopPropagation(); setLightbox((p) => (p === 0 ? images.length - 1 : p - 1)); }} aria-label="Previous">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
-            </svg>
-          </button>
-          <div className="osc-lightbox__content" onClick={(e) => e.stopPropagation()}>
-            <img src={images[lightbox].src} alt={images[lightbox].alt} className="osc-lightbox__img" />
-            <p className="osc-lightbox__caption">{images[lightbox].alt}</p>
+          {images.length > 1 && (
+            <button
+              type="button"
+              className="project-gallery-lightbox__arrow is-prev"
+              onClick={(e) => { e.stopPropagation(); moveLightbox(-1); }}
+              aria-label="Previous image"
+            >
+              ←
+            </button>
+          )}
+          <div className="project-gallery-lightbox__image" onClick={(e) => e.stopPropagation()}>
+            <img src={images[lightboxIndex].src} alt={images[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            <span>
+              {String(lightboxIndex + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
+            </span>
           </div>
-          <button type="button" className="osc-lightbox__arrow osc-lightbox__arrow--next" onClick={(e) => { e.stopPropagation(); setLightbox((p) => (p === images.length - 1 ? 0 : p + 1)); }} aria-label="Next">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
-            </svg>
-          </button>
+          {images.length > 1 && (
+            <button
+              type="button"
+              className="project-gallery-lightbox__arrow is-next"
+              onClick={(e) => { e.stopPropagation(); moveLightbox(1); }}
+              aria-label="Next image"
+            >
+              →
+            </button>
+          )}
         </div>
       )}
     </section>
@@ -613,7 +663,7 @@ function GmbReviewsSection({ subpage }) {
 }
 
 function LocationSection({ subpage }) {
-  const mapUrl = subpage.locationImage || subpage.locationMapUrl || fallbackData.locationMapUrl;
+  const mapUrl = subpage.locationImage || subpage.locationMapUrl || ACTIVE_ACRES_ANGELICA_FALLBACK.locationMapUrl;
 
   return (
     <section className="section-pad osc-section osc-section--dark" id="location">
@@ -634,6 +684,9 @@ function LocationSection({ subpage }) {
           )}
           <Reveal delay={80} className="osc-location__info">
             <h3 className="osc-location__heading">Key Destinations</h3>
+            <p style={{ color: "rgba(245,244,241,0.62)", fontSize: "14px", lineHeight: "1.6", marginBottom: "24px" }}>
+              At Active Acres, the best of East Kolkata is outside your doorstep. Whether you are traveling by metro, cab, or train, commuting from one place to another is extremely simple. Located at a very prompt location connecting everywhere.
+            </p>
             <div className="osc-location__list">
               {(subpage.locationDestinations || []).map((d, i) => (
                 <div key={d.name || i} className="osc-location__item">
@@ -748,6 +801,9 @@ function CtaSection({ subpage, onBrochureClick }) {
           <button className="submit-btn" onClick={onBrochureClick} style={{ display: "inline-flex" }}>
             Download Brochure<span className="ar">→</span>
           </button>
+          <p style={{ fontSize: "12px", color: "rgba(35,31,32,0.45)", marginTop: "24px" }}>
+            HIRA Registration No: HIRA/P/KOL/2020/000778 | Contact: 03369029144 | info@ruchirealty.com
+          </p>
         </Reveal>
       </div>
     </section>
@@ -767,7 +823,7 @@ function MobileFixedCta({ onBrochureClick }) {
 export default function ActiveAcresAngelicaPage() {
   const [brochurePopup, setBrochurePopup] = useState(false);
   const [navHidden, setNavHidden] = useState(false);
-  const [subpage, setSubpage] = useState(fallbackData);
+  const [subpage, setSubpage] = useState(ACTIVE_ACRES_ANGELICA_FALLBACK);
 
   const onContact = useCallback(() => {
     setBrochurePopup(true);
@@ -782,40 +838,39 @@ export default function ActiveAcresAngelicaPage() {
         if (!active) return;
         
         const project = (projects || []).find(
-          (p) => p.url === "/active-acres-angelica" || p.title === "Active Acres Angelica" || p.slug === "active-acres-angelica"
+          (p) => p.url === "/active-acres-angelica" || p.url === "/projects/active-acres-angelica" || p.title === "Active Acres Angelica" || p.slug === "active-acres-angelica"
         );
         
         if (project) {
           const { data: sp } = await window.RuchiBackend.projectSubpages.getByProjectId(project.id);
           if (!active) return;
           if (sp) {
-            // Extract custom serialized specs fields
             const extracted = extractSpecsAndCustomData(sp.specifications);
 
             setSubpage({
-              heroTitle: sp.heroTitle || fallbackData.heroTitle,
-              heroTagline: sp.heroTagline || fallbackData.heroTagline,
-              heroLogo: sp.heroLogo || fallbackData.heroLogo,
-              heroBg: sp.heroBg || fallbackData.heroBg,
-              heroMobileUrl: extracted.heroMobileUrl || fallbackData.heroMobileUrl,
-              companyLogoUrl: extracted.companyLogoUrl || fallbackData.companyLogoUrl,
-              locationMapUrl: extracted.locationMapUrl || fallbackData.locationMapUrl,
-              gmbGoogleIconUrl: extracted.gmbGoogleIconUrl || fallbackData.gmbGoogleIconUrl,
-              gmbStarIconUrl: extracted.gmbStarIconUrl || fallbackData.gmbStarIconUrl,
-              overviewParagraphs: sp.overviewParagraphs?.length ? sp.overviewParagraphs : fallbackData.overviewParagraphs,
-              overviewHighlights: sp.overviewHighlights?.length ? sp.overviewHighlights : fallbackData.overviewHighlights,
-              amenities: sp.amenities?.length ? sp.amenities : fallbackData.amenities,
-              specifications: extracted.specifications?.length ? extracted.specifications : fallbackData.specifications,
-              floorPlans: extracted.floorPlans?.length ? extracted.floorPlans : fallbackData.floorPlans,
-              locationImage: sp.locationImage || fallbackData.locationImage,
-              locationMapEmbed: sp.locationMapEmbed || fallbackData.locationMapEmbed,
-              locationDestinations: sp.locationDestinations?.length ? sp.locationDestinations : fallbackData.locationDestinations,
-              videoSection: extracted.videoSection || fallbackData.videoSection,
-              gmbReviews: extracted.gmbReviews || fallbackData.gmbReviews,
-              galleryImages: sp.galleryImages?.length ? sp.galleryImages : fallbackData.galleryImages,
-              brochureUrl: sp.brochureUrl || fallbackData.brochureUrl,
-              metaTitle: sp.metaTitle || fallbackData.metaTitle,
-              metaDescription: sp.metaDescription || fallbackData.metaDescription,
+              heroTitle: sp.heroTitle || ACTIVE_ACRES_ANGELICA_FALLBACK.heroTitle,
+              heroTagline: sp.heroTagline || ACTIVE_ACRES_ANGELICA_FALLBACK.heroTagline,
+              heroLogo: sp.heroLogo || ACTIVE_ACRES_ANGELICA_FALLBACK.heroLogo,
+              heroBg: sp.heroBg || ACTIVE_ACRES_ANGELICA_FALLBACK.heroBg,
+              heroMobileUrl: extracted.heroMobileUrl || ACTIVE_ACRES_ANGELICA_FALLBACK.heroMobileUrl,
+              companyLogoUrl: extracted.companyLogoUrl || ACTIVE_ACRES_ANGELICA_FALLBACK.companyLogoUrl,
+              locationMapUrl: extracted.locationMapUrl || ACTIVE_ACRES_ANGELICA_FALLBACK.locationMapUrl,
+              gmbGoogleIconUrl: extracted.gmbGoogleIconUrl || ACTIVE_ACRES_ANGELICA_FALLBACK.gmbGoogleIconUrl,
+              gmbStarIconUrl: extracted.gmbStarIconUrl || ACTIVE_ACRES_ANGELICA_FALLBACK.gmbStarIconUrl,
+              overviewParagraphs: sp.overviewParagraphs?.length ? sp.overviewParagraphs : ACTIVE_ACRES_ANGELICA_FALLBACK.overviewParagraphs,
+              overviewHighlights: sp.overviewHighlights?.length ? sp.overviewHighlights : ACTIVE_ACRES_ANGELICA_FALLBACK.overviewHighlights,
+              amenities: sp.amenities?.length ? sp.amenities : ACTIVE_ACRES_ANGELICA_FALLBACK.amenities,
+              specifications: extracted.specifications?.length ? extracted.specifications : ACTIVE_ACRES_ANGELICA_FALLBACK.specifications,
+              floorPlans: extracted.floorPlans?.length ? extracted.floorPlans : ACTIVE_ACRES_ANGELICA_FALLBACK.floorPlans,
+              locationImage: sp.locationImage || ACTIVE_ACRES_ANGELICA_FALLBACK.locationImage,
+              locationMapEmbed: sp.locationMapEmbed || ACTIVE_ACRES_ANGELICA_FALLBACK.locationMapEmbed,
+              locationDestinations: sp.locationDestinations?.length ? sp.locationDestinations : ACTIVE_ACRES_ANGELICA_FALLBACK.locationDestinations,
+              videoSection: extracted.videoSection || ACTIVE_ACRES_ANGELICA_FALLBACK.videoSection,
+              gmbReviews: extracted.gmbReviews || ACTIVE_ACRES_ANGELICA_FALLBACK.gmbReviews,
+              galleryImages: sp.galleryImages?.length ? sp.galleryImages : ACTIVE_ACRES_ANGELICA_FALLBACK.galleryImages,
+              brochureUrl: sp.brochureUrl || ACTIVE_ACRES_ANGELICA_FALLBACK.brochureUrl,
+              metaTitle: sp.metaTitle || ACTIVE_ACRES_ANGELICA_FALLBACK.metaTitle,
+              metaDescription: sp.metaDescription || ACTIVE_ACRES_ANGELICA_FALLBACK.metaDescription,
             });
           }
         }
@@ -838,7 +893,7 @@ export default function ActiveAcresAngelicaPage() {
   }, [brochurePopup]);
 
   useEffect(() => {
-    document.title = subpage.metaTitle || fallbackData.metaTitle;
+    document.title = subpage.metaTitle || ACTIVE_ACRES_ANGELICA_FALLBACK.metaTitle;
     let meta = document.querySelector('meta[name="description"]');
     let created = false;
     if (!meta) {
@@ -846,7 +901,7 @@ export default function ActiveAcresAngelicaPage() {
       meta.name = "description";
       created = true;
     }
-    meta.content = subpage.metaDescription || fallbackData.metaDescription;
+    meta.content = subpage.metaDescription || ACTIVE_ACRES_ANGELICA_FALLBACK.metaDescription;
     if (created) {
       document.head.appendChild(meta);
     }
@@ -890,8 +945,8 @@ export default function ActiveAcresAngelicaPage() {
         <HeroSection subpage={subpage} onBrochureClick={() => setBrochurePopup(true)} />
         <StickyNav subpage={subpage} />
         <OverviewSection subpage={subpage} />
+        <SpecificationsSection subpage={subpage} />
         <AmenitiesSection subpage={subpage} />
-        <LandscapeFeaturesSection subpage={subpage} />
         <FloorPlansSection subpage={subpage} />
         <WalkthroughSection subpage={subpage} />
         <GallerySection subpage={subpage} />

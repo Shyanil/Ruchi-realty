@@ -7,7 +7,7 @@ import { PROJECT_OPTIONS } from "../data/projects";
 
 const BASE = "/projects/one-prime-residential";
 
-const fallbackData = {
+export const ONE_PRIME_RESIDENTIAL_FALLBACK = {
   heroTitle: "One Prime Residential",
   heroTagline: "A Smart Upgrade To Premium Living",
   heroLogo: `${BASE}/logo.webp`,
@@ -183,7 +183,7 @@ function OverviewSection({ subpage }) {
 
 function AmenitiesSection({ subpage }) {
   if (!subpage.amenities?.length) return null;
-  return <section className="section-pad osc-section osc-section--dark" id="amenities"><div className="rr-wrap"><Reveal><div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}><div><div className="eyebrow" style={{ color: "var(--rr-lime)" }}>AMENITIES</div><h2>Amenities & Facilities<br /><span className="rr-grad">for smoother everyday life.</span></h2></div><p className="sec-head__lead">{subpage.amenitiesIntro || fallbackData.amenitiesIntro}</p></div></Reveal><div className="osc-amenities__grid">{subpage.amenities.map((a, i) => <Reveal key={a.name || i} delay={i * 70} className="osc-amenity-card"><div className="osc-amenity-card__icon"><AmenityIcon icon={amenityKey(a)} /></div><h4 className="osc-amenity-card__name">{a.name}</h4></Reveal>)}</div></div></section>;
+  return <section className="section-pad osc-section osc-section--dark" id="amenities"><div className="rr-wrap"><Reveal><div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}><div><div className="eyebrow" style={{ color: "var(--rr-lime)" }}>AMENITIES</div><h2>Amenities & Facilities<br /><span className="rr-grad">for smoother everyday life.</span></h2></div><p className="sec-head__lead">{subpage.amenitiesIntro || ONE_PRIME_RESIDENTIAL_FALLBACK.amenitiesIntro}</p></div></Reveal><div className="osc-amenities__grid">{subpage.amenities.map((a, i) => <Reveal key={a.name || i} delay={i * 70} className="osc-amenity-card"><div className="osc-amenity-card__icon"><AmenityIcon icon={amenityKey(a)} /></div><h4 className="osc-amenity-card__name">{a.name}</h4></Reveal>)}</div></div></section>;
 }
 
 function FloorPlansSection({ subpage }) {
@@ -199,21 +199,140 @@ function WalkthroughSection({ subpage }) {
   return <section className="section-pad osc-section" id="walkthrough"><div className="rr-wrap"><Reveal><div className="sec-head" style={{ marginBottom: "40px" }}><div><div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>WALKTHROUGH</div><h2>Experience the project<br /><span className="rr-grad">through virtual tours.</span></h2></div></div></Reveal><div className="one-prime-videos">{videos.map((video, index) => <Reveal key={video.embedUrl} delay={index * 100} className="osc-video__visual one-prime-video"><h3 className="one-prime-video__title">{video.title}</h3><div className="one-prime-video__frame"><iframe title={`One Prime Residential ${video.title}`} src={video.embedUrl} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen /></div></Reveal>)}</div></div></section>;
 }
 
-function ImageGridSection({ id, eyebrow, title, accent, images, dark = false }) {
-  const [lightbox, setLightbox] = useState(null);
+function ImageGridSection({ id = "gallery", eyebrow = "GALLERY", title, accent, images = [], dark = false }) {
+  const list = (images || []).filter((img) => img?.src);
+  const [galleryStart, setGalleryStart] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
+
   useEffect(() => {
-    if (lightbox === null) return undefined;
-    document.body.classList.add("nav-locked");
-    const onKey = (e) => { if (e.key === "Escape") setLightbox(null); };
-    window.addEventListener("keydown", onKey);
-    return () => { document.body.classList.remove("nav-locked"); window.removeEventListener("keydown", onKey); };
-  }, [lightbox]);
-  if (!images?.length) return null;
-  return <section className={`section-pad osc-section ${dark ? "one-prime-gallery-section" : ""}`} id={id}><div className="rr-wrap"><Reveal><div className={`sec-head ${dark ? "sec-head--dark" : ""}`} style={{ marginBottom: "48px" }}><div><div className="eyebrow" style={{ color: dark ? "var(--rr-lime)" : "var(--rr-indigo)" }}>{eyebrow}</div><h2>{title}<br /><span className="rr-grad">{accent}</span></h2></div></div></Reveal><div className="osc-gallery__grid">{images.map((img, i) => <Reveal key={img.src || i} delay={(i % 4) * 60} className={`osc-gallery__item ${i === 0 ? "osc-gallery__item--wide" : ""}`}><button type="button" className="osc-gallery__btn" onClick={() => setLightbox(i)} aria-label={`View ${img.alt}`}><img src={img.src} alt={img.alt} loading="lazy" className="osc-gallery__img" /><span className="osc-gallery__zoom"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /><path d="M11 8v6M8 11h6" /></svg></span></button></Reveal>)}</div></div>{lightbox !== null && images[lightbox] ? <div className="osc-lightbox" onClick={() => setLightbox(null)}><button type="button" className="osc-lightbox__close" onClick={() => setLightbox(null)} aria-label="Close gallery">x</button><button type="button" className="osc-lightbox__arrow osc-lightbox__arrow--prev" onClick={(e) => { e.stopPropagation(); setLightbox(lightbox === 0 ? images.length - 1 : lightbox - 1); }} aria-label="Previous">&lt;</button><div className="osc-lightbox__content" onClick={(e) => e.stopPropagation()}><img src={images[lightbox].src} alt={images[lightbox].alt} className="osc-lightbox__img" /><p className="osc-lightbox__caption">{images[lightbox].alt}</p></div><button type="button" className="osc-lightbox__arrow osc-lightbox__arrow--next" onClick={(e) => { e.stopPropagation(); setLightbox(lightbox === images.length - 1 ? 0 : lightbox + 1); }} aria-label="Next">&gt;</button></div> : null}</section>;
+    if (lightboxIndex !== null) {
+      document.body.classList.add("nav-locked");
+      const onKey = (e) => {
+        if (e.key === "Escape") setLightboxIndex(null);
+        if (e.key === "ArrowLeft") setLightboxIndex((p) => (p === 0 ? list.length - 1 : p - 1));
+        if (e.key === "ArrowRight") setLightboxIndex((p) => (p === list.length - 1 ? 0 : p + 1));
+      };
+      window.addEventListener("keydown", onKey);
+      return () => {
+        document.body.classList.remove("nav-locked");
+        window.removeEventListener("keydown", onKey);
+      };
+    }
+  }, [lightboxIndex, list.length]);
+
+  if (!list.length) return null;
+
+  const visibleIndexes = Array.from(
+    { length: Math.min(3, list.length) },
+    (_, idx) => (galleryStart + idx) % list.length
+  );
+
+  const moveGallery = (dir) => {
+    setGalleryStart((prev) => (prev + dir + list.length) % list.length);
+  };
+
+  const moveLightbox = (dir) => {
+    setLightboxIndex((prev) => (prev + dir + list.length) % list.length);
+  };
+
+  return (
+    <section className={`section-pad project-section project-gallery osc-section ${dark ? "one-prime-gallery-section" : ""}`} id={id}>
+      <div className="rr-wrap">
+        <Reveal>
+          <div className={`sec-head ${dark ? "sec-head--dark" : ""}`} style={{ marginBottom: "40px" }}>
+            <div>
+              <div className="eyebrow" style={{ color: dark ? "var(--rr-lime)" : "var(--rr-indigo)" }}>{eyebrow}</div>
+              <h2>{title}<br /><span className="rr-grad">{accent}</span></h2>
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal className="project-gallery-trio">
+          {visibleIndexes.map((imgIdx) => {
+            const img = list[imgIdx];
+            return (
+              <button
+                type="button"
+                key={`${img.src}-${imgIdx}`}
+                onClick={() => setLightboxIndex(imgIdx)}
+                aria-label={`Open ${img.alt || `Gallery image ${imgIdx + 1}`}`}
+              >
+                <div className="rimg" style={{ width: "100%", height: "100%", borderRadius: "10px", overflow: "hidden" }}>
+                  <img
+                    src={img.src}
+                    alt={img.alt || `Gallery image ${imgIdx + 1}`}
+                    loading="lazy"
+                    className="rimg__img"
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                </div>
+              </button>
+            );
+          })}
+        </Reveal>
+
+        {list.length > 3 && (
+          <Reveal className="project-gallery-trio__controls">
+            <span>
+              {String(galleryStart + 1).padStart(2, "0")} / {String(list.length).padStart(2, "0")}
+            </span>
+            <button
+              type="button"
+              onClick={() => moveGallery(-1)}
+              aria-label="Previous gallery images"
+            >
+              ←
+            </button>
+            <button
+              type="button"
+              onClick={() => moveGallery(1)}
+              aria-label="Next gallery images"
+            >
+              →
+            </button>
+          </Reveal>
+        )}
+      </div>
+
+      {lightboxIndex !== null && list[lightboxIndex] && (
+        <div className="project-gallery-lightbox" role="dialog" aria-modal="true" onClick={() => setLightboxIndex(null)}>
+          <button type="button" className="project-gallery-lightbox__close" onClick={() => setLightboxIndex(null)} aria-label="Close">
+            ×
+          </button>
+          {list.length > 1 && (
+            <button
+              type="button"
+              className="project-gallery-lightbox__arrow is-prev"
+              onClick={(e) => { e.stopPropagation(); moveLightbox(-1); }}
+              aria-label="Previous image"
+            >
+              ←
+            </button>
+          )}
+          <div className="project-gallery-lightbox__image" onClick={(e) => e.stopPropagation()}>
+            <img src={list[lightboxIndex].src} alt={list[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            <span>
+              {String(lightboxIndex + 1).padStart(2, "0")} / {String(list.length).padStart(2, "0")}
+            </span>
+          </div>
+          {list.length > 1 && (
+            <button
+              type="button"
+              className="project-gallery-lightbox__arrow is-next"
+              onClick={(e) => { e.stopPropagation(); moveLightbox(1); }}
+              aria-label="Next image"
+            >
+              →
+            </button>
+          )}
+        </div>
+      )}
+    </section>
+  );
 }
 
 function LocationSection({ subpage }) {
-  return <section className="section-pad osc-section osc-section--dark" id="location"><div className="rr-wrap"><Reveal><div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}><div><div className="eyebrow" style={{ color: "var(--rr-lime)" }}>LOCATION</div><h2>Prime location,<br /><span className="rr-grad">unmatched connectivity.</span></h2></div></div></Reveal><div className="osc-location__grid"><Reveal className="osc-location__visual"><img src={subpage.locationImage} alt="One Prime Residential location map" loading="lazy" className="osc-location__img" /></Reveal><Reveal delay={80} className="osc-location__info"><h3 className="osc-location__heading">Newtown Action Area 1</h3><p style={{ color: "rgba(245,244,241,0.62)", fontSize: "14px", lineHeight: "1.6", marginBottom: "24px" }}>{subpage.locationIntro || fallbackData.locationIntro}</p>{subpage.locationDestinations?.length ? <div className="osc-location__list">{subpage.locationDestinations.map((d, i) => <div key={d.name || i} className="osc-location__item"><span className="osc-location__name">{d.name}</span><span className="osc-location__dist">{d.dist}</span></div>)}</div> : null}{subpage.locationMapEmbed ? <div className="osc-location__map-wrap"><iframe title="One Prime Residential location map" src={subpage.locationMapEmbed} width="100%" height="240" style={{ border: 0 }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade" /></div> : null}</Reveal></div></div></section>;
+  return <section className="section-pad osc-section osc-section--dark" id="location"><div className="rr-wrap"><Reveal><div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}><div><div className="eyebrow" style={{ color: "var(--rr-lime)" }}>LOCATION</div><h2>Prime location,<br /><span className="rr-grad">unmatched connectivity.</span></h2></div></div></Reveal><div className="osc-location__grid"><Reveal className="osc-location__visual"><img src={subpage.locationImage} alt="One Prime Residential location map" loading="lazy" className="osc-location__img" /></Reveal><Reveal delay={80} className="osc-location__info"><h3 className="osc-location__heading">Newtown Action Area 1</h3><p style={{ color: "rgba(245,244,241,0.62)", fontSize: "14px", lineHeight: "1.6", marginBottom: "24px" }}>{subpage.locationIntro || ONE_PRIME_RESIDENTIAL_FALLBACK.locationIntro}</p>{subpage.locationDestinations?.length ? <div className="osc-location__list">{subpage.locationDestinations.map((d, i) => <div key={d.name || i} className="osc-location__item"><span className="osc-location__name">{d.name}</span><span className="osc-location__dist">{d.dist}</span></div>)}</div> : null}{subpage.locationMapEmbed ? <div className="osc-location__map-wrap"><iframe title="One Prime Residential location map" src={subpage.locationMapEmbed} width="100%" height="240" style={{ border: 0 }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade" /></div> : null}</Reveal></div></div></section>;
 }
 
 function BrochurePopup({ subpage, onClose }) {
@@ -231,7 +350,7 @@ function BrochurePopup({ subpage, onClose }) {
         const { error: leadError } = await window.RuchiBackend.leads.submitLead({ ...form, interest: form.project, notes: form.message, source: "One Prime Residential page brochure download", project_slug: "one-prime-residential" });
         if (leadError) throw leadError;
       }
-      setSent(true); window.open(subpage.brochureUrl || fallbackData.brochureUrl, "_blank");
+      setSent(true); window.open(subpage.brochureUrl || ONE_PRIME_RESIDENTIAL_FALLBACK.brochureUrl, "_blank");
     } catch (err) { setError(err.message || "Failed to submit enquiry. Please try again."); }
     finally { setSending(false); }
   };
@@ -243,7 +362,7 @@ function MobileFixedCta({ onBrochureClick }) {
 }
 
 export default function OnePrimeResidentialPage() {
-  const [subpage, setSubpage] = useState(fallbackData);
+  const [subpage, setSubpage] = useState(ONE_PRIME_RESIDENTIAL_FALLBACK);
   const [brochurePopup, setBrochurePopup] = useState(false);
   const [navHidden, setNavHidden] = useState(false);
   const onContact = useCallback(() => setBrochurePopup(true), []);
@@ -263,7 +382,7 @@ export default function OnePrimeResidentialPage() {
         const walkthroughVideoSection = sp.walkthroughVideoId
           ? { enabled: true, videos: [{ title: "Project Walkthrough", videoUrl: sp.walkthroughVideoId.length === 11 ? `https://www.youtube.com/watch?v=${sp.walkthroughVideoId}` : sp.walkthroughVideoId, thumbnailUrl: "" }] }
           : null;
-        setSubpage({ ...fallbackData, heroTitle: sp.heroTitle || fallbackData.heroTitle, heroTagline: sp.heroTagline || fallbackData.heroTagline, heroLogo: sp.heroLogo || fallbackData.heroLogo, heroBg: sp.heroBg || fallbackData.heroBg, heroMobileUrl: extracted.heroMobileUrl || fallbackData.heroMobileUrl, overviewParagraphs: sp.overviewParagraphs?.length ? sp.overviewParagraphs : fallbackData.overviewParagraphs, overviewHighlights: sp.overviewHighlights?.length ? sp.overviewHighlights : fallbackData.overviewHighlights, amenities: sp.amenities?.length ? sp.amenities : fallbackData.amenities, floorPlans: extracted.floorPlans?.length ? extracted.floorPlans : fallbackData.floorPlans, locationImage: sp.locationImage || fallbackData.locationImage, locationMapEmbed: sp.locationMapEmbed || fallbackData.locationMapEmbed, locationDestinations: sp.locationDestinations?.length ? sp.locationDestinations : fallbackData.locationDestinations, videoSection: extracted.videoSection || walkthroughVideoSection || fallbackData.videoSection, galleryImages: sp.galleryImages?.length ? sp.galleryImages : fallbackData.galleryImages, constructionUpdates: extracted.constructionUpdates?.length ? extracted.constructionUpdates : fallbackData.constructionUpdates, brochureUrl: sp.brochureUrl || fallbackData.brochureUrl, metaTitle: sp.metaTitle || fallbackData.metaTitle, metaDescription: sp.metaDescription || fallbackData.metaDescription });
+        setSubpage({ ...ONE_PRIME_RESIDENTIAL_FALLBACK, heroTitle: sp.heroTitle || ONE_PRIME_RESIDENTIAL_FALLBACK.heroTitle, heroTagline: sp.heroTagline || ONE_PRIME_RESIDENTIAL_FALLBACK.heroTagline, heroLogo: sp.heroLogo || ONE_PRIME_RESIDENTIAL_FALLBACK.heroLogo, heroBg: sp.heroBg || ONE_PRIME_RESIDENTIAL_FALLBACK.heroBg, heroMobileUrl: extracted.heroMobileUrl || ONE_PRIME_RESIDENTIAL_FALLBACK.heroMobileUrl, overviewParagraphs: sp.overviewParagraphs?.length ? sp.overviewParagraphs : ONE_PRIME_RESIDENTIAL_FALLBACK.overviewParagraphs, overviewHighlights: sp.overviewHighlights?.length ? sp.overviewHighlights : ONE_PRIME_RESIDENTIAL_FALLBACK.overviewHighlights, amenities: sp.amenities?.length ? sp.amenities : ONE_PRIME_RESIDENTIAL_FALLBACK.amenities, floorPlans: extracted.floorPlans?.length ? extracted.floorPlans : ONE_PRIME_RESIDENTIAL_FALLBACK.floorPlans, locationImage: sp.locationImage || ONE_PRIME_RESIDENTIAL_FALLBACK.locationImage, locationMapEmbed: sp.locationMapEmbed || ONE_PRIME_RESIDENTIAL_FALLBACK.locationMapEmbed, locationDestinations: sp.locationDestinations?.length ? sp.locationDestinations : ONE_PRIME_RESIDENTIAL_FALLBACK.locationDestinations, videoSection: extracted.videoSection || walkthroughVideoSection || ONE_PRIME_RESIDENTIAL_FALLBACK.videoSection, galleryImages: sp.galleryImages?.length ? sp.galleryImages : ONE_PRIME_RESIDENTIAL_FALLBACK.galleryImages, constructionUpdates: extracted.constructionUpdates?.length ? extracted.constructionUpdates : ONE_PRIME_RESIDENTIAL_FALLBACK.constructionUpdates, brochureUrl: sp.brochureUrl || ONE_PRIME_RESIDENTIAL_FALLBACK.brochureUrl, metaTitle: sp.metaTitle || ONE_PRIME_RESIDENTIAL_FALLBACK.metaTitle, metaDescription: sp.metaDescription || ONE_PRIME_RESIDENTIAL_FALLBACK.metaDescription });
       } catch (err) { console.error("Error loading One Prime Residential subpage details:", err); }
     };
     fetchSubpage();
@@ -271,11 +390,11 @@ export default function OnePrimeResidentialPage() {
   }, []);
 
   useEffect(() => {
-    document.title = subpage.metaTitle || fallbackData.metaTitle;
+    document.title = subpage.metaTitle || ONE_PRIME_RESIDENTIAL_FALLBACK.metaTitle;
     let meta = document.querySelector('meta[name="description"]');
     let created = false;
     if (!meta) { meta = document.createElement("meta"); meta.name = "description"; created = true; }
-    meta.content = subpage.metaDescription || fallbackData.metaDescription;
+    meta.content = subpage.metaDescription || ONE_PRIME_RESIDENTIAL_FALLBACK.metaDescription;
     if (created) document.head.appendChild(meta);
     return () => { if (created) meta.remove(); };
   }, [subpage.metaTitle, subpage.metaDescription]);

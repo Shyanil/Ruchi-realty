@@ -70,6 +70,8 @@ const emptyProject = {
   heroLogo: "",
   heroBg: "",
   heroMobileUrl: "",
+  heroImagePosition: "center center",
+  heroImageFit: "cover",
   companyLogoUrl: "",
   gmbGoogleIconUrl: "",
   gmbStarIconUrl: "",
@@ -81,12 +83,17 @@ const emptyProject = {
   overviewHighlights: [],
   amenities: [],
   specifications: [],
+  specificationImage: "",
   locationImage: "",
   locationMapEmbed: "",
   locationDestinations: [],
   walkthroughVideoId: "",
   galleryImages: [],
   brochureUrl: "",
+  faqs: [],
+  relatedProjectSlugs: [],
+  ctaLabels: { brochure: "Download Brochure", visit: "Book a Visit" },
+  ogImage: "",
   metaTitle: "",
   metaDescription: "",
   isPublished: true,
@@ -852,19 +859,26 @@ function ProjectsAdmin() {
       amenities: sp?.amenities || [],
       specifications: extracted.specifications || [],
       heroMobileUrl: extracted.heroMobileUrl || "",
+      heroImagePosition: sp?.heroImagePosition || "center center",
+      heroImageFit: sp?.heroImageFit || "cover",
       companyLogoUrl: extracted.companyLogoUrl || "",
       gmbGoogleIconUrl: extracted.gmbGoogleIconUrl || "",
       gmbStarIconUrl: extracted.gmbStarIconUrl || "",
       locationMapUrl: extracted.locationMapUrl || "",
-      floorPlans: extracted.floorPlans || [],
-      videoSection: extracted.videoSection || { enabled: false, videoUrl: "", thumbnailUrl: "" },
+      floorPlans: sp?.floorPlans?.length ? sp.floorPlans : extracted.floorPlans || [],
+      videoSection: sp?.videos?.[0] || (extracted.videoSection?.videoUrl ? extracted.videoSection : { enabled: Boolean(sp?.walkthroughVideoId), videoUrl: sp?.walkthroughVideoId || "", thumbnailUrl: "" }),
       gmbReviews: extracted.gmbReviews || { enabled: false, googleIconUrl: "", starIconUrl: "", reviews: [] },
       locationImage: sp?.locationImage || "",
       locationMapEmbed: sp?.locationMapEmbed || "",
       locationDestinations: sp?.locationDestinations || [],
-      walkthroughVideoId: sp?.walkthroughVideoId || "",
+      walkthroughVideoId: extracted.videoSection?.videoUrl || sp?.walkthroughVideoId || "",
       galleryImages: sp?.galleryImages || [],
       brochureUrl: sp?.brochureUrl || "",
+      specificationImage: sp?.specificationImage || "",
+      faqs: sp?.faqs || [],
+      relatedProjectSlugs: sp?.relatedProjectSlugs || [],
+      ctaLabels: sp?.ctaLabels || { brochure: "Download Brochure", visit: "Book a Visit" },
+      ogImage: sp?.ogImage || "",
       metaTitle: sp?.metaTitle || "",
       metaDescription: sp?.metaDescription || "",
       isPublished: sp?.isPublished ?? true,
@@ -882,6 +896,13 @@ function ProjectsAdmin() {
     setUpdating(true);
     try {
       const paragraphs = overviewText.split(/\n{2,}/).map(p => p.trim()).filter(Boolean);
+      const vidUrl = (form.videoSection?.videoUrl || form.walkthroughVideoId || "").trim();
+      const videoSectionPayload = {
+        enabled: Boolean(vidUrl),
+        title: form.videoSection?.title || "Construction Walkthrough",
+        videoUrl: vidUrl,
+        thumbnailUrl: form.videoSection?.thumbnailUrl || ""
+      };
       const specsWithCustom = [
         ...(form.specifications || []),
         { title: "__hero_mobile_url__", desc: form.heroMobileUrl || "" },
@@ -890,7 +911,7 @@ function ProjectsAdmin() {
         { title: "__gmb_star_icon_url__", desc: form.gmbStarIconUrl || "" },
         { title: "__location_map_url__", desc: "" },
         { title: "__floor_plans__", desc: JSON.stringify(form.floorPlans || []) },
-        { title: "__video_section__", desc: JSON.stringify(form.videoSection || { enabled: false, videoUrl: "", thumbnailUrl: "" }) },
+        { title: "__video_section__", desc: JSON.stringify(videoSectionPayload) },
         { title: "__gmb_reviews__", desc: JSON.stringify(form.gmbReviews || { enabled: false, googleIconUrl: "", starIconUrl: "", reviews: [] }) },
       ];
       const subpagePayload = (projectId) => ({
@@ -899,16 +920,26 @@ function ProjectsAdmin() {
         heroTagline: form.heroTagline || form.tag || form.description,
         heroLogo: form.heroLogo || form.companyLogoUrl || "assets/logo-h.png",
         heroBg: form.heroBg || form.image_url,
+        heroMobileUrl: form.heroMobileUrl || "",
+        heroImagePosition: form.heroImagePosition || "center center",
+        heroImageFit: form.heroImageFit || "cover",
         overviewParagraphs: paragraphs.length ? paragraphs : [form.description].filter(Boolean),
         overviewHighlights: withOverviewHighlightIcons(form.overviewHighlights),
         amenities: form.amenities,
         specifications: specsWithCustom,
+        specificationImage: form.specificationImage || "",
+        floorPlans: form.floorPlans || [],
         locationImage: form.locationImage,
         locationMapEmbed: form.locationMapEmbed,
         locationDestinations: form.locationDestinations,
-        walkthroughVideoId: form.walkthroughVideoId,
+        walkthroughVideoId: vidUrl,
+        videos: vidUrl ? [videoSectionPayload] : [],
         galleryImages: form.galleryImages,
         brochureUrl: form.brochureUrl || "",
+        faqs: form.faqs || [],
+        relatedProjectSlugs: form.relatedProjectSlugs || [],
+        ctaLabels: form.ctaLabels || { brochure: "Download Brochure", visit: "Book a Visit" },
+        ogImage: form.ogImage || form.heroBg || form.image_url || "",
         metaTitle: form.metaTitle || `${form.title} | Ruchi Realty`,
         metaDescription: form.metaDescription || form.description,
         isPublished: form.isPublished !== false,
@@ -1027,6 +1058,9 @@ function ProjectsAdmin() {
             <AdminField label="Hero tagline"><input value={form.heroTagline} onChange={(e) => set("heroTagline", e.target.value)} /></AdminField>
             <AdminImageUpload label="Hero logo only" value={form.heroLogo} onChange={(v) => set("heroLogo", v)} />
             <AdminImageUpload label="Hero background landscape" value={form.heroBg} onChange={(v) => set("heroBg", v)} />
+            <AdminImageUpload label="Optional mobile hero image" value={form.heroMobileUrl} onChange={(v) => set("heroMobileUrl", v)} />
+            <AdminField label="Hero image focal position"><input value={form.heroImagePosition} onChange={(e) => set("heroImagePosition", e.target.value)} placeholder="center center, 50% 30%, left center" /></AdminField>
+            <AdminField label="Hero image fit"><select value={form.heroImageFit} onChange={(e) => set("heroImageFit", e.target.value)}><option value="cover">Cover — fill hero</option><option value="contain">Contain — preserve entire image</option></select></AdminField>
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Overview</h3>
             <AdminField label="Overview Paragraphs (separate paragraphs with an empty line)"><textarea rows={6} value={overviewText} onChange={(e) => setOverviewText(e.target.value)} placeholder="Write first paragraph.&#10;&#10;Write second paragraph." /></AdminField>
@@ -1037,6 +1071,7 @@ function ProjectsAdmin() {
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Specifications / Landscape</h3>
             <KeyValueListEditor title="Specifications / Landscape" items={form.specifications} onChange={(list) => set("specifications", list)} keyPlaceholder="Specification Title" valuePlaceholder="Specification Details" keyProp="title" valueProp="desc" />
+            <AdminImageUpload label="Optional shared specification image" value={form.specificationImage} onChange={(v) => set("specificationImage", v)} />
             <FloorPlansEditor items={form.floorPlans} onChange={(list) => set("floorPlans", list)} />
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Location</h3>
@@ -1082,10 +1117,17 @@ function ProjectsAdmin() {
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Brochure</h3>
             <AdminField label="Brochure URL"><input value={form.brochureUrl} onChange={(e) => set("brochureUrl", e.target.value)} placeholder="Optional. Leave blank to keep the brochure CTA and send users to enquiry." /></AdminField>
+            <AdminField label="Brochure CTA label"><input value={form.ctaLabels?.brochure || ""} onChange={(e) => set("ctaLabels", { ...form.ctaLabels, brochure: e.target.value })} /></AdminField>
+            <AdminField label="Enquiry / visit CTA label"><input value={form.ctaLabels?.visit || ""} onChange={(e) => set("ctaLabels", { ...form.ctaLabels, visit: e.target.value })} /></AdminField>
+
+            <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>FAQ & Related Projects</h3>
+            <KeyValueListEditor title="Frequently Asked Questions" items={form.faqs} onChange={(list) => set("faqs", list)} keyPlaceholder="Question" valuePlaceholder="Answer" keyProp="question" valueProp="answer" />
+            <AdminField label="Related project slugs (comma separated)"><input value={(form.relatedProjectSlugs || []).join(", ")} onChange={(e) => set("relatedProjectSlugs", e.target.value.split(",").map((item) => item.trim()).filter(Boolean))} placeholder="one-rajarhat, active-greens" /></AdminField>
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>SEO</h3>
             <AdminField label="Meta title"><input value={form.metaTitle} onChange={(e) => set("metaTitle", e.target.value)} /></AdminField>
             <AdminField label="Meta description"><textarea rows={2} value={form.metaDescription} onChange={(e) => set("metaDescription", e.target.value)} /></AdminField>
+            <AdminImageUpload label="Open Graph sharing image" value={form.ogImage} onChange={(v) => set("ogImage", v)} />
 
             <label className="admin-check" style={{ margin: "12px 0" }}>
               <input type="checkbox" checked={form.isPublished} onChange={(e) => set("isPublished", e.target.checked)} /> Subpage published

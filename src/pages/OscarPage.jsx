@@ -58,7 +58,7 @@ const GALLERY_IMAGES = [
   { src: `${BASE}/temple.webp`, alt: "Temple at Oscar Indore" },
 ];
 
-const fallbackData = {
+export const OSCAR_FALLBACK = {
   heroTitle: "Oscar / Oscar Billionaires",
   heroTagline: "A Smart Upgrade To Premium Living",
   heroLogo: `${BASE}/logo.webp`,
@@ -323,66 +323,131 @@ function WalkthroughSection({ subpage }) {
 }
 
 function GallerySection({ subpage }) {
-  const [lightbox, setLightbox] = useState(null);
-  const images = subpage.galleryImages || [];
+  const images = (subpage.galleryImages || []).filter((img) => img?.src);
+  const [galleryStart, setGalleryStart] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
 
   useEffect(() => {
-    if (lightbox !== null) {
+    if (lightboxIndex !== null) {
       document.body.classList.add("nav-locked");
-      const onKey = (e) => { if (e.key === "Escape") setLightbox(null); };
+      const onKey = (e) => {
+        if (e.key === "Escape") setLightboxIndex(null);
+        if (e.key === "ArrowLeft") setLightboxIndex((p) => (p === 0 ? images.length - 1 : p - 1));
+        if (e.key === "ArrowRight") setLightboxIndex((p) => (p === images.length - 1 ? 0 : p + 1));
+      };
       window.addEventListener("keydown", onKey);
-      return () => { document.body.classList.remove("nav-locked"); window.removeEventListener("keydown", onKey); };
+      return () => {
+        document.body.classList.remove("nav-locked");
+        window.removeEventListener("keydown", onKey);
+      };
     }
-  }, [lightbox]);
+  }, [lightboxIndex, images.length]);
+
+  if (!images.length) return null;
+
+  const visibleIndexes = Array.from(
+    { length: Math.min(3, images.length) },
+    (_, idx) => (galleryStart + idx) % images.length
+  );
+
+  const moveGallery = (dir) => {
+    setGalleryStart((prev) => (prev + dir + images.length) % images.length);
+  };
+
+  const moveLightbox = (dir) => {
+    setLightboxIndex((prev) => (prev + dir + images.length) % images.length);
+  };
 
   return (
-    <section className="section-pad osc-section osc-section--dark" id="gallery">
+    <section className="section-pad project-section project-gallery osc-section osc-section--dark" id="gallery">
       <div className="rr-wrap">
         <Reveal>
-          <div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}>
+          <div className="sec-head sec-head--dark" style={{ marginBottom: "40px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>GALLERY</div>
-              <h2>A glimpse into<br /><span className="rr-grad">the Oscar lifestyle.</span></h2>
+              <h2>A closer look<br /><span className="rr-grad">at the Oscar lifestyle.</span></h2>
             </div>
           </div>
         </Reveal>
-        <div className="osc-gallery__grid">
-          {images.map((img, i) => (
-            <Reveal key={img.src || i} delay={(i % 4) * 60} className={`osc-gallery__item ${i === 0 ? "osc-gallery__item--wide" : ""}`}>
-              <button type="button" className="osc-gallery__btn" onClick={() => setLightbox(i)} aria-label={`View ${img.alt}`}>
-                <img src={img.src} alt={img.alt} loading="lazy" className="osc-gallery__img" />
-                <span className="osc-gallery__zoom">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /><path d="M11 8v6M8 11h6" />
-                  </svg>
-                </span>
+
+        <Reveal className="project-gallery-trio">
+          {visibleIndexes.map((imgIdx) => {
+            const img = images[imgIdx];
+            return (
+              <button
+                type="button"
+                key={`${img.src}-${imgIdx}`}
+                onClick={() => setLightboxIndex(imgIdx)}
+                aria-label={`Open ${img.alt || `Oscar gallery image ${imgIdx + 1}`}`}
+              >
+                <div className="rimg" style={{ width: "100%", height: "100%", borderRadius: "10px", overflow: "hidden" }}>
+                  <img
+                    src={img.src}
+                    alt={img.alt || `Oscar gallery ${imgIdx + 1}`}
+                    loading="lazy"
+                    className="rimg__img"
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                </div>
               </button>
-            </Reveal>
-          ))}
-        </div>
+            );
+          })}
+        </Reveal>
+
+        {images.length > 3 && (
+          <Reveal className="project-gallery-trio__controls">
+            <span>
+              {String(galleryStart + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
+            </span>
+            <button
+              type="button"
+              onClick={() => moveGallery(-1)}
+              aria-label="Previous gallery images"
+            >
+              ←
+            </button>
+            <button
+              type="button"
+              onClick={() => moveGallery(1)}
+              aria-label="Next gallery images"
+            >
+              →
+            </button>
+          </Reveal>
+        )}
       </div>
 
-      {lightbox !== null && images[lightbox] && (
-        <div className="osc-lightbox" onClick={() => setLightbox(null)}>
-          <button type="button" className="osc-lightbox__close" onClick={() => setLightbox(null)} aria-label="Close gallery">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
+      {lightboxIndex !== null && images[lightboxIndex] && (
+        <div className="project-gallery-lightbox" role="dialog" aria-modal="true" onClick={() => setLightboxIndex(null)}>
+          <button type="button" className="project-gallery-lightbox__close" onClick={() => setLightboxIndex(null)} aria-label="Close">
+            ×
           </button>
-          <button type="button" className="osc-lightbox__arrow osc-lightbox__arrow--prev" onClick={(e) => { e.stopPropagation(); setLightbox((p) => (p === 0 ? images.length - 1 : p - 1)); }} aria-label="Previous">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
-            </svg>
-          </button>
-          <div className="osc-lightbox__content" onClick={(e) => e.stopPropagation()}>
-            <img src={images[lightbox].src} alt={images[lightbox].alt} className="osc-lightbox__img" />
-            <p className="osc-lightbox__caption">{images[lightbox].alt}</p>
+          {images.length > 1 && (
+            <button
+              type="button"
+              className="project-gallery-lightbox__arrow is-prev"
+              onClick={(e) => { e.stopPropagation(); moveLightbox(-1); }}
+              aria-label="Previous image"
+            >
+              ←
+            </button>
+          )}
+          <div className="project-gallery-lightbox__image" onClick={(e) => e.stopPropagation()}>
+            <img src={images[lightboxIndex].src} alt={images[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            <span>
+              {String(lightboxIndex + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
+            </span>
           </div>
-          <button type="button" className="osc-lightbox__arrow osc-lightbox__arrow--next" onClick={(e) => { e.stopPropagation(); setLightbox((p) => (p === images.length - 1 ? 0 : p + 1)); }} aria-label="Next">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
-            </svg>
-          </button>
+          {images.length > 1 && (
+            <button
+              type="button"
+              className="project-gallery-lightbox__arrow is-next"
+              onClick={(e) => { e.stopPropagation(); moveLightbox(1); }}
+              aria-label="Next image"
+            >
+              →
+            </button>
+          )}
         </div>
       )}
     </section>
@@ -485,7 +550,7 @@ function CtaSection({ subpage, onBrochureClick }) {
 export default function OscarPage() {
   const [brochurePopup, setBrochurePopup] = useState(false);
   const [navHidden, setNavHidden] = useState(false);
-  const [subpage, setSubpage] = useState(fallbackData);
+  const [subpage, setSubpage] = useState(OSCAR_FALLBACK);
 
   const onContact = useCallback(() => {
     setBrochurePopup(true);
@@ -509,22 +574,22 @@ export default function OscarPage() {
           if (!active) return;
           if (sp) {
             setSubpage({
-              heroTitle: sp.heroTitle || fallbackData.heroTitle,
-              heroTagline: sp.heroTagline || fallbackData.heroTagline,
-              heroLogo: sp.heroLogo || fallbackData.heroLogo,
-              heroBg: sp.heroBg || fallbackData.heroBg,
-              overviewParagraphs: sp.overviewParagraphs?.length ? sp.overviewParagraphs : fallbackData.overviewParagraphs,
-              overviewHighlights: sp.overviewHighlights?.length ? sp.overviewHighlights : fallbackData.overviewHighlights,
-              amenities: sp.amenities?.length ? sp.amenities : fallbackData.amenities,
-              specifications: sp.specifications?.length ? sp.specifications : fallbackData.specifications,
-              locationImage: sp.locationImage || fallbackData.locationImage,
-              locationMapEmbed: sp.locationMapEmbed || fallbackData.locationMapEmbed,
-              locationDestinations: sp.locationDestinations?.length ? sp.locationDestinations : fallbackData.locationDestinations,
-              walkthroughVideoId: sp.walkthroughVideoId || fallbackData.walkthroughVideoId,
-              galleryImages: sp.galleryImages?.length ? sp.galleryImages : fallbackData.galleryImages,
-              brochureUrl: sp.brochureUrl || fallbackData.brochureUrl,
-              metaTitle: sp.metaTitle || fallbackData.metaTitle,
-              metaDescription: sp.metaDescription || fallbackData.metaDescription,
+              heroTitle: sp.heroTitle || OSCAR_FALLBACK.heroTitle,
+              heroTagline: sp.heroTagline || OSCAR_FALLBACK.heroTagline,
+              heroLogo: sp.heroLogo || OSCAR_FALLBACK.heroLogo,
+              heroBg: sp.heroBg || OSCAR_FALLBACK.heroBg,
+              overviewParagraphs: sp.overviewParagraphs?.length ? sp.overviewParagraphs : OSCAR_FALLBACK.overviewParagraphs,
+              overviewHighlights: sp.overviewHighlights?.length ? sp.overviewHighlights : OSCAR_FALLBACK.overviewHighlights,
+              amenities: sp.amenities?.length ? sp.amenities : OSCAR_FALLBACK.amenities,
+              specifications: sp.specifications?.length ? sp.specifications : OSCAR_FALLBACK.specifications,
+              locationImage: sp.locationImage || OSCAR_FALLBACK.locationImage,
+              locationMapEmbed: sp.locationMapEmbed || OSCAR_FALLBACK.locationMapEmbed,
+              locationDestinations: sp.locationDestinations?.length ? sp.locationDestinations : OSCAR_FALLBACK.locationDestinations,
+              walkthroughVideoId: sp.walkthroughVideoId || OSCAR_FALLBACK.walkthroughVideoId,
+              galleryImages: sp.galleryImages?.length ? sp.galleryImages : OSCAR_FALLBACK.galleryImages,
+              brochureUrl: sp.brochureUrl || OSCAR_FALLBACK.brochureUrl,
+              metaTitle: sp.metaTitle || OSCAR_FALLBACK.metaTitle,
+              metaDescription: sp.metaDescription || OSCAR_FALLBACK.metaDescription,
             });
           }
         }
@@ -547,7 +612,7 @@ export default function OscarPage() {
   }, [brochurePopup]);
 
   useEffect(() => {
-    document.title = subpage.metaTitle || fallbackData.metaTitle;
+    document.title = subpage.metaTitle || OSCAR_FALLBACK.metaTitle;
     let meta = document.querySelector('meta[name="description"]');
     let created = false;
     if (!meta) {
@@ -555,7 +620,7 @@ export default function OscarPage() {
       meta.name = "description";
       created = true;
     }
-    meta.content = subpage.metaDescription || fallbackData.metaDescription;
+    meta.content = subpage.metaDescription || OSCAR_FALLBACK.metaDescription;
     if (created) {
       document.head.appendChild(meta);
     }

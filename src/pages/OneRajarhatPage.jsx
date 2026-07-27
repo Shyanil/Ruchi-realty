@@ -1,5 +1,5 @@
 import ProjectSplitHero from "../components/ProjectSplitHero";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Nav from "../components/Nav";
 import { Footer } from "../components/Footer";
 import { Reveal } from "../components/shared";
@@ -69,7 +69,7 @@ function parseVideoUrl(url = "") {
   }
   if (id) {
     return {
-      embedUrl: `https://www.youtube.com/embed/${id}?autoplay=1&mute=1`,
+      embedUrl: `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=0&disablekb=1&fs=0&iv_load_policy=3&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&loop=1&playlist=${id}`,
       thumbnail: `https://img.youtube.com/vi/${id}/maxresdefault.jpg`
     };
   }
@@ -77,12 +77,12 @@ function parseVideoUrl(url = "") {
 }
 
 
-const fallbackData = {
+export const ONE_RAJARHAT_FALLBACK = {
   heroTitle: "One Rajarhat",
   heroTagline: "For a world-class living at the heart of the city of joy, step into the one!",
   heroLogo: "/projects/one-rajarhat/logo.webp",
-  heroBg: "/projects/one-rajarhat/hero.webp",
-  heroMobileUrl: "/projects/one-rajarhat/hero.webp",
+  heroBg: "assets/projects/one-rajarhat/hero.jpg",
+  heroMobileUrl: "assets/projects/one-rajarhat/hero.jpg",
   companyLogoUrl: "/projects/one-rajarhat/ruchi-logo.webp",
   locationMapUrl: "/projects/one-rajarhat/location-map.webp",
   gmbGoogleIconUrl: "",
@@ -109,16 +109,26 @@ const fallbackData = {
     { name: "Library", icon: "library" }
   ],
   specifications: [
-    { title: "STRUCTURE", desc: "Earthquake resistant RCC frame structure." },
-    { title: "WALLS", desc: "Brickwork / AAC Block walls with plastering." },
-    { title: "CEILING", desc: "Plaster of Paris finish." },
-    { title: "FLOORING", desc: "Imported Marble / Premium Vitrified tiles in living/dining. Wooden flooring in master bedroom. Anti-skid ceramic tiles in toilets and kitchen." },
-    { title: "KITCHEN", desc: "Granite counter top with stainless steel sink. Premium ceramic tile dado up to 2 feet above counter." },
-    { title: "TOILET", desc: "Premium sanitary ware (Kohler/Toto or equivalent). CP fittings of Jaguar/Kohler or equivalent. Designer ceramic tiles on walls up to 7 feet." },
-    { title: "DOORS & WINDOWS", desc: "Main entrance door in solid flush door with veneer. Internal flush doors. Powder-coated aluminum windows." },
-    { title: "WALL FINISH", desc: "Interior - Plaster of Paris. Exterior - Combination of Textured Paint / Paint Finish." },
-    { title: "ELECTRICAL", desc: "Concealed copper wiring with modular switches of Havells/Legrand or equivalent. AC points in all bedrooms and living room." },
-    { title: "COMMON FACILITIES", desc: "Double height decorated entrance lobby. 24x7 security with CCTV surveillance. Advanced fire detection and fighting systems. High-speed elevators. 100% power backup for common areas." }
+    {
+      title: "Earthquake-Resistant Structure & Masonry",
+      desc: "Engineered RCC frame structure built for maximum earthquake safety. Precision brickwork and AAC block walls with smooth Plaster of Paris interior finishing.",
+      image: "/projects/one-rajarhat/gallery-aerial-photo.webp"
+    },
+    {
+      title: "Imported Marble & Hardwood Flooring",
+      desc: "Living and dining areas featuring imported marble and premium vitrified tiles. Master bedrooms with warm wooden laminate flooring, anti-skid ceramic tiles in kitchens and bathrooms, and veneer finish main entrance doors.",
+      image: "/projects/one-rajarhat/gallery-living-room.webp"
+    },
+    {
+      title: "High-End Sanitary & Modular Fittings",
+      desc: "Premium sanitary ware and CP fittings from Kohler/Toto/Jaquar. Polished granite kitchen countertops with stainless steel sinks and designer ceramic wall tiles up to 7 feet.",
+      image: "/projects/one-rajarhat/gallery-master-bedroom.webp"
+    },
+    {
+      title: "Advanced Electrification & Common Facilities",
+      desc: "Concealed copper wiring with modular switches (Havells/Legrand), VRV/split AC provision, double-height grand entrance lobby, 24/7 CCTV surveillance, high-speed elevators, and 100% power backup for common areas.",
+      image: "/projects/one-rajarhat/gallery-lobby.webp"
+    }
   ],
   floorPlans: [
     { title: "Master Plan", desc: "/projects/one-rajarhat/master-plan.webp" },
@@ -198,45 +208,27 @@ function normalizeAmenityIcon(item) {
   if (raw.includes("table") || raw.includes("tennis")) return "table-tennis";
   if (raw.includes("yoga") || raw.includes("meditation")) return "yoga";
   if (raw.includes("sauna") || raw.includes("steam")) return "wellness";
-  if (raw.includes("snooker")) return "snooker";
-  if (raw.includes("jogging")) return "jogging";
+  if (raw.includes("snooker") || raw.includes("pool")) return "snooker";
+  if (raw.includes("jogging") || raw.includes("track")) return "jogging";
   if (raw.includes("library")) return "library";
-  return raw;
+  return "amenity";
 }
 
 function AmenityIcon({ icon }) {
   return (
     <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      {icon === "pool" && <>
-        <path d="M6 40h36M6 36h36" /><path d="M10 36V20a6 6 0 0 1 12 0v16M26 36V20a6 6 0 0 1 12 0v16" /><path d="M10 28h12M26 28h12" />
-      </>}
-      {icon === "gym" && <>
-        <path d="M6 26h36" /><path d="M10 22v8" /><path d="M14 18v12" /><path d="M24 14v20" /><path d="M34 18v12" /><path d="M38 22v8" />
-      </>}
-      {icon === "badminton" && <>
-        <circle cx="24" cy="24" r="2" fill="currentColor" /><path d="M24 22V6M24 26v16M14 14l14 14M20 10l14 14" /><path d="M34 14l-14 14" />
-      </>}
-      {icon === "table-tennis" && <>
-        <circle cx="20" cy="20" r="6" /><path d="M14 26l-5 5M20 20l4 4" /><circle cx="34" cy="14" r="3" />
-      </>}
-      {icon === "yoga" && <>
-        <circle cx="24" cy="10" r="4" /><path d="M24 14v10M12 24h24M16 38l8-14 8 14M11 34h26" />
-      </>}
-      {icon === "wellness" && <>
-        <path d="M14 36h20a6 6 0 0 0 6-6v-8H8v8a6 6 0 0 0 6 6z" /><path d="M18 16c-2-3 2-5 0-8M26 16c-2-3 2-5 0-8M34 16c-2-3 2-5 0-8" />
-      </>}
-      {icon === "snooker" && <>
-        <circle cx="17" cy="20" r="5" /><circle cx="29" cy="28" r="5" /><path d="M36 12 12 36" /><path d="M38 10l2-2" />
-      </>}
-      {icon === "jogging" && <>
-        <circle cx="28" cy="9" r="4" /><path d="M24 17l-6 8 8 3 6 10M26 20l8 4M20 38l-8 4" />
-      </>}
-      {icon === "library" && <>
-        <path d="M8 39.5A2.5 2.5 0 0 1 10.5 37H40M8 39.5A2.5 2.5 0 0 0 10.5 42H40M8 39.5v-30A2.5 2.5 0 0 1 10.5 7H40v30H10.5A2.5 2.5 0 0 1 8 39.5z" />
-      </>}
-      {!["pool", "gym", "badminton", "table-tennis", "yoga", "wellness", "snooker", "jogging", "library"].includes(icon) && <>
-        <circle cx="24" cy="24" r="18" /><path d="M12 24h24M24 12v24" />
-      </>}
+      {icon === "pool" && <path d="M6 40h36M6 36h36M10 36V20a6 6 0 0 1 12 0v16M26 36V20a6 6 0 0 1 12 0v16M10 28h12M26 28h12" />}
+      {icon === "gym" && <path d="M6 26h36M10 22v8M14 18v12M24 14v20M34 18v12M38 22v8" />}
+      {icon === "badminton" && <><circle cx="24" cy="24" r="2" fill="currentColor" /><path d="M24 22V6M24 26v16M14 14l14 14M20 10l14 14M34 14l-14 14" /></>}
+      {icon === "table-tennis" && <><circle cx="20" cy="20" r="6" /><path d="M14 26l-5 5M20 20l4 4" /><circle cx="34" cy="14" r="3" /></>}
+      {icon === "yoga" && <circle cx="24" cy="24" r="18" />}
+      {icon === "wellness" && <path d="M12 24h24M24 12v24" />}
+      {icon === "snooker" && <circle cx="24" cy="24" r="18" />}
+      {icon === "jogging" && <path d="M12 24h24M24 12v24" />}
+      {icon === "library" && <path d="M8 39.5A2.5 2.5 0 0 1 10.5 37H40M8 39.5A2.5 2.5 0 0 0 10.5 42H40M8 39.5v-30A2.5 2.5 0 0 1 10.5 7H40v30H10.5A2.5 2.5 0 0 1 8 39.5z" />}
+      {!["pool", "gym", "badminton", "table-tennis", "yoga", "wellness", "snooker", "jogging", "library"].includes(icon) && (
+        <><circle cx="24" cy="24" r="18" /><path d="M12 24h24M24 12v24" /></>
+      )}
     </svg>
   );
 }
@@ -371,30 +363,46 @@ function AmenitiesSection({ subpage }) {
 }
 
 function LandscapeFeaturesSection({ subpage }) {
-  const specs = subpage.specifications || [];
+  const rawSpecs = subpage.specifications || [];
+  const specs = rawSpecs.filter(
+    (item) => item?.title && !String(item.title).startsWith("__") && (item.desc || item.details)
+  );
   if (!specs.length) return null;
 
   return (
-    <section className="section-pad osc-section" id="landscape">
+    <section className="section-pad project-section project-specifications" id="landscape">
       <div className="rr-wrap">
         <Reveal>
-          <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>SPECIFICATIONS</div>
-          <h2 className="osc-section__title">
-            Meticulous specifications<br /><span className="rr-grad">and premium construction.</span>
-          </h2>
-        </Reveal>
-        <div className="osc-specs__layout">
-          <Reveal className="osc-specs__visual">
-            <img src={subpage.galleryImages?.[0]?.src || subpage.heroBg || fallbackData.heroBg} alt="One Rajarhat Specifications Visual" loading="lazy" className="osc-specs__img" />
-          </Reveal>
-          <div className="osc-specs__cards">
-            {specs.map((s, i) => (
-              <Reveal key={s.title || i} delay={i * 70} className="osc-spec-card">
-                <h4 className="osc-spec-card__title">{s.title}</h4>
-                <p className="osc-spec-card__desc">{s.desc}</p>
-              </Reveal>
-            ))}
+          <div className="project-section__head">
+            <span className="eyebrow">SPECIFICATIONS</span>
+            <h2>Meticulous specifications,<br /><span className="rr-grad">engineered for luxury.</span></h2>
           </div>
+        </Reveal>
+        <div className="project-spec-list">
+          {specs.map((spec, index) => {
+            const fallbackImgs = [
+              "/projects/one-rajarhat/gallery-living-room.webp",
+              "/projects/one-rajarhat/gallery-master-bedroom.webp",
+              "/projects/one-rajarhat/gallery-lobby.webp",
+              "/projects/one-rajarhat/gallery-aerial-photo.webp"
+            ];
+            const image = spec.image || spec.img || spec.src || fallbackImgs[index % fallbackImgs.length];
+            const descText = spec.desc || spec.details || "";
+            return (
+              <article className={`project-spec-row ${index % 2 ? "is-reversed" : ""}`} key={spec.title || index}>
+                <div className="project-spec-row__visual">
+                  <img src={image} alt={`One Rajarhat ${spec.title}`} loading="lazy" />
+                </div>
+                <div className="project-spec-row__content">
+                  <span className="project-spec-row__number">{String(index + 1).padStart(2, "0")}</span>
+                  <h3>{spec.title}</h3>
+                  <div className="project-spec-points">
+                    <p><span>{descText}</span></p>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -461,68 +469,131 @@ function FloorPlansSection({ subpage }) {
 }
 
 function GallerySection({ subpage }) {
-  const [lightbox, setLightbox] = useState(null);
-  const images = subpage.galleryImages || [];
+  const images = (subpage.galleryImages || []).filter((img) => img?.src);
+  const [galleryStart, setGalleryStart] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
 
   useEffect(() => {
-    if (lightbox !== null) {
+    if (lightboxIndex !== null) {
       document.body.classList.add("nav-locked");
-      const onKey = (e) => { if (e.key === "Escape") setLightbox(null); };
+      const onKey = (e) => {
+        if (e.key === "Escape") setLightboxIndex(null);
+        if (e.key === "ArrowLeft") setLightboxIndex((p) => (p === 0 ? images.length - 1 : p - 1));
+        if (e.key === "ArrowRight") setLightboxIndex((p) => (p === images.length - 1 ? 0 : p + 1));
+      };
       window.addEventListener("keydown", onKey);
-      return () => { document.body.classList.remove("nav-locked"); window.removeEventListener("keydown", onKey); };
+      return () => {
+        document.body.classList.remove("nav-locked");
+        window.removeEventListener("keydown", onKey);
+      };
     }
-  }, [lightbox]);
+  }, [lightboxIndex, images.length]);
 
   if (!images.length) return null;
 
+  const visibleIndexes = Array.from(
+    { length: Math.min(3, images.length) },
+    (_, idx) => (galleryStart + idx) % images.length
+  );
+
+  const moveGallery = (dir) => {
+    setGalleryStart((prev) => (prev + dir + images.length) % images.length);
+  };
+
+  const moveLightbox = (dir) => {
+    setLightboxIndex((prev) => (prev + dir + images.length) % images.length);
+  };
+
   return (
-    <section className="section-pad osc-section osc-section--dark" id="gallery">
+    <section className="section-pad project-section project-gallery osc-section osc-section--dark" id="gallery">
       <div className="rr-wrap">
         <Reveal>
-          <div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}>
+          <div className="sec-head sec-head--dark" style={{ marginBottom: "40px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>GALLERY</div>
-              <h2>A glimpse into<br /><span className="rr-grad">the One Rajarhat lifestyle.</span></h2>
+              <h2>A closer look<br /><span className="rr-grad">at the One Rajarhat lifestyle.</span></h2>
             </div>
           </div>
         </Reveal>
-        <div className="osc-gallery__grid">
-          {images.map((img, i) => (
-            <Reveal key={img.src || i} delay={(i % 4) * 60} className={`osc-gallery__item ${i === 0 ? "osc-gallery__item--wide" : ""}`}>
-              <button type="button" className="osc-gallery__btn" onClick={() => setLightbox(i)} aria-label={`View ${img.alt}`}>
-                <img src={img.src} alt={img.alt} loading="lazy" className="osc-gallery__img" />
-                <span className="osc-gallery__zoom">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /><path d="M11 8v6M8 11h6" />
-                  </svg>
-                </span>
+
+        <Reveal className="project-gallery-trio">
+          {visibleIndexes.map((imgIdx) => {
+            const img = images[imgIdx];
+            return (
+              <button
+                type="button"
+                key={`${img.src}-${imgIdx}`}
+                onClick={() => setLightboxIndex(imgIdx)}
+                aria-label={`Open ${img.alt || `One Rajarhat gallery image ${imgIdx + 1}`}`}
+              >
+                <div className="rimg" style={{ width: "100%", height: "100%", borderRadius: "10px", overflow: "hidden" }}>
+                  <img
+                    src={img.src}
+                    alt={img.alt || `One Rajarhat gallery ${imgIdx + 1}`}
+                    loading="lazy"
+                    className="rimg__img"
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                </div>
               </button>
-            </Reveal>
-          ))}
-        </div>
+            );
+          })}
+        </Reveal>
+
+        {images.length > 3 && (
+          <Reveal className="project-gallery-trio__controls">
+            <span>
+              {String(galleryStart + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
+            </span>
+            <button
+              type="button"
+              onClick={() => moveGallery(-1)}
+              aria-label="Previous gallery images"
+            >
+              ←
+            </button>
+            <button
+              type="button"
+              onClick={() => moveGallery(1)}
+              aria-label="Next gallery images"
+            >
+              →
+            </button>
+          </Reveal>
+        )}
       </div>
 
-      {lightbox !== null && images[lightbox] && (
-        <div className="osc-lightbox" onClick={() => setLightbox(null)}>
-          <button type="button" className="osc-lightbox__close" onClick={() => setLightbox(null)} aria-label="Close gallery">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
+      {lightboxIndex !== null && images[lightboxIndex] && (
+        <div className="project-gallery-lightbox" role="dialog" aria-modal="true" onClick={() => setLightboxIndex(null)}>
+          <button type="button" className="project-gallery-lightbox__close" onClick={() => setLightboxIndex(null)} aria-label="Close">
+            ×
           </button>
-          <button type="button" className="osc-lightbox__arrow osc-lightbox__arrow--prev" onClick={(e) => { e.stopPropagation(); setLightbox((p) => (p === 0 ? images.length - 1 : p - 1)); }} aria-label="Previous">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
-            </svg>
-          </button>
-          <div className="osc-lightbox__content" onClick={(e) => e.stopPropagation()}>
-            <img src={images[lightbox].src} alt={images[lightbox].alt} className="osc-lightbox__img" />
-            <p className="osc-lightbox__caption">{images[lightbox].alt}</p>
+          {images.length > 1 && (
+            <button
+              type="button"
+              className="project-gallery-lightbox__arrow is-prev"
+              onClick={(e) => { e.stopPropagation(); moveLightbox(-1); }}
+              aria-label="Previous image"
+            >
+              ←
+            </button>
+          )}
+          <div className="project-gallery-lightbox__image" onClick={(e) => e.stopPropagation()}>
+            <img src={images[lightboxIndex].src} alt={images[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            <span>
+              {String(lightboxIndex + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
+            </span>
           </div>
-          <button type="button" className="osc-lightbox__arrow osc-lightbox__arrow--next" onClick={(e) => { e.stopPropagation(); setLightbox((p) => (p === images.length - 1 ? 0 : p + 1)); }} aria-label="Next">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
-            </svg>
-          </button>
+          {images.length > 1 && (
+            <button
+              type="button"
+              className="project-gallery-lightbox__arrow is-next"
+              onClick={(e) => { e.stopPropagation(); moveLightbox(1); }}
+              aria-label="Next image"
+            >
+              →
+            </button>
+          )}
         </div>
       )}
     </section>
@@ -530,9 +601,15 @@ function GallerySection({ subpage }) {
 }
 
 function WalkthroughSection({ subpage }) {
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(true);
+  const playerRef = useRef(null);
   const video = parseVideoUrl(subpage.videoSection?.videoUrl);
-  const thumbnail = subpage.videoSection?.thumbnailUrl || video?.thumbnail;
+
+  const togglePlayback = () => {
+    const command = playing ? "stopVideo" : "playVideo";
+    playerRef.current?.contentWindow?.postMessage(JSON.stringify({ event: "command", func: command, args: [] }), "*");
+    setPlaying((value) => !value);
+  };
 
   if (!subpage.videoSection?.enabled || !subpage.videoSection?.videoUrl) return null;
 
@@ -548,34 +625,23 @@ function WalkthroughSection({ subpage }) {
           </div>
         </Reveal>
         <Reveal delay={100} className="osc-video__visual">
-          {playing && video?.embedUrl ? (
-            <div className="osc-video__frame-wrap" style={{ position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden", borderRadius: "12px" }}>
-              <iframe
-                title="Walkthrough Video"
-                src={video.embedUrl}
-                style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+          <div className="osc-video__frame-wrap one-rajarhat-autoplay-video">
+            <iframe
+              ref={playerRef}
+              title="One Rajarhat walkthrough video"
+              src={video?.embedUrl}
+              tabIndex="-1"
+              aria-hidden="true"
+              style={{ pointerEvents: "none" }}
+              allow="autoplay; encrypted-media"
+            />
+            <div className="one-rajarhat-autoplay-video__status" aria-hidden="true">
+              <span className={playing ? "is-live" : ""} />{playing ? "Now playing" : "Tour stopped"}
             </div>
-          ) : (
-            <div className="osc-video__preview-card" onClick={() => setPlaying(true)} style={{ cursor: "pointer", position: "relative", borderRadius: "12px", overflow: "hidden" }}>
-              {thumbnail ? (
-                <img src={thumbnail} alt="Walkthrough Thumbnail" style={{ width: "100%", height: "auto", minHeight: "350px", objectFit: "cover" }} />
-              ) : (
-                <div style={{ background: "rgba(20,18,26,0.04)", height: "450px", display: "grid", placeItems: "center", color: "var(--rr-ink)" }}>
-                  <span>Click to view Video Tour</span>
-                </div>
-              )}
-              <div className="osc-video__play-btn" style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", background: "rgba(20,18,26,0.3)" }}>
-                <div style={{ width: "72px", height: "72px", borderRadius: "50%", background: "var(--rr-lime)", display: "grid", placeItems: "center", color: "var(--rr-ink)" }}>
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="5 3 19 12 5 21" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-          )}
+            <button className="one-rajarhat-autoplay-video__control" type="button" onClick={togglePlayback} aria-label={playing ? "Stop walkthrough video" : "Restart walkthrough video"}>
+              {playing ? <><span className="stop-square" aria-hidden="true" />Stop tour</> : <><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="6 3 20 12 6 21" /></svg>Restart tour</>}
+            </button>
+          </div>
         </Reveal>
       </div>
     </section>
@@ -635,8 +701,8 @@ function GmbReviewsSection({ subpage }) {
 }
 
 function LocationSection({ subpage }) {
-  const visualUrl = subpage.locationImage || fallbackData.locationImage;
-  const detailedMapUrl = subpage.locationMapUrl || fallbackData.locationMapUrl;
+  const visualUrl = subpage.locationImage || ONE_RAJARHAT_FALLBACK.locationImage;
+  const detailedMapUrl = subpage.locationMapUrl || ONE_RAJARHAT_FALLBACK.locationMapUrl;
 
   return (
     <section className="section-pad osc-section osc-section--dark" id="location">
@@ -767,7 +833,7 @@ function BrochurePopup({ subpage, onClose }) {
       }
       setSent(true);
       const link = document.createElement("a");
-      link.href = subpage.brochureUrl || fallbackData.brochureUrl;
+      link.href = subpage.brochureUrl || ONE_RAJARHAT_FALLBACK.brochureUrl;
       link.download = "One-Rajarhat-Brochure.pdf";
       document.body.appendChild(link);
       link.click();
@@ -822,7 +888,7 @@ function BrochurePopup({ subpage, onClose }) {
 export default function OneRajarhatPage() {
   const [brochurePopup, setBrochurePopup] = useState(false);
   const [navHidden, setNavHidden] = useState(false);
-  const [subpage, setSubpage] = useState(fallbackData);
+  const [subpage, setSubpage] = useState(ONE_RAJARHAT_FALLBACK);
 
   const onContact = useCallback(() => {
     setBrochurePopup(true);
@@ -847,29 +913,29 @@ export default function OneRajarhatPage() {
             const extracted = extractSpecsAndCustomData(sp.specifications);
 
             setSubpage({
-              heroTitle: sp.heroTitle || fallbackData.heroTitle,
-              heroTagline: sp.heroTagline || fallbackData.heroTagline,
-              heroLogo: sp.heroLogo || fallbackData.heroLogo,
-              heroBg: sp.heroBg || fallbackData.heroBg,
-              heroMobileUrl: extracted.heroMobileUrl || fallbackData.heroMobileUrl,
-              companyLogoUrl: extracted.companyLogoUrl || fallbackData.companyLogoUrl,
-              locationMapUrl: extracted.locationMapUrl || fallbackData.locationMapUrl,
-              gmbGoogleIconUrl: extracted.gmbGoogleIconUrl || fallbackData.gmbGoogleIconUrl,
-              gmbStarIconUrl: extracted.gmbStarIconUrl || fallbackData.gmbStarIconUrl,
-              overviewParagraphs: sp.overviewParagraphs?.length ? sp.overviewParagraphs : fallbackData.overviewParagraphs,
-              overviewHighlights: sp.overviewHighlights?.length ? sp.overviewHighlights : fallbackData.overviewHighlights,
-              amenities: sp.amenities?.length ? sp.amenities : fallbackData.amenities,
-              specifications: extracted.specifications?.length ? extracted.specifications : fallbackData.specifications,
-              floorPlans: extracted.floorPlans?.length ? extracted.floorPlans : fallbackData.floorPlans,
-              locationImage: sp.locationImage || fallbackData.locationImage,
-              locationMapEmbed: sp.locationMapEmbed || fallbackData.locationMapEmbed,
-              locationDestinations: sp.locationDestinations?.length ? sp.locationDestinations : fallbackData.locationDestinations,
-              videoSection: extracted.videoSection || fallbackData.videoSection,
-              gmbReviews: extracted.gmbReviews || fallbackData.gmbReviews,
-              galleryImages: sp.galleryImages?.length ? sp.galleryImages : fallbackData.galleryImages,
-              brochureUrl: sp.brochureUrl || fallbackData.brochureUrl,
-              metaTitle: sp.metaTitle || fallbackData.metaTitle,
-              metaDescription: sp.metaDescription || fallbackData.metaDescription,
+              heroTitle: sp.heroTitle || ONE_RAJARHAT_FALLBACK.heroTitle,
+              heroTagline: sp.heroTagline || ONE_RAJARHAT_FALLBACK.heroTagline,
+              heroLogo: sp.heroLogo || ONE_RAJARHAT_FALLBACK.heroLogo,
+              heroBg: sp.heroBg || ONE_RAJARHAT_FALLBACK.heroBg,
+              heroMobileUrl: extracted.heroMobileUrl || ONE_RAJARHAT_FALLBACK.heroMobileUrl,
+              companyLogoUrl: extracted.companyLogoUrl || ONE_RAJARHAT_FALLBACK.companyLogoUrl,
+              locationMapUrl: extracted.locationMapUrl || ONE_RAJARHAT_FALLBACK.locationMapUrl,
+              gmbGoogleIconUrl: extracted.gmbGoogleIconUrl || ONE_RAJARHAT_FALLBACK.gmbGoogleIconUrl,
+              gmbStarIconUrl: extracted.gmbStarIconUrl || ONE_RAJARHAT_FALLBACK.gmbStarIconUrl,
+              overviewParagraphs: sp.overviewParagraphs?.length ? sp.overviewParagraphs : ONE_RAJARHAT_FALLBACK.overviewParagraphs,
+              overviewHighlights: sp.overviewHighlights?.length ? sp.overviewHighlights : ONE_RAJARHAT_FALLBACK.overviewHighlights,
+              amenities: sp.amenities?.length ? sp.amenities : ONE_RAJARHAT_FALLBACK.amenities,
+              specifications: extracted.specifications?.length ? extracted.specifications : ONE_RAJARHAT_FALLBACK.specifications,
+              floorPlans: extracted.floorPlans?.length ? extracted.floorPlans : ONE_RAJARHAT_FALLBACK.floorPlans,
+              locationImage: sp.locationImage || ONE_RAJARHAT_FALLBACK.locationImage,
+              locationMapEmbed: sp.locationMapEmbed || ONE_RAJARHAT_FALLBACK.locationMapEmbed,
+              locationDestinations: sp.locationDestinations?.length ? sp.locationDestinations : ONE_RAJARHAT_FALLBACK.locationDestinations,
+              videoSection: extracted.videoSection || ONE_RAJARHAT_FALLBACK.videoSection,
+              gmbReviews: extracted.gmbReviews || ONE_RAJARHAT_FALLBACK.gmbReviews,
+              galleryImages: sp.galleryImages?.length ? sp.galleryImages : ONE_RAJARHAT_FALLBACK.galleryImages,
+              brochureUrl: sp.brochureUrl || ONE_RAJARHAT_FALLBACK.brochureUrl,
+              metaTitle: sp.metaTitle || ONE_RAJARHAT_FALLBACK.metaTitle,
+              metaDescription: sp.metaDescription || ONE_RAJARHAT_FALLBACK.metaDescription,
             });
           }
         }
@@ -884,7 +950,7 @@ export default function OneRajarhatPage() {
 
   // Sync tab/doc meta title and description
   useEffect(() => {
-    document.title = subpage.metaTitle || fallbackData.metaTitle;
+    document.title = subpage.metaTitle || ONE_RAJARHAT_FALLBACK.metaTitle;
     let meta = document.querySelector('meta[name="description"]');
     let created = false;
     if (!meta) {
@@ -892,7 +958,7 @@ export default function OneRajarhatPage() {
       meta.name = "description";
       created = true;
     }
-    meta.content = subpage.metaDescription || fallbackData.metaDescription;
+    meta.content = subpage.metaDescription || ONE_RAJARHAT_FALLBACK.metaDescription;
     if (created) {
       document.head.appendChild(meta);
     }
