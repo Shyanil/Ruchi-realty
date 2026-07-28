@@ -1,10 +1,12 @@
-export const GALLERY_CATEGORIES = ["All","Projects","Amenities","Lifestyle","Construction Updates","Events","Awards","Team","Other"];
+import { GALLERY_MEDIA } from "../data/galleryMedia";
+export const GALLERY_CATEGORIES = ["Videos","Events","Office Culture"];
 export const EVENT_TYPES = ["All","Event","Award","Recognition","Milestone","Media Coverage"];
 export const slugifyMedia = (value = "") => value.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 let manifestCache;
 const manifest = async () => manifestCache || (manifestCache = await fetch("/assets/media/gallery/media-assets-manifest.json").then((r) => r.json()));
-const normalizeGallery = (item) => ({ ...item, id: item.id || item.hash, image_url: item.image_url || item.media_assets?.public_url || item.public_url, thumbnail_url: item.thumbnail_url || item.media_assets?.thumbnail_url || item.public_url, title: item.title || item.alt_text, is_featured: Boolean(item.is_featured) });
-export async function getGallery(admin = false) { const fn = admin ? window.RuchiBackend?.media?.getAllGallery : window.RuchiBackend?.media?.getGallery; const result = await fn?.(); if (result?.data?.length) return result.data.map(normalizeGallery); return (await manifest()).filter((item) => item.usage_type !== "press_placeholder").map(normalizeGallery); }
+const youtubeThumb = (url = "") => { const id=url.match(/[?&]v=([^&]+)/)?.[1]||url.match(/youtu\.be\/([^?]+)/)?.[1]; return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : ""; };
+const normalizeGallery = (item) => { const image=item.image_url||item.media_assets?.public_url||item.public_url||youtubeThumb(item.video_url); return { ...item, id:item.id||item.hash, media_type:item.media_type||(item.video_url?"video":"image"), image_url:image, thumbnail_url:item.thumbnail_url||item.media_assets?.thumbnail_url||image, title:item.title||item.alt_text, is_featured:Boolean(item.is_featured) }; };
+export async function getGallery(admin = false) { const fn = admin ? window.RuchiBackend?.media?.getAllGallery : window.RuchiBackend?.media?.getGallery; const result = await fn?.(); if (result?.data?.length) return result.data.map(normalizeGallery); return GALLERY_MEDIA.map(normalizeGallery); }
 const withCover = (item) => ({ ...item, image_url:item.image_url||item.media_assets?.public_url||"", thumbnail_url:item.thumbnail_url||item.media_assets?.thumbnail_url||item.media_assets?.public_url||"" });
 export async function getPress(admin = false) { const fn = admin ? window.RuchiBackend?.media?.getAllPress : window.RuchiBackend?.media?.getPress; const result = await fn?.(); return (result?.data || []).map(withCover); }
 export async function getPressBySlug(slug) { const result = await window.RuchiBackend?.media?.getPressBySlug?.(slug); return result?.data ? withCover(result.data) : null; }
