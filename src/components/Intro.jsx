@@ -9,14 +9,14 @@ export default function Intro() {
           <div className="intro__eyebrow eyebrow sec-eyebrow">Committed to You</div>
         </Reveal>
         <Reveal delay={80}>
-          <h2 className="intro__head">
+          <h1 className="intro__head">
             We don't just build homes.<br />
             <span className="intro__grad">We stand by them.</span>
-          </h2>
+          </h1>
         </Reveal>
         <Reveal delay={160}>
           <p className="intro__sub">
-            For nearly four decades, across Kolkata, Indore, and Bhopal, we have treated the home as a promise, built with intent, handed over with care, and held to long after the keys change hands.
+            Since 2008, across Kolkata, Indore, and Bhopal, we have treated the home as a promise—built with intent, handed over with care, and supported long after the keys change hands.
           </p>
         </Reveal>
       </div>

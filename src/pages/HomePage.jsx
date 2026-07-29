@@ -12,6 +12,7 @@ import { BlogSection } from "../components/BlogSection";
 import { Contact } from "../components/Contact";
 import { Footer } from "../components/Footer";
 import { CustomCursor } from "../components/shared";
+import SEO from "../components/SEO";
 
 export default function HomePage() {
   useEffect(() => {
@@ -31,6 +32,7 @@ export default function HomePage() {
 
   return (
     <>
+      <SEO title="Ruchi Realty | Real Estate Developer in Kolkata, Indore & Bhopal" description="Founded in 2008, Ruchi Realty has delivered residential, commercial and plotted developments across Kolkata, Indore and Bhopal. Explore 20+ projects." canonical="https://ruchirealty.com/" image="/uploads/hero-one-victoria.webp" />
       <CustomCursor />
       <Nav onContact={scrollToContact} />
       <main>

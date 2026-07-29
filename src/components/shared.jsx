@@ -40,7 +40,7 @@ export function RImg({ src, alt = "", className = "", style = {}, grade = false,
 /* ---- Animated stat counter ---- */
 export function StatCounter({ value, suffix }) {
   const ref = useRef(null);
-  const [n, setN] = useState(0);
+  const [n, setN] = useState(value);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;

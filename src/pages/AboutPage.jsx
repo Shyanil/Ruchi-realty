@@ -2,36 +2,37 @@ import { useState, useEffect } from "react";
 import Nav from "../components/Nav";
 import { Footer } from "../components/Footer";
 import { Reveal, RImg } from "../components/shared";
+import SEO from "../components/SEO";
 
 const LEDGER_ITEMS = [
   {
     no: "01",
     title: "Environmental Sustainability",
-    desc: "Integrating green spaces, eco-friendly materials, and energy efficiency to build responsibly for future generations. We prioritize low-impact construction footprints and water recycling systems.",
+    desc: "Green spaces, efficient systems, and responsible material choices designed for lasting value.",
     img: "assets/projects/one-rajarhat.webp"
   },
   {
     no: "02",
     title: "Innovative Designs",
-    desc: "Crafting modern layouts, spatial flow optimization, and architectural elegance that redefine contemporary living. Our designs focus on maximum natural light ventilation and modular flexibility.",
+    desc: "Practical layouts shaped around natural light, ventilation, and modern everyday living.",
     img: "assets/projects/one-victoria.webp"
   },
   {
     no: "03",
     title: "Customer Satisfaction",
-    desc: "Fostering absolute transparency, customer-first service, and lifelong support. We establish direct communication channels and active post-handover support teams to keep you covered.",
+    desc: "Clear communication, transparent commitments, and support that continues after handover.",
     img: "assets/projects/active-acres.webp"
   },
   {
     no: "04",
     title: "Timely Completion",
-    desc: "Strict adherence to project timelines and rigorous phase planning. We manage milestones transparently, ensuring key handovers are met exactly as scheduled.",
+    desc: "Disciplined phase planning, visible milestones, and clear communication through delivery.",
     img: "uploads/hero-active-acres.webp"
   },
   {
     no: "05",
     title: "Quality Construction",
-    desc: "Sourcing premium raw materials and conducting multi-stage engineering audits. From structural steel to finishing joints, our audits ensure unmatched structural integrity.",
+    desc: "Specified materials and multi-stage engineering checks from structure through finishes.",
     img: "assets/projects/oscar-fort.webp"
   }
 ];
@@ -117,10 +118,10 @@ function AboutHero() {
         <Reveal>
           <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>About Us</div>
           <h1 className="ab-hero__title">
-            About<br /><span className="rr-grad">Ruchi Realty</span>
+            Committed<br /><span className="rr-grad">to You.</span>
           </h1>
           <p className="ab-hero__lead">
-            Building trust through landmark spaces across India.
+            Since 2008, building landmark spaces across Kolkata, Indore, and Bhopal.
           </p>
         </Reveal>
       </div>
@@ -155,9 +156,9 @@ function AboutLegacy() {
               <div className="ab-legacy__image-box"><img src="assets/projects/one-rajarhat.webp" alt="One Rajarhat" /></div>
             </div>
             <div className="ab-legacy__stats-strip">
-              <div className="ab-glass-stat"><span className="ab-glass-stat__val">17+</span><span className="ab-glass-stat__lbl">Years of Real Estate Expertise</span></div>
+              <div className="ab-glass-stat"><span className="ab-glass-stat__val">2008</span><span className="ab-glass-stat__lbl">Year Founded · 17+ Years of Experience</span></div>
               <div className="ab-glass-stat"><span className="ab-glass-stat__val">3</span><span className="ab-glass-stat__lbl">Key Indian Cities</span></div>
-              <div className="ab-glass-stat"><span className="ab-glass-stat__val">40+</span><span className="ab-glass-stat__lbl">Landmark Addresses Delivered</span></div>
+              <div className="ab-glass-stat"><span className="ab-glass-stat__val">20+</span><span className="ab-glass-stat__lbl">Residential, Commercial & Plotted Projects</span></div>
             </div>
           </Reveal>
         </div>
@@ -239,7 +240,7 @@ function AboutVisionMission() {
               <div className="ab-vm-card__eyebrow">MISSION</div>
               <h3 className="ab-vm-card__title">Empowering lives through exceptional spaces</h3>
               <p className="ab-vm-card__text">
-                Ruchi Realty is dedicated to crafting residential, commercial, and mixed-use projects that redefine modern living. With a legacy built on over 17 years of expertise and dedication, the company aims to exceed expectations, foster healthy communities, and create environments where contentment flourishes.
+                To create enduring residential and commercial spaces through disciplined engineering, thoughtful design, and customer-first delivery.
               </p>
               <blockquote className="ab-vm-card__quote">
                 &ldquo;To build real estate marvels across residential and commercial developments while setting new standards in quality and architectural excellence.&rdquo;
@@ -254,7 +255,7 @@ function AboutVisionMission() {
               <div className="ab-vm-card__eyebrow">VISION</div>
               <h3 className="ab-vm-card__title">To lead tomorrow together</h3>
               <p className="ab-vm-card__text">
-                Transforming the real estate landscape with innovation, sustainability, and excellence, crafting spaces where joy and vibrancy thrive.
+                To be a trusted Indian real estate company, known for quality, sustainability, and places where communities thrive.
               </p>
               <blockquote className="ab-vm-card__quote">
                 &ldquo;To contribute significantly to building a stronger nation and become the country's trusted real estate company.&rdquo;
@@ -483,6 +484,24 @@ function AboutTeam() {
   );
 }
 
+function AboutOffices() {
+  const offices = [
+    ["Kolkata", "54, 10, D. C. Dey Road, near ITC Sonar, Tangra, Kolkata – 700015, West Bengal"],
+    ["Indore", "2/1, South Tukoganj, Behind High Court, Indore – 452001, Madhya Pradesh"],
+    ["Bhopal", "Behind Bhabha College, Jatkhedi, Hoshangabad Road, Bhopal – 462026, Madhya Pradesh"],
+  ];
+  return (
+    <section className="ab-offices section-pad" aria-labelledby="office-title">
+      <div className="rr-wrap">
+        <Reveal><div className="eyebrow">OUR OFFICES</div><h2 id="office-title">Local teams in three cities.</h2></Reveal>
+        <div className="ab-offices__grid">
+          {offices.map(([city, address]) => <Reveal className="ab-office" key={city}><h3>{city}</h3><address>{address}</address><a href="/contact">Contact {city} office</a></Reveal>)}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function AboutCTA() {
   const onExplore = (e) => {
     e.preventDefault();
@@ -524,6 +543,7 @@ export default function AboutPage() {
 
   return (
     <>
+      <SEO title="About Ruchi Realty | Legacy, Projects & Leadership" description="Meet Ruchi Realty’s leadership and explore a legacy founded in 2008, with 20+ residential, commercial and plotted projects across three Indian cities." canonical="https://ruchirealty.com/about" image="/assets/about-family.png" />
       <Nav onContact={onContact} solidAt={1} />
       <main>
         <AboutHero />
@@ -532,6 +552,7 @@ export default function AboutPage() {
         <AboutVisionMission />
         <AboutProjects />
         <AboutTeam />
+        <AboutOffices />
       </main>
       <Footer />
     </>

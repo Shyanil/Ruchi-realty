@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect } from 'react'
+import { useEffect } from 'react'
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import ProjectsPage from './pages/ProjectsPage'
@@ -27,7 +27,7 @@ function ScrollToTop() {
     return () => { window.history.scrollRestoration = "auto"; };
   }, []);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!hash) {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       const frame = window.requestAnimationFrame(() => {

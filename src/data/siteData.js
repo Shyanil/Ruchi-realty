@@ -28,10 +28,9 @@ const IMG_PEOPLE = [
 ];
 
 const STATS = [
-  { num: 38, suffix: "", label: "Years building in eastern and central India." },
-  { num: 12, suffix: "k", label: "Homes handed over to the families who waited for them." },
-  { num: 40, suffix: "+", label: "Residential and commercial addresses delivered." },
-  { num: 100, suffix: "%", label: "Of our projects are RERA-registered before a single visit is offered." },
+  { num: 17, suffix: "+", label: "Years of real estate experience since our founding in 2008." },
+  { num: 20, suffix: "+", label: "Residential, commercial, and plotted projects." },
+  { num: 3, suffix: "", label: "Cities: Kolkata, Indore, and Bhopal." },
 ];
 
 const TRUST = [

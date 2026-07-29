@@ -48,7 +48,7 @@ const MEGA = (() => {
     },
     About: {
       href: "About.html",
-      blurb: "Nearly four decades of treating a home as a promise, built with intent and held to long after the keys change hands.",
+      blurb: "Founded in 2008: 17+ years of treating a home as a promise, built with intent and supported after handover.",
       cols: [
         { h: "Company", items: [["About Us", "About.html"], ["The proof, not the promise", "#why"], ["Our Team", "About.html#team"], ["Careers", "Careers.html"]] },
       ],
