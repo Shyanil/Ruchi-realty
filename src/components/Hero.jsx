@@ -103,9 +103,11 @@ export default function Hero() {
         muted
         loop
         playsInline
-        preload="metadata"
+        preload="auto"
         poster="/assets/projects/active-acres.webp"
         onPlaying={handlePlaying}
+        onCanPlay={handlePlaying}
+        onLoadedMetadata={handlePlaying}
         onLoadedData={handlePlaying}
         onError={handleVideoError}
         aria-label="Ruchi Realty showreel"
