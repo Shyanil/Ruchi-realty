@@ -5,14 +5,20 @@ import { Footer } from "../components/Footer";
 import SEO from "../components/SEO";
 import ShareButtons from "../components/blog/ShareButtons";
 import CommentSection from "../components/blog/CommentSection";
-import { getBlogBySlug, getPublicBlogs, slugify } from "../services/blogService";
+import { getBlogBySlug, getPublicBlogs, normalizeBlog, slugify } from "../services/blogService";
+import { BLOG } from "../data/siteData";
 
 const SITE = "https://ruchirealty.com";
 const formatDate = (value) => value ? new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "long", year: "numeric" }).format(new Date(value)) : "";
 const inline = (text) => { const parts = text.split(/(https?:\/\/[^\s]+|\[[^\]]+\]\([^)]+\))/g); return parts.map((part, i) => { const match = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/); if (match) return <a key={i} href={match[2]}>{match[1]}</a>; if (/^https?:\/\//.test(part)) return <a key={i} href={part}>{part}</a>; return part; }); };
 function ArticleBody({ content }) { const blocks = content.split(/\n{2,}/).map((part) => part.trim()).filter(Boolean); return <div className="article-copy">{blocks.map((block, i) => { if (/^###\s+/.test(block)) { const text = block.replace(/^###\s+/, ""); return <h3 id={slugify(text)} key={i}>{text}</h3>; } if (/^##\s+/.test(block)) { const text = block.replace(/^##\s+/, ""); return <h2 id={slugify(text)} key={i}>{text}</h2>; } if (/^>\s+/.test(block)) return <blockquote key={i}>{inline(block.replace(/^>\s+/, ""))}</blockquote>; const lines = block.split("\n"); if (lines.every((line) => /^[-*]\s+/.test(line))) return <ul key={i}>{lines.map((line, n) => <li key={n}>{inline(line.replace(/^[-*]\s+/, ""))}</li>)}</ul>; if (lines.every((line) => /^\d+\.\s+/.test(line))) return <ol key={i}>{lines.map((line, n) => <li key={n}>{inline(line.replace(/^\d+\.\s+/, ""))}</li>)}</ol>; return <p key={i}>{inline(block)}</p>; })}</div>; }
 export default function BlogDetailsPage() {
-  const { slug } = useParams(); const [blog, setBlog] = useState(null); const [related, setRelated] = useState([]); const [loading, setLoading] = useState(true);
+  const { slug } = useParams();
+  const fallbackBlogs = useMemo(() => BLOG.map(normalizeBlog), []);
+  const fallbackBlog = fallbackBlogs.find((item) => item.slug === slug) || null;
+  const [blog, setBlog] = useState(fallbackBlog);
+  const [related, setRelated] = useState(() => fallbackBlogs.filter((entry) => entry.slug !== slug && entry.category === fallbackBlog?.category).slice(0, 3));
+  const [loading, setLoading] = useState(!fallbackBlog);
   useEffect(() => { let live = true; Promise.all([getBlogBySlug(slug), getPublicBlogs()]).then(([item, all]) => { if (live) { setBlog(item); setRelated(all.filter((entry) => entry.slug !== slug && entry.category === item?.category).slice(0, 3)); setLoading(false); } }); return () => { live = false; }; }, [slug]);
   const canonical = blog?.canonical_url || `${SITE}/blogs/${slug}`;
   const headings = useMemo(() => (blog?.content.match(/^##\s+.+$/gm) || []).map((line) => ({ text: line.replace(/^##\s+/, ""), id: slugify(line.replace(/^##\s+/, "")) })), [blog?.content]);

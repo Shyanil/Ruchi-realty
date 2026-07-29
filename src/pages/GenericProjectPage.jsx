@@ -830,9 +830,20 @@ function ProjectEnquiryCTA({ data, onEnquire }) {
 export default function GenericProjectPage({ slugOverride = "" }) {
   const params = useParams();
   const slug = slugOverride || params.slug;
-  const [project, setProject] = useState(null);
-  const [subpage, setSubpage] = useState(null);
-  const [loaded, setLoaded] = useState(false);
+  const fallback = FALLBACK_SUBPAGES[slug] || null;
+  const fallbackListing = PROJECTS.find((item) => item.url?.endsWith(`/${slug}`));
+  const fallbackMeta = PROJECT_LEGACY_META[slug] || {};
+  const fallbackProject = fallback ? {
+    slug,
+    title: fallback.heroTitle || fallbackListing?.name,
+    name: fallback.heroTitle || fallbackListing?.name,
+    city: fallbackMeta.city || fallbackListing?.city || "",
+    location: fallbackMeta.city || fallbackListing?.city || "",
+    type: fallbackMeta.type || fallbackListing?.type || "Residential",
+  } : null;
+  const [project, setProject] = useState(fallbackProject);
+  const [subpage, setSubpage] = useState(fallback);
+  const [loaded, setLoaded] = useState(Boolean(fallback));
   const [brochurePopup, setBrochurePopup] = useState(false);
   const [heroPassed, setHeroPassed] = useState(false);
 

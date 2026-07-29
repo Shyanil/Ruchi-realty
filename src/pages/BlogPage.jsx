@@ -4,13 +4,14 @@ import Nav from "../components/Nav";
 import { Contact } from "../components/Contact";
 import { Footer } from "../components/Footer";
 import SEO from "../components/SEO";
-import { getPublicBlogs } from "../services/blogService";
+import { getPublicBlogs, normalizeBlog } from "../services/blogService";
+import { BLOG } from "../data/siteData";
 
 const PAGE_SIZE = 6;
 const formatDate = (value) => new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" }).format(new Date(value));
 function Card({ blog }) { return <article className="blog-list-card"><Link to={`/blogs/${blog.slug}`} className="blog-list-card__image"><img src={blog.image} alt={blog.image_alt} loading="lazy" /></Link><div className="blog-list-card__body"><div className="blog-list-card__meta"><span>{blog.category}</span><time dateTime={blog.published_at}>{formatDate(blog.published_at)}</time></div><h2><Link to={`/blogs/${blog.slug}`}>{blog.title}</Link></h2><p>{blog.excerpt}</p><div className="blog-list-card__foot"><span>{blog.reading_time_minutes} min read{blog.comment_count != null ? ` · ${blog.comment_count} comments` : ""}</span><Link to={`/blogs/${blog.slug}`}>Read More →</Link></div></div></article>; }
 export default function BlogPage() {
-  const [blogs, setBlogs] = useState([]); const [query, setQuery] = useState(""); const [category, setCategory] = useState("All"); const [visible, setVisible] = useState(PAGE_SIZE); const [loading, setLoading] = useState(true);
+  const [blogs, setBlogs] = useState(() => BLOG.map(normalizeBlog)); const [query, setQuery] = useState(""); const [category, setCategory] = useState("All"); const [visible, setVisible] = useState(PAGE_SIZE); const [loading, setLoading] = useState(false);
   useEffect(() => { let live = true; getPublicBlogs().then((data) => { if (live) { setBlogs(data); setLoading(false); } }); return () => { live = false; }; }, []);
   useEffect(() => setVisible(PAGE_SIZE), [query, category]);
   const categories = useMemo(() => ["All", ...new Set(blogs.map((blog) => blog.category))], [blogs]);
