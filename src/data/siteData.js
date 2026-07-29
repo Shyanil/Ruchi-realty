@@ -319,6 +319,7 @@ const VIDEO_TESTIMONIALS = [
 ];
 
 export const SHOWREEL = "/assets/hero_video.mp4";
+export const MOBILE_SHOWREEL = "/assets/hero_video_mobile.mp4";
 
 export {
   STATS,

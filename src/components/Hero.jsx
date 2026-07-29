@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { SHOWREEL } from "../data/siteData";
+import { MOBILE_SHOWREEL, SHOWREEL } from "../data/siteData";
 
 export default function Hero() {
   const vid = useRef(null);
@@ -104,7 +104,6 @@ export default function Hero() {
       <video
         ref={vid}
         className="hero__video"
-        src={SHOWREEL}
         autoPlay
         loop
         playsInline
@@ -113,7 +112,10 @@ export default function Hero() {
         onLoadedData={handlePlaying}
         onError={handleVideoError}
         aria-label="Ruchi Realty showreel"
-      />
+      >
+        <source media="(max-width: 720px)" src={MOBILE_SHOWREEL} type="video/mp4" />
+        <source src={SHOWREEL} type="video/mp4" />
+      </video>
       <div className="hero__scrim"></div>
 
       <button className={`hero__sound${soundOn ? " is-on" : ""}`} type="button"
