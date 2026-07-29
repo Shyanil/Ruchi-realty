@@ -39,6 +39,9 @@ main, section, .rr-wrap, .rr-wrap > * { min-width: 0; }
   .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
   html { scroll-behavior: auto; }
 }
+@media (max-width: 800px) {
+  .reveal { opacity: 1 !important; transform: none !important; }
+}
 
 /* ---- resilient image ---- */
 .rimg { position: relative; overflow: hidden; }

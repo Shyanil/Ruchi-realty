@@ -49,22 +49,17 @@ export default function Hero() {
     const video = vid.current;
     if (!video) return undefined;
 
-    // Request audible playback first. Browsers that allow it start with sound;
-    // when policy blocks it, keep the showreel reliable by falling back to mute.
-    video.defaultMuted = false;
-    video.muted = false;
-    video.play().then(() => {
-      audioUnlocked.current = true;
-      setSoundOn(true);
-    }).catch(() => {
-      video.muted = true;
-      setSoundOn(false);
-      video.play().catch(() => {
-        retryTimer.current = window.setTimeout(() => {
-          video.load();
-          video.play().catch(() => setVideoFailed(true));
-        }, 1200);
-      });
+    // Mobile browsers only guarantee autoplay when muted is present from the
+    // first paint. Audio remains available through the explicit sound button.
+    video.defaultMuted = true;
+    video.muted = true;
+    setSoundOn(false);
+    video.play().catch(() => {
+      retryTimer.current = window.setTimeout(() => {
+        video.load();
+        video.muted = true;
+        video.play().catch(() => setVideoFailed(true));
+      }, 1200);
     });
 
     return () => {
@@ -105,9 +100,11 @@ export default function Hero() {
         ref={vid}
         className="hero__video"
         autoPlay
+        muted
         loop
         playsInline
         preload="metadata"
+        poster="/assets/projects/active-acres.webp"
         onPlaying={handlePlaying}
         onLoadedData={handlePlaying}
         onError={handleVideoError}
