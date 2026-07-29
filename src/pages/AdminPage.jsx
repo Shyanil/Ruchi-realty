@@ -374,7 +374,7 @@ function AdminLogin({ onLogin }) {
   return (
     <main className="admin-login">
       <form className="admin-login__box" onSubmit={submit}>
-        <img src="assets/logo-h.png" alt="Ruchi Realty" />
+        <img src="assets/logo-h.webp" alt="Ruchi Realty" />
         <p className="admin-kicker">Secure admin login</p>
         <h1>Admin panel</h1>
         <AdminField label="Email">
@@ -925,7 +925,7 @@ function ProjectsAdmin() {
         project_id: projectId,
         heroTitle: form.heroTitle || form.title,
         heroTagline: form.heroTagline || form.tag || form.description,
-        heroLogo: form.heroLogo || form.companyLogoUrl || "assets/logo-h.png",
+        heroLogo: form.heroLogo || form.companyLogoUrl || "assets/logo-h.webp",
         heroBg: form.heroBg || form.image_url,
         heroMobileUrl: form.heroMobileUrl || "",
         heroImagePosition: form.heroImagePosition || "center center",
@@ -1163,7 +1163,7 @@ function ProjectsAdmin() {
         <div className="admin-list">
           {filteredProjects.length ? filteredProjects.map((project) => (
             <article className="admin-row admin-row--media" key={project.id}>
-              <img className="admin-thumb" src={project.image_url || "assets/logo-mark.png"} alt="" />
+              <img className="admin-thumb" src={project.image_url || "assets/logo-mark.webp"} alt="" />
               <div>
                 <strong>{project.title}</strong>
                 <span>{project.location} - {project.type} - {project.status}</span>
@@ -1419,7 +1419,7 @@ function BlogsAdmin() {
         <div className="admin-list">
           {filteredBlogs.length ? filteredBlogs.map((blog) => (
             <article className="admin-row admin-row--media" key={blog.id}>
-              <img className="admin-thumb" src={blog.image || "assets/logo-mark.png"} alt="" />
+              <img className="admin-thumb" src={blog.image || "assets/logo-mark.webp"} alt="" />
               <div>
                 <strong>{blog.title}</strong>
                 <span>{blog.category} - {blog.author}</span>
@@ -1659,7 +1659,7 @@ export default function AdminPage() {
   return (
     <>
       <div className="admin-top-row">
-        <a href="/" className="admin-brand"><img src="assets/logo-h.png" alt="Ruchi Realty" /></a>
+        <a href="/" className="admin-brand"><img src="assets/logo-h.webp" alt="Ruchi Realty" /></a>
         <button type="button" className="admin-logout" onClick={logout}>Logout</button>
       </div>
       <nav className="admin-tabs" aria-label="Admin sections">

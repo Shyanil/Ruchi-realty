@@ -2,20 +2,20 @@
    Awards Page Component - Ruchi Realty
    ============================================================ */
 const AWARDS_DATA = [
-  { title: "Malwa Vyapar Awards", img: "assets/media/award-malwa-vyapar.jpg" },
-  { title: "Company of the Year Award", img: "assets/media/award-company-of-the-year.jpg" },
-  { title: "Vishesh Atithi Awards", img: "assets/media/award-vishesh-atithi.jpg" },
-  { title: "Most Prestigious Property Exhibition", img: "assets/media/award-prestigious-property-exhibition.jpg" },
-  { title: "Excellence in Real Estate Planning", img: "assets/media/award-real-estate-planning.jpg" },
-  { title: "Property Auto Expo Award", img: "assets/media/award-property-auto-expo.jpg" },
-  { title: "Property Show Award by CREDAI", img: "assets/media/award-credai-property-show.jpg" },
-  { title: "Property Fair Awards by HDFC", img: "assets/media/award-hdfc-property-fair.jpg" },
-  { title: "Property & Auto Fair Awards", img: "assets/media/award-property-auto-fair.jpg" },
-  { title: "Times Property Show Award", img: "assets/media/award-times-property-show.jpg" },
-  { title: "Ultra High Luxury Developer of the Year Award", img: "assets/media/award-ultra-high-luxury-developer.jpg" },
-  { title: "Mega Property Expo Award", img: "assets/media/award-mega-property-expo-2025.jpg" },
-  { title: "Real Estate Fair Award", img: "assets/media/award-real-estate-fair-2025.jpg" },
-  { title: "Golden Brick Award", img: "assets/media/award-luxury-project-golden-brick-2025.jpg" }
+  { title: "Malwa Vyapar Awards", img: "assets/media/award-malwa-vyapar.webp" },
+  { title: "Company of the Year Award", img: "assets/media/award-company-of-the-year.webp" },
+  { title: "Vishesh Atithi Awards", img: "assets/media/award-vishesh-atithi.webp" },
+  { title: "Most Prestigious Property Exhibition", img: "assets/media/award-prestigious-property-exhibition.webp" },
+  { title: "Excellence in Real Estate Planning", img: "assets/media/award-real-estate-planning.webp" },
+  { title: "Property Auto Expo Award", img: "assets/media/award-property-auto-expo.webp" },
+  { title: "Property Show Award by CREDAI", img: "assets/media/award-credai-property-show.webp" },
+  { title: "Property Fair Awards by HDFC", img: "assets/media/award-hdfc-property-fair.webp" },
+  { title: "Property & Auto Fair Awards", img: "assets/media/award-property-auto-fair.webp" },
+  { title: "Times Property Show Award", img: "assets/media/award-times-property-show.webp" },
+  { title: "Ultra High Luxury Developer of the Year Award", img: "assets/media/award-ultra-high-luxury-developer.webp" },
+  { title: "Mega Property Expo Award", img: "assets/media/award-mega-property-expo-2025.webp" },
+  { title: "Real Estate Fair Award", img: "assets/media/award-real-estate-fair-2025.webp" },
+  { title: "Golden Brick Award", img: "assets/media/award-luxury-project-golden-brick-2025.webp" }
 ];
 
 function AwardsPage() {

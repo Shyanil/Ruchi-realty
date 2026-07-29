@@ -4,7 +4,7 @@ const upsertMeta = (selector, attrs) => { let el = document.head.querySelector(s
 export default function SEO({ title, description, canonical, image, type = "website", article, schemas = [] }) {
   useEffect(() => {
     const clean = new URL(canonical || location.pathname, SITE_URL); clean.search = ""; clean.hash = "";
-    const url = clean.toString(); const imageUrl = new URL(image || "/assets/logo-h.png", SITE_URL).toString(); document.title = title;
+    const url = clean.toString(); const imageUrl = new URL(image || "/assets/logo-h.webp", SITE_URL).toString(); document.title = title;
     upsertMeta('meta[name="description"]', { name: "description", content: description });
     [["og:title", title], ["og:description", description], ["og:url", url], ["og:image", imageUrl], ["og:type", type], ["twitter:card", "summary_large_image"], ["twitter:title", title], ["twitter:description", description], ["twitter:image", imageUrl]].forEach(([property, content]) => { const attr = property.startsWith("twitter:") ? "name" : "property"; upsertMeta(`meta[${attr}="${property}"]`, { [attr]: property, content }); });
     if (article?.publishedTime) upsertMeta('meta[property="article:published_time"]', { property: "article:published_time", content: article.publishedTime });

@@ -543,7 +543,7 @@ export default function AboutPage() {
 
   return (
     <>
-      <SEO title="About Ruchi Realty | Legacy, Projects & Leadership" description="Meet Ruchi Realty’s leadership and explore a legacy founded in 2008, with 20+ residential, commercial and plotted projects across three Indian cities." canonical="https://ruchirealty.com/about" image="/assets/about-family.png" />
+      <SEO title="About Ruchi Realty | Legacy, Projects & Leadership" description="Meet Ruchi Realty’s leadership and explore a legacy founded in 2008, with 20+ residential, commercial and plotted projects across three Indian cities." canonical="https://ruchirealty.com/about" image="/assets/about-family.webp" />
       <Nav onContact={onContact} solidAt={1} />
       <main>
         <AboutHero />

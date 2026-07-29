@@ -240,7 +240,7 @@ This system uses **[Lucide](https://lucide.dev)** (CDN-linked) as the substitute
 - Unicode symbols are fine only when they are typographic (·, —, →, ↗) and used as part of running copy — never as decoration.
 
 ### Logos & illustration
-- The custom **R monogram** (`assets/logo-mark.png`, gradient fill) is the only illustration the brand owns. It is treated as type — no shadows, no recolouring of the gradient, no animation. Use the white-knockout (`logo-mark-white.png`) on dark/photo/gradient surfaces.
+- The custom **R monogram** (`assets/logo-mark.webp`, gradient fill) is the only illustration the brand owns. It is treated as type — no shadows, no recolouring of the gradient, no animation. Use the white-knockout (`logo-mark-white.png`) on dark/photo/gradient surfaces.
 - No illustrations, no isometrics, no hand-drawn elements anywhere.
 
 ---

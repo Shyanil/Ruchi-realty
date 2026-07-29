@@ -1,8 +1,8 @@
 ﻿export const OSCAR_PRIDE_FALLBACK = {
   heroTitle: "Oscar Pride",
   heroTagline: "Oscar Pride - A Promise of Luxury Living",
-  heroLogo: "/projects/oscar-pride-indore/logo.png",
-  heroBg: "/projects/oscar-pride-indore/hero.jpg",
+  heroLogo: "/projects/oscar-pride-indore/logo.webp",
+  heroBg: "/projects/oscar-pride-indore/hero.webp",
   overviewParagraphs: [
     "With Oscar Pride, you are not just buying land but an opportunity to enrich your future. Oscar Pride offers an array of benefits, has excellent connectivity, is a perfect choice for a luxurious lifestyle and is an investment that keeps growing. Either way, Oscar Pride is a landmark that will redefine you.",
     "Located on Kanadia Main Road, Bypass, Oscar Pride is a unique plotted residential development spanning over 8 acres. With multiple plot sizes, it proves to be an excellent choice for those who aspire to live a zesty and yet secure lifestyle."

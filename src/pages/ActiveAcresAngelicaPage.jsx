@@ -94,13 +94,13 @@ function extractSpecsAndCustomData(specifications) {
 export const ACTIVE_ACRES_ANGELICA_FALLBACK = {
   heroTitle: "Angelica Active Acres",
   heroTagline: "Spread over 16.38 Acres with 6 towers of G+22 comprising 1050 Apartments",
-  heroLogo: "assets/projects/active-acres-angelica/logo.png",
+  heroLogo: "assets/projects/active-acres-angelica/logo.webp",
   heroBg: "assets/projects/active-acres-angelica/hero.webp",
   heroMobileUrl: "assets/projects/active-acres-angelica/hero-sm.webp",
-  companyLogoUrl: "assets/projects/active-acres-angelica/ruchi_logo.png",
-  locationMapUrl: "assets/projects/active-acres-angelica/location-map.jpg",
-  gmbGoogleIconUrl: "assets/projects/active-acres-angelica/g-icon.png",
-  gmbStarIconUrl: "assets/projects/active-acres-angelica/5-star.png",
+  companyLogoUrl: "assets/projects/active-acres-angelica/ruchi_logo.webp",
+  locationMapUrl: "assets/projects/active-acres-angelica/location-map.webp",
+  gmbGoogleIconUrl: "assets/projects/active-acres-angelica/g-icon.webp",
+  gmbStarIconUrl: "assets/projects/active-acres-angelica/5-star.webp",
   overviewParagraphs: [
     "One of the largest condominium projects of Kolkata, Active Acres, is spread over 16.38 Acres. It has 6 towers of G+22 comprising of 1050 Apartments, containing a mix of 2, 3 & 4 BHK apartments with Penthouses. The idea behind ‘Active Acres’ has been to provide the residents with a superior quality of life. Architects at Agarwal and Agarwal have utilized all their skill and innovation to bring to life the dream of a revolutionary residential complex.",
     "Located strategically behind JW Marriott in Tangra, Kolkata, Active Acres Angelica offers unmatched connectivity to E.M. Bypass, Salt Lake Sector V, Park Street, top schools, and international healthcare facilities. With over 6 acres of dedicated outdoor recreational space and world-class clubhouse amenities, it provides an elevated lifestyle for discerning homeowners."
@@ -150,11 +150,11 @@ export const ACTIVE_ACRES_ANGELICA_FALLBACK = {
     }
   ],
   floorPlans: [
-    { title: "Master Plan", desc: "assets/projects/active-acres-angelica/location-map.jpg" },
-    { title: "4 BHK Unit Plan", desc: "assets/projects/active-acres-angelica/location-map.jpg" },
-    { title: "3 BHK Unit Plan", desc: "assets/projects/active-acres-angelica/location-map.jpg" }
+    { title: "Master Plan", desc: "assets/projects/active-acres-angelica/location-map.webp" },
+    { title: "4 BHK Unit Plan", desc: "assets/projects/active-acres-angelica/location-map.webp" },
+    { title: "3 BHK Unit Plan", desc: "assets/projects/active-acres-angelica/location-map.webp" }
   ],
-  locationImage: "assets/projects/active-acres-angelica/location-map.jpg",
+  locationImage: "assets/projects/active-acres-angelica/location-map.webp",
   locationMapEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3684.636603099951!2d88.38883597603706!3d22.555291233633633!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02768f51a44c79%3A0xe5a13318281cb9f2!2sActive%20Acres!5e0!3m2!1sen!2sin!4v1691752959217!5m2!1sen!2sin",
   locationDestinations: [
     { name: "JW Marriott", dist: "1 km" },
@@ -166,12 +166,12 @@ export const ACTIVE_ACRES_ANGELICA_FALLBACK = {
   videoSection: {
     enabled: true,
     videoUrl: "https://youtu.be/GTYs3ZynAQU",
-    thumbnailUrl: "assets/projects/active-acres-angelica/video-thumbnail.jpg"
+    thumbnailUrl: "assets/projects/active-acres-angelica/video-thumbnail.webp"
   },
   gmbReviews: {
     enabled: true,
-    googleIconUrl: "assets/projects/active-acres-angelica/g-icon.png",
-    starIconUrl: "assets/projects/active-acres-angelica/5-star.png",
+    googleIconUrl: "assets/projects/active-acres-angelica/g-icon.webp",
+    starIconUrl: "assets/projects/active-acres-angelica/5-star.webp",
     reviews: [
       { author: "Ramesh Kumar", rating: 5, text: "Excellent residential tower inside Active Acres. The construction quality is top-notch, and the amenities like the library and table tennis are very well maintained. Extremely peaceful environment.", time: "1 month ago" },
       { author: "Ananya Sen", rating: 5, text: "Beautiful landscape gardens and wide roads. The new Angelica tower has a great location in Tangra, Kolkata, with very good connectivity to IT hubs and E.M. Bypass.", time: "2 weeks ago" },

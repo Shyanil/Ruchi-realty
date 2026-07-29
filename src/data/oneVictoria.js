@@ -3,7 +3,7 @@ const BASE = "/projects/one-victoria-new-town";
 export const ONE_VICTORIA_FALLBACK = {
   heroTitle: "One Victoria",
   heroTagline: "Residential & Retail / Apartment Complex",
-  heroLogo: `${BASE}/project-logo.png`,
+  heroLogo: `${BASE}/project-logo.webp`,
   heroBg: `${BASE}/hero.webp`,
   overviewParagraphs: [
     "Amidst the fast-paced streets of Newtown, ONE VICTORIA, a retail & apartment complex stands as a tranquil haven, seamlessly blending luxury residences with cutting-edge retail spaces. Located in the thriving Action Area-1, Newtown, relish in the perfect blend of convenience with excellent connectivity.",
@@ -37,11 +37,11 @@ export const ONE_VICTORIA_FALLBACK = {
     { title: "Location Context", desc: "At One Victoria, the best of East Kolkata is outside your doorstep. Whether you travel by metro, cab or flight, commuting from one place to another will be simplified beyond your expectations.", image: `${BASE}/gallery/gallery-1.webp` },
     { title: "Project Details", desc: "Residential + Retail / Apartment Complex. RERA: WBRERA/P/NOR/2024/001080. Phone: 033 6902 9144. Email: info@ruchirealty.com", image: `${BASE}/gallery/gallery-2.webp` },
     { title: "__hero_mobile_url__", desc: `${BASE}/hero-mobile.webp` },
-    { title: "__company_logo_url__", desc: `${BASE}/company-logo.png` },
+    { title: "__company_logo_url__", desc: `${BASE}/company-logo.webp` },
     { title: "__floor_plans__", desc: JSON.stringify([
-      { title: "Typical Floor Plan", desc: `${BASE}/plans/typical-floor-plan.jpg` },
-      { title: "Star Gazing Deck", desc: `${BASE}/plans/star-gazing-deck.jpg` },
-      { title: "Podium Plan", desc: `${BASE}/plans/podium-plan.jpg` },
+      { title: "Typical Floor Plan", desc: `${BASE}/plans/typical-floor-plan.webp` },
+      { title: "Star Gazing Deck", desc: `${BASE}/plans/star-gazing-deck.webp` },
+      { title: "Podium Plan", desc: `${BASE}/plans/podium-plan.webp` },
     ]) },
     { title: "__video_section__", desc: JSON.stringify({ enabled: false, title: "Project Walkthrough", videoUrl: "", thumbnailUrl: "" }) },
   ],
@@ -65,7 +65,7 @@ export const ONE_VICTORIA_FALLBACK = {
       category: "Gallery",
     })),
     ...Array.from({ length: 3 }, (_, index) => ({
-      src: `${BASE}/gallery/construction-${index + 1}.jpeg`,
+      src: `${BASE}/gallery/construction-${index + 1}.webp`,
       alt: `One Victoria construction update ${index + 1}`,
       category: "Construction",
     })),

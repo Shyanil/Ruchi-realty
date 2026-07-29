@@ -5,8 +5,8 @@
     "assets":  [
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/amenities/a-2.jpg",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/amenities-a-2.jpg",
-                       "final_public_path":  "/projects/oscar-pride-indore/amenities-a-2.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/amenities-a-2.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/amenities-a-2.webp",
                        "usage_section":  "amenity"
                    },
                    {
@@ -17,8 +17,8 @@
                    },
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/amenities/a-3.jpg",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/amenities-a-3.jpg",
-                       "final_public_path":  "/projects/oscar-pride-indore/amenities-a-3.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/amenities-a-3.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/amenities-a-3.webp",
                        "usage_section":  "amenity"
                    },
                    {
@@ -29,8 +29,8 @@
                    },
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/amenities/a-4.jpg",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/amenities-a-4.jpg",
-                       "final_public_path":  "/projects/oscar-pride-indore/amenities-a-4.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/amenities-a-4.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/amenities-a-4.webp",
                        "usage_section":  "amenity"
                    },
                    {
@@ -41,8 +41,8 @@
                    },
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/amenities/a-5.jpg",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/amenities-a-5.jpg",
-                       "final_public_path":  "/projects/oscar-pride-indore/amenities-a-5.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/amenities-a-5.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/amenities-a-5.webp",
                        "usage_section":  "amenity"
                    },
                    {
@@ -53,8 +53,8 @@
                    },
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/amenities/a-6.jpg",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/amenities-a-6.jpg",
-                       "final_public_path":  "/projects/oscar-pride-indore/amenities-a-6.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/amenities-a-6.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/amenities-a-6.webp",
                        "usage_section":  "amenity"
                    },
                    {
@@ -65,8 +65,8 @@
                    },
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/amenities/a-7.jpg",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/amenities-a-7.jpg",
-                       "final_public_path":  "/projects/oscar-pride-indore/amenities-a-7.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/amenities-a-7.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/amenities-a-7.webp",
                        "usage_section":  "amenity"
                    },
                    {
@@ -77,8 +77,8 @@
                    },
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/amenities/a-8.jpg",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/amenities-a-8.jpg",
-                       "final_public_path":  "/projects/oscar-pride-indore/amenities-a-8.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/amenities-a-8.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/amenities-a-8.webp",
                        "usage_section":  "amenity"
                    },
                    {
@@ -89,8 +89,8 @@
                    },
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/gallery/g-1.jpg",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/gallery-g-1.jpg",
-                       "final_public_path":  "/projects/oscar-pride-indore/gallery-g-1.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/gallery-g-1.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/gallery-g-1.webp",
                        "usage_section":  "gallery"
                    },
                    {
@@ -101,8 +101,8 @@
                    },
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/gallery/g-2.jpg",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/gallery-g-2.jpg",
-                       "final_public_path":  "/projects/oscar-pride-indore/gallery-g-2.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/gallery-g-2.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/gallery-g-2.webp",
                        "usage_section":  "gallery"
                    },
                    {
@@ -113,8 +113,8 @@
                    },
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/gallery/g-3.jpg",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/gallery-g-3.jpg",
-                       "final_public_path":  "/projects/oscar-pride-indore/gallery-g-3.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/gallery-g-3.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/gallery-g-3.webp",
                        "usage_section":  "gallery"
                    },
                    {
@@ -125,8 +125,8 @@
                    },
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/gallery/g-4.jpg",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/gallery-g-4.jpg",
-                       "final_public_path":  "/projects/oscar-pride-indore/gallery-g-4.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/gallery-g-4.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/gallery-g-4.webp",
                        "usage_section":  "gallery"
                    },
                    {
@@ -137,8 +137,8 @@
                    },
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/gallery/g-5.jpg",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/gallery-g-5.jpg",
-                       "final_public_path":  "/projects/oscar-pride-indore/gallery-g-5.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/gallery-g-5.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/gallery-g-5.webp",
                        "usage_section":  "gallery"
                    },
                    {
@@ -149,8 +149,8 @@
                    },
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/gallery/g-6.jpg",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/gallery-g-6.jpg",
-                       "final_public_path":  "/projects/oscar-pride-indore/gallery-g-6.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/gallery-g-6.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/gallery-g-6.webp",
                        "usage_section":  "gallery"
                    },
                    {
@@ -161,8 +161,8 @@
                    },
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/gallery/g-7.jpg",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/gallery-g-7.jpg",
-                       "final_public_path":  "/projects/oscar-pride-indore/gallery-g-7.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/gallery-g-7.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/gallery-g-7.webp",
                        "usage_section":  "gallery"
                    },
                    {
@@ -173,20 +173,20 @@
                    },
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/hero-sm.jpg",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/hero-sm.jpg",
-                       "final_public_path":  "/projects/oscar-pride-indore/hero-sm.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/hero-sm.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/hero-sm.webp",
                        "usage_section":  "hero/card"
                    },
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/hero.jpg",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/hero.jpg",
-                       "final_public_path":  "/projects/oscar-pride-indore/hero.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/hero.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/hero.webp",
                        "usage_section":  "hero/card"
                    },
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/loc-1.jpg",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/loc-1.jpg",
-                       "final_public_path":  "/projects/oscar-pride-indore/loc-1.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/loc-1.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/loc-1.webp",
                        "usage_section":  "location"
                    },
                    {
@@ -197,14 +197,14 @@
                    },
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/logo.png",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/logo.png",
-                       "final_public_path":  "/projects/oscar-pride-indore/logo.png",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/logo.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/logo.webp",
                        "usage_section":  "project logo"
                    },
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/plans/plan.jpg",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/plans-plan.jpg",
-                       "final_public_path":  "/projects/oscar-pride-indore/plans-plan.jpg",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/plans-plan.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/plans-plan.webp",
                        "usage_section":  "layout plan"
                    },
                    {
@@ -215,8 +215,8 @@
                    },
                    {
                        "original_url":  "https://ruchirealty.com/oscar-pride-indore/images/ruchi_logo.png",
-                       "downloaded_local_path":  "public/projects/oscar-pride-indore/ruchi_logo.png",
-                       "final_public_path":  "/projects/oscar-pride-indore/ruchi_logo.png",
+                       "downloaded_local_path":  "public/projects/oscar-pride-indore/ruchi_logo.webp",
+                       "final_public_path":  "/projects/oscar-pride-indore/ruchi_logo.webp",
                        "usage_section":  "company logo"
                    }
                ],

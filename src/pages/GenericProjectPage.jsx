@@ -55,8 +55,8 @@ const FALLBACK_SUBPAGES = {
   "oscar-fort-indore": {
     "heroTitle": "Oscar Fort",
     "heroTagline": "Your Journey To a Royal Living begins here",
-    "heroLogo": "/projects/oscar-fort-indore/logo.png",
-    "heroBg": "/projects/oscar-fort-indore/hero.jpg",
+    "heroLogo": "/projects/oscar-fort-indore/logo.webp",
+    "heroBg": "/projects/oscar-fort-indore/hero.webp",
     "overviewParagraphs": [
       "Memorable moments with a royal touch make all the difference. Each occasion of your life deserves a royal welcome. It is time that you get it every single day of your life. It is your time to rule."
     ],
@@ -175,7 +175,7 @@ const FALLBACK_SUBPAGES = {
       },
       {
         "title": "Home Loan Available from HDFC",
-        "desc": "Banking partner section found in the source. Logo asset: /projects/oscar-fort-indore/hdfc-home-loan-logo.png"
+        "desc": "Banking partner section found in the source. Logo asset: /projects/oscar-fort-indore/hdfc-home-loan-logo.webp"
       },
       {
         "title": "Project Address",
@@ -187,14 +187,14 @@ const FALLBACK_SUBPAGES = {
       },
       {
         "title": "__floor_plans__",
-        "desc": "[{\"title\":\"Layout Plan\",\"desc\":\"/projects/oscar-fort-indore/layout-plan.jpg\"},{\"title\":\"Exciting Location\",\"desc\":\"/projects/oscar-fort-indore/exciting-location.jpg\"},{\"title\":\"Upcoming Phase\",\"desc\":\"/projects/oscar-fort-indore/upcoming-phase.jpg\"}]"
+        "desc": "[{\"title\":\"Layout Plan\",\"desc\":\"/projects/oscar-fort-indore/layout-plan.webp\"},{\"title\":\"Exciting Location\",\"desc\":\"/projects/oscar-fort-indore/exciting-location.webp\"},{\"title\":\"Upcoming Phase\",\"desc\":\"/projects/oscar-fort-indore/upcoming-phase.webp\"}]"
       },
       {
         "title": "__video_section__",
-        "desc": "{\"enabled\":true,\"title\":\"Walk Through\",\"videoUrl\":\"https://player.vimeo.com/video/735387729?h=0982bb9b19\",\"thumbnailUrl\":\"/projects/oscar-fort-indore/hero.jpg\"}"
+        "desc": "{\"enabled\":true,\"title\":\"Walk Through\",\"videoUrl\":\"https://player.vimeo.com/video/735387729?h=0982bb9b19\",\"thumbnailUrl\":\"/projects/oscar-fort-indore/hero.webp\"}"
       }
     ],
-    "locationImage": "/projects/oscar-fort-indore/exciting-location.jpg",
+    "locationImage": "/projects/oscar-fort-indore/exciting-location.webp",
     "locationMapEmbed": "",
     "locationDestinations": [
       {
@@ -213,175 +213,175 @@ const FALLBACK_SUBPAGES = {
     "walkthroughVideoId": "https://player.vimeo.com/video/735387729?h=0982bb9b19",
     "galleryImages": [
       {
-        "src": "/projects/oscar-fort-indore/gallery-1.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-1.webp",
         "alt": "Oscar Fort gallery image 1"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-2.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-2.webp",
         "alt": "Oscar Fort gallery image 2"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-3.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-3.webp",
         "alt": "Oscar Fort gallery image 3"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-4.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-4.webp",
         "alt": "Oscar Fort gallery image 4"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-5.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-5.webp",
         "alt": "Oscar Fort gallery image 5"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-6.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-6.webp",
         "alt": "Oscar Fort gallery image 6"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-7.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-7.webp",
         "alt": "Oscar Fort gallery image 7"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-8.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-8.webp",
         "alt": "Oscar Fort gallery image 8"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-9.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-9.webp",
         "alt": "Oscar Fort gallery image 9"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-10.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-10.webp",
         "alt": "Oscar Fort gallery image 10"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-11.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-11.webp",
         "alt": "Oscar Fort gallery image 11"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-12.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-12.webp",
         "alt": "Oscar Fort gallery image 12"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-13.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-13.webp",
         "alt": "Oscar Fort gallery image 13"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-14.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-14.webp",
         "alt": "Oscar Fort gallery image 14"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-15.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-15.webp",
         "alt": "Oscar Fort gallery image 15"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-16.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-16.webp",
         "alt": "Oscar Fort gallery image 16"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-17.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-17.webp",
         "alt": "Oscar Fort gallery image 17"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-18.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-18.webp",
         "alt": "Oscar Fort gallery image 18"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-19.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-19.webp",
         "alt": "Oscar Fort gallery image 19"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-20.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-20.webp",
         "alt": "Oscar Fort gallery image 20"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-21.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-21.webp",
         "alt": "Oscar Fort gallery image 21"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-22.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-22.webp",
         "alt": "Oscar Fort gallery image 22"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-23.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-23.webp",
         "alt": "Oscar Fort gallery image 23"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-24.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-24.webp",
         "alt": "Oscar Fort gallery image 24"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-25.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-25.webp",
         "alt": "Oscar Fort gallery image 25"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-26.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-26.webp",
         "alt": "Oscar Fort gallery image 26"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-27.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-27.webp",
         "alt": "Oscar Fort gallery image 27"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-28.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-28.webp",
         "alt": "Oscar Fort gallery image 28"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-29.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-29.webp",
         "alt": "Oscar Fort gallery image 29"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-30.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-30.webp",
         "alt": "Oscar Fort gallery image 30"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-31.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-31.webp",
         "alt": "Oscar Fort gallery image 31"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-32.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-32.webp",
         "alt": "Oscar Fort gallery image 32"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-33.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-33.webp",
         "alt": "Oscar Fort gallery image 33"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-34.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-34.webp",
         "alt": "Oscar Fort gallery image 34"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-35.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-35.webp",
         "alt": "Oscar Fort gallery image 35"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-36.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-36.webp",
         "alt": "Oscar Fort gallery image 36"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-37.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-37.webp",
         "alt": "Oscar Fort gallery image 37"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-38.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-38.webp",
         "alt": "Oscar Fort gallery image 38"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-39.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-39.webp",
         "alt": "Oscar Fort gallery image 39"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-40.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-40.webp",
         "alt": "Oscar Fort gallery image 40"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-41.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-41.webp",
         "alt": "Oscar Fort gallery image 41"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-42.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-42.webp",
         "alt": "Oscar Fort gallery image 42"
       },
       {
-        "src": "/projects/oscar-fort-indore/gallery-43.jpg",
+        "src": "/projects/oscar-fort-indore/gallery-43.webp",
         "alt": "Oscar Fort gallery image 43"
       }
     ],
@@ -392,7 +392,7 @@ const FALLBACK_SUBPAGES = {
   "lifescapes-bhopal": {
     heroTitle: "Ruchi Lifescapes",
     heroTagline: "Discover luxury living at Ruchi Lifescapes Bhopal, offering residential options from 1000 to 4000 sqft. and ample amenities.",
-    heroLogo: "/projects/lifescapes-bhopal/logo.png",
+    heroLogo: "/projects/lifescapes-bhopal/logo.webp",
     heroBg: "/projects/lifescapes-bhopal/card.webp",
     overviewParagraphs: [
       "Discover the pinnacle of luxury living at Ruchi Lifescapes Bhopal, where every aspect of convenience and elegance converges seamlessly. Situated in the heart of Bhopal, Madhya Pradesh, this prestigious real estate project offers a lifestyle that surpasses all expectations.",
@@ -419,7 +419,7 @@ const FALLBACK_SUBPAGES = {
       { name: "Squash", icon: "tennis" }
     ],
     specifications: [
-      { title: "__floor_plans__", desc: "[{\"title\":\"Master Layout\",\"desc\":\"/projects/lifescapes-bhopal/floor-master.jpg\"},{\"title\":\"2.5 BHK\",\"desc\":\"/projects/lifescapes-bhopal/floor-2-5-bhk.jpg\"},{\"title\":\"3 BHK\",\"desc\":\"/projects/lifescapes-bhopal/floor-3-bhk.jpg\"},{\"title\":\"Orchid Row House\",\"desc\":\"/projects/lifescapes-bhopal/floor-orchid-row-house.jpg\"},{\"title\":\"Orchid Row House 2\",\"desc\":\"/projects/lifescapes-bhopal/floor-orchid-row-house-2.jpg\"},{\"title\":\"Tulip Twin Bungalow\",\"desc\":\"/projects/lifescapes-bhopal/floor-tulip-twin-bungalow.jpg\"},{\"title\":\"Villa\",\"desc\":\"/projects/lifescapes-bhopal/floor-villa.jpg\"}]" },
+      { title: "__floor_plans__", desc: "[{\"title\":\"Master Layout\",\"desc\":\"/projects/lifescapes-bhopal/floor-master.webp\"},{\"title\":\"2.5 BHK\",\"desc\":\"/projects/lifescapes-bhopal/floor-2-5-bhk.webp\"},{\"title\":\"3 BHK\",\"desc\":\"/projects/lifescapes-bhopal/floor-3-bhk.webp\"},{\"title\":\"Orchid Row House\",\"desc\":\"/projects/lifescapes-bhopal/floor-orchid-row-house.webp\"},{\"title\":\"Orchid Row House 2\",\"desc\":\"/projects/lifescapes-bhopal/floor-orchid-row-house-2.webp\"},{\"title\":\"Tulip Twin Bungalow\",\"desc\":\"/projects/lifescapes-bhopal/floor-tulip-twin-bungalow.webp\"},{\"title\":\"Villa\",\"desc\":\"/projects/lifescapes-bhopal/floor-villa.webp\"}]" },
       { title: "__video_section__", desc: "{\"enabled\":false,\"videoUrl\":\"\",\"thumbnailUrl\":\"\"}" }
     ],
     locationImage: "/projects/lifescapes-bhopal/card.webp",
@@ -433,12 +433,12 @@ const FALLBACK_SUBPAGES = {
       { name: "Railway Station", dist: "7 km" }
     ],
     galleryImages: [
-      { src: "/projects/lifescapes-bhopal/gallery-1.jpg", alt: "Ruchi Lifescapes Bhopal gallery image 1" },
-      { src: "/projects/lifescapes-bhopal/gallery-2.jpg", alt: "Ruchi Lifescapes Bhopal gallery image 2" },
-      { src: "/projects/lifescapes-bhopal/gallery-3.jpg", alt: "Ruchi Lifescapes Bhopal gallery image 3" },
-      { src: "/projects/lifescapes-bhopal/gallery-4.jpg", alt: "Ruchi Lifescapes Bhopal gallery image 4" },
-      { src: "/projects/lifescapes-bhopal/gallery-5.jpg", alt: "Ruchi Lifescapes Bhopal gallery image 5" },
-      { src: "/projects/lifescapes-bhopal/gallery-6.jpg", alt: "Ruchi Lifescapes Bhopal gallery image 6" }
+      { src: "/projects/lifescapes-bhopal/gallery-1.webp", alt: "Ruchi Lifescapes Bhopal gallery image 1" },
+      { src: "/projects/lifescapes-bhopal/gallery-2.webp", alt: "Ruchi Lifescapes Bhopal gallery image 2" },
+      { src: "/projects/lifescapes-bhopal/gallery-3.webp", alt: "Ruchi Lifescapes Bhopal gallery image 3" },
+      { src: "/projects/lifescapes-bhopal/gallery-4.webp", alt: "Ruchi Lifescapes Bhopal gallery image 4" },
+      { src: "/projects/lifescapes-bhopal/gallery-5.webp", alt: "Ruchi Lifescapes Bhopal gallery image 5" },
+      { src: "/projects/lifescapes-bhopal/gallery-6.webp", alt: "Ruchi Lifescapes Bhopal gallery image 6" }
     ],
     brochureUrl: "/projects/lifescapes-bhopal/brochure.pdf",
     metaTitle: "Ruchi Lifescapes Bhopal - Ruchi Realty",
@@ -533,7 +533,7 @@ function normalizeProjectSubpage(project, sp) {
     slug: project?.slug || "",
     location: project?.location || project?.city || "",
     tag: sp?.heroTagline || project?.tag || description,
-    heroLogo: project?.slug === "ruchi-lifescapes-indore-project" ? "/projects/ruchi-lifescapes-indore-project/logo.jpg" : assetUrl(sp?.heroLogo || ""),
+    heroLogo: project?.slug === "ruchi-lifescapes-indore-project" ? "/projects/ruchi-lifescapes-indore-project/logo.webp" : assetUrl(sp?.heroLogo || ""),
     heroBg: assetUrl(sp?.heroBg || project?.image_url || project?.img || "assets/projects/oscar-billionaires.webp"),
     heroMobileUrl: assetUrl(custom.heroMobileUrl || sp?.heroMobileUrl || ""),
     heroImagePosition: sp?.heroImagePosition || "center center",

@@ -165,7 +165,7 @@ function Nav({ onContact }) {
       <div className="nav__bar">
         <a className="nav__brand" href="#top" onClick={(e) => go(e, "#top")} aria-label="Ruchi Realty — home">
           <img className="nav__logo"
-            src={dark ? window.__rsrc("logoHW", "assets/logo-h-white.png") : window.__rsrc("logoH", "assets/logo-h.png")}
+            src={dark ? window.__rsrc("logoHW", "assets/logo-h-white.webp") : window.__rsrc("logoH", "assets/logo-h.webp")}
             alt="Ruchi Realty" />
         </a>
         <nav className="nav__links" aria-label="Primary">

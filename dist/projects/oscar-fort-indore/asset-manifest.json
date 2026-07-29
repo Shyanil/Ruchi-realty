@@ -12,400 +12,400 @@
   "assets": [
     {
       "originalUrl": "https://oscarfort.com/images/logo.png",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/logo.png",
-      "finalPublicPath": "/projects/oscar-fort-indore/logo.png",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/logo.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/logo.webp",
       "usage": "logo",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/logo4.png",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/divider.png",
-      "finalPublicPath": "/projects/oscar-fort-indore/divider.png",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/divider.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/divider.webp",
       "usage": "decorative divider",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/oscarFort.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/hero.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/hero.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/hero.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/hero.webp",
       "usage": "hero, card",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/welcomeImage.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/overview.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/overview.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/overview.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/overview.webp",
       "usage": "overview",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-2.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/unique-abode.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/unique-abode.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/unique-abode.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/unique-abode.webp",
       "usage": "content section",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-21.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/rule-fort.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/rule-fort.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/rule-fort.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/rule-fort.webp",
       "usage": "content section",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-36.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/vast-expanses.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/vast-expanses.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/vast-expanses.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/vast-expanses.webp",
       "usage": "content section",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-41.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/royal-canvas.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/royal-canvas.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/royal-canvas.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/royal-canvas.webp",
       "usage": "content section",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/banking-services.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/banking-services.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/banking-services.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/banking-services.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/banking-services.webp",
       "usage": "banking partner",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/hdfc-home-loan-logo-png.png",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/hdfc-home-loan-logo.png",
-      "finalPublicPath": "/projects/oscar-fort-indore/hdfc-home-loan-logo.png",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/hdfc-home-loan-logo.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/hdfc-home-loan-logo.webp",
       "usage": "banking partner logo",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/floorPlan.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/layout-plan.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/layout-plan.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/layout-plan.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/layout-plan.webp",
       "usage": "floor plan",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/excitingLocation.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/exciting-location.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/exciting-location.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/exciting-location.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/exciting-location.webp",
       "usage": "location, floor plan",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/upcomingPhase.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/upcoming-phase.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/upcoming-phase.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/upcoming-phase.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/upcoming-phase.webp",
       "usage": "floor plan",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/brochure_4.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/brochure-4.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/brochure-4.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/brochure-4.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/brochure-4.webp",
       "usage": "brochure partial found",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-1.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-1.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-1.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-1.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-1.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-2.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-2.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-2.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-2.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-2.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-3.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-3.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-3.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-3.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-3.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-4.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-4.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-4.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-4.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-4.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-5.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-5.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-5.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-5.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-5.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-6.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-6.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-6.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-6.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-6.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-7.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-7.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-7.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-7.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-7.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-8.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-8.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-8.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-8.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-8.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-9.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-9.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-9.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-9.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-9.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-10.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-10.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-10.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-10.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-10.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-11.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-11.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-11.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-11.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-11.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-12.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-12.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-12.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-12.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-12.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-13.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-13.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-13.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-13.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-13.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-14.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-14.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-14.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-14.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-14.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-15.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-15.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-15.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-15.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-15.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-16.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-16.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-16.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-16.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-16.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-17.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-17.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-17.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-17.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-17.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-18.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-18.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-18.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-18.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-18.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-19.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-19.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-19.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-19.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-19.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-20.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-20.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-20.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-20.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-20.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-21.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-21.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-21.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-21.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-21.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-22.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-22.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-22.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-22.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-22.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-23.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-23.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-23.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-23.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-23.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-24.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-24.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-24.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-24.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-24.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-25.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-25.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-25.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-25.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-25.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-26.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-26.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-26.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-26.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-26.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-27.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-27.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-27.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-27.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-27.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-28.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-28.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-28.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-28.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-28.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-29.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-29.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-29.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-29.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-29.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-30.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-30.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-30.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-30.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-30.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-31.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-31.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-31.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-31.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-31.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-32.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-32.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-32.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-32.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-32.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-33.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-33.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-33.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-33.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-33.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-34.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-34.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-34.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-34.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-34.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-35.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-35.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-35.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-35.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-35.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-36.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-36.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-36.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-36.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-36.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-37.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-37.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-37.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-37.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-37.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-38.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-38.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-38.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-38.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-38.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-39.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-39.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-39.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-39.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-39.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-40.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-40.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-40.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-40.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-40.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-41.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-41.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-41.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-41.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-41.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-42.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-42.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-42.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-42.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-42.webp",
       "usage": "gallery",
       "exists": true
     },
     {
       "originalUrl": "https://oscarfort.com/images/gallery/Oscar-43.jpg",
-      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-43.jpg",
-      "finalPublicPath": "/projects/oscar-fort-indore/gallery-43.jpg",
+      "downloadedLocalPath": "public/projects/oscar-fort-indore/gallery-43.webp",
+      "finalPublicPath": "/projects/oscar-fort-indore/gallery-43.webp",
       "usage": "gallery",
       "exists": true
     }

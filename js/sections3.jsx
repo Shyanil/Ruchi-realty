@@ -3,7 +3,7 @@
    ============================================================ */
 const { useEffect: uE3, useState: uS3 } = React;
 
-const AWARD_WREATH = window.__rsrc("awardWreath", "assets/award-wreath.jpg");
+const AWARD_WREATH = window.__rsrc("awardWreath", "assets/award-wreath.webp");
 
 /* ---- Award card: gold wreath, year (or star) inside, name below ---- */
 function AwardCard({ a, hidden }) {

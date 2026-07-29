@@ -142,7 +142,7 @@ function Footer() {
         <div className="footer__rule"></div>
         <div className="footer-cols">
           <div className="footer__brandcol">
-            <img src={window.__rsrc("logoHW", "assets/logo-h-white.png")} alt="Ruchi Realty" className="footer__logo" />
+            <img src={window.__rsrc("logoHW", "assets/logo-h-white.webp")} alt="Ruchi Realty" className="footer__logo" />
             <p className="footer__tagline">Creators of considered environments across eastern and central India.</p>
             <div className="footer__contact footer__links2">
               <a href={phoneHref}>{phone}</a>

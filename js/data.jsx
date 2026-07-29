@@ -79,7 +79,7 @@ const PROJECTS = [
 
   // --- Ongoing ---
   { name: "Angelica", city: "Active Acres · Kolkata", type: "Residential", status: "Ongoing", url: "https://ruchirealty.com/angelica/", img: "assets/projects/active-acres.webp" },
-  { name: "Oscar Fort", city: "Indore", type: "Township", status: "Ongoing", url: "/projects/oscar-fort-indore", img: "/projects/oscar-fort-indore/hero.jpg" },
+  { name: "Oscar Fort", city: "Indore", type: "Township", status: "Ongoing", url: "/projects/oscar-fort-indore", img: "/projects/oscar-fort-indore/hero.webp" },
   { name: "Oscar Sanctuary", city: "Indore", type: "Township", status: "Ongoing", url: "/projects/oscar-sanctuary-indore", img: "/projects/oscar-sanctuary-indore/hero.webp" },
 
   // --- Upcoming ---
@@ -366,7 +366,7 @@ const BLOG = [
 
 // hero stills for sections
 const HERO_IMG = {
-  about: window.__rsrc("aboutFamily", "assets/about-family.png"),
+  about: window.__rsrc("aboutFamily", "assets/about-family.webp"),
   aboutAlt: IMG_LIVING[0],
   testimonial: IMG_PEOPLE[1],
   contact: IMG_TOWER[4],

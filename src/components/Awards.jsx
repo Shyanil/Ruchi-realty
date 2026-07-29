@@ -1,7 +1,7 @@
 import { Reveal, RImg } from "./shared";
 import { AWARDS } from "../data/siteData";
 
-const AWARD_WREATH = "assets/award-wreath.jpg";
+const AWARD_WREATH = "assets/award-wreath.webp";
 
 function AwardCard({ a, hidden }) {
   return (

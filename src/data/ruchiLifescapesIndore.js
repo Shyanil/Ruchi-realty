@@ -1,7 +1,7 @@
 export const RUCHI_LIFESCAPES_INDORE_FALLBACK = {
   heroTitle: "Ruchi Lifescapes",
   heroTagline: "Ruchi Lifescapes Indore - Big on Life",
-  heroLogo: "/projects/ruchi-lifescapes-indore-project/logo.jpg",
+  heroLogo: "/projects/ruchi-lifescapes-indore-project/logo.webp",
   heroBg: "/projects/ruchi-lifescapes-indore-project/hero.webp",
   overviewParagraphs: [
     "The big on life now gets bigger.",
