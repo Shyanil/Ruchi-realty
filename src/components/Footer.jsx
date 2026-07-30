@@ -188,7 +188,7 @@ export function Footer() {
         </div>
 
         <div className="footer__bottom">
-          <span>© 1987–2026 · Ruchi Realty Holdings Ltd.</span>
+          <span>© 2026 · Ruchi Realty Holdings Ltd. · Established 2008</span>
           <span className="footer__legal">
             <Link to="/privacy-policy">Privacy</Link><Link to="/disclaimer">Disclaimer</Link>
           </span>

@@ -29,7 +29,7 @@ const IMG_PEOPLE = [
 
 const STATS = [
   { num: 2008, suffix: "", label: "Founded in 2008, with teams across eastern and central India." },
-  { num: 20, suffix: "", label: "Residential, commercial and plotted projects listed." },
+  { num: 3, suffix: "", label: "Development types: residential, commercial and plotted." },
   { num: 3, suffix: "", label: "Cities: Kolkata, Indore, and Bhopal." },
 ];
 

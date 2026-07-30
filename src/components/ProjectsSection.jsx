@@ -15,8 +15,11 @@ export function cityOf(p) {
 }
 
 function projectUrl(p) {
-  const name = String(p?.name || p?.title || "").toLowerCase();
+  const name = String(p?.name || p?.title || "").toLowerCase().trim();
   const city = String(p?.city || p?.location || "").toLowerCase();
+  if (name === "active acres" && city.includes("kolkata")) {
+    return "/projects";
+  }
   if (name.includes("one victoria") && city.includes("kolkata")) {
     return "/projects/one-victoria-new-town";
   }

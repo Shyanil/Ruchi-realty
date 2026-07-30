@@ -2,7 +2,7 @@ export const PROJECTS = [
   { name: "One Victoria", city: "Action Area 1, New Town, Kolkata", type: "Residential", status: "Ongoing", url: "/projects/one-victoria-new-town", img: "/projects/one-victoria-new-town/hero.webp" },
   { name: "One Prime Residential", city: "New Town, Kolkata", type: "Residential", status: "Ready to Move", url: "/projects/one-prime-residential", img: "/projects/one-prime-residential/card.webp" },
   { name: "Oscar Billionaires", city: "Indore", type: "Residential", status: "Ready to Move", url: "/projects/oscar-indore", img: "assets/projects/oscar-billionaires.webp" },
-  { name: "Active Acres", city: "Kolkata", type: "Residential", status: "Ready to Move", url: "/projects/active-acres-angelica", img: "assets/projects/active-acres.webp" },
+  { name: "Active Acres", city: "Kolkata", type: "Residential", status: "Ready to Move", url: "/projects", img: "assets/projects/active-acres.webp" },
   { name: "One Rajarhat", city: "Rajarhat - Kolkata", type: "Residential", status: "Ready to Move", url: "/projects/one-rajarhat", img: "assets/projects/one-rajarhat.webp" },
   { name: "Active Business Park", city: "Kolkata", type: "Commercial", status: "Ready to Move", url: "/projects/active-business-park", img: "assets/projects/active-business-park.webp" },
   { name: "Active Greens", city: "Kolkata", type: "Residential", status: "Ready to Move", url: "/projects/active-greens", img: "assets/projects/active-green.webp" },

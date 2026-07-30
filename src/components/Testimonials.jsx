@@ -36,7 +36,7 @@ function VideoLightbox({ v, onClose }) {
 export function Testimonials() {
   const [active, setActive] = useState(null);
   const data = VIDEO_TESTIMONIALS;
-  const reel = { name: "Ruchi Realty", project: "The full film", city: "Committed to You", line: "Thirty-eight years, in two minutes.", poster: IMG_TOWER[4] };
+  const reel = { name: "Ruchi Realty", project: "The full film", city: "Committed to You", line: "Our story, in two minutes.", poster: IMG_TOWER[4] };
   return (
     <section className="testimonials section-pad" id="testimonials">
       <div className="testi-sig" aria-hidden="true"></div>

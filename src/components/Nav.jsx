@@ -16,13 +16,13 @@ const ROUTE_MAP = {
 };
 
 const MEGA = (() => {
-  const insightItems = BLOG.slice(0, 4).map((b) => [b.title, "Blog.html"]);
+  const insightItems = BLOG.slice(0, 4).map((b) => [b.title, `/blogs/${b.slug}`]);
   const insightFeat = {
     kind: "blog",
     eyebrow: BLOG[0]?.cat || "Industry Insights",
     title: BLOG[0]?.title || "Industry insights",
     sub: "Read the piece →",
-    href: "Blog.html",
+    href: `/blogs/${BLOG[0]?.slug || ""}`,
   };
   return {
     Projects: {
@@ -48,14 +48,14 @@ const MEGA = (() => {
     },
     About: {
       href: "About.html",
-      blurb: "Founded in 2008: 17+ years of treating a home as a promise, built with intent and supported after handover.",
+      blurb: "Founded in 2008, Ruchi Realty develops residential, commercial and plotted projects across Kolkata, Indore and Bhopal.",
       cols: [
         { h: "Company", items: [["About Us", "About.html"], ["The proof, not the promise", "#why"], ["Our Team", "About.html#team"], ["Careers", "Careers.html"]] },
       ],
-      feat: { kind: "statement", eyebrow: "Committed to you", title: "Thirty-eight years of keeping our word.", sub: "Read the story →", href: "About.html" },
+      feat: { kind: "statement", eyebrow: "Committed to you", title: "Building with clarity and long term commitment.", sub: "Read the story →", href: "About.html" },
     },
     Blogs: {
-      href: "Blog.html",
+      href: "/blogs",
       blurb: "Industry insights written plainly, covering materials, plans, and the relationships that begin at the keys.",
       cols: [
         { h: "Latest insights", items: insightItems },
@@ -63,7 +63,7 @@ const MEGA = (() => {
       feat: insightFeat,
     },
     Media: {
-      href: "Media.html",
+      href: "/media",
       blurb: "Project galleries, official press updates, events, awards, and the milestone moments that shape the Ruchi Realty story.",
       cols: [
         { h: "Media", items: [["Gallery", "/media/gallery"], ["Press Releases", "/media/press-releases"], ["Events & Awards", "/media/events-awards"]] },
