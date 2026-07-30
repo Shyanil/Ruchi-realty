@@ -104,7 +104,6 @@ export default function Hero() {
         loop
         playsInline
         preload="auto"
-        poster="/assets/projects/active-acres.webp"
         onPlaying={handlePlaying}
         onCanPlay={handlePlaying}
         onLoadedMetadata={handlePlaying}
