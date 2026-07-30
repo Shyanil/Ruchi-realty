@@ -49,6 +49,15 @@ function projectUrl(p) {
   return p?.url || "";
 }
 
+function projectFallbackImage(p) {
+  const url = projectUrl(p);
+  const byUrl = PROJECTS.find((project) => projectUrl(project) === url && project.img);
+  if (byUrl?.img) return byUrl.img;
+  const name = String(p?.name || p?.title || "").toLowerCase().trim();
+  const city = cityOf(p);
+  return PROJECTS.find((project) => String(project.name || "").toLowerCase().trim() === name && cityOf(project) === city)?.img || "";
+}
+
 export function prioritizeOnePrime(items = []) {
   return items;
 }
@@ -81,11 +90,12 @@ export function ProjectTile({ p, i, n }) {
     : p.status === "Ongoing" ? "status--ongoing" : "status--upcoming";
   const url = projectUrl(p);
   const isInternal = url && url.startsWith("/");
+  const fallbackImg = projectFallbackImage(p);
 
   if (isInternal) {
     return (
       <Link className="ptile" data-cursor="View" to={url}>
-        <RImg src={p.img} alt={`${p.name}, ${p.city}`} className="ptile__media" grade />
+        <RImg src={p.img} fallbackSrc={fallbackImg} alt={`${p.name}, ${p.city}`} className="ptile__media" grade />
         <div className="ptile__scrim"></div>
         <div className="ptile__top">
           <span className={`status ${cls}`}><span className="dot"></span>{p.status}</span>
@@ -103,7 +113,7 @@ export function ProjectTile({ p, i, n }) {
   const Tile = url ? "a" : "article";
   return (
     <Tile className="ptile" data-cursor={url ? "View" : undefined} href={url || undefined}>
-      <RImg src={p.img} alt={`${p.name}, ${p.city}`} className="ptile__media" grade />
+      <RImg src={p.img} fallbackSrc={fallbackImg} alt={`${p.name}, ${p.city}`} className="ptile__media" grade />
       <div className="ptile__scrim"></div>
       <div className="ptile__top">
         <span className={`status ${cls}`}><span className="dot"></span>{p.status}</span>
@@ -164,11 +174,11 @@ export function ProjectsSection() {
         <Reveal>
           <div className="sec-head sec-head--dark">
             <div>
-              <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>Our Projects</div>
-              <h2>Addresses we build,<br /><span className="rr-grad">and then stand by.</span></h2>
+              <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>Explore our projects</div>
+              <h2>Find a project in the city<br /><span className="rr-grad">that matters to you.</span></h2>
             </div>
             <p className="sec-head__lead">
-              Residential and commercial projects across Kolkata, Indore, and Bhopal, each carried from drawing to handover with the same care.
+              Browse residential, commercial and plotted developments in Kolkata, Indore and Bhopal. Filter by city to find the right next step.
             </p>
           </div>
         </Reveal>

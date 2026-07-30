@@ -14,6 +14,29 @@ import { Footer } from "../components/Footer";
 import { CustomCursor } from "../components/shared";
 import SEO from "../components/SEO";
 
+const HOME_SCHEMAS = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Ruchi Realty",
+    url: "https://ruchirealty.com/",
+    logo: "https://ruchirealty.com/assets/logo-h.webp",
+    foundingDate: "2008",
+    sameAs: [
+      "https://www.facebook.com/RuchiRealty",
+      "https://www.instagram.com/ruchi_realty",
+      "https://www.linkedin.com/company/ruchi-realty-holdings-limited/",
+      "https://www.youtube.com/@ruchirealty.comrealestatec8583",
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Ruchi Realty",
+    url: "https://ruchirealty.com/",
+  },
+];
+
 export default function HomePage() {
   useEffect(() => {
     if (window.location.hash) {
@@ -32,7 +55,14 @@ export default function HomePage() {
 
   return (
     <>
-      <SEO title="Ruchi Realty | Real Estate Developer in Kolkata, Indore & Bhopal" description="Founded in 2008, Ruchi Realty has delivered residential, commercial and plotted developments across Kolkata, Indore and Bhopal. Explore 20+ projects." canonical="https://ruchirealty.com/" image="/uploads/hero-one-victoria.webp" />
+      <SEO title="Ruchi Realty | Real Estate Developer in Kolkata, Indore & Bhopal" description="Explore residential, commercial and plotted projects by Ruchi Realty across Kolkata, Indore and Bhopal. View locations, status and enquiry options." canonical="https://ruchirealty.com/" image="/uploads/hero-one-victoria.webp" />
+      {HOME_SCHEMAS.map((schema) => (
+        <script
+          key={schema["@type"]}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }}
+        />
+      ))}
       <CustomCursor />
       <Nav onContact={scrollToContact} />
       <main>

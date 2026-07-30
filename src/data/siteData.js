@@ -28,31 +28,31 @@ const IMG_PEOPLE = [
 ];
 
 const STATS = [
-  { num: 17, suffix: "+", label: "Years of real estate experience since our founding in 2008." },
-  { num: 20, suffix: "+", label: "Residential, commercial, and plotted projects." },
+  { num: 2008, suffix: "", label: "Founded in 2008, with teams across eastern and central India." },
+  { num: 20, suffix: "", label: "Residential, commercial and plotted projects listed." },
   { num: 3, suffix: "", label: "Cities: Kolkata, Indore, and Bhopal." },
 ];
 
 const TRUST = [
   {
-    icon: "shield-check", no: "01", title: "RERA-registered, every project",
-    body: "Each address carries its own RERA number, registered before we invite you to a single site visit. The paperwork is open from the first conversation."
+    icon: "shield-check", no: "01", title: "Project details you can verify",
+    body: "Plans, specifications, approvals and RERA information, where applicable, should be easy to review before a site visit."
   },
   {
-    icon: "ruler", no: "02", title: "Built to the specification you were shown",
-    body: "The materials, the fittings, and the finishes are written down and met. What you are shown is what you are handed the keys to."
+    icon: "ruler", no: "02", title: "Specifications stated clearly",
+    body: "Materials, fittings and finishes should be presented in plain language and matched to approved project documents."
   },
   {
-    icon: "handshake", no: "03", title: "We stay after the keys change hands",
-    body: "The relationship does not end at possession. Service, support, and the same people you began with remain reachable."
+    icon: "handshake", no: "03", title: "Support after possession",
+    body: "A handover is not the end of the relationship. Buyers should know whom to contact and how support is handled."
   },
   {
-    icon: "calendar-check", no: "04", title: "Timelines shared clearly and honestly",
-    body: "We communicate progress in plain language, keep milestones visible, and tell you early when something changes so you are never left guessing."
+    icon: "calendar-check", no: "04", title: "Updates through construction",
+    body: "Milestones and material changes should be communicated clearly, without making buyers chase information."
   },
   {
-    icon: "map-pin", no: "05", title: "Locations chosen for everyday life",
-    body: "We choose addresses around real connectivity, essential conveniences, and long-term livability—not just what looks promising on a map."
+    icon: "map-pin", no: "05", title: "Locations chosen for daily life",
+    body: "Projects should explain real connectivity to work, education, healthcare and essential services."
   },
 ];
 
@@ -93,7 +93,6 @@ const PRESS = [
   { date: "Jul 2024", head: "A tree-plantation drive takes root at Saatvik Green, Indore.", img: IMG_TOWER[5] },
   { date: "Jun 2024", head: "One Victoria, our New Town, Kolkata residence, is unveiled at Novotel.", img: IMG_TOWER[0] },
   { date: "May 2023", head: "Ruchi Group reports its FY23 results.", img: IMG_TOWER[8] },
-  { date: "May 2023", head: "Westminster City Council clears a Ruchi Group redevelopment in Indore.", img: IMG_TOWER[1] },
   { date: "Feb 2023", head: "Innovative Marketing Concept of the Year 2022 goes to Ruchi Group.", img: IMG_LIVING[1] },
   { date: "Feb 2023", head: "Ruchi Group acquires a 60-acre land parcel in Kolkata.", img: IMG_TOWER[3] },
   { date: "Apr 2016", head: "Active Acres named Outstanding Project of the Year at the Golden Brick Awards, Dubai.", img: IMG_TOWER[2] },

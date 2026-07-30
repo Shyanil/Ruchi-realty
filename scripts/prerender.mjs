@@ -10,8 +10,8 @@ const template = await readFile(resolve(dist, "index.html"), "utf8");
 const siteUrl = "https://ruchirealty.com";
 
 const staticPages = [
-  { path: "/", title: "Ruchi Realty | Real Estate Developer in Kolkata, Indore & Bhopal", description: "Founded in 2008, Ruchi Realty has delivered residential, commercial and plotted developments across Kolkata, Indore and Bhopal. Explore 20+ projects." },
-  { path: "/about", title: "About Ruchi Realty | Legacy, Projects & Leadership", description: "Meet Ruchi Realty's leadership and explore a legacy founded in 2008, with 20+ residential, commercial and plotted projects across three Indian cities." },
+  { path: "/", title: "Ruchi Realty | Real Estate Developer in Kolkata, Indore & Bhopal", description: "Explore residential, commercial and plotted projects by Ruchi Realty across Kolkata, Indore and Bhopal. View locations, status and enquiry options." },
+  { path: "/about", title: "About Ruchi Realty | Company, Projects and Leadership", description: "Learn about Ruchi Realty, founded in 2008, its residential, commercial and plotted developments across Kolkata, Indore and Bhopal, and its leadership." },
   { path: "/projects", title: "Ruchi Realty Projects | Kolkata, Indore & Bhopal", description: "Explore Ruchi Realty residential, commercial and plotted developments across Kolkata, Indore and Bhopal." },
   { path: "/blogs", title: "Real Estate Insights & Guides | Ruchi Realty", description: "Read Ruchi Realty insights on home buying, property investment, plotted developments and real estate markets in Kolkata, Indore and Bhopal." },
   { path: "/careers", title: "Careers at Ruchi Realty", description: "Explore career opportunities with Ruchi Realty across real estate sales, engineering, customer service and operations." },

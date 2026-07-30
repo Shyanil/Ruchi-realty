@@ -40,23 +40,23 @@ const LEDGER_ITEMS = [
 const ABOUT_PROJECTS = {
   Kolkata: [
     { name: "Active Acres", desc: "G+23 stories across 6 high-rise towers within a 16.37-acre area.", status: "Completed", img: "assets/projects/active-acres.webp" },
-    { name: "Active Green", desc: "Luxury apartments near ITC Sonar, off E.M. Bypass.", status: "Completed", img: "assets/projects/active-green.webp" },
+    { name: "Active Greens", desc: "Residential apartments near ITC Sonar, off E.M. Bypass.", status: "Completed", img: "assets/projects/active-green.webp" },
     { name: "Angelica Tower", desc: "Modern apartments at D.C. Dey Road, Tangra.", status: "Ongoing", img: "assets/projects/active-acres.webp" },
     { name: "Active Business Park", desc: "Commercial complex over 2.25 lakh sq. ft.", status: "Completed", img: "assets/projects/active-business-park.webp" },
     { name: "One Rajarhat", desc: "G+23 stories across 3 high-rise towers in New Town.", status: "Completed", img: "assets/projects/one-rajarhat.webp" },
-    { name: "One Prime", desc: "Mixed-use apartments in New Town.", status: "Ongoing", img: "assets/projects/one-prime.webp" },
+    { name: "One Prime Residential", desc: "Ready-to-move residential apartments in New Town.", status: "Completed", img: "assets/projects/one-prime.webp", url: "/projects/one-prime-residential" },
     { name: "One Victoria", desc: "An ongoing residential and retail development in Action Area 1, New Town, Kolkata.", status: "Ongoing", img: "/projects/one-victoria-new-town/hero.webp", url: "/projects/one-victoria-new-town" }
   ],
   Indore: [
     { name: "Oscar The Billionaire's Destination", desc: "Ultra-premium luxury plotted development on 24 acres.", status: "Completed", img: "assets/projects/oscar-billionaires.webp" },
     { name: "Oscar Pride", desc: "Ultra-premium luxury plots across 8 acres.", status: "Completed", img: "assets/projects/oscar-pride.webp" },
-    { name: "Oscar Fort", desc: "A leisure-focused premium development designed around dreams and happiness.", status: "Completed", img: "assets/projects/oscar-fort.webp" },
+    { name: "Oscar Fort", desc: "An ongoing residential development in Indore.", status: "Ongoing", img: "assets/projects/oscar-fort.webp", url: "/projects/oscar-fort-indore" },
     { name: "Oscar Palace", desc: "Royal-themed project designed like a majestic kingdom palace.", status: "Ongoing", img: "assets/projects/oscar-palace.webp" },
     { name: "Oscar Sanctuary", desc: "Oscar Sanctuary is a residential project in Indore. Full project details can be updated from the admin panel.", status: "Ongoing", img: "/projects/oscar-sanctuary-indore/hero.webp", url: "/projects/oscar-sanctuary-indore" },
     { name: "Ruchi Lifescapes", desc: "Luxury plots spanning 73 acres with 700 plots.", status: "Completed", img: "/projects/ruchi-lifescapes-indore-project/hero.webp", url: "/projects/ruchi-lifescapes-indore-project" },
-    { name: "Ruchi Enclave", desc: "Ruchi Enclave is a residential project in Indore. Full project details can be updated from the admin panel.", status: "Upcoming", img: "/projects/ruchi-enclave-indore/hero.webp", url: "/projects/ruchi-enclave-indore" },
+    { name: "Ruchi Enclave", desc: "A ready-to-move residential project in Indore.", status: "Completed", img: "/projects/ruchi-enclave-indore/hero.webp", url: "/projects/ruchi-enclave-indore" },
     { name: "Saatvik Vihar", desc: "Luxury plots across 31 acres with 698 plots.", status: "Completed", img: "/projects/saatvik-vihar-indore/hero.webp", url: "/projects/saatvik-vihar-indore" },
-    { name: "Saatvik Green", desc: "Premium plotting project across 28 acres.", status: "Ongoing", img: "/projects/saatvikgreen-indore/hero.webp", url: "/projects/saatvikgreen-indore" },
+    { name: "Saatvik Green", desc: "A ready-to-move plotted residential project in Indore.", status: "Completed", img: "/projects/saatvikgreen-indore/hero.webp", url: "/projects/saatvikgreen-indore" },
     { name: "Anand Vihar", desc: "Premium plotting project with 900 plots.", status: "Completed", img: "/projects/anand-vihar-indore/hero.webp", url: "/projects/anand-vihar-indore" }
   ],
   Bhopal: [
@@ -110,18 +110,43 @@ const TEAM_MEMBERS = [
   }
 ];
 
+const ABOUT_SCHEMAS = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Ruchi Realty",
+    url: "https://ruchirealty.com/",
+    logo: "https://ruchirealty.com/assets/logo-h.webp",
+    foundingDate: "2008",
+    sameAs: [
+      "https://www.facebook.com/RuchiRealty",
+      "https://www.instagram.com/ruchi_realty",
+      "https://www.linkedin.com/company/ruchi-realty-holdings-limited/",
+      "https://www.youtube.com/@ruchirealty.comrealestatec8583",
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://ruchirealty.com/" },
+      { "@type": "ListItem", position: 2, name: "About Ruchi Realty", item: "https://ruchirealty.com/about" },
+    ],
+  },
+];
+
 function AboutHero() {
   return (
     <header className="ab-hero" data-screen-label="About us">
       <div className="ab-hero__sig" aria-hidden="true"></div>
       <div className="rr-wrap ab-hero__grid">
         <Reveal>
-          <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>About Us</div>
+          <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>About Ruchi Realty</div>
           <h1 className="ab-hero__title">
-            Committed<br /><span className="rr-grad">to You.</span>
+            Building homes, workplaces<br /><span className="rr-grad">and communities since 2008.</span>
           </h1>
           <p className="ab-hero__lead">
-            Since 2008, building landmark spaces across Kolkata, Indore, and Bhopal.
+            Ruchi Realty is an Indian real estate developer with residential, commercial and plotted projects across Kolkata, Indore and Bhopal.
           </p>
         </Reveal>
       </div>
@@ -136,15 +161,15 @@ function AboutLegacy() {
         <div className="ab-legacy__grid">
           <div className="ab-legacy__left">
             <Reveal>
-              <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>LEGACY</div>
+              <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>OUR STORY</div>
               <h2 className="ab-legacy__title">
-                Trusted legacy of engineering excellence
+                A practical approach to real estate development
               </h2>
               <p className="ab-legacy__intro">
-                Welcome to Ruchi Realty, where excellence in real estate meets a commitment to crafting exceptional spaces. For over 17 years, the company has developed, managed, and sold residential, commercial, and retail properties across India.
+                Ruchi Realty was founded in 2008 to develop well-planned spaces in growing Indian cities. Its portfolio includes homes, commercial properties and plotted communities shaped around location, usability and long-term value.
               </p>
               <p className="ab-legacy__body">
-                Founded in 2008, Ruchi Realty has built a strong presence through modern design, superior construction quality, thoughtful amenities, and a customer-first approach. The company's portfolio spans Kolkata, Indore, and Bhopal, with landmark residential, commercial, and plotted developments.
+                Today, teams work across Kolkata, Indore and Bhopal. From planning and approvals to construction, handover and customer support, each project is managed with attention to clear specifications, responsible execution and communication.
               </p>
             </Reveal>
           </div>
@@ -156,9 +181,9 @@ function AboutLegacy() {
               <div className="ab-legacy__image-box"><img src="assets/projects/one-rajarhat.webp" alt="One Rajarhat" /></div>
             </div>
             <div className="ab-legacy__stats-strip">
-              <div className="ab-glass-stat"><span className="ab-glass-stat__val">2008</span><span className="ab-glass-stat__lbl">Year Founded · 17+ Years of Experience</span></div>
+              <div className="ab-glass-stat"><span className="ab-glass-stat__val">2008</span><span className="ab-glass-stat__lbl">Year Founded</span></div>
               <div className="ab-glass-stat"><span className="ab-glass-stat__val">3</span><span className="ab-glass-stat__lbl">Key Indian Cities</span></div>
-              <div className="ab-glass-stat"><span className="ab-glass-stat__val">20+</span><span className="ab-glass-stat__lbl">Residential, Commercial & Plotted Projects</span></div>
+              <div className="ab-glass-stat"><span className="ab-glass-stat__val">20</span><span className="ab-glass-stat__lbl">Projects Listed Across Residential, Commercial & Plotted Developments</span></div>
             </div>
           </Reveal>
         </div>
@@ -175,12 +200,12 @@ function AboutPhilosophy() {
       <div className="rr-wrap">
         <div className="ab-philosophy__header">
           <Reveal>
-            <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>PHILOSOPHY</div>
+            <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>HOW WE WORK</div>
             <h2 className="ab-philosophy__title">
-              A philosophy built on trust, quality, and responsible growth
+              Clear principles for planning, delivery and support
             </h2>
             <p className="ab-philosophy__lead">
-              Ruchi Realty believes in ethical trade practices, high-quality residences, innovation, timely delivery, and a deeply customer-centric approach.
+              Our approach focuses on practical design, documented specifications, responsible development, clear communication and support beyond possession.
             </p>
           </Reveal>
         </div>
@@ -198,7 +223,7 @@ function AboutPhilosophy() {
             <div className="ab-philosophy__image-overlay"></div>
             <div className="ab-philosophy__image-caption">
               <span>{LEDGER_ITEMS[activeLedger].title}</span>
-              <p>Designing and constructing around values, sustainability, and long-term asset value.</p>
+              <p>Planning and building around everyday use, clear information and long-term value.</p>
             </div>
           </Reveal>
 
@@ -238,9 +263,9 @@ function AboutVisionMission() {
             <div className="ab-vm-card__overlay"></div>
             <div className="ab-vm-card__content">
               <div className="ab-vm-card__eyebrow">MISSION</div>
-              <h3 className="ab-vm-card__title">Empowering lives through exceptional spaces</h3>
+              <h3 className="ab-vm-card__title">Dependable projects, clearly delivered</h3>
               <p className="ab-vm-card__text">
-                To create enduring residential and commercial spaces through disciplined engineering, thoughtful design, and customer-first delivery.
+                To develop dependable residential, commercial and plotted projects through thoughtful planning, disciplined construction and clear customer communication.
               </p>
               <blockquote className="ab-vm-card__quote">
                 &ldquo;To build real estate marvels across residential and commercial developments while setting new standards in quality and architectural excellence.&rdquo;
@@ -253,9 +278,9 @@ function AboutVisionMission() {
             <div className="ab-vm-card__overlay"></div>
             <div className="ab-vm-card__content">
               <div className="ab-vm-card__eyebrow">VISION</div>
-              <h3 className="ab-vm-card__title">To lead tomorrow together</h3>
+              <h3 className="ab-vm-card__title">Useful design and responsible growth</h3>
               <p className="ab-vm-card__text">
-                To be a trusted Indian real estate company, known for quality, sustainability, and places where communities thrive.
+                To be a trusted Indian real estate company known for useful design, responsible growth and long-term value.
               </p>
               <blockquote className="ab-vm-card__quote">
                 &ldquo;To contribute significantly to building a stronger nation and become the country's trusted real estate company.&rdquo;
@@ -305,11 +330,11 @@ function AboutProjects() {
         <Reveal>
           <div className="sec-head sec-head--dark ab-projects__header">
             <div>
-              <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>FOOTPRINT</div>
-              <h2 className="ab-projects__title">Landmark addresses,<br /><span className="rr-grad">across key cities.</span></h2>
+              <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>OUR PORTFOLIO</div>
+              <h2 className="ab-projects__title">Projects across three cities<br /><span className="rr-grad">and multiple property types.</span></h2>
             </div>
             <p className="ab-projects__lead">
-              Ruchi Realty's portfolio includes landmark residential towers, commercial spaces, and plotted developments across major Indian cities.
+              Explore ready-to-move, ongoing and upcoming residential, commercial and plotted developments by city.
             </p>
           </div>
         </Reveal>
@@ -450,10 +475,10 @@ function AboutTeam() {
       <div className="rr-wrap">
         <div className="ab-team__header">
           <Reveal>
-            <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>OUR TEAM</div>
-            <h2 className="ab-team__title">Meet the people shaping Ruchi Realty</h2>
+            <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>LEADERSHIP</div>
+            <h2 className="ab-team__title">Experienced leadership across development, finance and operations</h2>
             <p className="ab-team__lead">
-              Our leaders don't just plan and strategize. They bring the expertise, discipline, and vision to execute landmark developments with consistency and care.
+              Ruchi Realty is led by professionals with experience across real estate development, engineering, finance, strategy, sales and customer operations.
             </p>
           </Reveal>
         </div>
@@ -493,7 +518,7 @@ function AboutOffices() {
   return (
     <section className="ab-offices section-pad" aria-labelledby="office-title">
       <div className="rr-wrap">
-        <Reveal><div className="eyebrow">OUR OFFICES</div><h2 id="office-title">Local teams in three cities.</h2></Reveal>
+        <Reveal><div className="eyebrow">OUR OFFICES</div><h2 id="office-title">Local teams in Kolkata, Indore and Bhopal.</h2></Reveal>
         <div className="ab-offices__grid">
           {offices.map(([city, address]) => <Reveal className="ab-office" key={city}><h3>{city}</h3><address>{address}</address><a href="/contact">Contact {city} office</a></Reveal>)}
         </div>
@@ -543,7 +568,14 @@ export default function AboutPage() {
 
   return (
     <>
-      <SEO title="About Ruchi Realty | Legacy, Projects & Leadership" description="Meet Ruchi Realty’s leadership and explore a legacy founded in 2008, with 20+ residential, commercial and plotted projects across three Indian cities." canonical="https://ruchirealty.com/about" image="/assets/about-family.webp" />
+      <SEO title="About Ruchi Realty | Company, Projects and Leadership" description="Learn about Ruchi Realty, founded in 2008, its residential, commercial and plotted developments across Kolkata, Indore and Bhopal, and its leadership." canonical="https://ruchirealty.com/about" image="/assets/about-family.webp" />
+      {ABOUT_SCHEMAS.map((schema) => (
+        <script
+          key={schema["@type"]}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }}
+        />
+      ))}
       <Nav onContact={onContact} solidAt={1} />
       <main>
         <AboutHero />

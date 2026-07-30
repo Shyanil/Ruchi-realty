@@ -458,6 +458,42 @@ function assetUrl(src = "") {
   return `/${src.replace(/^\.\//, "")}`;
 }
 
+function mergeProjectSubpage(fallback, remote) {
+  if (!fallback) return remote || null;
+  if (!remote) return fallback;
+  const preferArray = (remoteValue, fallbackValue) => Array.isArray(remoteValue) && remoteValue.length ? remoteValue : (fallbackValue || []);
+  const preferText = (remoteValue, fallbackValue) => String(remoteValue || "").trim() ? remoteValue : (fallbackValue || "");
+  return {
+    ...fallback,
+    ...remote,
+    heroTitle: preferText(remote.heroTitle, fallback.heroTitle),
+    heroTagline: preferText(remote.heroTagline, fallback.heroTagline),
+    heroLogo: preferText(remote.heroLogo, fallback.heroLogo),
+    heroBg: preferText(remote.heroBg, fallback.heroBg),
+    heroMobileUrl: preferText(remote.heroMobileUrl, fallback.heroMobileUrl),
+    overviewParagraphs: preferArray(remote.overviewParagraphs, fallback.overviewParagraphs),
+    overviewHighlights: preferArray(remote.overviewHighlights, fallback.overviewHighlights),
+    amenities: preferArray(remote.amenities, fallback.amenities),
+    specifications: preferArray(remote.specifications, fallback.specifications),
+    specificationImage: preferText(remote.specificationImage, fallback.specificationImage),
+    floorPlans: preferArray(remote.floorPlans, fallback.floorPlans),
+    locationImage: preferText(remote.locationImage, fallback.locationImage),
+    locationMapEmbed: preferText(remote.locationMapEmbed, fallback.locationMapEmbed),
+    locationDestinations: preferArray(remote.locationDestinations, fallback.locationDestinations),
+    walkthroughVideoId: preferText(remote.walkthroughVideoId, fallback.walkthroughVideoId),
+    videos: preferArray(remote.videos, fallback.videos),
+    galleryImages: preferArray(remote.galleryImages, fallback.galleryImages),
+    constructionUpdates: preferArray(remote.constructionUpdates, fallback.constructionUpdates),
+    brochureUrl: preferText(remote.brochureUrl, fallback.brochureUrl),
+    faqs: preferArray(remote.faqs, fallback.faqs),
+    relatedProjectSlugs: preferArray(remote.relatedProjectSlugs, fallback.relatedProjectSlugs),
+    ctaLabels: { ...(fallback.ctaLabels || {}), ...(remote.ctaLabels || {}) },
+    ogImage: preferText(remote.ogImage, fallback.ogImage),
+    metaTitle: preferText(remote.metaTitle, fallback.metaTitle),
+    metaDescription: preferText(remote.metaDescription, fallback.metaDescription),
+  };
+}
+
 function parseJson(value, fallback) {
   try {
     if (typeof value === "object" && value !== null) return value;
@@ -510,22 +546,25 @@ function highlightIconSrc(icon, index) {
   return assetUrl(ICONS[DEFAULT_HIGHLIGHTS[index]?.icon] || ICONS.location);
 }
 
-function normalizeProjectSubpage(project, sp) {
+function normalizeProjectSubpage(project, sp, fallbackSp = null) {
   const custom = extractCustomSpecs(sp?.specifications || []);
+  const fallbackCustom = extractCustomSpecs(fallbackSp?.specifications || []);
   const title = sp?.heroTitle || project?.title || project?.name || "Project";
   const description = project?.description || "Explore this Ruchi Realty project with thoughtfully planned spaces, dependable execution, and a location selected for everyday convenience.";
   const videoSection = custom.videoSection || {};
   const legacyVideoUrl = (videoSection.videoUrl || "").trim() || (sp?.walkthroughVideoId || "").trim();
-  const videos = (Array.isArray(sp?.videos) && sp.videos.length ? sp.videos : legacyVideoUrl ? [{ ...videoSection, videoUrl: legacyVideoUrl }] : [])
+  const videoItems = Array.isArray(sp?.videos) && sp.videos.length ? sp.videos : legacyVideoUrl ? [{ ...videoSection, videoUrl: legacyVideoUrl }] : [];
+  const fallbackVideoItems = Array.isArray(fallbackSp?.videos) && fallbackSp.videos.length ? fallbackSp.videos : [];
+  const videos = videoItems
     .filter((item) => item?.videoUrl || item?.url)
-    .map((item, index) => ({ title: item.title || `Project video ${index + 1}`, videoUrl: videoEmbedUrl(item.videoUrl || item.url), thumbnailUrl: assetUrl(item.thumbnailUrl || item.poster || "") }));
+    .map((item, index) => ({ title: item.title || `Project video ${index + 1}`, videoUrl: videoEmbedUrl(item.videoUrl || item.url), thumbnailUrl: assetUrl(item.thumbnailUrl || item.poster || ""), thumbnailFallbackUrl: assetUrl(fallbackVideoItems[index]?.thumbnailUrl || fallbackVideoItems[index]?.poster || "") }));
   const clean = (items, predicate) => (Array.isArray(items) ? items : []).filter(predicate);
-  const normalizeImages = (items) => clean(items, (img) => img?.src || img?.image)
-    .map((img) => ({ ...img, src: assetUrl(img.src || img.image) }));
-  const rawGalleryImages = normalizeImages(sp?.galleryImages || []);
+  const normalizeImages = (items, fallbackItems = []) => clean(items, (img) => img?.src || img?.image)
+    .map((img, index) => ({ ...img, src: assetUrl(img.src || img.image), fallbackSrc: assetUrl(fallbackItems[index]?.src || fallbackItems[index]?.image || "") }));
+  const rawGalleryImages = normalizeImages(sp?.galleryImages || [], fallbackSp?.galleryImages || []);
   const isConstructionImage = (img) => /construction|progress|update/i.test(String(img?.category || ""));
   const galleryImages = rawGalleryImages.filter((img) => !isConstructionImage(img));
-  const constructionUpdates = [...normalizeImages(sp?.constructionUpdates || []), ...normalizeImages(custom.constructionUpdates), ...rawGalleryImages.filter(isConstructionImage)]
+  const constructionUpdates = [...normalizeImages(sp?.constructionUpdates || [], fallbackSp?.constructionUpdates || []), ...normalizeImages(custom.constructionUpdates, fallbackCustom.constructionUpdates), ...rawGalleryImages.filter(isConstructionImage)]
     .filter((img, index, items) => items.findIndex((candidate) => candidate.src === img.src) === index);
   return {
     title,
@@ -535,6 +574,8 @@ function normalizeProjectSubpage(project, sp) {
     tag: sp?.heroTagline || project?.tag || description,
     heroLogo: project?.slug === "ruchi-lifescapes-indore-project" ? "/projects/ruchi-lifescapes-indore-project/logo.webp" : assetUrl(sp?.heroLogo || ""),
     heroBg: assetUrl(sp?.heroBg || project?.image_url || project?.img || "assets/projects/oscar-billionaires.webp"),
+    heroFallbackLogo: assetUrl(fallbackSp?.heroLogo || ""),
+    heroFallbackBg: assetUrl(fallbackSp?.heroBg || project?.img || "assets/projects/oscar-billionaires.webp"),
     heroMobileUrl: assetUrl(custom.heroMobileUrl || sp?.heroMobileUrl || ""),
     heroImagePosition: sp?.heroImagePosition || "center center",
     heroImageFit: ["cover", "contain"].includes(sp?.heroImageFit) ? sp.heroImageFit : "cover",
@@ -545,10 +586,12 @@ function normalizeProjectSubpage(project, sp) {
     amenities: clean(sp?.amenities, (item) => item?.name),
     specifications: clean(custom.specifications, (item) => item?.title && (item?.desc || item?.details || item?.value)),
     specificationImage: assetUrl(sp?.specificationImage || ""),
-    floorPlans: (custom.floorPlans?.length ? custom.floorPlans : (sp?.floorPlans || [])).filter((plan) => plan?.desc || plan?.image).map((plan) => ({ ...plan, desc: assetUrl(plan.desc || plan.image) })),
+    specificationFallbackImage: assetUrl(fallbackSp?.specificationImage || ""),
+    floorPlans: (custom.floorPlans?.length ? custom.floorPlans : (sp?.floorPlans || [])).filter((plan) => plan?.desc || plan?.image).map((plan, index) => { const fallbackPlans = fallbackCustom.floorPlans?.length ? fallbackCustom.floorPlans : (fallbackSp?.floorPlans || []); return { ...plan, desc: assetUrl(plan.desc || plan.image), fallbackDesc: assetUrl(fallbackPlans[index]?.desc || fallbackPlans[index]?.image || "") }; }),
     videos,
     videoSection: videos[0] || { title: "", videoUrl: "", thumbnailUrl: "" },
     locationImage: assetUrl(sp?.locationImage || custom.locationMapUrl || ""),
+    locationFallbackImage: assetUrl(fallbackSp?.locationImage || fallbackCustom.locationMapUrl || ""),
     locationMapEmbed: embedSrc(sp?.locationMapEmbed || ""),
     locationDestinations: Array.isArray(sp?.locationDestinations) ? sp.locationDestinations : [],
     galleryImages,
@@ -737,7 +780,7 @@ function FloorPlansSection({ plans, title }) {
   const [active, setActive] = useState(0);
   if (!plans.length) return null;
   const plan = plans[Math.min(active, plans.length - 1)];
-  return <section className="section-pad osc-section" id="floor-plans"><div className="rr-wrap"><Reveal><div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: 16 }}>Floor Plans</div><h2 className="osc-section__title">Floor plans<br /><span className="rr-grad">for planned living.</span></h2></Reveal><div style={{ marginTop: 36 }}><Reveal style={{ display: "flex", gap: 12, marginBottom: 28, flexWrap: "wrap" }}>{plans.map((p, idx) => <button key={p.title || idx} type="button" className={`submit-btn ${active === idx ? "" : "ab-btn-outline"}`} style={{ padding: "10px 20px", background: active === idx ? "var(--rr-indigo)" : "transparent", color: active === idx ? "#fff" : "var(--rr-ink)", border: "1px solid var(--rr-indigo)" }} onClick={() => setActive(idx)}>{p.title || `Plan ${idx + 1}`}{p.config ? ` - ${p.config}` : ""}</button>)}</Reveal><Reveal key={active} style={{ background: "rgba(20,18,26,0.03)", padding: "clamp(16px,4vw,32px)", border: "1px solid rgba(20,18,26,0.08)", borderRadius: 8, display: "grid", placeItems: "center" }}><img src={plan.desc} alt={plan.title || `${title} floor plan`} style={{ maxWidth: "100%", maxHeight: 560, objectFit: "contain", borderRadius: 4 }} /></Reveal></div></div></section>;
+  return <section className="section-pad osc-section" id="floor-plans"><div className="rr-wrap"><Reveal><div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: 16 }}>Floor Plans</div><h2 className="osc-section__title">Floor plans<br /><span className="rr-grad">for planned living.</span></h2></Reveal><div style={{ marginTop: 36 }}><Reveal style={{ display: "flex", gap: 12, marginBottom: 28, flexWrap: "wrap" }}>{plans.map((p, idx) => <button key={p.title || idx} type="button" className={`submit-btn ${active === idx ? "" : "ab-btn-outline"}`} style={{ padding: "10px 20px", background: active === idx ? "var(--rr-indigo)" : "transparent", color: active === idx ? "#fff" : "var(--rr-ink)", border: "1px solid var(--rr-indigo)" }} onClick={() => setActive(idx)}>{p.title || `Plan ${idx + 1}`}{p.config ? ` - ${p.config}` : ""}</button>)}</Reveal><Reveal key={active} style={{ background: "rgba(20,18,26,0.03)", padding: "clamp(16px,4vw,32px)", border: "1px solid rgba(20,18,26,0.08)", borderRadius: 8, display: "grid", placeItems: "center" }}><img src={plan.desc} alt={plan.title || `${title} floor plan`} onError={(event) => { if (plan.fallbackDesc && event.currentTarget.src !== new URL(plan.fallbackDesc, window.location.origin).href) event.currentTarget.src = plan.fallbackDesc; else event.currentTarget.hidden = true; }} style={{ maxWidth: "100%", maxHeight: 560, objectFit: "contain", borderRadius: 4 }} /></Reveal></div></div></section>;
 }
 
 function WalkthroughSection({ video }) {
@@ -776,7 +819,7 @@ function ProjectSpecifications({ data }) {
   const specs=(data.specifications||[]).filter(item=>item?.title&&(item?.desc||item?.details));
   if (!specs.length) return null;
   const content=<div className="project-spec-grid">{specs.map((spec,index)=>{const parts=specificationParts(spec.desc||spec.details||spec.value);return <article className="project-spec-card" key={`${spec.title}-${index}`}><span>{String(index+1).padStart(2,"0")}</span><h3>{spec.title}</h3><div className="project-spec-points">{parts.map((part,partIndex)=>{const colon=part.indexOf(":");return colon>0?<p key={partIndex}><strong>{part.slice(0,colon)}</strong><em>{part.slice(colon+1).trim()}</em></p>:<p key={partIndex}><em>{part}</em></p>})}</div></article>})}</div>;
-  return <section className="section-pad project-section project-specifications" id="specifications"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Specifications</span><h2>Materials and details,<br/><span className="rr-grad">presented clearly.</span></h2></div>{data.specificationImage?<div className="project-spec-layout"><RImg className="project-spec-layout__image" src={data.specificationImage} alt={`${data.title} specifications`}/>{content}</div>:content}</div></section>;
+  return <section className="section-pad project-section project-specifications" id="specifications"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Specifications</span><h2>Materials and details,<br/><span className="rr-grad">presented clearly.</span></h2></div>{data.specificationImage?<div className="project-spec-layout"><RImg className="project-spec-layout__image" src={data.specificationImage} fallbackSrc={data.specificationFallbackImage} alt={`${data.title} specifications`}/>{content}</div>:content}</div></section>;
 }
 
 function ProjectAmenities({ amenities }) {
@@ -787,13 +830,13 @@ function ProjectAmenities({ amenities }) {
 function ProjectLocation({ data }) {
   const destinations=(data.locationDestinations||[]).filter(item=>item?.name);
   if (!data.locationImage&&!data.locationMapEmbed&&!destinations.length) return null;
-  return <section className="section-pad project-section project-location" id="location"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Location &amp; Connectivity</span><h2>A connected address,<br/><span className="rr-grad">close to what matters.</span></h2></div><div className="project-location__grid">{data.locationImage?<RImg className="project-location__image" src={data.locationImage} alt={`${data.title} location map`} mono/>:null}<div className="project-location__content">{destinations.length?<div className="project-location__list">{destinations.map((item,index)=><div key={`${item.name}-${index}`}><span>{item.name}</span><strong>{item.dist||item.distance||"Nearby"}</strong></div>)}</div>:null}{data.locationMapEmbed?<iframe title={`${data.title} map`} src={data.locationMapEmbed} loading="lazy" referrerPolicy="no-referrer-when-downgrade"/>:null}</div></div></div></section>;
+  return <section className="section-pad project-section project-location" id="location"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Location &amp; Connectivity</span><h2>A connected address,<br/><span className="rr-grad">close to what matters.</span></h2></div><div className="project-location__grid">{data.locationImage?<RImg className="project-location__image" src={data.locationImage} fallbackSrc={data.locationFallbackImage} alt={`${data.title} location map`} mono/>:null}<div className="project-location__content">{destinations.length?<div className="project-location__list">{destinations.map((item,index)=><div key={`${item.name}-${index}`}><span>{item.name}</span><strong>{item.dist||item.distance||"Nearby"}</strong></div>)}</div>:null}{data.locationMapEmbed?<iframe title={`${data.title} map`} src={data.locationMapEmbed} loading="lazy" referrerPolicy="no-referrer-when-downgrade"/>:null}</div></div></div></section>;
 }
 
 function ProjectWalkthrough({ data }) {
   const videos=data.videos||[];
   if (!videos.length) return null;
-  return <section className="section-pad project-section project-walkthrough" id="walkthrough"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">{videos.length>1?"Project Videos":"Walkthrough Video"}</span><h2>Explore the project<br/><span className="rr-grad">from wherever you are.</span></h2></div><div className={`project-video-grid ${videos.length===1?"is-single":""}`}>{videos.map((video,index)=><article className="project-video-card" key={`${video.videoUrl}-${index}`}>{videos.length>1?<h3>{video.title}</h3>:null}<div className="project-walkthrough__frame">{video.thumbnailUrl?<img src={video.thumbnailUrl} alt=""/>:null}<iframe title={video.title||`${data.title} walkthrough ${index+1}`} src={video.videoUrl} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen/></div></article>)}</div></div></section>;
+  return <section className="section-pad project-section project-walkthrough" id="walkthrough"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">{videos.length>1?"Project Videos":"Walkthrough Video"}</span><h2>Explore the project<br/><span className="rr-grad">from wherever you are.</span></h2></div><div className={`project-video-grid ${videos.length===1?"is-single":""}`}>{videos.map((video,index)=><article className="project-video-card" key={`${video.videoUrl}-${index}`}>{videos.length>1?<h3>{video.title}</h3>:null}<div className="project-walkthrough__frame">{video.thumbnailUrl?<RImg src={video.thumbnailUrl} fallbackSrc={video.thumbnailFallbackUrl} alt=""/>:null}<iframe title={video.title||`${data.title} walkthrough ${index+1}`} src={video.videoUrl} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen/></div></article>)}</div></div></section>;
 }
 
 function ProjectFaq({ data }) {
@@ -814,7 +857,7 @@ function ProjectGallery({ data, construction = false }) {
   const visibleIndexes=useThreeBoxGallery?Array.from({length:Math.min(3,images.length)},(_,index)=>(galleryStart+index)%images.length):images.map((_,index)=>index);
   const moveGallery=(direction)=>setGalleryStart(index=>(index+direction+images.length)%images.length);
   const moveLightbox=(direction)=>setLightboxIndex(index=>(index+direction+images.length)%images.length);
-  return <section className={`section-pad project-section project-gallery${construction ? " project-construction" : ""}`} id={sectionId}><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">{sectionLabel}</span><h2>{title}<br/><span className="rr-grad">{accent}</span></h2></div>{visibleIndexes.length?<><div className={useThreeBoxGallery?"project-gallery-trio":"project-gallery-grid"}>{visibleIndexes.map((imageIndex,position)=>{const image=images[imageIndex];return useThreeBoxGallery?<button type="button" onClick={()=>setLightboxIndex(imageIndex)} aria-label={`Open ${image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}`} key={`${image.src}-${imageIndex}`}><RImg src={image.src} alt={image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}/></button>:<a href={image.src} target="_blank" rel="noreferrer" className={position===0?"is-featured":""} key={`${image.src}-${imageIndex}`}><RImg src={image.src} alt={image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}/></a>})}</div>{useThreeBoxGallery&&images.length>3?<div className="project-gallery-trio__controls"><span>{String(galleryStart+1).padStart(2,"0")} / {String(images.length).padStart(2,"0")}</span><button type="button" onClick={()=>moveGallery(-1)} aria-label={`Previous ${sectionLabel.toLowerCase()} images`}>&#8592;</button><button type="button" onClick={()=>moveGallery(1)} aria-label={`Next ${sectionLabel.toLowerCase()} images`}>&#8594;</button></div>:null}</>:null}</div>{lightboxIndex!==null?<div className="project-gallery-lightbox" role="dialog" aria-modal="true" aria-label={`${data.title} ${sectionLabel.toLowerCase()} preview`} onClick={()=>setLightboxIndex(null)}><button className="project-gallery-lightbox__close" type="button" onClick={()=>setLightboxIndex(null)} aria-label="Close image preview">&#215;</button>{images.length>1?<button className="project-gallery-lightbox__arrow is-prev" type="button" onClick={event=>{event.stopPropagation();moveLightbox(-1)}} aria-label="Previous image">&#8592;</button>:null}<div className="project-gallery-lightbox__image" onClick={event=>event.stopPropagation()}><RImg src={images[lightboxIndex].src} alt={images[lightboxIndex].alt||`${data.title} ${imageLabel} ${lightboxIndex+1}`}/><span>{String(lightboxIndex+1).padStart(2,"0")} / {String(images.length).padStart(2,"0")}</span></div>{images.length>1?<button className="project-gallery-lightbox__arrow is-next" type="button" onClick={event=>{event.stopPropagation();moveLightbox(1)}} aria-label="Next image">&#8594;</button>:null}</div>:null}</section>;
+  return <section className={`section-pad project-section project-gallery${construction ? " project-construction" : ""}`} id={sectionId}><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">{sectionLabel}</span><h2>{title}<br/><span className="rr-grad">{accent}</span></h2></div>{visibleIndexes.length?<><div className={useThreeBoxGallery?"project-gallery-trio":"project-gallery-grid"}>{visibleIndexes.map((imageIndex,position)=>{const image=images[imageIndex];return useThreeBoxGallery?<button type="button" onClick={()=>setLightboxIndex(imageIndex)} aria-label={`Open ${image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}`} key={`${image.src}-${imageIndex}`}><RImg src={image.src} fallbackSrc={image.fallbackSrc} alt={image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}/></button>:<a href={image.src} target="_blank" rel="noreferrer" className={position===0?"is-featured":""} key={`${image.src}-${imageIndex}`}><RImg src={image.src} fallbackSrc={image.fallbackSrc} alt={image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}/></a>})}</div>{useThreeBoxGallery&&images.length>3?<div className="project-gallery-trio__controls"><span>{String(galleryStart+1).padStart(2,"0")} / {String(images.length).padStart(2,"0")}</span><button type="button" onClick={()=>moveGallery(-1)} aria-label={`Previous ${sectionLabel.toLowerCase()} images`}>&#8592;</button><button type="button" onClick={()=>moveGallery(1)} aria-label={`Next ${sectionLabel.toLowerCase()} images`}>&#8594;</button></div>:null}</>:null}</div>{lightboxIndex!==null?<div className="project-gallery-lightbox" role="dialog" aria-modal="true" aria-label={`${data.title} ${sectionLabel.toLowerCase()} preview`} onClick={()=>setLightboxIndex(null)}><button className="project-gallery-lightbox__close" type="button" onClick={()=>setLightboxIndex(null)} aria-label="Close image preview">&#215;</button>{images.length>1?<button className="project-gallery-lightbox__arrow is-prev" type="button" onClick={event=>{event.stopPropagation();moveLightbox(-1)}} aria-label="Previous image">&#8592;</button>:null}<div className="project-gallery-lightbox__image" onClick={event=>event.stopPropagation()}><RImg src={images[lightboxIndex].src} fallbackSrc={images[lightboxIndex].fallbackSrc} alt={images[lightboxIndex].alt||`${data.title} ${imageLabel} ${lightboxIndex+1}`}/><span>{String(lightboxIndex+1).padStart(2,"0")} / {String(images.length).padStart(2,"0")}</span></div>{images.length>1?<button className="project-gallery-lightbox__arrow is-next" type="button" onClick={event=>{event.stopPropagation();moveLightbox(1)}} aria-label="Next image">&#8594;</button>:null}</div>:null}</section>;
 }
 function RelatedProjects({ slug, preferredSlugs=[] }) {
   const available=PROJECTS.filter(project=>project.url&&project.url!==`/projects/${slug}`&&!project.url.endsWith(`/${slug}`));
@@ -859,7 +902,7 @@ export default function GenericProjectPage({ slugOverride = "" }) {
         setProject(found || (fallback ? { slug, title: fallback.heroTitle, name: fallback.heroTitle, city: meta.city || "", location: meta.city || "", type: meta.type || "Residential" } : null));
         if (found?.id) {
           const { data: sp } = await window.RuchiBackend.projectSubpages.getByProjectId(found.id);
-          if (active) setSubpage(sp || fallback);
+          if (active) setSubpage(mergeProjectSubpage(fallback, sp));
         } else if (active) {
           setSubpage(fallback);
         }
@@ -879,7 +922,7 @@ export default function GenericProjectPage({ slugOverride = "" }) {
     return () => { active = false; };
   }, [slug]);
 
-  const data = useMemo(() => normalizeProjectSubpage(project, subpage), [project, subpage]);
+  const data = useMemo(() => normalizeProjectSubpage(project, subpage, fallback), [project, subpage, fallback]);
   const onBrochure = () => setBrochurePopup(true);
   const useSplitHero = true;
   const submitHeroLead = async (form) => {
@@ -943,12 +986,12 @@ export default function GenericProjectPage({ slugOverride = "" }) {
       <Nav onContact={onBrochure} hidden={brochurePopup || heroPassed} solid={useSplitHero} />
       <main>
         <header className={`osc-hero ${useSplitHero ? `victoria-hero project-hero--${data.slug}` : String()}`} data-screen-label={data.title}>
-          <div className={`osc-hero__bg project-hero-media project-hero-media--${data.heroImageFit}`} style={{ "--project-hero-position": data.heroImagePosition }}><picture>{data.heroMobileUrl ? <source media="(max-width: 720px)" srcSet={data.heroMobileUrl} /> : null}<img src={data.heroBg} alt={`${data.title} project view`} fetchPriority="high" /></picture>{data.heroMedia?.type === "youtube_video" && data.heroMedia.url ? <iframe className="osc-hero__video" src={data.heroMedia.url} title={`${data.title} hero video`} allow="autoplay; encrypted-media" tabIndex="-1" aria-hidden="true" /> : null}</div>
+          <div className={`osc-hero__bg project-hero-media project-hero-media--${data.heroImageFit}`} style={{ "--project-hero-position": data.heroImagePosition }}><picture>{data.heroMobileUrl ? <source media="(max-width: 720px)" srcSet={data.heroMobileUrl} /> : null}<img src={data.heroBg} alt={`${data.title} project view`} fetchPriority="high" onError={(event) => { const fallbackSrc = data.heroFallbackBg; if (fallbackSrc && event.currentTarget.src !== new URL(fallbackSrc, window.location.origin).href) { event.currentTarget.parentElement?.querySelectorAll("source").forEach((source) => source.removeAttribute("srcset")); event.currentTarget.src = fallbackSrc; } }} /></picture>{data.heroMedia?.type === "youtube_video" && data.heroMedia.url ? <iframe className="osc-hero__video" src={data.heroMedia.url} title={`${data.title} hero video`} allow="autoplay; encrypted-media" tabIndex="-1" aria-hidden="true" /> : null}</div>
           <div className="osc-hero__overlay"></div>
           <div className="osc-hero__sig" aria-hidden="true"></div>
           {useSplitHero ? <div className={`rr-wrap victoria-hero__form-wrap`}><HeroEnquiryForm title={data.title} onSubmit={submitHeroLead} /></div> : <div className="rr-wrap osc-hero__wrap">
             <Reveal><div className="osc-hero__content">
-              {data.heroLogo ? <img src={data.heroLogo} alt={`${data.title} logo`} style={{ maxWidth: "min(260px,70vw)", maxHeight: 90, objectFit: "contain", marginBottom: 18 }} /> : null}
+              {data.heroLogo ? <img src={data.heroLogo} alt={`${data.title} logo`} onError={(event) => { if (data.heroFallbackLogo && event.currentTarget.src !== new URL(data.heroFallbackLogo, window.location.origin).href) event.currentTarget.src = data.heroFallbackLogo; else event.currentTarget.hidden = true; }} style={{ maxWidth: "min(260px,70vw)", maxHeight: 90, objectFit: "contain", marginBottom: 18 }} /> : null}
               <h1 className="osc-hero__title">{data.title}</h1>
               {data.location ? <p className="osc-hero__city">{data.location}</p> : null}
               <p className="osc-hero__tagline">{data.tag}</p>
@@ -959,7 +1002,7 @@ export default function GenericProjectPage({ slugOverride = "" }) {
 
         <SectionNav data={data} visible={heroPassed && !brochurePopup} />
 
-        {useSplitHero ? <section className={`victoria-intro`} id={`project-details`}><div className={`rr-wrap victoria-intro__top`}><div className={`victoria-intro__identity`}>{data.heroLogo ? <img src={data.heroLogo} alt={`${data.title} logo`} onError={(event)=>{event.currentTarget.hidden=true}} /> : null}<div><span className={`eyebrow`}>{data.type}</span><h1>{data.title}</h1>{data.location?<p>{data.location}</p>:null}<strong>{data.tag}</strong></div></div><div className={`victoria-intro__actions`}><Link className={`ab-btn-outline ab-btn-outline--white`} to={`/projects`}>More Projects<CtaArrow /></Link><button className={`submit-btn victoria-intro__brochure`} type={`button`} onClick={onBrochure}>{data.brochureUrl?data.ctaLabels.brochure:data.ctaLabels.visit}<CtaArrow /></button></div></div>{data.overviewHighlights.length?<div className={`rr-wrap victoria-intro__facts`}>{data.overviewHighlights.map((h, i) => <div className={`victoria-fact`} key={h.label || i}><span>{String(i + 1).padStart(2, `0`)}</span><div><small>{h.label}</small><strong>{h.desc}</strong></div></div>)}</div>:null}</section> : null}
+        {useSplitHero ? <section className={`victoria-intro`} id={`project-details`}><div className={`rr-wrap victoria-intro__top`}><div className={`victoria-intro__identity`}>{data.heroLogo ? <img src={data.heroLogo} alt={`${data.title} logo`} onError={(event)=>{if (data.heroFallbackLogo && event.currentTarget.src !== new URL(data.heroFallbackLogo, window.location.origin).href) event.currentTarget.src = data.heroFallbackLogo; else event.currentTarget.hidden=true;}} /> : null}<div><span className={`eyebrow`}>{data.type}</span><h1>{data.title}</h1>{data.location?<p>{data.location}</p>:null}<strong>{data.tag}</strong></div></div><div className={`victoria-intro__actions`}><Link className={`ab-btn-outline ab-btn-outline--white`} to={`/projects`}>More Projects<CtaArrow /></Link><button className={`submit-btn victoria-intro__brochure`} type={`button`} onClick={onBrochure}>{data.brochureUrl?data.ctaLabels.brochure:data.ctaLabels.visit}<CtaArrow /></button></div></div>{data.overviewHighlights.length?<div className={`rr-wrap victoria-intro__facts`}>{data.overviewHighlights.map((h, i) => <div className={`victoria-fact`} key={h.label || i}><span>{String(i + 1).padStart(2, `0`)}</span><div><small>{h.label}</small><strong>{h.desc}</strong></div></div>)}</div>:null}</section> : null}
 
         <ProjectOverview data={data} />
 

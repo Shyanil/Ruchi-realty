@@ -44,11 +44,11 @@ export function Testimonials() {
         <Reveal>
           <div className="testi-headrow">
             <div>
-              <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>In their words</div>
-              <h2 className="testi-head">The families who live<br /><span className="rr-grad">in what we promised.</span></h2>
+              <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>Resident stories</div>
+              <h2 className="testi-head">What living in a Ruchi Realty<br /><span className="rr-grad">home is really like.</span></h2>
             </div>
             <p className="testi-intro">
-              No scripts. Real families, filmed in the homes we handed them, speaking about the part that mattered.
+              Hear directly from residents about the buying experience, their neighbourhood and life after moving in.
             </p>
           </div>
         </Reveal>

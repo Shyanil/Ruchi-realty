@@ -8,7 +8,7 @@ const ROUTE_MAP = {
   "Projects.html": "/projects",
   "About.html": "/about",
   "Awards.html": "/awards",
-  "Blog.html": "/blog",
+  "Blog.html": "/blogs",
   "Careers.html": "/careers",
   "Contact.html": "/contact",
   "Media.html": "/media",

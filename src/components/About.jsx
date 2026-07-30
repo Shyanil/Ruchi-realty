@@ -13,17 +13,17 @@ export function About() {
           </Reveal>
           <div className="about-copy">
             <Reveal>
-              <div className="eyebrow sec-eyebrow">Why we build</div>
+              <div className="eyebrow sec-eyebrow">About Ruchi Realty</div>
               <h2 className="about-head">
-                A home is the largest <span className="rr-grad">trust</span> a family ever gives.
+                Built around quality, clarity and <span className="rr-grad">long term relationships.</span>
               </h2>
             </Reveal>
             <Reveal delay={80}>
               <p className="about-lead" style={{ fontSize: "16px", color: "rgba(35, 31, 32, 0.6)", height: "89px", lineHeight: "1.65" }}>
-                Founded in 2008, Ruchi Realty has spent 17+ years creating residential, commercial, and plotted developments across Kolkata, Indore, and Bhopal.
+                Since 2008, Ruchi Realty has created residential, commercial and plotted developments across Kolkata, Indore and Bhopal.
               </p>
               <p className="about-body" style={{ lineHeight: "1.9" }}>
-                Because a home should keep its promises long after the keys change hands, we build with intent and stay reachable after. That is what we mean when we say we are committed to you.
+                Our work brings together considered locations, practical planning, responsible construction and support that continues beyond possession.
               </p>
             </Reveal>
             <Reveal delay={140}>
@@ -35,7 +35,7 @@ export function About() {
                   </div>
                 )}
               </div>
-              <a className="about-more" href="/about">Our legacy, leadership and offices →</a>
+              <a className="about-more" href="/about">Our story and leadership →</a>
             </Reveal>
           </div>
         </div>

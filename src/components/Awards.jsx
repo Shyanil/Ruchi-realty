@@ -27,10 +27,10 @@ export function Awards() {
       <div className="rr-wrap">
         <Reveal>
           <div className="awards__intro">
-            <div className="eyebrow sec-eyebrow">Recognition</div>
-            <h2 className="awards__head">Quietly <span className="rr-grad">acknowledged</span>,<br />over the years.</h2>
+            <div className="eyebrow sec-eyebrow">Awards and recognition</div>
+            <h2 className="awards__head">Recognition earned across<br /><span className="rr-grad">projects and years.</span></h2>
             <p className="awards__lead">
-              We don't build for awards. We are grateful when the work is noticed all the same.
+              Explore recognition received by Ruchi Realty projects across different cities and years.
             </p>
           </div>
         </Reveal>

@@ -36,12 +36,12 @@ export function Contact() {
       <div className="rr-wrap">
         <div className="contact-header-centered">
           <Reveal>
-            <div className="eyebrow sec-eyebrow">Talk to us</div>
+            <div className="eyebrow sec-eyebrow">Plan your visit</div>
             <h2 className="contact-head">
-              Come and see<br /><span className="rr-grad">for yourself.</span>
+              Tell us which project<br /><span className="rr-grad">you would like to explore.</span>
             </h2>
             <p className="contact-lead">
-              Tell us a little about what you are looking for. Someone who knows the projects, not a call centre, will write back.
+              Share your preferred city, project and contact details. A member of the relevant project team will get in touch to answer questions or arrange a site visit.
             </p>
           </Reveal>
         </div>

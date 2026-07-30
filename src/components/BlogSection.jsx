@@ -21,10 +21,10 @@ export function BlogSection() {
         <Reveal>
           <div className="sec-head">
             <div>
-              <div className="eyebrow sec-eyebrow">Blogs</div>
-              <h2 className="blog__head">What we're thinking about,<br /><span className="rr-grad">written plainly.</span></h2>
+              <div className="eyebrow sec-eyebrow">Property guides</div>
+              <h2 className="blog__head">Useful information for<br /><span className="rr-grad">homebuyers and investors.</span></h2>
             </div>
-            <Link className="blog__all" to="/blogs">View all insights<span className="ar">→</span></Link>
+            <Link className="blog__all" to="/blogs">Read all property guides<span className="ar">→</span></Link>
           </div>
         </Reveal>
       </div>

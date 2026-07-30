@@ -23,12 +23,34 @@ export function Reveal({ children, delay = 0, as = "div", className = "", style 
 }
 
 /* ---- Resilient image: brand-gradient + monogram fallback ---- */
-export function RImg({ src, alt = "", className = "", style = {}, grade = false, mono = true }) {
-  const [ok, setOk] = useState(true);
+function normalizeImageSrc(src = "") {
+  return !src || /^(https?:|data:|blob:|\/)/i.test(src) ? src : `/${src.replace(/^\.\//, "")}`;
+}
+
+export function RImg({ src, fallbackSrc = "", alt = "", className = "", style = {}, grade = false, mono = true }) {
+  const primarySrc = normalizeImageSrc(src);
+  const backupSrc = normalizeImageSrc(fallbackSrc);
+  const [currentSrc, setCurrentSrc] = useState(primarySrc || backupSrc);
+  const [ok, setOk] = useState(Boolean(primarySrc || backupSrc));
+
+  useEffect(() => {
+    const nextSrc = primarySrc || backupSrc;
+    setCurrentSrc(nextSrc);
+    setOk(Boolean(nextSrc));
+  }, [primarySrc, backupSrc]);
+
+  const handleError = () => {
+    if (backupSrc && currentSrc !== backupSrc) {
+      setCurrentSrc(backupSrc);
+      return;
+    }
+    setOk(false);
+  };
+
   return (
     <div className={`rimg ${className}`} style={{ background: "var(--rr-gradient-brand)", ...style }}>
       {ok ? (
-        <img src={!src || /^(https?:|data:|\/)/i.test(src) ? src : `/${src.replace(/^\.\//, "")}`} alt={alt} loading="lazy" onError={() => setOk(false)}
+        <img src={currentSrc} alt={alt} loading="lazy" onError={handleError}
           className="rimg__img" style={grade ? { filter: "brightness(0.92)" } : null} />
       ) : (
         mono ? <div className="rimg__mono" /> : null
@@ -66,7 +88,8 @@ export function StatCounter({ value, suffix }) {
     io.observe(el);
     return () => io.disconnect();
   }, [value]);
-  return <span ref={ref}>{n.toLocaleString("en-US")}<span className="suffix">{suffix}</span></span>;
+  const displayValue = Number.isInteger(n) && n >= 1900 && n <= 2100 ? String(n) : n.toLocaleString("en-US");
+  return <span ref={ref}>{displayValue}<span className="suffix">{suffix}</span></span>;
 }
 
 /* ---- Award seal: thin gradient ring + star, refined & quiet ---- */

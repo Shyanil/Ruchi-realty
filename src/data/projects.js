@@ -36,5 +36,7 @@ export const PROJECT_OPTIONS = [
 ];
 
 if (typeof window !== 'undefined') {
-  window.PROJECTS = PROJECTS;
+  // Keep runtime/backend synchronization from mutating the imported seed list.
+  // Project cards use the original list as their guaranteed local image fallback.
+  window.PROJECTS = PROJECTS.map((project) => ({ ...project }));
 }

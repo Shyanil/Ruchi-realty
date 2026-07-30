@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const ROUTE_MAP = {
   "About.html": "/about",
   "Careers.html": "/careers",
-  "Blog.html": "/blog",
+  "Blog.html": "/blogs",
   "Awards.html": "/awards",
   "Projects.html": "/projects",
   "Contact.html": "/contact",

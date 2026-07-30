@@ -6,17 +6,17 @@ export default function Intro() {
       <div className="intro__sig" aria-hidden="true"></div>
       <div className="rr-wrap">
         <Reveal>
-          <div className="intro__eyebrow eyebrow sec-eyebrow">Committed to You</div>
+          <div className="intro__eyebrow eyebrow sec-eyebrow">Built on commitment</div>
         </Reveal>
         <Reveal delay={80}>
           <h1 className="intro__head">
-            We don't just build homes.<br />
-            <span className="intro__grad">We stand by them.</span>
+            Real estate shaped around<br />
+            <span className="intro__grad">how people live, work and invest.</span>
           </h1>
         </Reveal>
         <Reveal delay={160}>
           <p className="intro__sub">
-            Since 2008, across Kolkata, Indore, and Bhopal, we have treated the home as a promise—built with intent, handed over with care, and supported long after the keys change hands.
+            Ruchi Realty develops homes, commercial spaces and plotted communities across Kolkata, Indore and Bhopal, with attention to location, practical design, construction quality and clear communication.
           </p>
         </Reveal>
       </div>

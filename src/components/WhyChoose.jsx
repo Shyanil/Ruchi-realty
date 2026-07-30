@@ -8,10 +8,10 @@ export function WhyChoose() {
     <section className="section-pad why" id="why">
       <div className="rr-wrap why2">
         <Reveal className="why2__aside">
-          <div className="eyebrow sec-eyebrow">What commitment looks like</div>
-          <h2 className="why2__head">The <span className="rr-grad">proof</span>,<br />not the promise.</h2>
+          <div className="eyebrow sec-eyebrow">What buyers can expect</div>
+          <h2 className="why2__head">Clear <span className="rr-grad">commitments</span><br />at every stage.</h2>
           <p className="why2__lead">
-            Trust is earned, never claimed. These are the things we hold ourselves to and the things you can check for yourself before you decide.
+            A property decision should be based on information that can be checked. These are the standards we aim to make visible across every project.
           </p>
           <div className="why2__mark" aria-hidden="true"></div>
         </Reveal>

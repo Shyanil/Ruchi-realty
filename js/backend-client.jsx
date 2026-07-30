@@ -194,7 +194,15 @@
   const mergePublicProjects = (dbProjects = []) => {
     const bySlug = new Map(getSeedProjects().map((item) => [item.slug, item]));
     dbProjects.map(normalizeProject).forEach((item) => {
-      bySlug.set(item.slug, { ...(bySlug.get(item.slug) || {}), ...item });
+      const seed = bySlug.get(item.slug) || {};
+      const image = item.image_url || item.img || seed.image_url || seed.img || "";
+      bySlug.set(item.slug, {
+        ...seed,
+        ...item,
+        image_url: image,
+        img: image,
+        url: item.url || seed.url || `/projects/${item.slug}`,
+      });
     });
     return sortProjects([...bySlug.values()]);
   };
