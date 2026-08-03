@@ -9,6 +9,7 @@ import { Testimonials } from "../components/Testimonials";
 import { Awards } from "../components/Awards";
 import { Press } from "../components/Press";
 import { BlogSection } from "../components/BlogSection";
+import { Faq, HOME_FAQS } from "../components/Faq";
 import { Contact } from "../components/Contact";
 import { Footer } from "../components/Footer";
 import { CustomCursor } from "../components/shared";
@@ -34,6 +35,15 @@ const HOME_SCHEMAS = [
     "@type": "WebSite",
     name: "Ruchi Realty",
     url: "https://ruchirealty.com/",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: HOME_FAQS.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
   },
 ];
 
@@ -75,6 +85,7 @@ export default function HomePage() {
         <Awards />
         <Press />
         <BlogSection />
+        <Faq />
         <Contact />
       </main>
       <Footer />

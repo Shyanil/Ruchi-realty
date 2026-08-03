@@ -10,8 +10,8 @@ export default function Intro() {
         </Reveal>
         <Reveal delay={80}>
           <h1 className="intro__head">
-            Real estate shaped around<br />
-            <span className="intro__grad">how people live, work and invest.</span>
+            Where Living, Work<br />
+            <span className="intro__grad">and Investment Meet</span>
           </h1>
         </Reveal>
         <Reveal delay={160}>

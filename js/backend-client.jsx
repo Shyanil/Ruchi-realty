@@ -99,7 +99,8 @@
     const key = title.toLowerCase().trim();
     const place = location.toLowerCase().trim();
     if (key.includes("active business park")) return "active-business-park";
-    if (key.includes("active acres") || key.includes("angelica")) return "active-acres-angelica";
+    if (key.includes("active acres angelica") || key.includes("angelica")) return "active-acres-angelica";
+    if (key === "active acres") return "active-acres-kolkata";
     if (key.includes("active greens") || key.includes("active green")) return "active-greens";
     if (key.includes("one rajarhat")) return "one-rajarhat";
     if (key.includes("one prime")) return "one-prime-residential";

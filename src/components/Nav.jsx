@@ -28,7 +28,7 @@ const MEGA = (() => {
     Projects: {
       href: "Projects.html",
       projectNested: true,
-      blurb: "Residential and commercial projects across three cities, each carried from drawing to handover.",
+      blurb: "Homes, offices and plots across Kolkata, Indore and Bhopal.",
       cols: [
         { h: "By city", items: [
           ["Kolkata", "Projects.html#city=Kolkata"],
@@ -48,7 +48,7 @@ const MEGA = (() => {
     },
     About: {
       href: "About.html",
-      blurb: "Founded in 2008, Ruchi Realty develops residential, commercial and plotted projects across Kolkata, Indore and Bhopal.",
+      blurb: "Residential, commercial and plotted developments since 2008.",
       cols: [
         { h: "Company", items: [["About Us", "About.html"], ["The proof, not the promise", "#why"], ["Our Team", "About.html#team"], ["Careers", "Careers.html"]] },
       ],
@@ -56,7 +56,7 @@ const MEGA = (() => {
     },
     Blogs: {
       href: "/blogs",
-      blurb: "Industry insights written plainly, covering materials, plans, and the relationships that begin at the keys.",
+      blurb: "Plain-language guides to plans, materials and property decisions.",
       cols: [
         { h: "Latest insights", items: insightItems },
       ],
@@ -64,7 +64,7 @@ const MEGA = (() => {
     },
     Media: {
       href: "/media",
-      blurb: "Project galleries, official press updates, events, awards, and the milestone moments that shape the Ruchi Realty story.",
+      blurb: "Galleries, press releases, events and awards from Ruchi Realty.",
       cols: [
         { h: "Media", items: [["Gallery", "/media/gallery"], ["Press Releases", "/media/press-releases"], ["Events & Awards", "/media/events-awards"]] },
         { h: "Discover", items: [["Latest gallery", "/media/gallery"], ["Company updates", "/media/press-releases"], ["Recognitions", "/media/events-awards"]] },
@@ -73,7 +73,7 @@ const MEGA = (() => {
     },
     Contact: {
       href: "Contact.html",
-      blurb: "Tell us a little about what you're looking for. Someone who knows the projects, not a call centre, will write back.",
+      blurb: "Share what you need; our project team will get back to you.",
       cols: [
         { h: "Offices", items: [["Indore Office", "Contact.html#indore-office"], ["Kolkata Office", "Contact.html#kolkata-office"], ["Bhopal Office", "Contact.html#bhopal-office"]] },
         { h: "Reach us", items: [["+91 89292 25275", "tel:+918929225275"], ["ruchirealty.com", "#contact"], ["Indore · Kolkata · Bhopal", "#contact"]] },

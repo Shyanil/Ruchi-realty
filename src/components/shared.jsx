@@ -62,34 +62,47 @@ export function RImg({ src, fallbackSrc = "", alt = "", className = "", style = 
 /* ---- Animated stat counter ---- */
 export function StatCounter({ value, suffix }) {
   const ref = useRef(null);
-  const [n, setN] = useState(value);
+  const [n, setN] = useState(0);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    let started = false;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let active = false;
+    let frame;
+    let restart;
+    const stop = () => {
+      active = false;
+      cancelAnimationFrame(frame);
+      window.clearTimeout(restart);
+    };
+    const run = () => {
+      if (!active) return;
+      setN(0);
+      const t0 = performance.now();
+      const tick = (t) => {
+        const p = Math.min(1, (t - t0) / 12000);
+        const eased = 1 - Math.pow(1 - p, 3);
+        setN(Math.round(value * eased));
+        if (p < 1) frame = requestAnimationFrame(tick);
+        else restart = window.setTimeout(run, 180);
+      };
+      frame = requestAnimationFrame(tick);
+    };
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
-        if (e.isIntersecting && !started) {
-          started = true;
-          if (reduce) { setN(value); io.disconnect(); return; }
-          const dur = 1500, t0 = performance.now();
-          const tick = (t) => {
-            const p = Math.min(1, (t - t0) / dur);
-            const eased = 1 - Math.pow(1 - p, 3);
-            setN(Math.round(value * eased));
-            if (p < 1) requestAnimationFrame(tick);
-          };
-          requestAnimationFrame(tick);
-          io.disconnect();
+        if (e.isIntersecting) {
+          if (reduce) { setN(value); return; }
+          if (!active) { active = true; run(); }
+        } else {
+          stop();
         }
       });
     }, { threshold: 0.5 });
     io.observe(el);
-    return () => io.disconnect();
+    return () => { stop(); io.disconnect(); };
   }, [value]);
   const displayValue = Number.isInteger(n) && n >= 1900 && n <= 2100 ? String(n) : n.toLocaleString("en-US");
-  return <span ref={ref}>{displayValue}<span className="suffix">{suffix}</span></span>;
+  return <span ref={ref} aria-live="off">{displayValue}<span className="suffix">{suffix}</span></span>;
 }
 
 /* ---- Award seal: thin gradient ring + star, refined & quiet ---- */

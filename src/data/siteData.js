@@ -28,9 +28,10 @@ const IMG_PEOPLE = [
 ];
 
 const STATS = [
-  { num: 2008, suffix: "", label: "Founded in 2008, with teams across eastern and central India." },
-  { num: 3, suffix: "", label: "Development types: residential, commercial and plotted." },
-  { num: 3, suffix: "", label: "Cities: Kolkata, Indore, and Bhopal." },
+  { num: 4, suffix: " Million+", label: "Ready-to-move sq. ft. sold across our developments." },
+  { num: 15, suffix: " Years+", label: "Experience creating places people value." },
+  { num: 3, suffix: " Cities", label: "Kolkata, Indore and Bhopal." },
+  { num: 12, suffix: "+", label: "Ready-to-move projects." },
 ];
 
 const TRUST = [
@@ -308,12 +309,12 @@ const VIDEO_TESTIMONIALS = [
   { name: "Active Acres", project: "Ruchi Realty", city: "Kolkata", dur: "2:14", line: "We moved in on the date in our agreement.", poster: "assets/testimonial_1.webp", video: "https://www.youtube.com/embed/GTYs3ZynAQU?feature=oembed&autoplay=1&rel=0&controls=0" },
   { name: "Saatvik Vihar", project: "Ruchi Realty", city: "Indore", dur: "1:48", line: "The same person still picks up the phone.", poster: "assets/testimonial_2.webp", video: "https://www.youtube.com/embed/S4hnOtmQA9s?feature=oembed&autoplay=1&rel=0&controls=0" },
   { name: "Ruchi Lifescapes", project: "Ruchi Realty", city: "Indore", dur: "2:32", line: "Exactly what the specification showed us.", poster: "assets/testimonial_3.webp", video: "https://www.youtube.com/embed/ZDJWHNFzjXc?feature=oembed&autoplay=1&rel=0&controls=0" },
-  { name: "Ruchi Lifescapes Indore Review", project: "Ruchi Realty", city: "Indore", dur: "3:05", line: "A home our children grew into.", poster: "assets/testimonial_4.webp", video: "https://www.youtube.com/embed/rRzZ4gAwLjY?feature=oembed&autoplay=1&rel=0&controls=0" },
-  { name: "Ruchi Lifescapes Indore Review", project: "Ruchi Realty", city: "Indore", dur: "1:57", line: "Handed over, exactly as promised.", poster: "assets/testimonial_5.webp", video: "https://www.youtube.com/embed/Gsv3Kwl4k8U?feature=oembed&autoplay=1&rel=0&controls=0" },
-  { name: "One Victoria Review", project: "Ruchi Realty", city: "Kolkata", dur: "2:41", line: "Light and air in every room.", poster: "assets/testimonial_6.webp", video: "https://player.vimeo.com/video/1106022712?autoplay=1&rel=0&controls=0#t=" },
-  { name: "One Victoria Review", project: "Ruchi Realty", city: "Kolkata", dur: "2:09", line: "A community that began with shade.", poster: "assets/testimonial_7.webp", video: "https://player.vimeo.com/video/1106028174?autoplay=1&rel=0&controls=0#t=" },
-  { name: "One Victoria Review", project: "Ruchi Realty", city: "Kolkata", dur: "1:39", line: "Trust we could check before we signed.", poster: "assets/testimonial_8.webp", video: "https://player.vimeo.com/video/1106030671?autoplay=1&rel=0&controls=0#t=" },
-  { name: "One Victoria Review", project: "Ruchi Realty", city: "Kolkata", dur: "1:39", line: "Trust we could check before we signed.", poster: "assets/testimonial_9.webp", video: "https://player.vimeo.com/video/1106031951?autoplay=1&rel=0&controls=0#t=" },
+  { name: "Ruchi Lifescapes", project: "Ruchi Realty", city: "Indore", dur: "3:05", line: "A home our children grew into.", poster: "assets/testimonial_4.webp", video: "https://www.youtube.com/embed/rRzZ4gAwLjY?feature=oembed&autoplay=1&rel=0&controls=0" },
+  { name: "Ruchi Lifescapes", project: "Ruchi Realty", city: "Indore", dur: "1:57", line: "Handed over, exactly as promised.", poster: "assets/testimonial_5.webp", video: "https://www.youtube.com/embed/Gsv3Kwl4k8U?feature=oembed&autoplay=1&rel=0&controls=0" },
+  { name: "One Victoria", project: "Ruchi Realty", city: "Kolkata", dur: "2:41", line: "Light and air in every room.", poster: "assets/testimonial_6.webp", video: "https://player.vimeo.com/video/1106022712?autoplay=1&rel=0&controls=0#t=" },
+  { name: "One Victoria", project: "Ruchi Realty", city: "Kolkata", dur: "2:09", line: "A community that began with shade.", poster: "assets/testimonial_7.webp", video: "https://player.vimeo.com/video/1106028174?autoplay=1&rel=0&controls=0#t=" },
+  { name: "One Victoria", project: "Ruchi Realty", city: "Kolkata", dur: "1:39", line: "Trust we could check before we signed.", poster: "assets/testimonial_8.webp", video: "https://player.vimeo.com/video/1106030671?autoplay=1&rel=0&controls=0#t=" },
+  { name: "One Victoria", project: "Ruchi Realty", city: "Kolkata", dur: "1:39", line: "Trust we could check before we signed.", poster: "assets/testimonial_9.webp", video: "https://player.vimeo.com/video/1106031951?autoplay=1&rel=0&controls=0#t=" },
 ];
 
 export const SHOWREEL = "/assets/hero_video.mp4";

@@ -15,23 +15,20 @@ export function About() {
             <Reveal>
               <div className="eyebrow sec-eyebrow">About Ruchi Realty</div>
               <h2 className="about-head">
-                Built around quality, clarity and <span className="rr-grad">long term relationships.</span>
+                Committed to Clarity,<br /><span className="rr-grad">Built for Longevity.</span>
               </h2>
             </Reveal>
             <Reveal delay={80}>
-              <p className="about-lead" style={{ fontSize: "16px", color: "rgba(35, 31, 32, 0.6)", height: "89px", lineHeight: "1.65" }}>
-                Since 2008, Ruchi Realty has created residential, commercial and plotted developments across Kolkata, Indore and Bhopal.
-              </p>
-              <p className="about-body" style={{ lineHeight: "1.9" }}>
-                Our work brings together considered locations, practical planning, responsible construction and support that continues beyond possession.
+              <p className="about-lead">
+                Since 2008, Ruchi Realty has developed residential, commercial and plotted communities across Kolkata, Indore and Bhopal—bringing together considered locations, practical planning, responsible construction and support beyond possession.
               </p>
             </Reveal>
             <Reveal delay={140}>
-              <div className="stat-grid">
+              <div className="about-stats" aria-label="Ruchi Realty at a glance">
                 {STATS.map((s, i) =>
-                <div key={i} className="stat">
-                    <div className="stat__num"><StatCounter value={s.num} suffix={s.suffix} /></div>
-                    <div className="stat__label">{s.label}</div>
+                <div key={i} className="about-stat">
+                    <div className="about-stat__num"><StatCounter value={s.num} suffix={s.suffix} /></div>
+                    <div className="about-stat__label">{s.label}</div>
                   </div>
                 )}
               </div>
