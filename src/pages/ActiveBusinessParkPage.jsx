@@ -183,7 +183,7 @@ function OverviewSection({ subpage }) {
         <Reveal>
           <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>OVERVIEW</div>
           <h2 className="osc-section__title">
-            Designed for your business<br /><span className="rr-grad">to reach new heights.</span>
+            Designed for your business<br /><span className="rr-grad">to reach new heights</span>
           </h2>
         </Reveal>
         <div className="osc-overview__grid">
@@ -219,7 +219,7 @@ function SpecificationsSection({ subpage }) {
         <Reveal>
           <div className="project-section__head">
             <span className="eyebrow">Specifications</span>
-            <h2>Materials and details,<br /><span className="rr-grad">presented clearly.</span></h2>
+            <h2>Materials and details,<br /><span className="rr-grad">presented clearly</span></h2>
           </div>
         </Reveal>
         <div className="project-spec-list">
@@ -255,7 +255,7 @@ function AmenitiesSection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>AMENITIES</div>
-              <h2>Premium amenities,<br /><span className="rr-grad">crafted for business growth.</span></h2>
+              <h2>Premium amenities,<br /><span className="rr-grad">crafted for business growth</span></h2>
             </div>
             <p className="sec-head__lead">
               Active Business Park offers a workplace designed for growing corporate and business entrepreneurs in the city with premium facilities.
@@ -352,7 +352,7 @@ function WalkthroughSection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: 40 }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>Walkthrough</div>
-              <h2>{subpage.videoSection?.title || "Construction Walkthrough"}<br /><span className="rr-grad">project video.</span></h2>
+              <h2>{subpage.videoSection?.title || "Construction Walkthrough"}<br /><span className="rr-grad">project video</span></h2>
             </div>
           </div>
         </Reveal>
@@ -383,7 +383,7 @@ function LocationSection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>LOCATION</div>
-              <h2>Strategic location,<br /><span className="rr-grad">unmatched connectivity.</span></h2>
+              <h2>Strategic location,<br /><span className="rr-grad">unmatched connectivity</span></h2>
             </div>
           </div>
         </Reveal>
@@ -464,7 +464,7 @@ function GallerySection({ subpage }) {
           <div className="sec-head" style={{ marginBottom: "40px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-indigo)" }}>GALLERY</div>
-              <h2>A closer look<br /><span className="rr-grad">at Active Business Park.</span></h2>
+              <h2>A closer look<br /><span className="rr-grad">at Active Business Park</span></h2>
             </div>
           </div>
         </Reveal>
@@ -634,7 +634,7 @@ function CtaSection({ subpage, onBrochureClick }) {
       <div className="rr-wrap" style={{ textAlign: "center" }}>
         <Reveal>
           <h2 className="osc-section__title" style={{ marginBottom: "16px" }}>
-            Ready to grow your business?<br /><span className="rr-grad">Download the brochure.</span>
+            Ready to grow your business?<br /><span className="rr-grad">Download the brochure</span>
           </h2>
           <p style={{ fontSize: "var(--rr-fs-lead)", color: "rgba(35,31,32,0.62)", lineHeight: "1.6", margin: "0 auto 36px", maxWidth: "48ch" }}>
             Get detailed information about Active Business Park including space availability, pricing, and project specifications.

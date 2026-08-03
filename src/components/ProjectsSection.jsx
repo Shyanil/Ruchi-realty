@@ -88,6 +88,19 @@ export function CardArrow() {
   );
 }
 
+function projectViewLabel(p) {
+  const city = String(p.city || "").replace(", Madhya Pradesh", "");
+  const category = p.type === "Commercial" ? "Commercial Office Space" : p.city?.includes("Bhopal") ? "Residential Project" : "Luxury Apartments";
+  const specific = {
+    "One Victoria": "Luxury Apartments",
+    "Active Acres": "Luxury Flats",
+    "Active Business Park": "Commercial Office Space",
+    "Saatvik Vihar": "Residential Plots",
+    "Oscar Fort": "Premium Township",
+  }[p.name] || (p.name === "Ruchi Lifescapes" && !p.city?.includes("Bhopal") ? "Premium Plots" : category);
+  return `View ${p.name}: ${specific} in ${city}`;
+}
+
 export function ProjectTile({ p, i, n }) {
   const cls = p.status === "Ready to Move" ? "status--ready"
     : p.status === "Ongoing" ? "status--ongoing" : "status--upcoming";
@@ -107,7 +120,7 @@ export function ProjectTile({ p, i, n }) {
         <div className="ptile__body">
           <div className="ptile__loc">{p.city}</div>
           <div className="ptile__name">{p.name}</div>
-          <span className="ptile__view">View project<CardArrow /></span>
+          <span className="ptile__view">{projectViewLabel(p)}<CardArrow /></span>
         </div>
       </Link>
     );
@@ -125,7 +138,7 @@ export function ProjectTile({ p, i, n }) {
       <div className="ptile__body">
         <div className="ptile__loc">{p.city}</div>
         <div className="ptile__name">{p.name}</div>
-        <span className="ptile__view">View project<CardArrow /></span>
+        <span className="ptile__view">{projectViewLabel(p)}<CardArrow /></span>
       </div>
     </Tile>
   );
@@ -178,10 +191,10 @@ export function ProjectsSection() {
           <div className="sec-head sec-head--dark">
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>Explore our projects</div>
-              <h2>Find a project in the city<br /><span className="rr-grad">that matters to you.</span></h2>
+              <h2>Find a project in the city<br /><span className="rr-grad">that matters to you</span></h2>
             </div>
             <p className="sec-head__lead">
-              Browse residential, commercial and plotted developments in Kolkata, Indore and Bhopal. Filter by city to find the right next step.
+              Browse luxury apartments, residential plots and commercial spaces in Kolkata, Indore and Bhopal. Filter by city to find the right next step.
             </p>
           </div>
         </Reveal>

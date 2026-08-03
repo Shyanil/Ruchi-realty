@@ -120,13 +120,13 @@ export function Footer() {
       <div className="rr-wrap footer__inner">
         <h2 className="footer__statement">
           <span className="we">We are</span><br />
-          <span className="cm">committed to you.</span>
+          <span className="cm">committed to you</span>
         </h2>
         <div className="footer__rule"></div>
         <div className="footer-cols">
           <div className="footer__brandcol">
             <img src="/assets/logo-h-white.webp" alt="Ruchi Realty" className="footer__logo" />
-            <p className="footer__tagline">Creators of considered environments across eastern and central India.</p>
+            <p className="footer__tagline">Trusted real estate developer building residential, commercial and plotted communities across Kolkata, Indore and Bhopal.</p>
           </div>
 
           <div className="footer__col">

@@ -615,7 +615,7 @@ function HeroEnquiryForm({ title, onSubmit }) {
   const field = (key) => (e) => setForm({ ...form, [key]: e.target.value });
   return <form className={`victoria-hero-form`} onSubmit={(e) => { e.preventDefault(); onSubmit(form); }}>
     <div className="victoria-hero-form__head"><span className="victoria-hero-form__mark" aria-hidden="true"></span><span className={`eyebrow`}>Private Enquiry</span></div>
-    <h2>Discover life<br />at {title}.</h2>
+    <h2>Discover life<br />at {title}</h2>
     <p>Receive current pricing, plans and availability directly from our project team.</p>
     <div className="victoria-hero-form__fields">
       <label className="is-wide"><span>Full name</span><input value={form.name} onChange={field(`name`)} placeholder={`Enter your name`} autoComplete="name" required /></label>
@@ -765,7 +765,7 @@ function BrochureCta({ data, onBrochure }) {
     <section className="section-pad osc-section" id="brochure-cta">
       <div className="rr-wrap" style={{ textAlign: "center" }}>
         <Reveal>
-          <h2 className="osc-section__title" style={{ marginBottom: "16px" }}>{title}<br /><span className="rr-grad">Download the brochure.</span></h2>
+          <h2 className="osc-section__title" style={{ marginBottom: "16px" }}>{title}<br /><span className="rr-grad">Download the brochure</span></h2>
           <p style={{ fontSize: "var(--rr-fs-lead)", color: "rgba(35,31,32,0.62)", lineHeight: "1.6", margin: "0 auto 36px", maxWidth: "48ch" }}>
             Get detailed information about {data.title} including unit plans, pricing, and project specifications.
           </p>
@@ -780,12 +780,12 @@ function FloorPlansSection({ plans, title }) {
   const [active, setActive] = useState(0);
   if (!plans.length) return null;
   const plan = plans[Math.min(active, plans.length - 1)];
-  return <section className="section-pad osc-section" id="floor-plans"><div className="rr-wrap"><Reveal><div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: 16 }}>Floor Plans</div><h2 className="osc-section__title">Floor plans<br /><span className="rr-grad">for planned living.</span></h2></Reveal><div style={{ marginTop: 36 }}><Reveal style={{ display: "flex", gap: 12, marginBottom: 28, flexWrap: "wrap" }}>{plans.map((p, idx) => <button key={p.title || idx} type="button" className={`submit-btn ${active === idx ? "" : "ab-btn-outline"}`} style={{ padding: "10px 20px", background: active === idx ? "var(--rr-indigo)" : "transparent", color: active === idx ? "#fff" : "var(--rr-ink)", border: "1px solid var(--rr-indigo)" }} onClick={() => setActive(idx)}>{p.title || `Plan ${idx + 1}`}{p.config ? ` - ${p.config}` : ""}</button>)}</Reveal><Reveal key={active} style={{ background: "rgba(20,18,26,0.03)", padding: "clamp(16px,4vw,32px)", border: "1px solid rgba(20,18,26,0.08)", borderRadius: 8, display: "grid", placeItems: "center" }}><img src={plan.desc} alt={plan.title || `${title} floor plan`} onError={(event) => { if (plan.fallbackDesc && event.currentTarget.src !== new URL(plan.fallbackDesc, window.location.origin).href) event.currentTarget.src = plan.fallbackDesc; else event.currentTarget.hidden = true; }} style={{ maxWidth: "100%", maxHeight: 560, objectFit: "contain", borderRadius: 4 }} /></Reveal></div></div></section>;
+  return <section className="section-pad osc-section" id="floor-plans"><div className="rr-wrap"><Reveal><div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: 16 }}>Floor Plans</div><h2 className="osc-section__title">Floor plans<br /><span className="rr-grad">for planned living</span></h2></Reveal><div style={{ marginTop: 36 }}><Reveal style={{ display: "flex", gap: 12, marginBottom: 28, flexWrap: "wrap" }}>{plans.map((p, idx) => <button key={p.title || idx} type="button" className={`submit-btn ${active === idx ? "" : "ab-btn-outline"}`} style={{ padding: "10px 20px", background: active === idx ? "var(--rr-indigo)" : "transparent", color: active === idx ? "#fff" : "var(--rr-ink)", border: "1px solid var(--rr-indigo)" }} onClick={() => setActive(idx)}>{p.title || `Plan ${idx + 1}`}{p.config ? ` - ${p.config}` : ""}</button>)}</Reveal><Reveal key={active} style={{ background: "rgba(20,18,26,0.03)", padding: "clamp(16px,4vw,32px)", border: "1px solid rgba(20,18,26,0.08)", borderRadius: 8, display: "grid", placeItems: "center" }}><img src={plan.desc} alt={plan.title || `${title} floor plan`} onError={(event) => { if (plan.fallbackDesc && event.currentTarget.src !== new URL(plan.fallbackDesc, window.location.origin).href) event.currentTarget.src = plan.fallbackDesc; else event.currentTarget.hidden = true; }} style={{ maxWidth: "100%", maxHeight: 560, objectFit: "contain", borderRadius: 4 }} /></Reveal></div></div></section>;
 }
 
 function WalkthroughSection({ video }) {
   if (!video?.videoUrl) return null;
-  return <section className="section-pad osc-section osc-section--dark" id="walkthrough"><div className="rr-wrap"><Reveal><div className="sec-head sec-head--dark" style={{ marginBottom: 40 }}><div><div className="eyebrow" style={{ color: "var(--rr-lime)" }}>Walkthrough</div><h2>{video.title || "Construction Walkthrough"}<br /><span className="rr-grad">project video.</span></h2></div></div></Reveal><Reveal><div className="osc-modern-video-frame" style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", background: "#111", borderRadius: 8, overflow: "hidden", boxShadow: "0 24px 70px rgba(0,0,0,.28)" }}><iframe title={video.title || "Project walkthrough"} src={video.videoUrl} width="100%" height="100%" style={{ border: 0, position: "absolute", inset: 0 }} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen loading="lazy" /></div></Reveal></div></section>;
+  return <section className="section-pad osc-section osc-section--dark" id="walkthrough"><div className="rr-wrap"><Reveal><div className="sec-head sec-head--dark" style={{ marginBottom: 40 }}><div><div className="eyebrow" style={{ color: "var(--rr-lime)" }}>Walkthrough</div><h2>{video.title || "Construction Walkthrough"}<br /><span className="rr-grad">project video</span></h2></div></div></Reveal><Reveal><div className="osc-modern-video-frame" style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", background: "#111", borderRadius: 8, overflow: "hidden", boxShadow: "0 24px 70px rgba(0,0,0,.28)" }}><iframe title={video.title || "Project walkthrough"} src={video.videoUrl} width="100%" height="100%" style={{ border: 0, position: "absolute", inset: 0 }} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen loading="lazy" /></div></Reveal></div></section>;
 }
 
 function ProjectOverview({ data }) {
@@ -799,7 +799,7 @@ function ProjectOverview({ data }) {
     .slice(0, 4);
   return (
     <section className="section-pad project-section" id="overview"><div className="rr-wrap">
-      <div className="project-section__head project-section__head--overview"><span className="eyebrow">Project Overview</span><h2>Designed with purpose,<br/><span className="rr-grad">made for everyday life.</span></h2></div>
+      <div className="project-section__head project-section__head--overview"><span className="eyebrow">Project Overview</span><h2>Designed with purpose,<br/><span className="rr-grad">made for everyday life</span></h2></div>
       <div className="project-overview__layout">
         <div className="project-overview__copy">{overviewCopy.map((text,index)=><p key={index}>{text}</p>)}</div>
         {facts.length ? <aside className="project-overview__facts" aria-label={`${data.title} overview details`}>
@@ -819,29 +819,29 @@ function ProjectSpecifications({ data }) {
   const specs=(data.specifications||[]).filter(item=>item?.title&&(item?.desc||item?.details));
   if (!specs.length) return null;
   const content=<div className="project-spec-grid">{specs.map((spec,index)=>{const parts=specificationParts(spec.desc||spec.details||spec.value);return <article className="project-spec-card" key={`${spec.title}-${index}`}><span>{String(index+1).padStart(2,"0")}</span><h3>{spec.title}</h3><div className="project-spec-points">{parts.map((part,partIndex)=>{const colon=part.indexOf(":");return colon>0?<p key={partIndex}><strong>{part.slice(0,colon)}</strong><em>{part.slice(colon+1).trim()}</em></p>:<p key={partIndex}><em>{part}</em></p>})}</div></article>})}</div>;
-  return <section className="section-pad project-section project-specifications" id="specifications"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Specifications</span><h2>Materials and details,<br/><span className="rr-grad">presented clearly.</span></h2></div>{data.specificationImage?<div className="project-spec-layout"><RImg className="project-spec-layout__image" src={data.specificationImage} fallbackSrc={data.specificationFallbackImage} alt={`${data.title} specifications`}/>{content}</div>:content}</div></section>;
+  return <section className="section-pad project-section project-specifications" id="specifications"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Specifications</span><h2>Materials and details,<br/><span className="rr-grad">presented clearly</span></h2></div>{data.specificationImage?<div className="project-spec-layout"><RImg className="project-spec-layout__image" src={data.specificationImage} fallbackSrc={data.specificationFallbackImage} alt={`${data.title} specifications`}/>{content}</div>:content}</div></section>;
 }
 
 function ProjectAmenities({ amenities }) {
   const valid=(amenities||[]).filter(item=>item?.name);
   if (!valid.length) return null;
-  return <section className="section-pad project-section project-amenities" id="amenities"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Amenities</span><h2>Spaces that support<br/><span className="rr-grad">better everyday living.</span></h2></div><div className="project-amenities-grid">{valid.map((item,index)=><article className="project-amenity-card" key={`${item.name}-${index}`}><div className="project-amenity-card__icon"><AmenityIcon icon={item.icon} name={item.name}/></div><h3>{item.name}</h3></article>)}</div></div></section>;
+  return <section className="section-pad project-section project-amenities" id="amenities"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Amenities</span><h2>Spaces that support<br/><span className="rr-grad">better everyday living</span></h2></div><div className="project-amenities-grid">{valid.map((item,index)=><article className="project-amenity-card" key={`${item.name}-${index}`}><div className="project-amenity-card__icon"><AmenityIcon icon={item.icon} name={item.name}/></div><h3>{item.name}</h3></article>)}</div></div></section>;
 }
 function ProjectLocation({ data }) {
   const destinations=(data.locationDestinations||[]).filter(item=>item?.name);
   if (!data.locationImage&&!data.locationMapEmbed&&!destinations.length) return null;
-  return <section className="section-pad project-section project-location" id="location"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Location &amp; Connectivity</span><h2>A connected address,<br/><span className="rr-grad">close to what matters.</span></h2></div><div className="project-location__grid">{data.locationImage?<RImg className="project-location__image" src={data.locationImage} fallbackSrc={data.locationFallbackImage} alt={`${data.title} location map`} mono/>:null}<div className="project-location__content">{destinations.length?<div className="project-location__list">{destinations.map((item,index)=><div key={`${item.name}-${index}`}><span>{item.name}</span><strong>{item.dist||item.distance||"Nearby"}</strong></div>)}</div>:null}{data.locationMapEmbed?<iframe title={`${data.title} map`} src={data.locationMapEmbed} loading="lazy" referrerPolicy="no-referrer-when-downgrade"/>:null}</div></div></div></section>;
+  return <section className="section-pad project-section project-location" id="location"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Location &amp; Connectivity</span><h2>A connected address,<br/><span className="rr-grad">close to what matters</span></h2></div><div className="project-location__grid">{data.locationImage?<RImg className="project-location__image" src={data.locationImage} fallbackSrc={data.locationFallbackImage} alt={`${data.title} location map`} mono/>:null}<div className="project-location__content">{destinations.length?<div className="project-location__list">{destinations.map((item,index)=><div key={`${item.name}-${index}`}><span>{item.name}</span><strong>{item.dist||item.distance||"Nearby"}</strong></div>)}</div>:null}{data.locationMapEmbed?<iframe title={`${data.title} map`} src={data.locationMapEmbed} loading="lazy" referrerPolicy="no-referrer-when-downgrade"/>:null}</div></div></div></section>;
 }
 
 function ProjectWalkthrough({ data }) {
   const videos=data.videos||[];
   if (!videos.length) return null;
-  return <section className="section-pad project-section project-walkthrough" id="walkthrough"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">{videos.length>1?"Project Videos":"Walkthrough Video"}</span><h2>Explore the project<br/><span className="rr-grad">from wherever you are.</span></h2></div><div className={`project-video-grid ${videos.length===1?"is-single":""}`}>{videos.map((video,index)=><article className="project-video-card" key={`${video.videoUrl}-${index}`}>{videos.length>1?<h3>{video.title}</h3>:null}<div className="project-walkthrough__frame">{video.thumbnailUrl?<RImg src={video.thumbnailUrl} fallbackSrc={video.thumbnailFallbackUrl} alt=""/>:null}<iframe title={video.title||`${data.title} walkthrough ${index+1}`} src={video.videoUrl} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen/></div></article>)}</div></div></section>;
+  return <section className="section-pad project-section project-walkthrough" id="walkthrough"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">{videos.length>1?"Project Videos":"Walkthrough Video"}</span><h2>Explore the project<br/><span className="rr-grad">from wherever you are</span></h2></div><div className={`project-video-grid ${videos.length===1?"is-single":""}`}>{videos.map((video,index)=><article className="project-video-card" key={`${video.videoUrl}-${index}`}>{videos.length>1?<h3>{video.title}</h3>:null}<div className="project-walkthrough__frame">{video.thumbnailUrl?<RImg src={video.thumbnailUrl} fallbackSrc={video.thumbnailFallbackUrl} alt=""/>:null}<iframe title={video.title||`${data.title} walkthrough ${index+1}`} src={video.videoUrl} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen/></div></article>)}</div></div></section>;
 }
 
 function ProjectFaq({ data }) {
   if (!data.faqs?.length) return null;
-  return <section className="section-pad project-section project-faq" id="faq"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Frequently Asked Questions</span><h2>Helpful project<br/><span className="rr-grad">information.</span></h2></div><div className="project-faq__list">{data.faqs.map((item,index)=><details key={`${item.question}-${index}`}><summary>{item.question}<span aria-hidden="true">+</span></summary><div><p>{item.answer}</p></div></details>)}</div></div></section>;
+  return <section className="section-pad project-section project-faq" id="faq"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Frequently Asked Questions</span><h2>Helpful project<br/><span className="rr-grad">information</span></h2></div><div className="project-faq__list">{data.faqs.map((item,index)=><details key={`${item.question}-${index}`}><summary>{item.question}<span aria-hidden="true">+</span></summary><div><p>{item.answer}</p></div></details>)}</div></div></section>;
 }
 function ProjectGallery({ data, construction = false }) {
   const images=((construction ? data.constructionUpdates : data.galleryImages) || []).filter(image=>image?.src);
@@ -864,11 +864,11 @@ function RelatedProjects({ slug, preferredSlugs=[] }) {
   const preferred=preferredSlugs.map(item=>available.find(project=>project.url.endsWith(`/${item}`))).filter(Boolean);
   const items=[...preferred,...available.filter(item=>!preferred.includes(item))].slice(0,3);
   if (!items.length) return null;
-  return <section className="section-pad project-section project-related" id="more-projects"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">More Projects</span><h2>Continue exploring<br/><span className="rr-grad">Ruchi Realty.</span></h2></div><div className="pgrid">{items.map((item,index)=><ProjectTile p={item} i={index} n={index} key={`${item.name}-${item.url}`}/>)}</div></div></section>;
+  return <section className="section-pad project-section project-related" id="more-projects"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">More Projects</span><h2>Continue exploring<br/><span className="rr-grad">Ruchi Realty</span></h2></div><div className="pgrid">{items.map((item,index)=><ProjectTile p={item} i={index} n={index} key={`${item.name}-${item.url}`}/>)}</div></div></section>;
 }
 
 function ProjectEnquiryCTA({ data, onEnquire }) {
-  return <section className="section-pad project-final-cta" id="enquire"><div className="rr-wrap project-final-cta__inner"><span className="eyebrow">Take a Closer Look</span><h2>Discover {data.title}<br/><span>in complete detail.</span></h2><p>{data.brochureUrl?"Download the project brochure for plans, amenities, specifications and location highlights—all in one place.":"Share your details and our project team will help with plans, availability and a site visit."}</p><button className="submit-btn" type="button" onClick={onEnquire}>{data.brochureUrl?data.ctaLabels.brochure:data.ctaLabels.visit}<CtaArrow/></button></div></section>;
+  return <section className="section-pad project-final-cta" id="enquire"><div className="rr-wrap project-final-cta__inner"><span className="eyebrow">Take a Closer Look</span><h2>Discover {data.title}<br/><span>in complete detail</span></h2><p>{data.brochureUrl?"Download the project brochure for plans, amenities, specifications and location highlights—all in one place.":"Share your details and our project team will help with plans, availability and a site visit."}</p><button className="submit-btn" type="button" onClick={onEnquire}>{data.brochureUrl?data.ctaLabels.brochure:data.ctaLabels.visit}<CtaArrow/></button></div></section>;
 }
 export default function GenericProjectPage({ slugOverride = "" }) {
   const params = useParams();
@@ -974,11 +974,11 @@ export default function GenericProjectPage({ slugOverride = "" }) {
   }, [data.metaTitle, data.metaDescription, data.ogImage, slug]);
 
   if (!loaded) {
-    return <><Nav onContact={onBrochure} /><main className="section-pad rr-light"><div className="rr-wrap" style={{ paddingTop: 120 }}><p className="eyebrow" style={{ color: "var(--rr-indigo)" }}>Project</p><h1 className="osc-section__title">Loading project...</h1></div></main><Footer /></>;
+    return <><Nav onContact={onBrochure} /><main className="section-pad rr-light"><div className="rr-wrap" style={{ paddingTop: 120 }}><p className="eyebrow" style={{ color: "var(--rr-indigo)" }}>Project</p><h1 className="osc-section__title">Loading project</h1></div></main><Footer /></>;
   }
 
   if (!project) {
-    return <><Nav onContact={onBrochure} /><main className="section-pad rr-light"><div className="rr-wrap" style={{ paddingTop: 120 }}><p className="eyebrow" style={{ color: "var(--rr-indigo)" }}>Project</p><h1 className="osc-section__title">Project not found.</h1><Link className="submit-btn" to="/projects">View all projects<CtaArrow /></Link></div></main><Footer /></>;
+    return <><Nav onContact={onBrochure} /><main className="section-pad rr-light"><div className="rr-wrap" style={{ paddingTop: 120 }}><p className="eyebrow" style={{ color: "var(--rr-indigo)" }}>Project</p><h1 className="osc-section__title">Project not found</h1><Link className="submit-btn" to="/projects">View all projects<CtaArrow /></Link></div></main><Footer /></>;
   }
 
   return (

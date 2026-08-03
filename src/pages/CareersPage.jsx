@@ -125,7 +125,7 @@ function CareersHero({ onApply }) {
         <div className="cr-hero__content">
           <Reveal>
             <div className="cr-hero__badge">CAREERS AT RUCHI REALTY</div>
-            <h1 className="cr-hero__title">Build landmarks. Grow with purpose.</h1>
+            <h1 className="cr-hero__title">Build landmarks. Grow with purpose</h1>
             <p className="cr-hero__lead">
               Join a team that shapes residential, commercial, and plotted developments across India with engineering excellence, thoughtful planning, and a culture built on learning.
             </p>
@@ -173,7 +173,7 @@ function CareersCulture() {
           <div className="cr-culture__text">
             <Reveal>
               <div className="eyebrow">WORK CULTURE</div>
-              <h2 className="cr-culture__title">A culture that focuses on learning, ownership, and excellence.</h2>
+              <h2 className="cr-culture__title">A culture that focuses on learning, ownership, and excellence</h2>
               <p className="cr-culture__lead">
                 At Ruchi Realty, careers are built through responsibility, collaboration, and the opportunity to work on meaningful real estate developments. We value people who are curious, disciplined, customer-focused, and ready to grow with every project they touch.
               </p>

@@ -27,34 +27,68 @@ function normalizeImageSrc(src = "") {
   return !src || /^(https?:|data:|blob:|\/)/i.test(src) ? src : `/${src.replace(/^\.\//, "")}`;
 }
 
-export function RImg({ src, fallbackSrc = "", alt = "", className = "", style = {}, grade = false, mono = true }) {
+export function RImg({
+  src,
+  fallbackSrc = "",
+  alt = "",
+  className = "",
+  style = {},
+  grade = false,
+  mono = true,
+  priority = false,
+  loading = "lazy",
+}) {
   const primarySrc = normalizeImageSrc(src);
   const backupSrc = normalizeImageSrc(fallbackSrc);
   const [currentSrc, setCurrentSrc] = useState(primarySrc || backupSrc);
   const [ok, setOk] = useState(Boolean(primarySrc || backupSrc));
+  const [loaded, setLoaded] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
 
   useEffect(() => {
     const nextSrc = primarySrc || backupSrc;
     setCurrentSrc(nextSrc);
     setOk(Boolean(nextSrc));
+    setLoaded(false);
+    setShowLoader(false);
+    if (!nextSrc) return undefined;
+    const timer = window.setTimeout(() => setShowLoader(true), 350);
+    return () => window.clearTimeout(timer);
   }, [primarySrc, backupSrc]);
+
+  const handleLoaded = () => {
+    setLoaded(true);
+    setShowLoader(false);
+  };
 
   const handleError = () => {
     if (backupSrc && currentSrc !== backupSrc) {
       setCurrentSrc(backupSrc);
+      setLoaded(false);
+      setShowLoader(false);
       return;
     }
     setOk(false);
+    setShowLoader(false);
   };
 
   return (
-    <div className={`rimg ${className}`} style={{ background: "var(--rr-gradient-brand)", ...style }}>
+    <div className={`rimg ${!loaded ? "rimg--loading" : ""} ${className}`} style={{ background: "var(--rr-paper)", ...style }}>
       {ok ? (
-        <img src={currentSrc} alt={alt} loading="lazy" onError={handleError}
-          className="rimg__img" style={grade ? { filter: "brightness(0.92)" } : null} />
+        <img
+          src={currentSrc}
+          alt={alt}
+          loading={priority ? "eager" : loading}
+          decoding="async"
+          onLoad={handleLoaded}
+          onError={handleError}
+          className="rimg__img"
+          style={{ opacity: loaded ? 1 : 0, ...(grade ? { filter: "brightness(0.92)" } : {}) }}
+        />
       ) : (
         mono ? <div className="rimg__mono" /> : null
       )}
+      {!loaded && showLoader ? <span className="rimg__loader" role="status" aria-label="Loading image" /> : null}
     </div>
   );
 }

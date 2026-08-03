@@ -15,13 +15,21 @@ const ROUTE_MAP = {
   "index.html": "/",
 };
 
+function canonicalHref(href) {
+  for (const [oldRoute, newRoute] of Object.entries(ROUTE_MAP)) {
+    if (href === oldRoute) return newRoute;
+    if (href.startsWith(oldRoute + "#")) return newRoute + href.slice(href.indexOf("#"));
+  }
+  return href;
+}
+
 const MEGA = (() => {
   const insightItems = BLOG.slice(0, 4).map((b) => [b.title, `/blogs/${b.slug}`]);
   const insightFeat = {
     kind: "blog",
     eyebrow: BLOG[0]?.cat || "Industry Insights",
     title: BLOG[0]?.title || "Industry insights",
-    sub: "Read the piece →",
+    sub: "Read the piece â†’",
     href: `/blogs/${BLOG[0]?.slug || ""}`,
   };
   return {
@@ -38,11 +46,12 @@ const MEGA = (() => {
         ]},
       ],
       feat: {
-        kind: "project", eyebrow: "Now unveiling", title: "One Victoria", sub: "New Town · Kolkata", href: "/projects/one-victoria-new-town",
+        kind: "project", eyebrow: "Now unveiling", title: "One Victoria", sub: "New Town Â· Kolkata", href: "/projects/one-victoria-new-town",
         img: "/projects/one-victoria-new-town/hero.webp",
       },
       feats: [
         { kind: "project", eyebrow: "What's on", title: "Latest Events", sub: "Explore recent moments", href: "/media/events-awards", img: "/assets/media/gallery/credai-event-2.webp" },
+        { kind: "project", eyebrow: "Stay informed", title: "Latest Updates", sub: "Read the latest news", href: "/media/press-releases", img: "/assets/media/gallery/bhaskar-event-1.webp" },
       ],
     },
     About: {
@@ -68,14 +77,14 @@ const MEGA = (() => {
         { h: "Media", items: [["Gallery", "/media/gallery"], ["Press Releases", "/media/press-releases"], ["Events & Awards", "/media/events-awards"]] },
         { h: "Discover", items: [["Recognitions", "/media/events-awards"]] },
       ],
-      feat: { kind: "project", eyebrow: "Inside Ruchi Realty", title: "Media", sub: "Explore the collection →", href: "/media", img: "/assets/media/gallery/gallery-1.webp" },
+      feat: { kind: "project", eyebrow: "Inside Ruchi Realty", title: "Media", sub: "Explore the collection â†’", href: "/media", img: "/assets/media/gallery/gallery-1.webp" },
     },
     Contact: {
       href: "Contact.html",
       blurb: "Share what you need; our project team will get back to you.",
       cols: [
         { h: "Offices", items: [["Indore Office", "Contact.html#indore-office"], ["Kolkata Office", "Contact.html#kolkata-office"], ["Bhopal Office", "Contact.html#bhopal-office"]] },
-        { h: "Reach us", items: [["+91 89292 25275", "tel:+918929225275"], ["ruchirealty.com", "#contact"], ["Indore · Kolkata · Bhopal", "#contact"]] },
+        { h: "Reach us", items: [["+91 89292 25275", "tel:+918929225275"], ["ruchirealty.com", "#contact"], ["Indore Â· Kolkata Â· Bhopal", "#contact"]] },
       ],
       feat: { kind: "cta", eyebrow: "Get in touch", title: "Contact us", sub: "A real person, not a call centre.", href: "Contact.html#indore-office" },
     },
@@ -99,8 +108,8 @@ function MegaFeat({ feat, go }) {
     const proj = PROJECTS.find((p) => p.name === f.title);
     const src = f.img || (proj && proj.img) || IMG_TOWER[0];
     return (
-      <a className="mega-feat mega-feat--media" href={f.href} onClick={(e) => go(e, f.href)}>
-        <RImg src={src} alt={f.title} className="mega-feat__img" grade />
+      <a className="mega-feat mega-feat--media" href={canonicalHref(f.href)} onClick={(e) => go(e, f.href)}>
+        <RImg src={src} alt={f.title} className="mega-feat__img" grade priority />
         <div className="mega-feat__scrim"></div>
         <div className="mega-feat__body">
           <span className="mega-feat__eyebrow">{f.eyebrow}</span>
@@ -112,8 +121,8 @@ function MegaFeat({ feat, go }) {
   }
   if (f.kind === "blog") {
     return (
-      <a className="mega-feat mega-feat--media" href={f.href} onClick={(e) => go(e, f.href)}>
-        <RImg src={BLOG[0].img} alt={f.title} className="mega-feat__img" grade />
+      <a className="mega-feat mega-feat--media" href={canonicalHref(f.href)} onClick={(e) => go(e, f.href)}>
+        <RImg src={BLOG[0].img} alt={f.title} className="mega-feat__img" grade priority />
         <div className="mega-feat__scrim"></div>
         <div className="mega-feat__body">
           <span className="mega-feat__eyebrow">{f.eyebrow}</span>
@@ -124,7 +133,7 @@ function MegaFeat({ feat, go }) {
     );
   }
   return (
-    <a className="mega-feat mega-feat--brand" href={f.href} onClick={(e) => go(e, f.href)}>
+    <a className="mega-feat mega-feat--brand" href={canonicalHref(f.href)} onClick={(e) => go(e, f.href)}>
       <div className="mega-feat__sig" aria-hidden="true"></div>
       <span className="mega-feat__eyebrow">{f.eyebrow}</span>
       <span className="mega-feat__title">{f.title}</span>
@@ -140,7 +149,7 @@ function projectFilterHref(city, status) {
   const params = new URLSearchParams();
   if (city) params.set("city", city);
   if (status) params.set("status", status);
-  return `Projects.html#${params.toString()}`;
+  return `/projects#${params.toString()}`;
 }
 
 function ProjectCarouselFeature({ city, status, go }) {
@@ -204,7 +213,7 @@ function ProjectCarouselFeature({ city, status, go }) {
               onClick={prevSlide}
               aria-label="Previous projects"
             >
-              ‹
+              â€¹
             </button>
             <span className="mega-project-carousel__page">
               {Math.floor(currentIndex / VISIBLE_COUNT) + 1} / {totalPages}
@@ -215,7 +224,7 @@ function ProjectCarouselFeature({ city, status, go }) {
               onClick={nextSlide}
               aria-label="Next projects"
             >
-              ›
+              â€º
             </button>
           </div>
         )}
@@ -226,11 +235,11 @@ function ProjectCarouselFeature({ city, status, go }) {
           <a
             key={proj.name}
             className="mega-project-card"
-            href={proj.url || "Projects.html"}
+            href={canonicalHref(proj.url || "Projects.html")}
             onClick={(e) => go(e, proj.url || "Projects.html")}
           >
             <div className="mega-project-card__img-wrap">
-              <RImg src={proj.img || IMG_TOWER[0]} alt={proj.name} className="mega-project-card__img" grade />
+              <RImg src={proj.img || IMG_TOWER[0]} alt={proj.name} className="mega-project-card__img" grade priority />
               <span className={`mega-project-card__badge mega-project-card__badge--${proj.status?.toLowerCase().replace(/\s+/g, '-')}`}>
                 {proj.status}
               </span>
@@ -263,13 +272,13 @@ function ProjectNestedMenu({ go, activeCity, activeStatus, onCityHover, onStatus
             onFocus={() => onCityHover(city)}
           >
             <a href={projectFilterHref(city)} onClick={(e) => go(e, projectFilterHref(city))}>
-              {city}<span aria-hidden="true">›</span>
+              {city}<span aria-hidden="true">â€º</span>
             </a>
           </li>
         ))}
         <li className={!activeCity ? "is-active" : ""}>
           <a
-            href="Projects.html"
+            href="/projects"
             onMouseEnter={onAllProjectsHover}
             onFocus={onAllProjectsHover}
             onClick={(e) => go(e, "Projects.html")}
@@ -279,7 +288,7 @@ function ProjectNestedMenu({ go, activeCity, activeStatus, onCityHover, onStatus
         </li>
       </ul>
       <div className={`project-menu__status-panel ${activeCity ? "is-visible" : ""}`} aria-live="polite">
-        <div className="project-menu__label">By Status{activeCity ? ` · ${activeCity}` : ""}</div>
+        <div className="project-menu__label">By Status{activeCity ? ` Â· ${activeCity}` : ""}</div>
         {activeCity ? (
           <>
             <a
@@ -322,7 +331,7 @@ function ProjectMobileMenu({ go }) {
           </div>
         </details>
       ))}
-      <a className="mobile-project-menu__all" href="Projects.html" onClick={(e) => go(e, "Projects.html")}>All projects</a>
+      <a className="mobile-project-menu__all" href="/projects" onClick={(e) => go(e, "Projects.html")}>All projects</a>
     </div>
   );
 }
@@ -355,11 +364,11 @@ function MegaPanel({ cfg, go }) {
   };
 
   return (
-    <div className={`mega__inner rr-wrap ${cfg.projectNested ? "mega__inner--projects" : ""}`}>
+    <div className={`mega__inner rr-wrap ${cfg.projectNested ? "mega__inner--projects" : ""} ${cfg === MEGA.About ? "mega__inner--about" : ""}`}>
       <div className="mega__lead" onMouseEnter={handleDefaultPreview}>
         <p className="mega__blurb">{cfg.blurb}</p>
-        <a className="mega__all" href={cfg.href} onClick={(e) => go(e, cfg.href)}>
-          View section<span className="ar">→</span>
+        <a className="mega__all" href={canonicalHref(cfg.href)} onClick={(e) => go(e, cfg.href)}>
+          View section<span className="ar">â†’</span>
         </a>
       </div>
       <div className="mega__cols">
@@ -407,7 +416,8 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false, soli
 
   useEffect(() => {
     const mediaRoute = location.pathname.startsWith("/media");
-    const threshold = mediaRoute ? 0 : (solidAt ?? (window.__NAV_SOLID_AT != null ? window.__NAV_SOLID_AT : window.innerHeight - 90));
+    const blogRoute = location.pathname.startsWith("/blogs");
+    const threshold = mediaRoute ? 0 : (blogRoute ? 24 : (solidAt ?? (window.__NAV_SOLID_AT != null ? window.__NAV_SOLID_AT : window.innerHeight - 90)));
     const onScroll = () => setSolid(window.scrollY > threshold);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -428,6 +438,7 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false, soli
     setOpen(null);
     setMobile(false);
     if (!href) return;
+    href = canonicalHref(href);
 
     for (const [oldRoute, newRoute] of Object.entries(ROUTE_MAP)) {
       if (href === oldRoute) {
@@ -441,6 +452,12 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false, soli
         navigate(newRoute + hash);
         return;
       }
+    }
+
+    if (href.startsWith("/")) {
+      if (e) e.preventDefault();
+      navigate(href);
+      return;
     }
 
     if (href.startsWith("#")) {
@@ -481,7 +498,7 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false, soli
           {MEGA_ORDER.map((label) => (
             <div className="nav__item" key={label} onMouseEnter={() => setOpen(label)}>
               <a className={`nav__link ${open === label ? "is-open" : ""} ${isActive(label) ? "is-active" : ""}`}
-                href={MEGA[label].href} onClick={(e) => go(e, MEGA[label].href)}>
+                href={canonicalHref(MEGA[label].href)} onClick={(e) => go(e, MEGA[label].href)}>
                 {label}
                 <svg className="nav__chev" width="9" height="9" viewBox="0 0 10 10" aria-hidden="true">
                   <path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
@@ -504,10 +521,10 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false, soli
         <div className="mobile__inner">
           {MEGA_ORDER.map((label) => (
             <div className="mobile-group" key={label}>
-              <a className="mobile-group__h" href={MEGA[label].href} onClick={(e) => go(e, MEGA[label].href)}>{label}</a>
+              <a className="mobile-group__h" href={canonicalHref(MEGA[label].href)} onClick={(e) => go(e, MEGA[label].href)}>{label}</a>
               {label === "Projects" ? <ProjectMobileMenu go={go} /> : <div className="mobile-group__links">
                 {MEGA[label].cols.flatMap((c) => c.items).slice(0, 5).map(([l, h]) => (
-                  <a key={l} href={h} onClick={(e) => go(e, h)}>{l}</a>
+                  <a key={l} href={canonicalHref(h)} onClick={(e) => go(e, h)}>{l}</a>
                 ))}
               </div>}
             </div>

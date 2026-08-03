@@ -302,7 +302,7 @@ function OverviewSection({ subpage }) {
         <Reveal>
           <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>OVERVIEW</div>
           <h2 className="osc-section__title">
-            Spacious residences<br /><span className="rr-grad">crafted for elevated living.</span>
+            Spacious residences<br /><span className="rr-grad">crafted for elevated living</span>
           </h2>
         </Reveal>
         <div className="osc-overview__grid">
@@ -337,7 +337,7 @@ function AmenitiesSection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>AMENITIES</div>
-              <h2>Premium leisure,<br /><span className="rr-grad">tailored for you.</span></h2>
+              <h2>Premium leisure,<br /><span className="rr-grad">tailored for you</span></h2>
             </div>
             <p className="sec-head__lead">
               Active Greens features a thoughtful array of modern amenities designed to refresh, connect, and elevate your daily routine.
@@ -368,7 +368,7 @@ function LandscapeFeaturesSection({ subpage }) {
         <Reveal>
           <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>SPECIFICATIONS</div>
           <h2 className="osc-section__title">
-            Exceptional planning<br /><span className="rr-grad">and high quality specifications.</span>
+            Exceptional planning<br /><span className="rr-grad">and high quality specifications</span>
           </h2>
         </Reveal>
         <div className="osc-specs__layout">
@@ -402,7 +402,7 @@ function FloorPlansSection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: "32px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>FLOOR PLANS</div>
-              <h2>Spacious layouts,<br /><span className="rr-grad">carefully planned structures.</span></h2>
+              <h2>Spacious layouts,<br /><span className="rr-grad">carefully planned structures</span></h2>
             </div>
           </div>
         </Reveal>
@@ -491,7 +491,7 @@ function GallerySection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: "40px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>GALLERY</div>
-              <h2>A closer look<br /><span className="rr-grad">at the Active Greens lifestyle.</span></h2>
+              <h2>A closer look<br /><span className="rr-grad">at the Active Greens lifestyle</span></h2>
             </div>
           </div>
         </Reveal>
@@ -594,7 +594,7 @@ function WalkthroughSection({ subpage }) {
           <div className="osc-walkthrough__header" style={{ marginBottom: "40px" }}>
             <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>WALKTHROUGH</div>
             <h2 className="osc-section__title">
-              Active Greens Video Walkthrough<br /><span className="rr-grad">experience the community.</span>
+              Active Greens Video Walkthrough<br /><span className="rr-grad">experience the community</span>
             </h2>
             <p className="osc-walkthrough__lead" style={{ color: "rgba(35,31,32,0.62)" }}>
               Take a virtual walkthrough of our project to explore the green spaces, planning, and residences.
@@ -643,7 +643,7 @@ function GmbReviewsSection({ subpage }) {
           <div className="sec-head" style={{ marginBottom: "48px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-indigo)" }}>REVIEWS</div>
-              <h2>Google Reviews<br /><span className="rr-grad">what our residents say.</span></h2>
+              <h2>Google Reviews<br /><span className="rr-grad">what our residents say</span></h2>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {subpage.gmbReviews.googleIconUrl && (
@@ -687,7 +687,7 @@ function LocationSection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>LOCATION</div>
-              <h2>Prime location,<br /><span className="rr-grad">unmatched connectivity.</span></h2>
+              <h2>Prime location,<br /><span className="rr-grad">unmatched connectivity</span></h2>
             </div>
           </div>
         </Reveal>
@@ -761,7 +761,7 @@ function CtaSection({ subpage, onBrochureClick }) {
       <div className="rr-wrap" style={{ textAlign: "center" }}>
         <Reveal>
           <h2 className="osc-section__title" style={{ marginBottom: "16px" }}>
-            Ready to own your dream residence?<br /><span className="rr-grad">Download the brochure.</span>
+            Ready to own your dream residence?<br /><span className="rr-grad">Download the brochure</span>
           </h2>
           <p style={{ fontSize: "var(--rr-fs-lead)", color: "rgba(35,31,32,0.62)", lineHeight: "1.6", margin: "0 auto 36px", maxWidth: "48ch" }}>
             Get detailed information about Active Greens including unit plans, pricing, and project specifications.

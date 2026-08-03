@@ -1,5 +1,5 @@
 /* ============================================================
-   Ruchi Realty ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Supabase backend bridge
+   Ruchi Realty Supabase backend bridge
    ============================================================ */
 (function () {
   const SUPABASE = window.RUCHI_SUPABASE_CONFIG || {};
@@ -417,7 +417,7 @@
   };
 
   const normalizeCareerJob = (job = {}) => {
-    const dropdown_val = job.dropdown_val || `${job.title || ""} ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ${job.dept || ""}`;
+    const dropdown_val = job.dropdown_val || `${job.title || ""}, ${job.dept || ""}`;
     return {
       id: job.id || uid(),
       slug: job.slug || "",
@@ -443,7 +443,7 @@
     dept: job.dept,
     type: job.type || "Full-time",
     desc: job.desc,
-    dropdown_val: job.dropdown_val || `${job.title} ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ${job.dept}`,
+    dropdown_val: job.dropdown_val || `${job.title}, ${job.dept}`,
     overview: job.overview || "",
     responsibilities: Array.isArray(job.responsibilities) ? job.responsibilities : [],
     requirements: Array.isArray(job.requirements) ? job.requirements : [],

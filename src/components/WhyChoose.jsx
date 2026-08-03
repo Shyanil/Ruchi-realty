@@ -8,8 +8,8 @@ export function WhyChoose() {
     <section className="section-pad why" id="why">
       <div className="rr-wrap why2">
         <Reveal className="why2__aside">
-          <div className="eyebrow sec-eyebrow">What buyers can expect</div>
-          <h2 className="why2__head">Your questions,<br /><span className="rr-grad">clearly answered.</span></h2>
+          <div className="eyebrow sec-eyebrow">FAQ</div>
+          <h2 className="why2__head">Your questions,<br /><span className="rr-grad">clearly answered</span></h2>
           <p className="why2__lead">
             Helpful information for every stage of your property search.
           </p>

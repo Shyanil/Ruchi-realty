@@ -45,7 +45,7 @@ export function Testimonials() {
           <div className="testi-headrow">
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>Resident stories</div>
-              <h2 className="testi-head">What living in a Ruchi Realty<br /><span className="rr-grad">home is really like.</span></h2>
+              <h2 className="testi-head">What living in a Ruchi Realty<br /><span className="rr-grad">home is really like</span></h2>
             </div>
             <p className="testi-intro">
               Hear directly from residents about the buying experience, their neighbourhood and life after moving in.

@@ -5,6 +5,7 @@ import { Contact } from "../components/Contact";
 import { Footer } from "../components/Footer";
 import { Reveal } from "../components/shared";
 import { ProjectTile, cityOf } from "../components/ProjectsSection";
+import SEO from "../components/SEO";
 import { PROJECTS } from "../data/projects";
 
 const PP_CITIES = ["All", "Kolkata", "Indore", "Bhopal"];
@@ -87,6 +88,7 @@ export default function ProjectsPage() {
 
   return (
     <>
+      <SEO title="Real Estate Projects in Indore, Kolkata & Bhopal | Ruchi Realty" description="Explore residential, commercial and plotted real estate projects by Ruchi Realty across Indore, Kolkata and Bhopal. Filter by city, ready to move, ongoing or upcoming." canonical="https://ruchirealty.com/projects" image="/assets/projects/one-victoria.webp" />
       <Nav onContact={onContact} solidAt={60} />
       <main>
         <header className="pp-hero" data-screen-label="All Projects">
@@ -98,6 +100,7 @@ export default function ProjectsPage() {
               <p className="pp-lead">
                 Ruchi Realty was never just about building homes. It was always about creating better ways of living.
               </p>
+              <p className="pp-lead pp-lead--keywords">Browse luxury apartments, residential plots and commercial spaces, from ready to move homes to upcoming launches.</p>
             </Reveal>
           </div>
         </header>
@@ -109,7 +112,7 @@ export default function ProjectsPage() {
                 {PP_CITIES.map((c) => {
                   return (
                     <button key={c} role="tab" type="button" aria-selected={city === c}
-                      className={`ptab ${city === c ? "is-active" : ""}`} onClick={() => pickCity(c)}>
+                      className={`ptab ${city === c ? "is-active" : ""}`} aria-label={c === "All" ? "Show all projects" : `Filter projects by ${c}`} onClick={() => pickCity(c)}>
                       {c}
                     </button>
                   );

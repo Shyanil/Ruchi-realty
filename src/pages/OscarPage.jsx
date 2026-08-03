@@ -134,7 +134,7 @@ function OverviewSection({ subpage }) {
         <Reveal>
           <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>OVERVIEW</div>
           <h2 className="osc-section__title">
-            A plotted development,<br /><span className="rr-grad">redefining premium living.</span>
+            A plotted development,<br /><span className="rr-grad">redefining premium living</span>
           </h2>
         </Reveal>
         <div className="osc-overview__grid">
@@ -165,7 +165,7 @@ function AmenitiesSection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>AMENITIES</div>
-              <h2>Premium amenities,<br /><span className="rr-grad">crafted for your lifestyle.</span></h2>
+              <h2>Premium amenities,<br /><span className="rr-grad">crafted for your lifestyle</span></h2>
             </div>
             <p className="sec-head__lead">
               The hub of sports and leisure, the Club House is a spaced area to pamper oneself with some stress-busting activities and to collect oodles of joyous moments for one&rsquo;s family.
@@ -213,7 +213,7 @@ function SpecificationsSection({ subpage }) {
         <Reveal>
           <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>SPECIFICATIONS</div>
           <h2 className="osc-section__title">
-            Built to the highest<br /><span className="rr-grad">standards of quality.</span>
+            Built to the highest<br /><span className="rr-grad">standards of quality</span>
           </h2>
         </Reveal>
         <div className="osc-specs__layout">
@@ -242,7 +242,7 @@ function LocationSection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>LOCATION</div>
-              <h2>Prime location,<br /><span className="rr-grad">unmatched connectivity.</span></h2>
+              <h2>Prime location,<br /><span className="rr-grad">unmatched connectivity</span></h2>
             </div>
           </div>
         </Reveal>
@@ -288,7 +288,7 @@ function WalkthroughSection({ subpage }) {
           <div className="osc-walkthrough__header">
             <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>WALKTHROUGH</div>
             <h2 className="osc-section__title">
-              Oscar Walkthrough<br /><span className="rr-grad">experience the space.</span>
+              Oscar Walkthrough<br /><span className="rr-grad">experience the space</span>
             </h2>
             <p className="osc-walkthrough__lead">
               Tailored to meet your expectations, walk around the exceptional living.
@@ -365,7 +365,7 @@ function GallerySection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: "40px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>GALLERY</div>
-              <h2>A closer look<br /><span className="rr-grad">at the Oscar lifestyle.</span></h2>
+              <h2>A closer look<br /><span className="rr-grad">at the Oscar lifestyle</span></h2>
             </div>
           </div>
         </Reveal>
@@ -533,7 +533,7 @@ function CtaSection({ subpage, onBrochureClick }) {
       <div className="rr-wrap" style={{ textAlign: "center" }}>
         <Reveal>
           <h2 className="osc-section__title" style={{ marginBottom: "16px" }}>
-            Ready to own your dream plot?<br /><span className="rr-grad">Download the brochure.</span>
+            Ready to own your dream plot?<br /><span className="rr-grad">Download the brochure</span>
           </h2>
           <p style={{ fontSize: "var(--rr-fs-lead)", color: "rgba(35,31,32,0.62)", lineHeight: "1.6", margin: "0 auto 36px", maxWidth: "48ch" }}>
             Get detailed information about the project including plot sizes, pricing, and payment plans.

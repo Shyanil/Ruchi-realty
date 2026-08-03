@@ -304,7 +304,7 @@ function OverviewSection({ subpage }) {
         <Reveal>
           <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>OVERVIEW</div>
           <h2 className="osc-section__title">
-            Spacious residences<br /><span className="rr-grad">crafted for elevated living.</span>
+            Spacious residences<br /><span className="rr-grad">crafted for elevated living</span>
           </h2>
         </Reveal>
         <div className="osc-overview__grid">
@@ -340,7 +340,7 @@ function AmenitiesSection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>AMENITIES</div>
-              <h2>Premium leisure,<br /><span className="rr-grad">tailored for you.</span></h2>
+              <h2>Premium leisure,<br /><span className="rr-grad">tailored for you</span></h2>
             </div>
             <p className="sec-head__lead">
               One Rajarhat features a thoughtful array of modern amenities designed to refresh, connect, and elevate your daily routine.
@@ -375,7 +375,7 @@ function LandscapeFeaturesSection({ subpage }) {
         <Reveal>
           <div className="project-section__head">
             <span className="eyebrow">SPECIFICATIONS</span>
-            <h2>Meticulous specifications,<br /><span className="rr-grad">engineered for luxury.</span></h2>
+            <h2>Meticulous specifications,<br /><span className="rr-grad">engineered for luxury</span></h2>
           </div>
         </Reveal>
         <div className="project-spec-list">
@@ -422,7 +422,7 @@ function FloorPlansSection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: "32px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>FLOOR PLANS</div>
-              <h2>Spacious layouts,<br /><span className="rr-grad">carefully planned structures.</span></h2>
+              <h2>Spacious layouts,<br /><span className="rr-grad">carefully planned structures</span></h2>
             </div>
           </div>
         </Reveal>
@@ -511,7 +511,7 @@ function GallerySection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: "40px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>GALLERY</div>
-              <h2>A closer look<br /><span className="rr-grad">at the One Rajarhat lifestyle.</span></h2>
+              <h2>A closer look<br /><span className="rr-grad">at the One Rajarhat lifestyle</span></h2>
             </div>
           </div>
         </Reveal>
@@ -620,7 +620,7 @@ function WalkthroughSection({ subpage }) {
           <div className="osc-walkthrough__header">
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>WALKTHROUGH</div>
-              <h2 className="osc-section__title">Experience the project<br /><span className="rr-grad">through a virtual tour.</span></h2>
+              <h2 className="osc-section__title">Experience the project<br /><span className="rr-grad">through a virtual tour</span></h2>
             </div>
           </div>
         </Reveal>
@@ -662,7 +662,7 @@ function GmbReviewsSection({ subpage }) {
               <div className="eyebrow" style={{ color: "var(--rr-indigo)", margin: 0 }}>GOOGLE REVIEWS</div>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "20px" }}>
-              <h2>What our clients say<br /><span className="rr-grad">about One Rajarhat.</span></h2>
+              <h2>What our clients say<br /><span className="rr-grad">about One Rajarhat</span></h2>
               {gmb.starIconUrl && (
                 <div style={{ display: "flex", alignItems: "center", gap: "8px", background: "rgba(20,18,26,0.04)", padding: "10px 16px", borderRadius: "30px", border: "1px solid rgba(20,18,26,0.08)" }}>
                   <img src={gmb.starIconUrl} alt="5 Stars" style={{ height: "18px", objectFit: "contain" }} />
@@ -711,7 +711,7 @@ function LocationSection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>LOCATION</div>
-              <h2>Prime location,<br /><span className="rr-grad">unmatched connectivity.</span></h2>
+              <h2>Prime location,<br /><span className="rr-grad">unmatched connectivity</span></h2>
             </div>
           </div>
         </Reveal>
@@ -785,7 +785,7 @@ function CtaSection({ subpage, onBrochureClick }) {
       <div className="rr-wrap" style={{ textAlign: "center" }}>
         <Reveal>
           <h2 className="osc-section__title" style={{ marginBottom: "16px" }}>
-            Ready to own your dream residence?<br /><span className="rr-grad">Download the brochure.</span>
+            Ready to own your dream residence?<br /><span className="rr-grad">Download the brochure</span>
           </h2>
           <p style={{ fontSize: "var(--rr-fs-lead)", color: "rgba(35,31,32,0.62)", lineHeight: "1.6", margin: "0 auto 36px", maxWidth: "48ch" }}>
             Get detailed information about One Rajarhat including unit plans, pricing, and project specifications.

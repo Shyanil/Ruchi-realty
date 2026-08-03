@@ -12,6 +12,7 @@ const offices = [
     address: "2/1, South Tukoganj, Behind High Court, Indore – 452001 (M.P.), India.",
     sales: "+91 89292 25275",
     corporate: "0731-4018010 | 4018015 | 4018120",
+        area: "Serving South Tukoganj, Bicholi Hapsi and greater Indore.",
     action: "Call Sales",
     href: "tel:+918929225275",
   },
@@ -23,6 +24,7 @@ const offices = [
     address: "54, 10, Debendra Chandra Dey Rd, near ITC Sonar, Tangra, Kolkata – 700015 (W.B.), India.",
     sales: "+91 98364 18000",
     corporate: "033-66066777",
+        area: "Serving Tangra, New Town, Rajarhat and greater Kolkata.",
     action: "Call Sales",
     href: "tel:+919836418000",
   },
@@ -34,6 +36,7 @@ const offices = [
     address: "Behind Bhabha College, Jatkhedi Hoshangabad Road, Bhopal – 462026 (M.P.), India.",
     sales: "+91 89292 25275",
     corporate: "Customer Care: +91 89292 25275",
+        area: "Serving Hoshangabad Road and greater Bhopal.",
     action: "Call Customer Care",
     href: "tel:+918929225275",
   },
@@ -43,8 +46,8 @@ export default function ContactPage() {
   return (
     <>
       <SEO
-        title="Contact Ruchi Realty | Indore, Kolkata & Bhopal Offices"
-        description="Get in touch with RRHL Realty Limited across our offices in Indore, Kolkata, and Bhopal. Sales and corporate enquiry details."
+        title="Contact Ruchi Realty — Offices in Kolkata, Indore & Bhopal"
+        description="Get in touch with Ruchi Realty. Schedule a site visit, request pricing, or contact our Kolkata, Indore or Bhopal office directly."
         canonical="https://ruchirealty.com/contact"
         image="/assets/projects/one-victoria.webp"
       />
@@ -54,7 +57,7 @@ export default function ContactPage() {
           <div className="contact-page__mark" aria-hidden="true" />
           <div className="rr-wrap">
             <span className="eyebrow">Get In Touch</span>
-            <h1>A considered way<br /><span>to find your place.</span></h1>
+            <h1>A considered way<br /><span>to find your place</span></h1>
             <p>You can get in touch with us across our offices in Indore, Kolkata, and Bhopal or reach our customer care team anytime.</p>
           </div>
         </header>
@@ -63,7 +66,7 @@ export default function ContactPage() {
           <div className="rr-wrap">
             <div className="contact-paths__intro">
               <span className="eyebrow sec-eyebrow">Get In Touch</span>
-              <h2>Our Offices &<br />Customer Care.</h2>
+              <h2>Our Offices &<br />Customer Care</h2>
             </div>
             <div className="contact-paths__grid">
               {offices.map((office) => (
@@ -73,6 +76,7 @@ export default function ContactPage() {
                   <div className="contact-office-details">
                     <strong className="contact-office-company">{office.company}</strong>
                     <p className="contact-office-addr">{office.address}</p>
+                    <p className="contact-office-area">{office.area}</p>
                     <p className="contact-office-phone">
                       <span>Ph. Sales: </span><a href={`tel:${office.sales.replace(/\s+/g, "")}`}>{office.sales}</a>
                     </p>

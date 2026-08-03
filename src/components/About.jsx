@@ -14,13 +14,11 @@ export function About() {
           <div className="about-copy">
             <Reveal>
               <div className="eyebrow sec-eyebrow">About Ruchi Realty</div>
-              <h2 className="about-head">
-                Committed to Clarity,<br /><span className="rr-grad">Built for Longevity.</span>
-              </h2>
+              <h2 className="about-head">Trusted Real Estate Developer <span className="rr-grad">Since 2008</span></h2>
             </Reveal>
             <Reveal delay={80}>
               <p className="about-lead">
-                Since 2008, Ruchi Realty has developed residential, commercial and plotted communities across Kolkata, Indore and Bhopal—bringing together considered locations, practical planning, responsible construction and support beyond possession.
+                Since 2008, Ruchi Realty has developed residential, commercial and plotted communities across Kolkata, Indore and Bhopal, bringing together considered locations, practical planning, responsible construction and support beyond possession.
               </p>
             </Reveal>
             <Reveal delay={140}>

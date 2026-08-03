@@ -256,7 +256,7 @@ function OverviewSection({ subpage }) {
         <Reveal>
           <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>OVERVIEW</div>
           <h2 className="osc-section__title">
-            One of Kolkata's Largest Condominiums,<br /><span className="rr-grad">spread over 16.38 Acres.</span>
+            One of Kolkata's Largest Condominiums,<br /><span className="rr-grad">spread over 16.38 Acres</span>
           </h2>
         </Reveal>
         <div className="osc-overview__grid">
@@ -294,7 +294,7 @@ function SpecificationsSection({ subpage }) {
         <Reveal>
           <div className="project-section__head">
             <span className="eyebrow">Specifications</span>
-            <h2>Architecture and features,<br /><span className="rr-grad">crafted to perfection.</span></h2>
+            <h2>Architecture and features,<br /><span className="rr-grad">crafted to perfection</span></h2>
           </div>
         </Reveal>
         <div className="project-spec-list">
@@ -332,7 +332,7 @@ function AmenitiesSection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>AMENITIES</div>
-              <h2>World-class amenities,<br /><span className="rr-grad">tailored for complete luxury.</span></h2>
+              <h2>World-class amenities,<br /><span className="rr-grad">tailored for complete luxury</span></h2>
             </div>
             <p className="sec-head__lead">
               Active Acres Angelica features a rich array of indoor and outdoor leisure facilities designed for wellness, sports, and recreation.
@@ -379,7 +379,7 @@ function FloorPlansSection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: "32px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>FLOOR PLANS</div>
-              <h2>Spacious layouts,<br /><span className="rr-grad">carefully planned structures.</span></h2>
+              <h2>Spacious layouts,<br /><span className="rr-grad">carefully planned structures</span></h2>
             </div>
           </div>
         </Reveal>
@@ -468,7 +468,7 @@ function GallerySection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: "40px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>GALLERY</div>
-              <h2>A glimpse into<br /><span className="rr-grad">the Angelica lifestyle.</span></h2>
+              <h2>A glimpse into<br /><span className="rr-grad">the Angelica lifestyle</span></h2>
             </div>
           </div>
         </Reveal>
@@ -571,7 +571,7 @@ function WalkthroughSection({ subpage }) {
           <div className="osc-walkthrough__header" style={{ marginBottom: "40px" }}>
             <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>WALKTHROUGH</div>
             <h2 className="osc-section__title">
-              Angelica Video Walkthrough<br /><span className="rr-grad">experience the residences.</span>
+              Angelica Video Walkthrough<br /><span className="rr-grad">experience the residences</span>
             </h2>
             <p className="osc-walkthrough__lead" style={{ color: "rgba(35,31,32,0.62)" }}>
               Take a virtual walkthrough of our project to explore premium finishes, layout, and landscaping.
@@ -623,7 +623,7 @@ function GmbReviewsSection({ subpage }) {
               <div className="eyebrow" style={{ color: "var(--rr-indigo)", margin: 0 }}>GOOGLE REVIEWS</div>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "20px" }}>
-              <h2>What our clients say<br /><span className="rr-grad">about Active Acres.</span></h2>
+              <h2>What our clients say<br /><span className="rr-grad">about Active Acres</span></h2>
               {gmb.starIconUrl && (
                 <div style={{ display: "flex", alignItems: "center", gap: "8px", background: "rgba(20,18,26,0.04)", padding: "10px 16px", borderRadius: "30px", border: "1px solid rgba(20,18,26,0.08)" }}>
                   <img src={gmb.starIconUrl} alt="5 Stars" style={{ height: "18px", objectFit: "contain" }} />
@@ -672,7 +672,7 @@ function LocationSection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>LOCATION</div>
-              <h2>Prime location,<br /><span className="rr-grad">unmatched connectivity.</span></h2>
+              <h2>Prime location,<br /><span className="rr-grad">unmatched connectivity</span></h2>
             </div>
           </div>
         </Reveal>
@@ -793,7 +793,7 @@ function CtaSection({ subpage, onBrochureClick }) {
       <div className="rr-wrap" style={{ textAlign: "center" }}>
         <Reveal>
           <h2 className="osc-section__title" style={{ marginBottom: "16px" }}>
-            Ready to own your dream residence?<br /><span className="rr-grad">Download the brochure.</span>
+            Ready to own your dream residence?<br /><span className="rr-grad">Download the brochure</span>
           </h2>
           <p style={{ fontSize: "var(--rr-fs-lead)", color: "rgba(35,31,32,0.62)", lineHeight: "1.6", margin: "0 auto 36px", maxWidth: "48ch" }}>
             Get detailed information about Active Acres Angelica including unit plans, pricing, and project specifications.

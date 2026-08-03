@@ -19,6 +19,18 @@ export const HOME_FAQS = [
     question: "How can I get pricing and availability details?",
     answer: "Submit an enquiry through the website or contact our sales team. They will share current availability, pricing, and relevant project information.",
   },
+  {
+    question: "Are Ruchi Realty projects RERA approved?",
+    answer: "RERA registration is provided for projects where applicable. Please review the relevant project page or contact our team for current RERA details.",
+  },
+  {
+    question: "Does Ruchi Realty offer luxury apartments and premium plots?",
+    answer: "Yes. Ruchi Realty offers luxury apartments, premium plots and commercial spaces across Kolkata, Indore and Bhopal.",
+  },
+  {
+    question: "What is the price range for flats in New Town, Kolkata or Indore?",
+    answer: "Pricing varies by project, location, configuration and availability. Contact our team for current pricing for flats in New Town, Kolkata, Indore or Bhopal.",
+  },
 ];
 
 export function Faq() {
@@ -27,7 +39,7 @@ export function Faq() {
       <div className="rr-wrap faq__layout">
         <div className="faq__intro">
           <div className="eyebrow sec-eyebrow">Frequently asked questions</div>
-          <h2>Helpful answers,<br /><span className="rr-grad">clearly explained.</span></h2>
+          <h2>Helpful answers,<br /><span className="rr-grad">clearly explained</span></h2>
           <p>Everything you need to know before exploring a Ruchi Realty project.</p>
         </div>
         <div className="faq__list">

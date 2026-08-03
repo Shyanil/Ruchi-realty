@@ -77,7 +77,7 @@ function AwardsShowcase() {
       <div className="rr-wrap">
         <div className="awd-showcase__header">
           <div className="eyebrow awd-showcase__label">AWARDS &amp; RECOGNITION</div>
-          <h2 className="awd-showcase__title">Celebrating milestones of trust and excellence.</h2>
+          <h2 className="awd-showcase__title">Celebrating milestones of trust and excellence</h2>
           <p className="awd-showcase__lead">Honours and recognitions that reflect Ruchi Realty's commitment to quality, innovation, and landmark development.</p>
         </div>
 

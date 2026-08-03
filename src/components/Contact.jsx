@@ -54,7 +54,7 @@ export function Contact({
                   <div className="contact-thanks__tick">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#231f20" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l4 4 10-10" /></svg>
                   </div>
-                  <h3>Thank you, {f.name.split(" ")[0] || "there"}.</h3>
+                  <h3>Thank you, {f.name.split(" ")[0] || "there"}</h3>
                   <p>We have your note. Someone from our team will be in touch without the hard sell.</p>
                 </div>
               ) : (

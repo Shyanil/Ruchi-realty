@@ -422,7 +422,7 @@ function DashboardAdmin({ onTab }) {
       <div className="admin-hero">
         <div>
           <p className="admin-kicker">Staff workspace</p>
-          <h2>Manage live website content.</h2>
+          <h2>Manage live website content</h2>
           <p>Projects, leads, settings, and articles are managed through authenticated staff access with RLS protection.</p>
         </div>
         <button type="button" className="admin-primary" onClick={() => onTab("projects")}>Add project</button>
@@ -1648,7 +1648,7 @@ export default function AdminPage() {
     return () => { active = false; };
   }, []);
 
-  if (checkingSession) return <main className="admin-login"><div className="admin-login__box"><p className="admin-kicker">Secure admin login</p><h1>Checking session...</h1></div></main>;
+  if (checkingSession) return <main className="admin-login"><div className="admin-login__box"><p className="admin-kicker">Secure admin login</p><h1>Checking session</h1></div></main>;
   if (!user) return <AdminLogin onLogin={setUser} />;
 
   const logout = async () => {
