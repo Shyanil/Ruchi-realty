@@ -22,7 +22,11 @@ main, section, .rr-wrap, .rr-wrap > * { min-width: 0; }
 .eyebrow { font-size: var(--rr-fs-eyebrow); font-weight: var(--rr-w-medium); letter-spacing: var(--rr-ls-eyebrow); text-transform: uppercase; }
 .sec-eyebrow { color: var(--rr-indigo); }
 .rr-wrap { width: 100%; max-width: 1280px; margin-inline: auto; padding-inline: clamp(24px, 5vw, 72px); }
-@media (min-width: 1440px) {
+/* Desktop content and navigation share one alignment grid. */
+@media (min-width: 1200px) {
+  .rr-wrap { max-width: 1440px; padding-inline: clamp(32px, 3vw, 48px); }
+}
+@media (min-width: 1600px) {
   .rr-wrap { max-width: 1680px; padding-inline: clamp(40px, 3vw, 56px); }
 }
 .section-pad { padding-block: clamp(44px, 5.4vw, 72px); }
