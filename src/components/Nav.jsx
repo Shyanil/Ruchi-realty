@@ -42,7 +42,6 @@ const MEGA = (() => {
         img: "/projects/one-victoria-new-town/hero.webp",
       },
       feats: [
-        { kind: "project", eyebrow: "Discover", title: "Latest Updates", sub: "News from Ruchi Realty", href: "/media/press-releases", img: "/assets/media/gallery/bhaskar-event-1.webp" },
         { kind: "project", eyebrow: "What's on", title: "Latest Events", sub: "Explore recent moments", href: "/media/events-awards", img: "/assets/media/gallery/credai-event-2.webp" },
       ],
     },
@@ -50,9 +49,9 @@ const MEGA = (() => {
       href: "About.html",
       blurb: "Residential, commercial and plotted developments since 2008.",
       cols: [
-        { h: "Company", items: [["About Us", "About.html"], ["The proof, not the promise", "#why"], ["Our Team", "About.html#team"], ["Careers", "Careers.html"]] },
+        { h: "Company", items: [["About Us", "About.html"], ["Our Team", "About.html#team"], ["Careers", "Careers.html"]] },
       ],
-      feat: { kind: "statement", eyebrow: "Committed to you", title: "Building with clarity and long term commitment.", sub: "Read the story →", href: "About.html" },
+      feat: { kind: "project", eyebrow: "Committed to you", title: "Building with clarity and long term commitment.", sub: "Read the story", href: "About.html", img: "/assets/about-committed-to-you.webp" },
     },
     Blogs: {
       href: "/blogs",
@@ -67,7 +66,7 @@ const MEGA = (() => {
       blurb: "Galleries, press releases, events and awards from Ruchi Realty.",
       cols: [
         { h: "Media", items: [["Gallery", "/media/gallery"], ["Press Releases", "/media/press-releases"], ["Events & Awards", "/media/events-awards"]] },
-        { h: "Discover", items: [["Latest gallery", "/media/gallery"], ["Company updates", "/media/press-releases"], ["Recognitions", "/media/events-awards"]] },
+        { h: "Discover", items: [["Recognitions", "/media/events-awards"]] },
       ],
       feat: { kind: "project", eyebrow: "Inside Ruchi Realty", title: "Media", sub: "Explore the collection →", href: "/media", img: "/assets/media/gallery/gallery-1.webp" },
     },

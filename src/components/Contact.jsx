@@ -2,7 +2,11 @@ import { useState } from "react";
 import { Reveal } from "./shared";
 import { PROJECT_OPTIONS } from "../data/projects";
 
-export function Contact() {
+export function Contact({
+  eyebrow = "Plan your visit",
+  heading = <>Tell us which project<br /><span className="rr-grad">you would like to explore.</span></>,
+  lead = "Share your preferred city, project and contact details. A member of the relevant project team will get in touch to answer questions or arrange a site visit.",
+}) {
   const [f, setF] = useState({ name: "", phone: "", email: "", project: "", message: "" });
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
@@ -36,13 +40,9 @@ export function Contact() {
       <div className="rr-wrap">
         <div className="contact-header-centered">
           <Reveal>
-            <div className="eyebrow sec-eyebrow">Plan your visit</div>
-            <h2 className="contact-head">
-              Tell us which project<br /><span className="rr-grad">you would like to explore.</span>
-            </h2>
-            <p className="contact-lead">
-              Share your preferred city, project and contact details. A member of the relevant project team will get in touch to answer questions or arrange a site visit.
-            </p>
+            <div className="eyebrow sec-eyebrow">{eyebrow}</div>
+            <h2 className="contact-head">{heading}</h2>
+            <p className="contact-lead">{lead}</p>
           </Reveal>
         </div>
 

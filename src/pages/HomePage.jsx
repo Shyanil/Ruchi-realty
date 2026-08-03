@@ -9,7 +9,7 @@ import { Testimonials } from "../components/Testimonials";
 import { Awards } from "../components/Awards";
 import { Press } from "../components/Press";
 import { BlogSection } from "../components/BlogSection";
-import { Faq, HOME_FAQS } from "../components/Faq";
+import { HOME_FAQS } from "../components/Faq";
 import { Contact } from "../components/Contact";
 import { Footer } from "../components/Footer";
 import { CustomCursor } from "../components/shared";
@@ -85,8 +85,11 @@ export default function HomePage() {
         <Awards />
         <Press />
         <BlogSection />
-        <Faq />
-        <Contact />
+        <Contact
+          eyebrow="Get in Touch"
+          heading="Plan Your Site Visit"
+          lead="Tell us which real estate project you'd like to explore. Share your preferred city, Indore, Kolkata or Bhopal, along with your project and contact details, and our team will reach out to answer questions or arrange a visit."
+        />
       </main>
       <Footer />
     </>

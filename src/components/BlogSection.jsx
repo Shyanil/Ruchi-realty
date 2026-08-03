@@ -21,8 +21,8 @@ export function BlogSection() {
         <Reveal>
           <div className="sec-head">
             <div>
-              <div className="eyebrow sec-eyebrow">Property guides</div>
-              <h2 className="blog__head">Useful information for<br /><span className="rr-grad">homebuyers and investors.</span></h2>
+              <div className="eyebrow sec-eyebrow">Our Blogs</div>
+              <h2 className="blog__head">Real Estate Insights <span className="rr-grad">&amp; Expert Advice</span></h2>
             </div>
             <Link className="blog__all" to="/blogs">Read all property guides<span className="ar">→</span></Link>
           </div>

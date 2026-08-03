@@ -91,7 +91,11 @@ export default function ContactPage() {
           </div>
         </section>
 
-        <Contact />
+        <Contact
+          eyebrow="Get in Touch"
+          heading="Plan Your Site Visit"
+          lead="Tell us which real estate project you'd like to explore. Share your preferred city, Indore, Kolkata or Bhopal, along with your project and contact details, and our team will reach out to answer questions or arrange a visit."
+        />
       </main>
       <Footer />
     </>

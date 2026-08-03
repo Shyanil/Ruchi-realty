@@ -158,12 +158,6 @@ function CareersHero({ onApply }) {
               </div>
             </div>
 
-            <div className="cr-collage__card cr-collage__card--comm">
-              <img src="uploads/careers_hero_commercial.webp" alt="Commercial Development" />
-              <div className="cr-collage__chip cr-collage__chip--side">
-                <span className="lbl">Real Estate Careers</span>
-              </div>
-            </div>
           </Reveal>
         </div>
       </div>

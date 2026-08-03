@@ -73,21 +73,15 @@ const QUOTES = [
 ];
 
 const AWARDS = [
-  { name: "Mega Property Expo Award", year: "2025" },
-  { name: "Mega Property Expo Award", year: "2024" },
-  { name: "Ultra-High Luxury Developer of the Year", year: "" },
-  { name: "Luxury Project of the Year", year: "" },
-  { name: "Golden Brick Award", year: "" },
-  { name: "Company of the Year", year: "" },
-  { name: "Times Property Show Award", year: "" },
-  { name: "Property Show Award · CREDAI", year: "" },
-  { name: "Property Fair Awards · HDFC", year: "" },
+  { name: "Property Show Award by CREDAI", year: "" },
   { name: "Malwa Vyapar Awards", year: "" },
-  { name: "Vishisht Atithi Awards", year: "" },
-  { name: "Real Estate Fair Award", year: "" },
-  { name: "Most Prestigious Property Exhibition", year: "" },
+  { name: "Ultra High Luxury Developer of the Year Award", year: "" },
+  { name: "Visith Atithi Awards", year: "" },
+  { name: "Property Fair Awards by HDFC", year: "" },
+  { name: "Most Prestegious Property Exhibition", year: "" },
   { name: "Property Auto Expo Award", year: "" },
   { name: "Property & Auto Fair Awards", year: "" },
+  { name: "Times Property Show Award", year: "" },
 ];
 
 const PRESS = [
@@ -103,8 +97,8 @@ const PRESS = [
 const BLOG = [
   {
     cat: "Kolkata luxury projects",
-    title: "Luxury living at One Victoria, New Town Kolkata",
-    date: "Dec 2024",
+    title: "Discover the Pinnacle of Luxury Living at One Victoria in New Town, Kolkata",
+    date: "December 28, 2024",
     author: "deepak ruchi_realty",
     slug: "one-victoria-kolkata-luxury-living",
     url: "https://ruchirealty.com/one-victoria-kolkata-the-future-of-real-estate-unveiling-growth-in-indore-and-kolkatas-new-town/",
@@ -118,8 +112,8 @@ const BLOG = [
   },
   {
     cat: "Market growth / investment",
-    title: "Real estate growth in Indore and Kolkata New Town",
-    date: "Dec 2024",
+    title: "The Future of Real Estate: Unveiling Growth in Indore and Kolkata’s New Town",
+    date: "December 25, 2024",
     author: "Ruchi Realty",
     slug: "real-estate-growth-indore-kolkata-new-town",
     url: "https://ruchirealty.com/the-future-of-real-estate-unveiling-growth-in-indore-and-kolkatas-new-town/",
@@ -133,8 +127,8 @@ const BLOG = [
   },
   {
     cat: "Kolkata luxury projects",
-    title: "Top 5 residential projects in Kolkata by Ruchi Realty",
-    date: "Dec 2024",
+    title: "Top 5 Residential Projects in Kolkata by Ruchi Realty",
+    date: "December 23, 2024",
     author: "Ruchi Realty",
     slug: "top-5-residential-projects-kolkata",
     url: "https://ruchirealty.com/top-5-residential-projects-in-kolkata-by-ruchi-realty/",
@@ -148,8 +142,8 @@ const BLOG = [
   },
   {
     cat: "Plot buyer education",
-    title: "How to evaluate the value of a plot",
-    date: "Jun 2024",
+    title: "How to Evaluate the Value of a Plot: Key Factors to Consider",
+    date: "June 5, 2024",
     author: "Ruchi Realty",
     slug: "how-to-evaluate-plot-value",
     url: "https://ruchirealty.com/how-to-evaluate-the-value-of-a-plot/",
@@ -163,8 +157,8 @@ const BLOG = [
   },
   {
     cat: "Market growth / investment",
-    title: "Investment advantages in Indore real estate",
-    date: "May 2024",
+    title: "Investment Advantages in Real Estate Sector in Indore",
+    date: "May 7, 2024",
     author: "Ruchi Realty",
     slug: "investment-advantages-indore-real-estate",
     url: "https://ruchirealty.com/investment-advantages-in-real-estate-sector-2/",
@@ -178,8 +172,8 @@ const BLOG = [
   },
   {
     cat: "Project-led Indore content",
-    title: "Ruchi Lifescapes Indore and premium plotted living",
-    date: "May 2024",
+    title: "Ruchi Lifescapes Indore: Where Luxury Meets Serenity in Premium Plots",
+    date: "May 3, 2024",
     author: "Ruchi Realty",
     slug: "ruchi-lifescapes-indore-premium-plots",
     url: "https://ruchirealty.com/premium-plots-in-indore-2/",
@@ -193,8 +187,8 @@ const BLOG = [
   },
   {
     cat: "Plot buyer education",
-    title: "First-time property buyer's guide",
-    date: "Apr 2024",
+    title: "Buying property for the first time? Here’s your buyer’s guide to the right purchase",
+    date: "April 20, 2024",
     author: "Ruchi Realty",
     slug: "first-time-property-buyer-guide",
     url: "https://ruchirealty.com/buying-property-for-the-first-time-heres-your-buyers-guide-to-the-right-purchase/",
@@ -208,8 +202,8 @@ const BLOG = [
   },
   {
     cat: "Project-led Indore content",
-    title: "Oscar Pride as an Indore investment opportunity",
-    date: "Apr 2024",
+    title: "Unleash the Potential of Oscar Pride:A Wise Investment for Growing Returns",
+    date: "April 15, 2024",
     author: "Ruchi Realty",
     slug: "oscar-pride-indore-investment",
     url: "https://ruchirealty.com/unleash-the-potential-of-oscar-pridea-wise-investment-for-growing-returns/",
@@ -223,8 +217,8 @@ const BLOG = [
   },
   {
     cat: "Project-led Indore content",
-    title: "Ruchi Lifescapes and serene residential living",
-    date: "Mar 2024",
+    title: "Ruchi Lifescapes: An Epitome of Serene Lifestyle",
+    date: "March 21, 2024",
     author: "Ruchi Realty",
     slug: "ruchi-lifescapes-serene-lifestyle",
     url: "https://ruchirealty.com/ruchi-lifescapes-an-epitome-of-serene-lifestyle/",
@@ -238,8 +232,8 @@ const BLOG = [
   },
   {
     cat: "Project-led Indore content",
-    title: "Benefits of gated community living at Oscar Pride",
-    date: "Mar 2024",
+    title: "Owning a Home at Oscar Pride: The Benefits of Gated Community Living",
+    date: "March 9, 2024",
     author: "Ruchi Realty",
     slug: "oscar-pride-gated-community-living",
     url: "https://ruchirealty.com/owning-a-home-at-oscar-pride-the-benefits-of-gated-community-living/",
@@ -253,8 +247,8 @@ const BLOG = [
   },
   {
     cat: "Market growth / investment",
-    title: "Why invest in real estate in 2024",
-    date: "Feb 2024",
+    title: "Why should you Invest in Real Estate in 2024",
+    date: "February 18, 2024",
     author: "Ruchi Realty",
     slug: "why-invest-in-real-estate-2024",
     url: "https://ruchirealty.com/why-should-you-invest-in-real-estate-in-2023/",
@@ -268,8 +262,8 @@ const BLOG = [
   },
   {
     cat: "Project-led Indore content",
-    title: "Luxury living at Ruchi Lifescapes",
-    date: "Feb 2024",
+    title: "Experience Luxury Living at Ruchi Lifescapes",
+    date: "February 5, 2024",
     author: "Ruchi Realty",
     slug: "ruchi-lifescapes-luxury-living",
     url: "https://ruchirealty.com/experience-luxury-living-at-ruchi-lifescapes-discover-your-dream-plot/",
@@ -283,8 +277,8 @@ const BLOG = [
   },
   {
     cat: "Plot buyer education",
-    title: "How to know if you are getting a good property price",
-    date: "Dec 2023",
+    title: "How To Know You’re Getting A Good Price 2023",
+    date: "December 20, 2023",
     author: "Ruchi Realty",
     slug: "good-property-price-guide",
     url: "https://ruchirealty.com/how-to-know-youre-getting-a-good-price/",

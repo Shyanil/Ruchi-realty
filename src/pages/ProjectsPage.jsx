@@ -94,9 +94,9 @@ export default function ProjectsPage() {
           <div className="rr-wrap">
             <Reveal>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>Our Projects</div>
-              <h1 className="pp-head">Every address,<br /><span className="rr-grad">across three cities.</span></h1>
+              <h1 className="pp-head">Real Estate Projects in Indore, Kolkata <span className="rr-grad">&amp; Bhopal</span></h1>
               <p className="pp-lead">
-                Residential and commercial projects in Kolkata, Indore, and Bhopal, each carried from drawing to handover with the same care.
+                Ruchi Realty was never just about building homes. It was always about creating better ways of living.
               </p>
             </Reveal>
           </div>
