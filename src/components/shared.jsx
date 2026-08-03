@@ -73,7 +73,7 @@ export function RImg({
   };
 
   return (
-    <div className={`rimg ${!loaded ? "rimg--loading" : ""} ${className}`} style={{ background: "var(--rr-paper)", ...style }}>
+    <div className={`rimg ${className}`} style={{ background: "var(--rr-paper)", ...style }}>
       {ok ? (
         <img
           src={currentSrc}
@@ -83,12 +83,12 @@ export function RImg({
           onLoad={handleLoaded}
           onError={handleError}
           className="rimg__img"
-          style={{ opacity: loaded ? 1 : 0, ...(grade ? { filter: "brightness(0.92)" } : {}) }}
+          style={{ opacity: 1, ...(grade ? { filter: "brightness(0.92)" } : {}) }}
         />
       ) : (
         mono ? <div className="rimg__mono" /> : null
       )}
-      {!loaded && showLoader ? <span className="rimg__loader" role="status" aria-label="Loading image" /> : null}
+      {null}
     </div>
   );
 }

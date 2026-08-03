@@ -29,7 +29,7 @@ const MEGA = (() => {
     kind: "blog",
     eyebrow: BLOG[0]?.cat || "Industry Insights",
     title: BLOG[0]?.title || "Industry insights",
-    sub: "Read the piece â†’",
+    sub: "Read the piece",
     href: `/blogs/${BLOG[0]?.slug || ""}`,
   };
   return {
@@ -46,7 +46,7 @@ const MEGA = (() => {
         ]},
       ],
       feat: {
-        kind: "project", eyebrow: "Now unveiling", title: "One Victoria", sub: "New Town Â· Kolkata", href: "/projects/one-victoria-new-town",
+        kind: "project", eyebrow: "Now unveiling", title: "One Victoria", sub: "New Town, Kolkata", href: "/projects/one-victoria-new-town",
         img: "/projects/one-victoria-new-town/hero.webp",
       },
       feats: [
@@ -77,14 +77,14 @@ const MEGA = (() => {
         { h: "Media", items: [["Gallery", "/media/gallery"], ["Press Releases", "/media/press-releases"], ["Events & Awards", "/media/events-awards"]] },
         { h: "Discover", items: [["Recognitions", "/media/events-awards"]] },
       ],
-      feat: { kind: "project", eyebrow: "Inside Ruchi Realty", title: "Media", sub: "Explore the collection â†’", href: "/media", img: "/assets/media/gallery/gallery-1.webp" },
+      feat: { kind: "project", eyebrow: "Inside Ruchi Realty", title: "Media", sub: "Explore the collection", href: "/media", img: "/assets/media/gallery/gallery-1.webp" },
     },
     Contact: {
       href: "Contact.html",
       blurb: "Share what you need; our project team will get back to you.",
       cols: [
         { h: "Offices", items: [["Indore Office", "Contact.html#indore-office"], ["Kolkata Office", "Contact.html#kolkata-office"], ["Bhopal Office", "Contact.html#bhopal-office"]] },
-        { h: "Reach us", items: [["+91 89292 25275", "tel:+918929225275"], ["ruchirealty.com", "#contact"], ["Indore Â· Kolkata Â· Bhopal", "#contact"]] },
+        { h: "Reach us", items: [["+91 89292 25275", "tel:+918929225275"], ["ruchirealty.com", "#contact"], ["Indore, Kolkata and Bhopal", "#contact"]] },
       ],
       feat: { kind: "cta", eyebrow: "Get in touch", title: "Contact us", sub: "A real person, not a call centre.", href: "Contact.html#indore-office" },
     },
@@ -213,7 +213,7 @@ function ProjectCarouselFeature({ city, status, go }) {
               onClick={prevSlide}
               aria-label="Previous projects"
             >
-              â€¹
+              &#8249;
             </button>
             <span className="mega-project-carousel__page">
               {Math.floor(currentIndex / VISIBLE_COUNT) + 1} / {totalPages}
@@ -224,7 +224,7 @@ function ProjectCarouselFeature({ city, status, go }) {
               onClick={nextSlide}
               aria-label="Next projects"
             >
-              â€º
+              &#8250;
             </button>
           </div>
         )}
@@ -272,7 +272,7 @@ function ProjectNestedMenu({ go, activeCity, activeStatus, onCityHover, onStatus
             onFocus={() => onCityHover(city)}
           >
             <a href={projectFilterHref(city)} onClick={(e) => go(e, projectFilterHref(city))}>
-              {city}<span aria-hidden="true">â€º</span>
+              {city}<span aria-hidden="true">&#8250;</span>
             </a>
           </li>
         ))}
@@ -288,7 +288,7 @@ function ProjectNestedMenu({ go, activeCity, activeStatus, onCityHover, onStatus
         </li>
       </ul>
       <div className={`project-menu__status-panel ${activeCity ? "is-visible" : ""}`} aria-live="polite">
-        <div className="project-menu__label">By Status{activeCity ? ` Â· ${activeCity}` : ""}</div>
+        <div className="project-menu__label">By Status{activeCity ? `, ${activeCity}` : ""}</div>
         {activeCity ? (
           <>
             <a
@@ -368,7 +368,7 @@ function MegaPanel({ cfg, go }) {
       <div className="mega__lead" onMouseEnter={handleDefaultPreview}>
         <p className="mega__blurb">{cfg.blurb}</p>
         <a className="mega__all" href={canonicalHref(cfg.href)} onClick={(e) => go(e, cfg.href)}>
-          View section<span className="ar">â†’</span>
+          View section<span className="ar">&rarr;</span>
         </a>
       </div>
       <div className="mega__cols">
@@ -417,7 +417,8 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false, soli
   useEffect(() => {
     const mediaRoute = location.pathname.startsWith("/media");
     const blogRoute = location.pathname.startsWith("/blogs");
-    const threshold = mediaRoute ? 0 : (blogRoute ? 24 : (solidAt ?? (window.__NAV_SOLID_AT != null ? window.__NAV_SOLID_AT : window.innerHeight - 90)));
+    const mobileViewport = window.matchMedia("(max-width: 900px)").matches;
+    const threshold = mobileViewport || mediaRoute ? 24 : (blogRoute ? 24 : (solidAt ?? (window.__NAV_SOLID_AT != null ? window.__NAV_SOLID_AT : window.innerHeight - 90)));
     const onScroll = () => setSolid(window.scrollY > threshold);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });

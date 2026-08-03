@@ -2993,3 +2993,9 @@ body.nav-locked { overflow: hidden; }
 .blog-featured { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); }
 .blog-featured h2 { font-size: clamp(26px, 2.5vw, 40px); line-height: 1.14; text-wrap: balance; }
 @media (min-width: 901px) and (max-width: 1080px) { .blog-featured h2 { font-size: 24px; } }
+
+/* Projects page mobile filter cleanup. */
+@media (max-width: 640px) {
+  .pp-body .ptabs { border-bottom: 0; margin-bottom: 24px; }
+  .pp-body .ptab::after { bottom: 0; }
+}
