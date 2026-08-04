@@ -31,16 +31,16 @@ const SECTIONS = [
 ];
 
 const HIGHLIGHTS = [
-  { label: "Commercial Spaces", desc: "Premium workspaces designed for corporate growth.", icon: `${BASE}/icon-building.webp` },
-  { label: "Ample Amenities", desc: "Modern infrastructure, backup power and parking.", icon: `${BASE}/icon-amenities.webp` },
+  { label: "Commercial Spaces", desc: "For offices, banks, retail, health, wellness, food, IT/ITES and green industries.", icon: `${BASE}/icon-building.webp` },
+  { label: "Ample Amenities", desc: "Passenger and freight lifts, security, parking, backup power and facility management.", icon: `${BASE}/icon-amenities.webp` },
   { label: "Prime Location", desc: "Centrally located in Kolkata, 1.2 km off E.M. Bypass.", icon: `${BASE}/icon-location.webp` },
-  { label: "Value Package", desc: "Office spaces starting at competitive pricing.", icon: `${BASE}/icon-value.webp` },
+  { label: "Value Package", desc: "Office spaces from 652 sq. ft. at Rs. 30 lakhs, with floor plates up to 33,000 sq. ft.", icon: `${BASE}/icon-value.webp` },
 ];
 
 const SPECIFICATIONS = [
   {
     title: "Commercial & Business Hub",
-    desc: "Designed for a diverse mix of business activities including offices, banks, retail, health & wellness centers, food, IT/ITES, and green industries. Clear floor height of 3.4 metres with a hypermarket on the ground floor.",
+    desc: "Designed for offices, banks, retail, health and wellness centres, food, IT/ITES and green industries. A hypermarket on the ground floor supports the daily needs of the neighbouring populace.",
     image: `${BASE}/hero-1.webp`
   },
   {
@@ -50,25 +50,30 @@ const SPECIFICATIONS = [
   },
   {
     title: "Infrastructure & Logistics",
-    desc: "Modern passenger and freight lifts, 24x7 security with CCTV surveillance, intercom facility, 100% power backup, water treatment plant, facility management system, fire alarm & suppression, and dedicated truck bay for unloading goods.",
+    desc: "Passenger and freight lifts, CCTV cameras, intercom, power backup, water treatment, open and multi-level parking, 24 x 7 security, facility management, a 3.4 m clear floor height, fire alarm and a truck bay for unloading goods.",
     image: `${BASE}/hero-2.webp`
   },
   {
     title: "Flexible Workspaces & Value Pricing",
     desc: "Office spaces starting from 652 sq. ft. area at Rs 30 lakhs only, with single floor plate availability extending up to 33,000 sq. ft.",
     image: `${BASE}/hero-1.webp`
+  },
+  {
+    title: "Project Details",
+    desc: "Site Address: 54/10, D.C. Dey Road, Near ITC Sonar, off E.M. Bypass, Kolkata – 700015. WBRERA Number: HIRA/A/NOR/2018/000035.",
+    image: `${BASE}/location-map.webp`
   }
 ];
 
 const AMENITIES = [
   { name: "24 x 7 Security", icon: `${BASE}/amenity-security.webp` },
-  { name: "Open & Multi-Level Parking", icon: `${BASE}/amenity-parking.webp` },
+  { name: "Open & Multi-Level Car Parking", icon: `${BASE}/amenity-parking.webp` },
   { name: "Intercom Facility", icon: `${BASE}/amenity-intercom.webp` },
   { name: "CCTV Cameras", icon: `${BASE}/amenity-cctv.webp` },
   { name: "Water Treatment Plant", icon: `${BASE}/amenity-water.webp` },
-  { name: "Power Back Up Services", icon: `${BASE}/amenity-generator.webp` },
+  { name: "Power Back Up Management Services", icon: `${BASE}/amenity-generator.webp` },
   { name: "Fire Alarm & Suppression", icon: `${BASE}/amenity-fire.webp` },
-  { name: "Min 3.4m Floor Height", icon: `${BASE}/amenity-floor-height.webp` },
+  { name: "Floor Height of min 3.4 mtrs", icon: `${BASE}/amenity-floor-height.webp` },
 ];
 
 const FLOOR_PLANS = [
@@ -116,7 +121,7 @@ export const ACTIVE_BUSINESS_PARK_FALLBACK = {
   galleryImages: GALLERY_IMAGES,
   brochureUrl: `${BASE}/brochure.pdf`,
   metaTitle: "Active Business Park - Ruchi Realty",
-  metaDescription: "Discover Active Business Park: Prime commercial spaces in a strategic location. Modern amenities. Reach new heights for your business!"
+  metaDescription: "Active Business Park is a commercial development near ITC Sonar in Kolkata, 1.2 km off E.M. Bypass, with office spaces from 652 sq. ft. and business-ready amenities."
 };
 
 function HeroSection({ subpage, onBrochureClick }) {

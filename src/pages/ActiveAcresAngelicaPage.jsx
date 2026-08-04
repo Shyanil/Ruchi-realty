@@ -91,108 +91,98 @@ function extractSpecsAndCustomData(specifications) {
   };
 }
 
+const ACTIVE_ACRES_ASSET_BASE = "/projects/active-acres-angelica";
+
 export const ACTIVE_ACRES_ANGELICA_FALLBACK = {
-  heroTitle: "Angelica Active Acres",
-  heroTagline: "Spread over 16.38 Acres with 6 towers of G+22 comprising 1050 Apartments",
-  heroLogo: "assets/projects/active-acres-angelica/logo.webp",
-  heroBg: "assets/projects/active-acres-angelica/hero.webp",
-  heroMobileUrl: "assets/projects/active-acres-angelica/hero-sm.webp",
-  companyLogoUrl: "assets/projects/active-acres-angelica/ruchi_logo.webp",
-  locationMapUrl: "assets/projects/active-acres-angelica/location-map.webp",
-  gmbGoogleIconUrl: "assets/projects/active-acres-angelica/g-icon.webp",
-  gmbStarIconUrl: "assets/projects/active-acres-angelica/5-star.webp",
+  heroTitle: "Angelica - Active Acres",
+  heroTagline: "Starting from Rs. 2.30 Cr.*",
+  heroLogo: `${ACTIVE_ACRES_ASSET_BASE}/logo.webp`,
+  heroBg: `${ACTIVE_ACRES_ASSET_BASE}/hero.webp`,
+  heroMobileUrl: `${ACTIVE_ACRES_ASSET_BASE}/hero-mobile.webp`,
+  companyLogoUrl: `${ACTIVE_ACRES_ASSET_BASE}/ruchi-logo.webp`,
+  locationMapUrl: `${ACTIVE_ACRES_ASSET_BASE}/location.webp`,
+  gmbGoogleIconUrl: `${ACTIVE_ACRES_ASSET_BASE}/g-icon.webp`,
+  gmbStarIconUrl: `${ACTIVE_ACRES_ASSET_BASE}/5-star.webp`,
   overviewParagraphs: [
-    "One of the largest condominium projects of Kolkata, Active Acres, is spread over 16.38 Acres. It has 6 towers of G+22 comprising of 1050 Apartments, containing a mix of 2, 3 & 4 BHK apartments with Penthouses. The idea behind ‘Active Acres’ has been to provide the residents with a superior quality of life. Architects at Agarwal and Agarwal have utilized all their skill and innovation to bring to life the dream of a revolutionary residential complex.",
-    "Located strategically behind JW Marriott in Tangra, Kolkata, Active Acres Angelica offers unmatched connectivity to E.M. Bypass, Salt Lake Sector V, Park Street, top schools, and international healthcare facilities. With over 6 acres of dedicated outdoor recreational space and world-class clubhouse amenities, it provides an elevated lifestyle for discerning homeowners."
+    "One of the largest condominium projects of Kolkata, Active Acres, is spread over 16.38 acres. It has 6 towers of G+22 comprising 1,050 apartments, with a mix of 2, 3 and 4 BHK homes and penthouses. The idea behind Active Acres has been to provide residents with a superior quality of life.",
+    "Architects at Agarwal and Agarwal have used their skill and innovation to bring to life a revolutionary residential complex. Angelica is located behind JW Marriott, Kolkata, with six acres of outdoor space for activity, sports, fun and relaxation."
   ],
   overviewHighlights: [
-    { label: "Possession", desc: "September' 2026", icon: "location" },
+    { label: "Possession", desc: "September 2026", icon: "location" },
     { label: "Location", desc: "Behind JW Marriott, Kolkata", icon: "home" },
-    { label: "Flats Type", desc: "4 BHK 2.30 Cr* onwards", icon: "amenities" },
-    { label: "Outdoor Space", desc: "6 Acres", icon: "security" },
-    { label: "Total Land Area", desc: "16.38 Acres", icon: "size" },
-    { label: "Towers & Height", desc: "6 Towers (G+22)", icon: "infrastructure" },
-    { label: "Total Units", desc: "1050 Apartments", icon: "home" },
-    { label: "Architects", desc: "Agarwal & Agarwal", icon: "infrastructure" }
+    { label: "Flats Type", desc: "4 BHK from Rs. 2.30 Cr.*", icon: "amenities" },
+    { label: "Outdoor Space", desc: "6 Acres", icon: "security" }
   ],
   amenities: [
-    { name: "Gymnasium", icon: "gym" },
-    { name: "Library", icon: "library" },
-    { name: "Table Tennis", icon: "table-tennis" },
-    { name: "Meditation Room", icon: "meditation" },
-    { name: "Lounge", icon: "lounge" },
-    { name: "Squash Courts", icon: "squash" },
-    { name: "Pool Table", icon: "pool" },
-    { name: "Air Hockey", icon: "hockey" },
-    { name: "Football Ground", icon: "football" },
-    { name: "Play Zone – Billiards Table", icon: "billiards" }
+    { name: "Gymnasium", icon: `${ACTIVE_ACRES_ASSET_BASE}/amenities/amenity-1.webp` },
+    { name: "Library", icon: `${ACTIVE_ACRES_ASSET_BASE}/amenities/amenity-2.webp` },
+    { name: "Table Tennis", icon: `${ACTIVE_ACRES_ASSET_BASE}/amenities/amenity-3.webp` },
+    { name: "Meditation Room", icon: `${ACTIVE_ACRES_ASSET_BASE}/amenities/amenity-4.webp` },
+    { name: "Lounge", icon: `${ACTIVE_ACRES_ASSET_BASE}/amenities/amenity-5.webp` },
+    { name: "Squash Courts", icon: `${ACTIVE_ACRES_ASSET_BASE}/amenities/amenity-6.webp` },
+    { name: "Pool Table", icon: `${ACTIVE_ACRES_ASSET_BASE}/amenities/amenity-7.webp` },
+    { name: "Air Hockey", icon: `${ACTIVE_ACRES_ASSET_BASE}/amenities/amenity-8.webp` },
+    { name: "Football Ground", icon: `${ACTIVE_ACRES_ASSET_BASE}/amenities/amenity-9.webp` },
+    { name: "Play Zone - Billiards Table", icon: `${ACTIVE_ACRES_ASSET_BASE}/amenities/amenity-10.webp` }
   ],
   specifications: [
-    {
-      title: "High Speed Elevators & Infrastructure",
-      desc: "Equipped with high-speed passenger elevators, 24 Hours treated water supply, 100% power backup for common areas, underground electric cabling, concrete and interlocking pebble roads, and advanced fire fighting arrangements.",
-      image: "assets/projects/active-acres-angelica/gallery-1.webp"
-    },
-    {
-      title: "Round-the-Clock CCTV & Safety",
-      desc: "Gated residential community with 24/7 security personnel, comprehensive CCTV surveillance, and intercom facility connecting every apartment to the main security entrance.",
-      image: "assets/projects/active-acres-angelica/gallery-2.webp"
-    },
-    {
-      title: "Sprawling 6-Acre Outdoor Recreation",
-      desc: "Features 6 acres of landscaped outdoor spaces including manicured lawns, football ground, play zones, paved walking tracks, and peaceful seating areas.",
-      image: "assets/projects/active-acres-angelica/gallery-3.webp"
-    },
-    {
-      title: "Grand Condominium Architecture",
-      desc: "Designed by renowned architects Agarwal & Agarwal across 16.38 acres featuring 6 towers of G+22 with 1050 apartments, offering a blend of 2, 3 & 4 BHK apartments and penthouses.",
-      image: "assets/projects/active-acres-angelica/gallery-4.webp"
-    }
+    { title: "High Speed Elevators", desc: "High-speed elevators and 24 hours treated water supply support comfortable everyday living.", image: `${ACTIVE_ACRES_ASSET_BASE}/gallery/gallery-1.webp` },
+    { title: "Safety & Connectivity", desc: "CCTV surveillance, intercom facility, underground electric cabling and fire-fighting arrangements provide reliable support.", image: `${ACTIVE_ACRES_ASSET_BASE}/gallery/gallery-2.webp` },
+    { title: "Infrastructure", desc: "Concrete and interlocking pebble roads, plus power back-up for common areas, create a well-planned residential environment.", image: `${ACTIVE_ACRES_ASSET_BASE}/gallery/gallery-3.webp` },
+    { title: "Project Details", desc: "HIRA Registration No: HIRA/P/KOL/2020/000778. Contact: 033 6902 9144 | info@ruchirealty.com.", image: `${ACTIVE_ACRES_ASSET_BASE}/gallery/gallery-4.webp` }
   ],
   floorPlans: [
-    { title: "Master Plan", desc: "assets/projects/active-acres-angelica/location-map.webp" },
-    { title: "4 BHK Unit Plan", desc: "assets/projects/active-acres-angelica/location-map.webp" },
-    { title: "3 BHK Unit Plan", desc: "assets/projects/active-acres-angelica/location-map.webp" }
+    { title: "Master Plan 1", desc: `${ACTIVE_ACRES_ASSET_BASE}/plans/master-1.webp` },
+    { title: "Master Plan 2", desc: `${ACTIVE_ACRES_ASSET_BASE}/plans/master-2.webp` },
+    { title: "Master Plan 3", desc: `${ACTIVE_ACRES_ASSET_BASE}/plans/master-3.webp` },
+    { title: "4 BHK Plan 1", desc: `${ACTIVE_ACRES_ASSET_BASE}/plans/4bhk-1.webp` },
+    { title: "4 BHK Plan 2", desc: `${ACTIVE_ACRES_ASSET_BASE}/plans/4bhk-2.webp` },
+    { title: "3 BHK Plan 1", desc: `${ACTIVE_ACRES_ASSET_BASE}/plans/3bhk-1.webp` },
+    { title: "3 BHK Plan 2", desc: `${ACTIVE_ACRES_ASSET_BASE}/plans/3bhk-2.webp` },
+    { title: "3 BHK Plan 3", desc: `${ACTIVE_ACRES_ASSET_BASE}/plans/3bhk-3.webp` },
+    { title: "3 BHK Plan 4", desc: `${ACTIVE_ACRES_ASSET_BASE}/plans/3bhk-4.webp` },
+    { title: "2 BHK Plan 1", desc: `${ACTIVE_ACRES_ASSET_BASE}/plans/2bhk-1.webp` },
+    { title: "2 BHK Plan 2", desc: `${ACTIVE_ACRES_ASSET_BASE}/plans/2bhk-2.webp` },
+    { title: "2 BHK Plan 3", desc: `${ACTIVE_ACRES_ASSET_BASE}/plans/2bhk-3.webp` },
+    { title: "2 BHK Plan 4", desc: `${ACTIVE_ACRES_ASSET_BASE}/plans/2bhk-4.webp` },
+    { title: "2 BHK Plan 5", desc: `${ACTIVE_ACRES_ASSET_BASE}/plans/2bhk-5.webp` }
   ],
-  locationImage: "assets/projects/active-acres-angelica/location-map.webp",
+  locationImage: `${ACTIVE_ACRES_ASSET_BASE}/location.webp`,
   locationMapEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3684.636603099951!2d88.38883597603706!3d22.555291233633633!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02768f51a44c79%3A0xe5a13318281cb9f2!2sActive%20Acres!5e0!3m2!1sen!2sin!4v1691752959217!5m2!1sen!2sin",
   locationDestinations: [
-    { name: "JW Marriott", dist: "1 km" },
-    { name: "Hospital", dist: "3 km" },
-    { name: "Well Known Schools", dist: "2 km" },
-    { name: "Mall", dist: "2 km" },
+    { name: "JW Marriott", dist: "1 km" }, { name: "Hospital", dist: "3 km" },
+    { name: "Well Known Schools", dist: "2 km" }, { name: "Mall", dist: "2 km" },
     { name: "International Airport", dist: "20 km" }
   ],
-  videoSection: {
-    enabled: true,
-    videoUrl: "https://youtu.be/GTYs3ZynAQU",
-    thumbnailUrl: "assets/projects/active-acres-angelica/video-thumbnail.webp"
-  },
+  videoSection: { enabled: true, videoUrl: "https://youtu.be/GTYs3ZynAQU", thumbnailUrl: `${ACTIVE_ACRES_ASSET_BASE}/testimonial-thumbnail.webp` },
   gmbReviews: {
-    enabled: true,
-    googleIconUrl: "assets/projects/active-acres-angelica/g-icon.webp",
-    starIconUrl: "assets/projects/active-acres-angelica/5-star.webp",
+    enabled: true, googleIconUrl: `${ACTIVE_ACRES_ASSET_BASE}/g-icon.webp`, starIconUrl: `${ACTIVE_ACRES_ASSET_BASE}/5-star.webp`,
     reviews: [
-      { author: "Ramesh Kumar", rating: 5, text: "Excellent residential tower inside Active Acres. The construction quality is top-notch, and the amenities like the library and table tennis are very well maintained. Extremely peaceful environment.", time: "1 month ago" },
-      { author: "Ananya Sen", rating: 5, text: "Beautiful landscape gardens and wide roads. The new Angelica tower has a great location in Tangra, Kolkata, with very good connectivity to IT hubs and E.M. Bypass.", time: "2 weeks ago" },
-      { author: "Debabrata Bose", rating: 5, text: "The layout of the apartment is very spacious with plenty of natural light and ventilation. Very satisfied with the Ruchi Realty team and their customer service.", time: "3 months ago" }
+      { author: "Jyotirmoy Hajra", avatar: `${ACTIVE_ACRES_ASSET_BASE}/reviews/user-1.webp`, rating: 5, time: "7 years ago", text: "One of the largest condominium projects of Kolkata, Active Acres is spread over 16.38 acres. Its six towers offer 2, 3 and 4 BHK apartments and penthouses, with a focus on activity, outdoor sports, fun and relaxation." },
+      { author: "MD FAIYAZ", avatar: `${ACTIVE_ACRES_ASSET_BASE}/reviews/user-2.webp`, rating: 5, time: "7 months ago", text: "Great location and connectivity. The society is great to live in with all amenities, huge indoor and outdoor sports activities, and six acres of land." },
+      { author: "Shristy Ranka", avatar: `${ACTIVE_ACRES_ASSET_BASE}/reviews/user-3.webp`, rating: 5, time: "7 months ago", text: "One of the best projects in Kolkata, with good connectivity. Schools, hospitals and markets are very close to the project." },
+      { author: "Sandip Banerjee", avatar: `${ACTIVE_ACRES_ASSET_BASE}/reviews/user-4.webp`, rating: 5, time: "a year ago", text: "An extraordinary project in central Kolkata with six acres of open green space, big trees, football, cricket, tennis and basketball, closely connected with the city and airport." }
     ]
   },
   galleryImages: [
-    { src: "assets/projects/active-acres-angelica/gallery-1.webp", alt: "Angelica Exterior Perspective" },
-    { src: "assets/projects/active-acres-angelica/gallery-2.webp", alt: "Angelica Entrance Lobby" },
-    { src: "assets/projects/active-acres-angelica/gallery-3.webp", alt: "Angelica Landscape View" },
-    { src: "assets/projects/active-acres-angelica/gallery-4.webp", alt: "Angelica Clubhouse Interiors" },
-    { src: "assets/projects/active-acres-angelica/gallery-5.webp", alt: "Angelica Show Flat Bedroom" },
-    { src: "assets/projects/active-acres-angelica/gallery-6.webp", alt: "Angelica Show Flat Living Room" }
+    ...Array.from({ length: 6 }, (_, index) => ({
+      src: `${ACTIVE_ACRES_ASSET_BASE}/gallery/gallery-${index + 1}.webp`,
+      largeSrc: `${ACTIVE_ACRES_ASSET_BASE}/gallery/gallery-${index + 1}-large.webp`,
+      alt: `Angelica Active Acres gallery image ${index + 1}`
+    })),
+    ...Array.from({ length: 10 }, (_, index) => ({
+      src: `${ACTIVE_ACRES_ASSET_BASE}/amenities/amenity-${index + 1}.webp`,
+      largeSrc: `${ACTIVE_ACRES_ASSET_BASE}/amenities/amenity-${index + 1}.webp`,
+      alt: `Active Acres Angelica amenity ${index + 1}`
+    }))
   ],
-  brochureUrl: "assets/projects/active-acres-angelica/brochure.pdf",
-  metaTitle: "Active Acres Angelica | Premium 3 & 4 BHK Apartments in Kolkata | Ruchi Realty",
-  metaDescription: "Explore Active Acres Angelica by Ruchi Realty. Located behind JW Marriott, Kolkata, this premium residential project offers luxury 3 BHK and 4 BHK apartments with 6 acres of outdoor space."
+  brochureUrl: "",
+  metaTitle: "Angelica - Active Acres | 4 BHK Apartments in Kolkata | Ruchi Realty",
+  metaDescription: "Angelica at Active Acres offers 4 BHK residences from Rs. 2.30 Cr.* behind JW Marriott, Kolkata, with six acres of outdoor space and a September 2026 possession timeline."
 };
 
 function HeroSection({ subpage, onBrochureClick }) {
-  return <ProjectSplitHero subpage={subpage} title="Active Acres Angelica" location="Kolkata" type="Residential" slug="active-acres-angelica" onBrochure={onBrochureClick} />;
+  return <ProjectSplitHero subpage={subpage} title="Angelica - Active Acres" location="Behind JW Marriott, Kolkata" type="Residential" slug="active-acres-angelica" onBrochure={onBrochureClick} />;
 }
 
 function StickyNav({ subpage }) {
@@ -204,7 +194,7 @@ function StickyNav({ subpage }) {
     subpage.amenities?.length > 0 && { id: "amenities", label: "Amenities" },
     subpage.floorPlans?.length > 0 && { id: "floor-plans", label: "Floor Plans" },
     subpage.galleryImages?.length > 0 && { id: "gallery", label: "Gallery" },
-    (subpage.videoSection?.enabled && subpage.videoSection?.videoUrl) && { id: "walkthrough", label: "Walkthrough" },
+    (subpage.videoSection?.enabled && subpage.videoSection?.videoUrl) && { id: "walkthrough", label: "Testimonials" },
     (subpage.gmbReviews?.enabled && subpage.gmbReviews?.reviews?.length > 0) && { id: "reviews", label: "Reviews" },
     subpage.locationImage && { id: "location", label: "Location" }
   ].filter(Boolean);
@@ -536,7 +526,7 @@ function GallerySection({ subpage }) {
             </button>
           )}
           <div className="project-gallery-lightbox__image" onClick={(e) => e.stopPropagation()}>
-            <img src={images[lightboxIndex].src} alt={images[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            <img src={images[lightboxIndex].largeSrc || images[lightboxIndex].src} alt={images[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain", background: "transparent" }} />
             <span>
               {String(lightboxIndex + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
             </span>
@@ -569,12 +559,12 @@ function WalkthroughSection({ subpage }) {
       <div className="rr-wrap">
         <Reveal>
           <div className="osc-walkthrough__header" style={{ marginBottom: "40px" }}>
-            <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>WALKTHROUGH</div>
+            <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>TESTIMONIALS</div>
             <h2 className="osc-section__title">
-              Angelica Video Walkthrough<br /><span className="rr-grad">experience the residences</span>
+              Hear from our community<br /><span className="rr-grad">at Active Acres Angelica</span>
             </h2>
             <p className="osc-walkthrough__lead" style={{ color: "rgba(35,31,32,0.62)" }}>
-              Take a virtual walkthrough of our project to explore premium finishes, layout, and landscaping.
+              Watch a testimonial from the Active Acres community and discover the experience of living here.
             </p>
           </div>
         </Reveal>
@@ -584,7 +574,7 @@ function WalkthroughSection({ subpage }) {
               video.type === "youtube" ? (
                 <iframe
                   src={video.embedUrl}
-                  title="Angelica Walkthrough Video"
+                  title="Active Acres testimonial video"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />
@@ -592,8 +582,8 @@ function WalkthroughSection({ subpage }) {
                 <video src={video.url} controls autoPlay style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               )
             ) : (
-              <button type="button" className="osc-walkthrough__play-btn" onClick={() => setPlaying(true)} aria-label="Play walkthrough video">
-                <img src={thumbnail || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80"} alt="Walkthrough thumbnail" loading="lazy" />
+              <button type="button" className="osc-walkthrough__play-btn" onClick={() => setPlaying(true)} aria-label="Play testimonial video">
+                <img src={thumbnail || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80"} alt="Active Acres testimonial video thumbnail" loading="lazy" />
                 <span className="osc-walkthrough__play-icon">
                   <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="10" />
@@ -640,9 +630,13 @@ function GmbReviewsSection({ subpage }) {
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
                   <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                    <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "var(--rr-indigo)", color: "#fff", display: "grid", placeItems: "center", fontWeight: "600", fontSize: "16px" }}>
-                      {r.author ? r.author.charAt(0) : "G"}
-                    </div>
+                    {r.avatar ? (
+                      <img src={r.avatar} alt="" style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} />
+                    ) : (
+                      <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "var(--rr-indigo)", color: "#fff", display: "grid", placeItems: "center", fontWeight: "600", fontSize: "16px" }}>
+                        {r.author ? r.author.charAt(0) : "G"}
+                      </div>
+                    )}
                     <div>
                       <h4 style={{ fontSize: "14px", fontWeight: "600", color: "var(--rr-ink)" }}>{r.author}</h4>
                       <span style={{ fontSize: "12px", color: "rgba(20,18,26,0.5)" }}>{r.time || "Recent"}</span>
@@ -838,7 +832,7 @@ export default function ActiveAcresAngelicaPage() {
         if (!active) return;
         
         const project = (projects || []).find(
-          (p) => p.url === "/active-acres-angelica" || p.url === "/projects/active-acres-angelica" || p.title === "Active Acres Angelica" || p.slug === "active-acres-angelica"
+          (p) => p.url === "/active-acres-angelica" || p.url === "/projects/active-acres-angelica" || p.title === "Active Acres Angelica" || p.title === "Active Acres" || p.slug === "active-acres-angelica" || p.slug === "active-acres-kolkata"
         );
         
         if (project) {

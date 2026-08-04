@@ -18,7 +18,7 @@ function projectUrl(p) {
   const name = String(p?.name || p?.title || "").toLowerCase().trim();
   const city = String(p?.city || p?.location || "").toLowerCase();
   if (name === "active acres" && city.includes("kolkata")) {
-    return "/projects";
+    return "/projects/active-acres-angelica";
   }
   if (name.includes("one victoria") && city.includes("kolkata")) {
     return "/projects/one-victoria-new-town";
@@ -189,7 +189,7 @@ export function ProjectsSection() {
       <div className="rr-wrap">
         <Reveal>
           <div className="sec-head sec-head--dark">
-            <div>
+            <div className="projects__intro">
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>Explore our projects</div>
               <h2>Find a project in the city<br /><span className="rr-grad">that matters to you</span></h2>
             </div>

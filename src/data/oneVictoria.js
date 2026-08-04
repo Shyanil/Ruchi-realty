@@ -2,7 +2,7 @@ const BASE = "/projects/one-victoria-new-town";
 
 export const ONE_VICTORIA_FALLBACK = {
   heroTitle: "One Victoria",
-  heroTagline: "Residential & Retail / Apartment Complex",
+  heroTagline: "Starting from Rs. 3 Cr.*",
   heroLogo: `${BASE}/project-logo.webp`,
   heroBg: `${BASE}/hero.webp`,
   overviewParagraphs: [
@@ -42,6 +42,7 @@ export const ONE_VICTORIA_FALLBACK = {
       { title: "Typical Floor Plan", desc: `${BASE}/plans/typical-floor-plan.webp` },
       { title: "Star Gazing Deck", desc: `${BASE}/plans/star-gazing-deck.webp` },
       { title: "Podium Plan", desc: `${BASE}/plans/podium-plan.webp` },
+      { title: "Site Plan", desc: `${BASE}/plans/site-plan.webp` },
     ]) },
     { title: "__video_section__", desc: JSON.stringify({ enabled: false, title: "Project Walkthrough", videoUrl: "", thumbnailUrl: "" }) },
   ],
@@ -61,6 +62,7 @@ export const ONE_VICTORIA_FALLBACK = {
   galleryImages: [
     ...Array.from({ length: 6 }, (_, index) => ({
       src: `${BASE}/gallery/gallery-${index + 1}.webp`,
+      largeSrc: `${BASE}/gallery/gallery-${index + 1}-large.jpg`,
       alt: `One Victoria gallery image ${index + 1}`,
       category: "Gallery",
     })),

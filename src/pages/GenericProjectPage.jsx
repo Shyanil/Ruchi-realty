@@ -505,11 +505,12 @@ function parseJson(value, fallback) {
 }
 
 function extractCustomSpecs(specifications = []) {
-  const custom = { specifications: [], floorPlans: [], constructionUpdates: [], videoSection: null, heroMedia: null, heroMobileUrl: "", locationMapUrl: "" };
+  const custom = { specifications: [], floorPlans: [], constructionUpdates: [], videoSection: null, gmbReviews: null, heroMedia: null, heroMobileUrl: "", locationMapUrl: "" };
   specifications.forEach((item) => {
     if (item.title === "__floor_plans__") custom.floorPlans = parseJson(item.desc, []);
     else if (item.title === "__construction_updates__") custom.constructionUpdates = parseJson(item.desc, []);
     else if (item.title === "__video_section__") custom.videoSection = parseJson(item.desc, null);
+    else if (item.title === "__gmb_reviews__") custom.gmbReviews = parseJson(item.desc, null);
     else if (item.title === "__hero_media__") custom.heroMedia = parseJson(item.desc, null);
     else if (item.title === "__hero_mobile_url__") custom.heroMobileUrl = item.desc || "";
     else if (item.title === "__location_map_url__") custom.locationMapUrl = item.desc || "";
@@ -549,18 +550,22 @@ function highlightIconSrc(icon, index) {
 function normalizeProjectSubpage(project, sp, fallbackSp = null) {
   const custom = extractCustomSpecs(sp?.specifications || []);
   const fallbackCustom = extractCustomSpecs(fallbackSp?.specifications || []);
-  const title = sp?.heroTitle || project?.title || project?.name || "Project";
+  const isAngelica = project?.slug === "active-acres-angelica" || fallbackSp?.heroTitle === "Angelica - Active Acres";
+  const isSaatvikGreen = project?.slug === "saatvikgreen-indore" || fallbackSp?.heroTitle === "Saatvik Green";
+  const title = (isAngelica ? fallbackSp?.heroTitle : "") || sp?.heroTitle || project?.title || project?.name || "Project";
   const description = project?.description || "Explore this Ruchi Realty project with thoughtfully planned spaces, dependable execution, and a location selected for everyday convenience.";
-  const videoSection = custom.videoSection || {};
-  const legacyVideoUrl = (videoSection.videoUrl || "").trim() || (sp?.walkthroughVideoId || "").trim();
-  const videoItems = Array.isArray(sp?.videos) && sp.videos.length ? sp.videos : legacyVideoUrl ? [{ ...videoSection, videoUrl: legacyVideoUrl }] : [];
+  const videoSection = custom.videoSection || sp?.videoSection || fallbackCustom.videoSection || fallbackSp?.videoSection || {};
+  const legacyVideoUrl = (videoSection.videoUrl || "").trim() || (sp?.walkthroughVideoId || "").trim() || (fallbackSp?.walkthroughVideoId || "").trim();
   const fallbackVideoItems = Array.isArray(fallbackSp?.videos) && fallbackSp.videos.length ? fallbackSp.videos : [];
+  const videoItems = Array.isArray(sp?.videos) && sp.videos.length ? sp.videos : fallbackVideoItems.length ? fallbackVideoItems : legacyVideoUrl ? [{ ...videoSection, videoUrl: legacyVideoUrl }] : [];
   const videos = videoItems
     .filter((item) => item?.videoUrl || item?.url)
-    .map((item, index) => ({ title: item.title || `Project video ${index + 1}`, videoUrl: videoEmbedUrl(item.videoUrl || item.url), thumbnailUrl: assetUrl(item.thumbnailUrl || item.poster || ""), thumbnailFallbackUrl: assetUrl(fallbackVideoItems[index]?.thumbnailUrl || fallbackVideoItems[index]?.poster || "") }));
+    .map((item, index) => ({ title: item.title || (isAngelica ? "Testimonials" : `Project video ${index + 1}`), videoUrl: videoEmbedUrl(item.videoUrl || item.url), thumbnailUrl: assetUrl(item.thumbnailUrl || item.poster || ""), thumbnailFallbackUrl: assetUrl(fallbackVideoItems[index]?.thumbnailUrl || fallbackVideoItems[index]?.poster || "") }));
+  const reviewsSource = custom.gmbReviews || sp?.gmbReviews || fallbackCustom.gmbReviews || fallbackSp?.gmbReviews || null;
+  const gmbReviews = reviewsSource?.enabled && Array.isArray(reviewsSource.reviews) ? { ...reviewsSource, googleIconUrl: assetUrl(reviewsSource.googleIconUrl || ""), starIconUrl: assetUrl(reviewsSource.starIconUrl || ""), reviews: reviewsSource.reviews.filter((review) => review?.author || review?.text).map((review) => ({ ...review, avatar: assetUrl(review.avatar || review.image || "") })) } : null;
   const clean = (items, predicate) => (Array.isArray(items) ? items : []).filter(predicate);
   const normalizeImages = (items, fallbackItems = []) => clean(items, (img) => img?.src || img?.image)
-    .map((img, index) => ({ ...img, alt: img.alt || fallbackItems[index]?.alt || "", category: img.category || fallbackItems[index]?.category || "", src: assetUrl(img.src || img.image), fallbackSrc: assetUrl(fallbackItems[index]?.src || fallbackItems[index]?.image || "") }));
+    .map((img, index) => ({ ...img, alt: img.alt || fallbackItems[index]?.alt || "", category: img.category || fallbackItems[index]?.category || "", src: assetUrl(img.src || img.image), largeSrc: assetUrl(img.largeSrc || img.lightboxSrc || img.fullSrc || fallbackItems[index]?.largeSrc || ""), fallbackSrc: assetUrl(fallbackItems[index]?.src || fallbackItems[index]?.image || "") }));
   const remoteGalleryImages = normalizeImages(sp?.galleryImages || [], fallbackSp?.galleryImages || []);
   const fallbackGalleryImages = normalizeImages(fallbackSp?.galleryImages || []);
   const rawGalleryImages = [...remoteGalleryImages, ...fallbackGalleryImages].filter((img, index, items) => items.findIndex((candidate) => candidate.src === img.src || (candidate.alt && candidate.alt === img.alt)) === index);
@@ -571,14 +576,14 @@ function normalizeProjectSubpage(project, sp, fallbackSp = null) {
   return {
     title,
     type: project?.type || "Residential",
-    slug: project?.slug || "",
+    slug: project?.slug || (isAngelica ? "active-acres-angelica" : ""),
     location: project?.location || project?.city || "",
     tag: sp?.heroTagline || project?.tag || description,
-    heroLogo: project?.slug === "ruchi-lifescapes-indore-project" ? "/projects/ruchi-lifescapes-indore-project/logo.webp" : assetUrl(sp?.heroLogo || ""),
-    heroBg: assetUrl(sp?.heroBg || project?.image_url || project?.img || "assets/projects/oscar-billionaires.webp"),
+    heroLogo: project?.slug === "ruchi-lifescapes-indore-project" ? "/projects/ruchi-lifescapes-indore-project/logo.webp" : assetUrl((isAngelica ? fallbackSp?.heroLogo : "") || sp?.heroLogo || ""),
+    heroBg: assetUrl((isAngelica ? fallbackSp?.heroBg : "") || sp?.heroBg || project?.image_url || project?.img || "assets/projects/oscar-billionaires.webp"),
     heroFallbackLogo: assetUrl(fallbackSp?.heroLogo || ""),
     heroFallbackBg: assetUrl(fallbackSp?.heroBg || project?.img || "assets/projects/oscar-billionaires.webp"),
-    heroMobileUrl: assetUrl(custom.heroMobileUrl || sp?.heroMobileUrl || ""),
+    heroMobileUrl: assetUrl((isAngelica ? fallbackSp?.heroMobileUrl : "") || custom.heroMobileUrl || sp?.heroMobileUrl || ""),
     heroImagePosition: sp?.heroImagePosition || "center center",
     heroImageFit: ["cover", "contain"].includes(sp?.heroImageFit) ? sp.heroImageFit : "cover",
     heroMedia: custom.heroMedia,
@@ -592,10 +597,11 @@ function normalizeProjectSubpage(project, sp, fallbackSp = null) {
     floorPlans: (custom.floorPlans?.length ? custom.floorPlans : (sp?.floorPlans || [])).filter((plan) => plan?.desc || plan?.image).map((plan, index) => { const fallbackPlans = fallbackCustom.floorPlans?.length ? fallbackCustom.floorPlans : (fallbackSp?.floorPlans || []); return { ...plan, desc: assetUrl(plan.desc || plan.image), fallbackDesc: assetUrl(fallbackPlans[index]?.desc || fallbackPlans[index]?.image || "") }; }),
     videos,
     videoSection: videos[0] || { title: "", videoUrl: "", thumbnailUrl: "" },
+    gmbReviews,
     locationImage: assetUrl(sp?.locationImage || custom.locationMapUrl || ""),
     locationFallbackImage: assetUrl(fallbackSp?.locationImage || fallbackCustom.locationMapUrl || ""),
-    locationMapEmbed: embedSrc(sp?.locationMapEmbed || ""),
-    locationDestinations: Array.isArray(sp?.locationDestinations) ? sp.locationDestinations : [],
+    locationMapEmbed: embedSrc((isSaatvikGreen ? fallbackSp?.locationMapEmbed : "") || sp?.locationMapEmbed || ""),
+    locationDestinations: isSaatvikGreen ? (fallbackSp?.locationDestinations || []) : (Array.isArray(sp?.locationDestinations) ? sp.locationDestinations : []),
     galleryImages,
     constructionUpdates,
     brochureUrl: assetUrl(sp?.brochureUrl || ""),
@@ -655,7 +661,8 @@ function SectionNav({ data, visible = false }) {
 
       ["specifications", "Specifications", data.specifications?.length],
       ["amenities", "Amenities", data.amenities?.length],
-      ["walkthrough", "Walkthrough", data.videos?.length],
+      ["walkthrough", data.slug === "active-acres-angelica" ? "Testimonials" : "Walkthrough", data.videos?.length],
+      ["reviews", "Reviews", data.gmbReviews?.reviews?.length],
       ["gallery", "Gallery", data.galleryImages?.length],
       ["construction-updates", "Construction", data.constructionUpdates?.length],
       ["floor-plans", "Floor Plans", data.floorPlans?.length],
@@ -827,13 +834,23 @@ function ProjectAmenities({ amenities }) {
 function ProjectLocation({ data }) {
   const destinations=(data.locationDestinations||[]).filter(item=>item?.name);
   if (!data.locationImage&&!data.locationMapEmbed&&!destinations.length) return null;
-  return <section className="section-pad project-section project-location" id="location"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Location &amp; Connectivity</span><h2>A connected address,<br/><span className="rr-grad">close to what matters</span></h2><p className="project-section__description">See how this address keeps daily destinations and essential connections within easy reach.</p></div><div className="project-location__grid">{data.locationImage?<RImg className="project-location__image" src={data.locationImage} fallbackSrc={data.locationFallbackImage} alt={`${data.title} location map`} mono/>:null}<div className="project-location__content">{destinations.length?<div className="project-location__list">{destinations.map((item,index)=><div key={`${item.name}-${index}`}><span>{item.name}</span><strong>{item.dist||item.distance||"Nearby"}</strong></div>)}</div>:null}{data.locationMapEmbed?<iframe title={`${data.title} map`} src={data.locationMapEmbed} loading="lazy" referrerPolicy="no-referrer-when-downgrade"/>:null}</div></div></div></section>;
+  const mapVisual = data.locationImage ? <RImg className="project-location__image" src={data.locationImage} fallbackSrc={data.locationFallbackImage} alt={`${data.title} location map`} mono/> : data.locationMapEmbed ? <div className="project-location__image project-location__map"><iframe title={`${data.title} map`} src={data.locationMapEmbed} loading="lazy" referrerPolicy="no-referrer-when-downgrade"/></div> : null;
+  return <section className="section-pad project-section project-location" id="location"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Location &amp; Connectivity</span><h2>A connected address,<br/><span className="rr-grad">close to what matters</span></h2><p className="project-section__description">See how this address keeps daily destinations and essential connections within easy reach.</p></div><div className="project-location__grid">{mapVisual}<div className="project-location__content">{destinations.length?<div className="project-location__list">{destinations.map((item,index)=><div key={`${item.name}-${index}`}><span>{item.name}</span><strong>{item.dist||item.distance||"Nearby"}</strong></div>)}</div>:null}</div></div></div></section>;
 }
 
 function ProjectWalkthrough({ data }) {
-  const videos=data.videos||[];
+  const [playingIndex, setPlayingIndex] = useState(null);
+  const videos = data.videos || [];
+  const isTestimonial = data.slug === "active-acres-angelica";
   if (!videos.length) return null;
-  return <section className="section-pad project-section project-walkthrough" id="walkthrough"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">{videos.length>1?"Project Videos":"Walkthrough Video"}</span><h2>Explore the project<br/><span className="rr-grad">from wherever you are</span></h2><p className="project-section__description">Take a closer look at the spaces and details that define the project.</p></div><div className={`project-video-grid ${videos.length===1?"is-single":""}`}>{videos.map((video,index)=><article className="project-video-card" key={`${video.videoUrl}-${index}`}>{videos.length>1?<h3>{video.title}</h3>:null}<div className="project-walkthrough__frame">{video.thumbnailUrl?<RImg src={video.thumbnailUrl} fallbackSrc={video.thumbnailFallbackUrl} alt=""/>:null}<iframe title={video.title||`${data.title} walkthrough ${index+1}`} src={video.videoUrl} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen/></div></article>)}</div></div></section>;
+  return <section className="section-pad project-section project-walkthrough" id="walkthrough"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">{isTestimonial ? "Testimonials" : videos.length > 1 ? "Project Videos" : "Walkthrough Video"}</span><h2>{isTestimonial ? <>Hear from the community<br /><span className="rr-grad">at Active Acres Angelica</span></> : <>Explore the project<br /><span className="rr-grad">from wherever you are</span></>}</h2><p className="project-section__description">{isTestimonial ? "Watch the Active Acres Angelica testimonial and discover the experience of living in this community." : "Take a closer look at the spaces and details that define the project."}</p></div><div className={`project-video-grid ${videos.length === 1 ? "is-single" : ""}`}>{videos.map((video, index) => <article className="project-video-card" key={`${video.videoUrl}-${index}`}>{videos.length > 1 ? <h3>{video.title}</h3> : null}<div className="project-walkthrough__frame">{playingIndex === index ? <iframe title={video.title || `${data.title} video ${index + 1}`} src={video.videoUrl} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen /> : <button type="button" onClick={() => setPlayingIndex(index)} aria-label={`Play ${video.title || "project video"}`} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", padding: 0, border: 0, background: "#111", cursor: "pointer" }}><img src={video.thumbnailUrl || data.heroBg} alt={`${video.title || data.title} video thumbnail`} onError={(event) => { if (video.thumbnailFallbackUrl && event.currentTarget.src !== new URL(video.thumbnailFallbackUrl, window.location.origin).href) event.currentTarget.src = video.thumbnailFallbackUrl; }} style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }} /><span aria-hidden="true" style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", background: "linear-gradient(180deg,rgba(10,9,24,.08),rgba(10,9,24,.62))", color: "#fff", fontSize: "48px" }}>▶</span></button>}</div></article>)}</div></div></section>;
+}
+
+function ProjectTestimonials({ data }) {
+  const reviews = data.gmbReviews?.reviews || [];
+  if (!reviews.length) return null;
+  const stars = data.gmbReviews?.starIconUrl;
+  return <section className="section-pad project-section" id="reviews"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Google Reviews</span><h2>What residents say<br /><span className="rr-grad">about Active Acres</span></h2><p className="project-section__description">Feedback shared by the Active Acres community.</p></div><div className="gmb-reviews__grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "20px" }}>{reviews.map((review, index) => <article key={`${review.author}-${index}`} style={{ display: "flex", flexDirection: "column", gap: "18px", minHeight: "230px", padding: "24px", background: "#fff", border: "1px solid rgba(35,31,32,.1)", borderRadius: "12px", boxShadow: "0 10px 28px rgba(24,21,53,.06)" }}><div style={{ display: "flex", alignItems: "center", gap: "12px" }}>{review.avatar ? <img src={review.avatar} alt="" style={{ display: "block", width: "44px", height: "44px", borderRadius: "50%", objectFit: "cover" }} /> : <span style={{ display: "grid", placeItems: "center", width: "44px", height: "44px", borderRadius: "50%", background: "var(--rr-indigo)", color: "#fff" }}>{String(review.author || "G").charAt(0)}</span>}<div><strong style={{ display: "block", fontSize: "14px" }}>{review.author || "Google review"}</strong><small style={{ color: "rgba(35,31,32,.55)" }}>{review.time || "Recent"}</small></div></div>{stars ? <img src={stars} alt="5 stars" style={{ width: "100px", height: "auto", objectFit: "contain", objectPosition: "left" }} /> : null}<p style={{ margin: 0, color: "rgba(35,31,32,.7)", lineHeight: 1.65, fontSize: "14px" }}>“{review.text}”</p></article>)}</div></div></section>;
 }
 
 function ProjectFaq({ data }) {
@@ -854,7 +871,7 @@ function ProjectGallery({ data, construction = false }) {
   const visibleIndexes=useThreeBoxGallery?Array.from({length:Math.min(3,images.length)},(_,index)=>(galleryStart+index)%images.length):images.map((_,index)=>index);
   const moveGallery=(direction)=>setGalleryStart(index=>(index+direction+images.length)%images.length);
   const moveLightbox=(direction)=>setLightboxIndex(index=>(index+direction+images.length)%images.length);
-  return <section className={`section-pad project-section project-gallery${construction ? " project-construction" : ""}`} id={sectionId}><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">{sectionLabel}</span><h2>{title}<br/><span className="rr-grad">{accent}</span></h2><p className="project-section__description">{construction ? "Follow the latest construction milestones and on-site progress." : `Browse images that capture the spaces, materials, and character of ${data.title}.`}</p></div>{visibleIndexes.length?<><div className={useThreeBoxGallery?"project-gallery-trio":"project-gallery-grid"}>{visibleIndexes.map((imageIndex,position)=>{const image=images[imageIndex];return useThreeBoxGallery?<button type="button" onClick={()=>setLightboxIndex(imageIndex)} aria-label={`Open ${image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}`} key={`${image.src}-${imageIndex}`}><RImg src={image.src} fallbackSrc={image.fallbackSrc} alt={image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}/></button>:<a href={image.src} target="_blank" rel="noreferrer" className={position===0?"is-featured":""} key={`${image.src}-${imageIndex}`}><RImg src={image.src} fallbackSrc={image.fallbackSrc} alt={image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}/></a>})}</div>{useThreeBoxGallery&&images.length>3?<div className="project-gallery-trio__controls"><span>{String(galleryStart+1).padStart(2,"0")} / {String(images.length).padStart(2,"0")}</span><button type="button" onClick={()=>moveGallery(-1)} aria-label={`Previous ${sectionLabel.toLowerCase()} images`}>&#8592;</button><button type="button" onClick={()=>moveGallery(1)} aria-label={`Next ${sectionLabel.toLowerCase()} images`}>&#8594;</button></div>:null}</>:null}</div>{lightboxIndex!==null?<div className="project-gallery-lightbox" role="dialog" aria-modal="true" aria-label={`${data.title} ${sectionLabel.toLowerCase()} preview`} onClick={()=>setLightboxIndex(null)}><button className="project-gallery-lightbox__close" type="button" onClick={()=>setLightboxIndex(null)} aria-label="Close image preview">&#215;</button>{images.length>1?<button className="project-gallery-lightbox__arrow is-prev" type="button" onClick={event=>{event.stopPropagation();moveLightbox(-1)}} aria-label="Previous image">&#8592;</button>:null}<div className="project-gallery-lightbox__image" onClick={event=>event.stopPropagation()}><RImg src={images[lightboxIndex].src} fallbackSrc={images[lightboxIndex].fallbackSrc} alt={images[lightboxIndex].alt||`${data.title} ${imageLabel} ${lightboxIndex+1}`}/><span>{String(lightboxIndex+1).padStart(2,"0")} / {String(images.length).padStart(2,"0")}</span></div>{images.length>1?<button className="project-gallery-lightbox__arrow is-next" type="button" onClick={event=>{event.stopPropagation();moveLightbox(1)}} aria-label="Next image">&#8594;</button>:null}</div>:null}</section>;
+  return <section className={`section-pad project-section project-gallery${construction ? " project-construction" : ""}`} id={sectionId}><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">{sectionLabel}</span><h2>{title}<br/><span className="rr-grad">{accent}</span></h2><p className="project-section__description">{construction ? "Follow the latest construction milestones and on-site progress." : `Browse images that capture the spaces, materials, and character of ${data.title}.`}</p></div>{visibleIndexes.length?<><div className={useThreeBoxGallery?"project-gallery-trio":"project-gallery-grid"}>{visibleIndexes.map((imageIndex,position)=>{const image=images[imageIndex];return useThreeBoxGallery?<button type="button" onClick={()=>setLightboxIndex(imageIndex)} aria-label={`Open ${image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}`} key={`${image.src}-${imageIndex}`}><RImg className={/amenit/i.test(String(image.category || "")) ? "project-gallery-image--contain" : ""} src={image.src} fallbackSrc={image.fallbackSrc} alt={image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}/></button>:<a href={image.src} target="_blank" rel="noreferrer" className={position===0?"is-featured":""} key={`${image.src}-${imageIndex}`}><RImg className={/amenit/i.test(String(image.category || "")) ? "project-gallery-image--contain" : ""} src={image.src} fallbackSrc={image.fallbackSrc} alt={image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}/></a>})}</div>{useThreeBoxGallery&&images.length>3?<div className="project-gallery-trio__controls"><span>{String(galleryStart+1).padStart(2,"0")} / {String(images.length).padStart(2,"0")}</span><button type="button" onClick={()=>moveGallery(-1)} aria-label={`Previous ${sectionLabel.toLowerCase()} images`}>&#8592;</button><button type="button" onClick={()=>moveGallery(1)} aria-label={`Next ${sectionLabel.toLowerCase()} images`}>&#8594;</button></div>:null}</>:null}</div>{lightboxIndex!==null?<div className="project-gallery-lightbox" role="dialog" aria-modal="true" aria-label={`${data.title} ${sectionLabel.toLowerCase()} preview`} onClick={()=>setLightboxIndex(null)}><button className="project-gallery-lightbox__close" type="button" onClick={()=>setLightboxIndex(null)} aria-label="Close image preview">&#215;</button>{images.length>1?<button className="project-gallery-lightbox__arrow is-prev" type="button" onClick={event=>{event.stopPropagation();moveLightbox(-1)}} aria-label="Previous image">&#8592;</button>:null}<div className="project-gallery-lightbox__image" onClick={event=>event.stopPropagation()}><RImg src={images[lightboxIndex].largeSrc||images[lightboxIndex].src} fallbackSrc={images[lightboxIndex].src||images[lightboxIndex].fallbackSrc} alt={images[lightboxIndex].alt||`${data.title} ${imageLabel} ${lightboxIndex+1}`}/><span>{String(lightboxIndex+1).padStart(2,"0")} / {String(images.length).padStart(2,"0")}</span></div>{images.length>1?<button className="project-gallery-lightbox__arrow is-next" type="button" onClick={event=>{event.stopPropagation();moveLightbox(1)}} aria-label="Next image">&#8594;</button>:null}</div>:null}</section>;
 }
 function ProjectEnquiryCTA({ data, onEnquire }) {
   return <section className="section-pad project-final-cta" id="enquire"><div className="rr-wrap project-final-cta__inner"><span className="eyebrow">Take a Closer Look</span><h2>Discover {data.title}<br/><span>in complete detail</span></h2><p>{data.brochureUrl?"Download the project brochure for plans, amenities, specifications and location highlights—all in one place.":"Share your details and our project team will help with plans, availability and a site visit."}</p><button className="submit-btn" type="button" onClick={onEnquire}>{data.brochureUrl?data.ctaLabels.brochure:data.ctaLabels.visit}<CtaArrow/></button></div></section>;
@@ -998,6 +1015,7 @@ export default function GenericProjectPage({ slugOverride = "" }) {
         <ProjectSpecifications data={data} />
         <ProjectAmenities amenities={data.amenities} />
         <ProjectWalkthrough data={data} />
+        <ProjectTestimonials data={data} />
         <ProjectGallery data={data} />
         <ProjectGallery data={data} construction />
         <FloorPlansSection plans={data.floorPlans} title={data.title} />

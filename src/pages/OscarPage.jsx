@@ -32,10 +32,10 @@ const AMENITIES = [
 ];
 
 const SPECS = [
-  { title: "Storm Water, Drainage & Waste Water Management", desc: "Scientific storm water drainage network with efficient waste water management systems ensuring a clean and safe environment throughout the development." },
-  { title: "Roadway Engineering", desc: "Wide, well-planned internal roads with proper gradients, sub-base preparation, and quality pavement designed for lasting durability." },
-  { title: "Communication Network", desc: "Underground ducting for telephone, internet, and cable TV lines, keeping the landscape clean and future-ready." },
-  { title: "Electrification", desc: "Underground power distribution with adequate street lighting, individual metering, and dedicated feeder pillars." },
+  { title: "Storm Water, Drainage & Waste Water Management", desc: "Sanitary network is buried 1.5 metres below ground level. Installed high-tech Eco Drain and Nu-Drain uPVC pipes. Sewage Treatment Plant – MBBR/FAB system." },
+  { title: "Roadway Engineering", desc: "Tri-mix concrete roads blended with cobblestone. Spine road – 18 m wide; internal roads – 9 m wide. Sideways use flamed granite stone blended with Pavit tiles." },
+  { title: "Communication Network", desc: "The network is fitted with pull chambers and cross ducts, with CCTV cameras and a video recording system installed for added security." },
+  { title: "Electrification", desc: "Underground electric service lines for high tension (HT), low tension (LT) and low voltage (LV)." },
 ];
 
 const DESTINATIONS = [
@@ -59,7 +59,7 @@ const GALLERY_IMAGES = [
 ];
 
 export const OSCAR_FALLBACK = {
-  heroTitle: "Oscar / Oscar Billionaires",
+  heroTitle: "Oscar",
   heroTagline: "A Smart Upgrade To Premium Living",
   heroLogo: `${BASE}/logo.webp`,
   heroBg: `${BASE}/hero.webp`,
@@ -76,12 +76,12 @@ export const OSCAR_FALLBACK = {
   walkthroughVideoId: "HDft2VxWI9k",
   galleryImages: GALLERY_IMAGES,
   brochureUrl: `${BASE}/brochure.pdf`,
-  metaTitle: "Oscar / Oscar Billionaires | Premium Plotted Development in Indore | Ruchi Realty",
-  metaDescription: "Explore Oscar / Oscar Billionaires in Indore, a premium plotted development with prime location, world-class amenities, and plots from 4,000-12,500 sq. ft."
+  metaTitle: "Oscar | Premium Plotted Development in Indore | Ruchi Realty",
+  metaDescription: "Oscar is a premium plotted development at Bicholi Hapsi, Indore Bypass, with plots from 4,000 to 12,500 sq. ft., clubhouse amenities and planned urban infrastructure."
 };
 
 function HeroSection({ subpage, onBrochureClick }) {
-  return <ProjectSplitHero subpage={subpage} title="Oscar Billionaires" location="Indore" type="Premium Plotted Development" slug="oscar-indore" onBrochure={onBrochureClick} />;
+  return <ProjectSplitHero subpage={subpage} title="Oscar" location="Bicholi Hapsi, Indore Bypass" type="Premium Plotted Development" slug="oscar-indore" onBrochure={onBrochureClick} />;
 }
 
 function StickyNav() {

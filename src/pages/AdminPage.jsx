@@ -197,7 +197,7 @@ function collectProjectAssetUrls(project = {}, subpage = null) {
   const urls = [project.image_url, project.img];
   if (!subpage) return urls.filter(Boolean);
   urls.push(subpage.heroLogo, subpage.heroBg, subpage.locationImage, subpage.brochureUrl);
-  (subpage.galleryImages || []).forEach((item) => urls.push(item.src));
+  (subpage.galleryImages || []).forEach((item) => urls.push(item.src, item.largeSrc || item.lightboxSrc));
   (subpage.constructionUpdates || []).forEach((item) => urls.push(item.src));
   (subpage.specifications || []).forEach((item) => {
     if (item.title === "__floor_plans__") {
@@ -723,11 +723,18 @@ function GalleryListEditor({ items, onChange, title = "Gallery Images", addLabel
               Remove
             </button>
           </div>
-          <input
+                    <input
             type="text"
             value={item.alt || ""}
             onChange={(e) => updateRow(index, "alt", e.target.value)}
             placeholder="Alt description / Caption"
+            style={{ padding: "6px 10px", fontSize: "12px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }}
+          />
+          <input
+            type="text"
+            value={item.largeSrc || item.lightboxSrc || ""}
+            onChange={(e) => updateRow(index, "largeSrc", e.target.value)}
+            placeholder="Large lightbox image URL (optional)"
             style={{ padding: "6px 10px", fontSize: "12px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }}
           />
         </div>
@@ -792,6 +799,13 @@ function ReviewsListEditor({ items, onChange }) {
               Remove
             </button>
           </div>
+          <input
+            type="text"
+            value={item.avatar || ""}
+            onChange={(e) => updateRow(index, "avatar", e.target.value)}
+            placeholder="Reviewer profile image URL (optional)"
+            style={{ padding: "6px 10px", fontSize: "12px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }}
+          />
           <textarea
             value={item.text || ""}
             onChange={(e) => updateRow(index, "text", e.target.value)}

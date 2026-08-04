@@ -25,8 +25,8 @@ export const SAATVIK_GREEN_INDORE_FALLBACK = {
   locationMapEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4999.65613007766!2d75.93874079974611!3d22.83386000982388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39631db995c1582f%3A0x1c1ff37db299b50a!2sSaatvik%20Green!5e1!3m2!1sen!2sin!4v1750414936082!5m2!1sen!2sin",
   locationDestinations: [
     { name: "Proposed Shopping, School & Medical", dist: "Land facilities" },
-    { name: "Well Laid Out Parks", dist: "Within the development" },
-    { name: "Sector-wise Planning", dist: "Planned development" },
+    { name: "Well Laid Out Parks", dist: "Within township" },
+    { name: "Sector-wise Township", dist: "Planned development" },
     { name: "Wide Metalled Roads", dist: "Well lit" },
     { name: "Indore Railway Station", dist: "20 km" },
     { name: "Bombay Hospital", dist: "12 km" },
