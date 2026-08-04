@@ -96,11 +96,10 @@ export default function ProjectsPage() {
           <div className="rr-wrap">
             <Reveal>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>Our Projects</div>
-              <h1 className="pp-head">Real Estate Projects in Indore, Kolkata <span className="rr-grad">&amp; Bhopal</span></h1>
+              <h1 className="pp-head">Real Estate Projects Across Indore, Kolkata <span className="rr-grad">&amp; Bhopal</span></h1>
               <p className="pp-lead">
-                Ruchi Realty was never just about building homes. It was always about creating better ways of living.
+                Ruchi Realty was never just about building homes. It was always about creating better ways of living. Browse luxury apartments, residential plots and commercial spaces, from ready to move homes to upcoming launches.
               </p>
-              <p className="pp-lead pp-lead--keywords">Browse luxury apartments, residential plots and commercial spaces, from ready to move homes to upcoming launches.</p>
             </Reveal>
           </div>
         </header>

@@ -1,6 +1,6 @@
 import { GALLERY_MEDIA } from "../data/galleryMedia";
 export const GALLERY_CATEGORIES = ["Videos","Events","Office Culture"];
-export const EVENT_TYPES = ["All","Event","Award","Recognition","Milestone","Media Coverage"];
+export const EVENT_TYPES = ["All","Event","Award","Media Coverage"];
 export const slugifyMedia = (value = "") => value.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 let manifestCache;
 const manifest = async () => manifestCache || (manifestCache = await fetch("/assets/media/gallery/media-assets-manifest.json").then((r) => r.json()));

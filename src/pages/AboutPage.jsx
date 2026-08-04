@@ -174,7 +174,7 @@ function AboutLegacy() {
               <div className="ab-legacy__image-box"><img src="assets/projects/one-rajarhat.webp" alt="One Rajarhat" /></div>
             </div>
             <div className="ab-legacy__stats-strip">
-              <div className="ab-glass-stat"><span className="ab-glass-stat__val">2008</span><span className="ab-glass-stat__lbl">Founded</span></div>
+              <div className="ab-glass-stat"><span className="ab-glass-stat__val">33</span><span className="ab-glass-stat__lbl">Years of Legacy</span></div>
               <div className="ab-glass-stat"><span className="ab-glass-stat__val">3</span><span className="ab-glass-stat__lbl">Cities Served<br />Indore, Kolkata & Bhopal</span></div>
               <div className="ab-glass-stat"><span className="ab-glass-stat__val">20+</span><span className="ab-glass-stat__lbl">Projects<br />Residential, Commercial & Plotted Developments</span></div>
             </div>
@@ -262,7 +262,7 @@ function AboutVisionMission() {
                 Ruchi Realty develops dependable residential, commercial and plotted projects through thoughtful planning, disciplined construction and clear customer communication. With 17+ years of expertise, we aim to exceed expectations and build spaces that foster healthy, thriving communities.
               </p>
               <blockquote className="ab-vm-card__quote">
-                &ldquo;To build real estate marvels across residential and commercial developments, setting new standards in quality and architectural excellence.&rdquo;
+                &ldquo;Working toward becoming one of India's most trusted real estate companies.&rdquo;
               </blockquote>
             </div>
           </Reveal>
@@ -272,7 +272,7 @@ function AboutVisionMission() {
             <div className="ab-vm-card__overlay"></div>
             <div className="ab-vm-card__content">
               <div className="ab-vm-card__eyebrow">VISION</div>
-              <h3 className="ab-vm-card__title">Useful design and <span className="rr-grad">responsible growth</span></h3>
+              <h3 className="ab-vm-card__title">Useful design, <span className="rr-grad">responsible growth</span></h3>
               <p className="ab-vm-card__text">
                 Ruchi Realty aims to be a trusted Indian real estate company, known for useful design, responsible growth and long-term value, transforming the real estate landscape through innovation and sustainability and working toward becoming one of India’s most trusted real estate companies.
               </p>

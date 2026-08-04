@@ -86,7 +86,7 @@ const MEGA = (() => {
         { h: "Offices", items: [["Indore Office", "Contact.html#indore-office"], ["Kolkata Office", "Contact.html#kolkata-office"], ["Bhopal Office", "Contact.html#bhopal-office"]] },
         { h: "Reach us", items: [["+91 89292 25275", "tel:+918929225275"], ["ruchirealty.com", "#contact"], ["Indore, Kolkata and Bhopal", "#contact"]] },
       ],
-      feat: { kind: "cta", eyebrow: "Get in touch", title: "Contact us", sub: "A real person, not a call centre.", href: "Contact.html#indore-office" },
+      feat: { kind: "project", eyebrow: "Get in touch", title: "Contact us", sub: "A real person, not a call centre.", href: "Contact.html#indore-office", img: "/assets/contact-us.webp" },
     },
   };
 })();

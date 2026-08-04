@@ -294,7 +294,7 @@ const BLOG = [
 
 const HERO_IMG = {
   about: "assets/about-family.webp",
-  aboutAlt: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=1200&q=80",
+  aboutAlt: "/assets/about-home-1.webp",
   testimonial: "https://images.unsplash.com/photo-1611095973763-414019e72400?auto=format&fit=crop&w=1200&q=80",
   contact: "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80",
 };

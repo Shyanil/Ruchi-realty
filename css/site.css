@@ -413,7 +413,7 @@ body.nav-locked { overflow: hidden; }
 .about-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 30px; max-width: 620px; }
 .about-stat { min-width: 0; min-height: 120px; padding: 18px; border: 1px solid rgba(35,31,32,0.10); border-radius: var(--rr-r-2); background: rgba(255,255,255,0.68); box-shadow: 0 12px 28px rgba(20,18,26,0.05); }
 .about-stat + .about-stat { border-left: 1px solid rgba(35,31,32,0.10); padding-left: 18px; }
-.about-stat__num { color: var(--rr-indigo); font-size: clamp(30px, 3vw, 46px); font-weight: var(--rr-w-light); letter-spacing: var(--rr-ls-tight); line-height: 1; }
+.about-stat__num { color: var(--rr-indigo); font-size: clamp(28px, 2.6vw, 40px); font-weight: var(--rr-w-light); letter-spacing: var(--rr-ls-tight); line-height: 1; }
 .about-stat__num .suffix { color: var(--rr-indigo); }
 
 @media (max-width: 600px) { .about-stats { grid-template-columns: 1fr; max-width: none; } .about-stat { min-height: 0; padding: 20px; } .about-stat + .about-stat { border-left: 1px solid rgba(35,31,32,0.10); border-top: 1px solid rgba(35,31,32,0.10); padding-left: 20px; } }
@@ -530,7 +530,7 @@ body.nav-locked { overflow: hidden; }
 
 /* ============================================================ AWARDS */
 .awards { background: var(--rr-paper); }
-.awards__intro { text-align: center; max-width: 760px; margin: 0 auto 64px; }
+.awards__intro { text-align: center; max-width: 920px; margin: 0 auto 64px; }
 .awards__head { font-size: clamp(32px, 4.4vw, 56px); font-weight: var(--rr-w-light); letter-spacing: var(--rr-ls-tight); line-height: 1.06; margin: 16px 0 18px; }
 .awards__head .rr-grad { display: inline-block; white-space: nowrap; }
 .awards__lead { font-size: var(--rr-fs-lead); color: rgba(35,31,32,0.62); margin: 0 auto; max-width: 46ch; }
@@ -664,7 +664,7 @@ body.nav-locked { overflow: hidden; }
 
 /* ============================================================ AWARDS */
 .awards { background: var(--rr-paper); }
-.awards__intro { text-align: center; max-width: 760px; margin: 0 auto 64px; }
+.awards__intro { text-align: center; max-width: 920px; margin: 0 auto 64px; }
 .awards__head { font-size: clamp(32px, 4.4vw, 56px); font-weight: var(--rr-w-light); letter-spacing: var(--rr-ls-tight); line-height: 1.06; margin: 16px 0 18px; }
 .awards__lead { font-size: var(--rr-fs-lead); color: rgba(35,31,32,0.62); margin: 0 auto; max-width: 46ch; }
 /* infinite recognition carousel */
@@ -827,7 +827,7 @@ body.nav-locked { overflow: hidden; }
 .footer { background: var(--rr-indigo-deep); color: rgba(255,255,255,0.7); position: relative; overflow: hidden; }
 .footer__sig { position: absolute; right: -6%; top: -8%; width: 44%; aspect-ratio: 2110/2481; background: url("/assets/logo-mark-white.webp") center/contain no-repeat; opacity: 0.05; pointer-events: none; }
 .footer__inner { position: relative; padding-top: clamp(64px, 8vw, 104px); padding-bottom: 30px; }
-.footer__statement { font-weight: var(--rr-w-light); font-size: clamp(46px, 8vw, 112px); line-height: 0.96; letter-spacing: -0.035em; margin: 0; }
+.footer__statement { font-weight: var(--rr-w-light); font-size: clamp(42px, 7.2vw, 100px); line-height: 0.96; letter-spacing: -0.035em; margin: 0; }
 .footer__statement .we { color: rgba(255,255,255,0.4); }
 .footer__statement .cm { font-weight: var(--rr-w-medium); background: linear-gradient(92deg, #bed747 0%, #8fd0a0 42%, #aab2ef 82%, #c7ccff 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .footer__rule { height: 1px; background: rgba(255,255,255,0.16); margin: clamp(40px,5vw,64px) 0 clamp(32px,4vw,48px); }
@@ -985,7 +985,7 @@ body.nav-locked { overflow: hidden; }
 @media (max-width: 760px) {
   .hero{height:100dvh;min-height:560px}.hero__sound{display:none}.ab-offices__grid{grid-template-columns:1fr}.ab-office{min-height:0}.ab-office address{min-height:0;margin-bottom:25px}
   .footer__inner { padding-bottom: 22px; }
-  .footer__statement { font-size: clamp(42px, 13vw, 68px); }
+  .footer__statement { font-size: clamp(38px, 12vw, 62px); }
   .footer-cols { grid-template-columns: 1fr 1fr; gap: 38px 24px; }
   .footer__brandcol { grid-column: 1 / -1; }
   .footer__offices { grid-template-columns: 1fr; gap: 10px; }
@@ -1104,8 +1104,8 @@ body.nav-locked { overflow: hidden; }
 
 .ab-legacy__grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(520px, 1.1fr); gap: clamp(36px, 5vw, 76px); align-items: center; }
 .ab-legacy__left { max-width: 620px; }
-.ab-legacy__title { font-size: clamp(32px, 4.4vw, 56px); font-weight: var(--rr-w-light); letter-spacing: var(--rr-ls-tight); line-height: 1.08; margin: 0 0 24px; color: var(--rr-ink); }
-.ab-legacy__title .ab-title-line { display: block; white-space: normal; }
+.ab-legacy__title { font-size: clamp(22px, 7.5vw, 56px); font-weight: var(--rr-w-light); letter-spacing: var(--rr-ls-tight); line-height: 1.08; margin: 0 0 24px; color: var(--rr-ink); }
+.ab-legacy__title .ab-title-line { display: block; white-space: nowrap; }
 .ab-legacy__intro { font-size: var(--rr-fs-lead); line-height: 1.62; color: rgba(35, 31, 32, 0.65); font-weight: normal; margin-bottom: 24px; }
 .ab-legacy__body { font-size: var(--rr-fs-body); line-height: 1.7; color: rgba(35, 31, 32, 0.65); margin: 0; }
 
@@ -3088,3 +3088,86 @@ body.nav-locked { overflow: hidden; }
 
 
 .projects__intro h2 { margin-top: 12px; }
+
+/* Homepage commitment introduction stays centered on desktop. */
+@media (min-width: 701px) {
+  .intro .rr-wrap,
+  .intro :is(.intro__eyebrow, .intro__head, .intro__sub) {
+    text-align: center;
+  }
+  .intro :is(.intro__eyebrow, .intro__head, .intro__sub) {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+/* Align the visible left edge of the home project finder heading with its eyebrow. */
+.projects__intro h2 { transform: translateX(-2px); }
+
+/* Keep the inner-page hero labels consistent and use the brand gradient on dark hero backgrounds. */
+.ab-hero .eyebrow { font-size: 15px; }
+.bp-hero .eyebrow,
+.contact-page__hero .eyebrow,
+.media-hero .eyebrow,
+.privacy-hero .eyebrow {
+  background: var(--rr-gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@media (max-width: 700px) {
+  .ab-hero .eyebrow { font-size: 14px; }
+}
+/* Bring the About philosophy section closer to the preceding story and match its section-label scale. */
+.ab-philosophy { padding-top: clamp(20px, 2.5vw, 32px) !important; }
+.ab-philosophy__header .eyebrow { font-size: 15px; }
+@media (max-width: 700px) {
+  .ab-philosophy__header .eyebrow { font-size: 14px; }
+}
+/* Use the brand gradient for the About hero eyebrow. */
+.ab-hero .eyebrow {
+  background: var(--rr-gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+}
+/* Keep About mission and vision card titles on one line across compact laptop layouts. */
+@media (min-width: 901px) and (max-width: 1200px) {
+  .ab-vm-card__title {
+    font-size: clamp(20px, 2.2vw, 26px);
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+  }
+}
+/* Align the visible left edge of the About hero title with its eyebrow. */
+.ab-hero .eyebrow { margin-left: 0; padding-left: 0; }
+.ab-hero__title { margin-left: -2px; padding-left: 0; }
+/* Match the home projects eyebrow to the site-wide section-label scale. */
+.projects__intro .eyebrow { font-size: 15px; }
+@media (max-width: 700px) {
+  .projects__intro .eyebrow { font-size: 14px; }
+}
+/* Match the Resident stories eyebrow to the standard section-label scale. */
+.testi-headrow .eyebrow { font-size: 15px; }
+@media (max-width: 700px) {
+  .testi-headrow .eyebrow { font-size: 14px; }
+}
+/* Match the Awards and recognition eyebrow to the standard section-label scale. */
+.awards__intro .eyebrow { font-size: 15px; }
+@media (max-width: 700px) {
+  .awards__intro .eyebrow { font-size: 14px; }
+}
+/* Match the Our Blogs eyebrow to the standard section-label scale. */
+.blog .sec-head .eyebrow { font-size: 15px; }
+@media (max-width: 700px) {
+  .blog .sec-head .eyebrow { font-size: 14px; }
+}
+/* Match the Get in Touch eyebrow to the standard section-label scale. */
+.contact-header-centered .eyebrow { font-size: 15px; }
+@media (max-width: 700px) {
+  .contact-header-centered .eyebrow { font-size: 14px; }
+}
+/* Use one consistent eyebrow scale throughout page content. */
+main .eyebrow { font-size: 15px; }
+@media (max-width: 700px) {
+  main .eyebrow { font-size: 14px; }
+}
