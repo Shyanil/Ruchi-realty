@@ -345,7 +345,7 @@ function AboutProjects() {
         </Reveal>
       </div>
 
-      <div className="projects__sig ab-projects__sig" aria-hidden="true"></div>
+
 
       <div className="rr-wrap ab-projects__carousel-wrap">
       <div className="ab-flat-slider" key={city}>
