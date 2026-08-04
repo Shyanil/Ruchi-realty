@@ -11,7 +11,7 @@ export function About() {
             <RImg src={IMG_TOWER[0]} alt="A Ruchi Realty residence" className="about-img-3" />
             <RImg src={HERO_IMG.aboutAlt} alt="A bright, lived-in room" className="about-img-2" />
           </Reveal>
-          <div className="about-copy">
+          <div className="about-copy section-intro--left">
             <Reveal>
               <div className="eyebrow sec-eyebrow">About Ruchi Realty</div>
               <h2 className="about-head">Trusted Real Estate Developer <span className="rr-grad">Since 2008</span></h2>

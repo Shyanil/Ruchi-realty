@@ -171,7 +171,7 @@ function CareersCulture() {
       <div className="rr-wrap">
         <div className="cr-culture__grid">
           <div className="cr-culture__text">
-            <Reveal>
+            <Reveal className="section-intro--left">
               <div className="eyebrow">WORK CULTURE</div>
               <h2 className="cr-culture__title">A culture that focuses on learning, ownership, and excellence</h2>
               <p className="cr-culture__lead">
@@ -204,7 +204,7 @@ function CareersPositions({ jobs, onSelectJob }) {
     <section className="cr-positions section-pad" id="open-roles">
       <div className="rr-wrap">
         <div className="cr-positions__header">
-          <Reveal>
+          <Reveal className="section-intro--left">
             <div className="eyebrow" style={{ color: "var(--rr-indigo)" }}>OPEN POSITIONS</div>
             <h2 className="cr-positions__title">Current opportunities</h2>
             <p className="cr-positions__lead">

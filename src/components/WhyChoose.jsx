@@ -7,7 +7,7 @@ export function WhyChoose() {
   return (
     <section className="section-pad why" id="why">
       <div className="rr-wrap why2">
-        <Reveal className="why2__aside">
+        <Reveal className="why2__aside section-intro--left">
           <div className="eyebrow sec-eyebrow">FAQ</div>
           <h2 className="why2__head">Your questions,<br /><span className="rr-grad">clearly answered</span></h2>
           <p className="why2__lead">

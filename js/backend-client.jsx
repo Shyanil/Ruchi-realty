@@ -338,9 +338,9 @@
 
   const leadService = {
     async submitLead(leadData) {
-      return rest("leads", { select: "*" }, {
+      return rest("leads", {}, {
         method: "POST",
-        headers: { Prefer: "return=representation" },
+        headers: { Prefer: "return=minimal" },
         json: {
           name: (leadData.name || "").trim(),
           email: (leadData.email || "").trim(),

@@ -64,10 +64,6 @@ export default function ContactPage() {
 
         <section className="contact-paths section-pad">
           <div className="rr-wrap">
-            <div className="contact-paths__intro">
-              <span className="eyebrow sec-eyebrow">Get In Touch</span>
-              <h2>Our Offices &<br />Customer Care</h2>
-            </div>
             <div className="contact-paths__grid">
               {offices.map((office) => (
                 <article id={office.id} className="contact-path" key={office.id}>

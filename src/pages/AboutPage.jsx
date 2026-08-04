@@ -39,7 +39,7 @@ const LEDGER_ITEMS = [
 
 const ABOUT_PROJECTS = {
   Kolkata: [
-    { name: "Active Acres", desc: "G+23 stories across 6 high-rise towers within a 16.37-acre area.", status: "Completed", img: "assets/projects/active-acres.webp" },
+    { name: "Active Acres", desc: "G+23 stories across 6 high-rise towers within a 16.37-acre area.", status: "Completed", img: "assets/projects/active-acres.webp", url: "/projects/active-acres-angelica" },
     { name: "Active Greens", desc: "Residential apartments near ITC Sonar, off E.M. Bypass.", status: "Completed", img: "assets/projects/active-green.webp", url: "/projects/active-greens" },
     { name: "Angelica Tower", desc: "Modern apartments at D.C. Dey Road, Tangra.", status: "Ongoing", img: "assets/projects/active-acres.webp", url: "/projects/active-acres-angelica" },
     { name: "Active Business Park", desc: "Commercial complex over 2.25 lakh sq. ft.", status: "Completed", img: "assets/projects/active-business-park.webp", url: "/projects/active-business-park" },
@@ -142,7 +142,7 @@ function AboutHero() {
       <div className="rr-wrap ab-hero__grid">
         <Reveal>
           <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>About Ruchi Realty</div>
-          <h1 className="ab-hero__title">About Ruchi Realty <span className="rr-grad">Real Estate Developer Since 2008</span></h1>
+          <h1 className="ab-hero__title">About Ruchi Realty <span className="rr-grad">Real Estate</span><br /><span className="rr-grad">Developer Since 2008</span></h1>
         </Reveal>
       </div>
     </header>
@@ -154,7 +154,7 @@ function AboutLegacy() {
     <section className="ab-legacy section-pad" id="legacy">
       <div className="rr-wrap">
         <div className="ab-legacy__grid">
-          <div className="ab-legacy__left">
+          <div className="ab-legacy__left section-intro--left">
             <Reveal>
               <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>OUR STORY</div>
               <h2 className="ab-legacy__title"><span className="ab-title-line">Real Estate With Purpose</span><span className="rr-grad ab-title-line">Built For Lasting Value</span></h2>
@@ -349,6 +349,20 @@ function AboutProjects() {
 
       <div className="rr-wrap ab-projects__carousel-wrap">
       <div className="ab-flat-slider" key={city}>
+          {activeProjects.length > 1 && (
+            <>
+              <button type="button" className="ab-flat-arrow ab-flat-arrow--prev" onClick={prev} aria-label="Previous Project">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
+                </svg>
+              </button>
+              <button type="button" className="ab-flat-arrow ab-flat-arrow--next" onClick={next} aria-label="Next Project">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                </svg>
+              </button>
+            </>
+          )}
         <div className="ab-flat-viewport">
           <div className="ab-flat-track" style={{ transform: trackTransform }}>
             {activeProjects.map((p, i) => {
@@ -380,20 +394,6 @@ function AboutProjects() {
             })}
           </div>
 
-          {activeProjects.length > 1 && (
-            <>
-              <button type="button" className="ab-flat-arrow ab-flat-arrow--prev" onClick={prev} aria-label="Previous Project">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
-                </svg>
-              </button>
-              <button type="button" className="ab-flat-arrow ab-flat-arrow--next" onClick={next} aria-label="Next Project">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
-                </svg>
-              </button>
-            </>
-          )}
         </div>
 
         {activeProjects.length > 1 && (
@@ -469,7 +469,7 @@ function AboutTeam() {
   return (
     <section className="ab-team section-pad" id="team">
       <div className="rr-wrap">
-        <div className="ab-team__header">
+        <div className="ab-team__header section-intro--left">
           <Reveal>
             <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>OUR TEAM</div>
             <h2 className="ab-team__title">Experienced leadership across<br /><span className="rr-grad">development, finance and operations</span></h2>
@@ -514,7 +514,7 @@ function AboutOffices() {
   return (
     <section className="ab-offices section-pad" aria-labelledby="office-title">
       <div className="rr-wrap">
-        <Reveal><div className="eyebrow">OUR OFFICES</div><h2 id="office-title">Local teams in<br /><span className="rr-grad">Kolkata, Indore and Bhopal</span></h2></Reveal>
+        <Reveal className="section-intro--left"><div className="eyebrow">OUR OFFICES</div><h2 id="office-title">Local teams in<br /><span className="rr-grad">Kolkata, Indore and Bhopal</span></h2></Reveal>
         <div className="ab-offices__grid">
           {offices.map(([city, address]) => <Reveal className="ab-office" key={city}><h3>{city}</h3><address>{address}</address><a href="/contact">Contact {city} office</a></Reveal>)}
         </div>
