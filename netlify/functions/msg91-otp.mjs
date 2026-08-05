@@ -1,5 +1,5 @@
 const MSG91_BASE_URL = "https://control.msg91.com/api/v5/otp";
-const MSG91_AUTH_KEY = globalThis?.process?.env?.MSG91_AUTH_KEY || "435247A7MZh23WYd1O675c0f2eP1";
+const MSG91_AUTH_KEY = globalThis?.process?.env?.MSG91_AUTH_KEY || "435247AnLQlROagS1Y674441afP1";
 const MSG91_TEMPLATE_ID = globalThis?.process?.env?.MSG91_TEMPLATE_ID || "6744542dd6fc0508b6353972";
 const JSON_HEADERS = { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" };
 function json(status, body) { return new Response(JSON.stringify(body), { status, headers: JSON_HEADERS }); }
