@@ -3205,3 +3205,13 @@ main .eyebrow { font-size: 15px; }
 @media (max-width: 700px) {
   main .eyebrow { font-size: 14px; }
 }
+
+/* Mobile overflow fixes for long section headings */
+@media (max-width: 640px) {
+  .awards__intro { width: 100%; padding-inline: 4px; }
+  .awards__head { font-size: clamp(28px, 8.4vw, 42px); line-height: 1.08; overflow-wrap: anywhere; }
+  .awards__head .rr-grad { display: inline; white-space: normal; overflow-wrap: anywhere; }
+  .media-portal h2 { font-size: clamp(30px, 9vw, 40px); line-height: 1.08; white-space: normal; overflow-wrap: anywhere; }
+  .sec-head h2 { font-size: clamp(30px, 8.5vw, 44px); overflow-wrap: anywhere; }
+  .sec-head__lead { width: 100%; }
+}
