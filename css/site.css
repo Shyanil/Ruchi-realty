@@ -3215,3 +3215,9 @@ main .eyebrow { font-size: 15px; }
   .sec-head h2 { font-size: clamp(30px, 8.5vw, 44px); overflow-wrap: anywhere; }
   .sec-head__lead { width: 100%; }
 }
+/* Keep project city filters clear of the divider on small screens. */
+@media (max-width: 640px) {
+  .projects .ptabs { border-bottom: 0; margin-bottom: 28px; row-gap: 12px; }
+  .projects .ptab { padding-bottom: 10px; }
+  .projects .ptab::after { bottom: 0; }
+}
