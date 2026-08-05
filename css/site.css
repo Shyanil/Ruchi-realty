@@ -3261,3 +3261,14 @@ main .eyebrow { font-size: 15px; }
   .pp-body .ptabs { margin-bottom: 30px; }
   .pp-body .pp-status { margin-top: 0; }
 }
+/* Keep the city-tab divider below the active indicator and above status filters. */
+@media (max-width: 640px) {
+  .pp-body .ptabs {
+    padding-bottom: 8px;
+    margin-bottom: 36px;
+  }
+  .pp-body .pp-status {
+    margin-top: 0;
+    margin-bottom: 48px;
+  }
+}
