@@ -4,6 +4,7 @@ import Nav from "../components/Nav";
 import { Footer } from "../components/Footer";
 import { Reveal, RImg } from "../components/shared";
 import { CardArrow } from "../components/ProjectsSection";
+import OtpVerification, { formatIndianPhoneForLead, isValidIndianPhone } from "../components/OtpVerification";
 import { PROJECTS } from "../data/projects";
 import { OSCAR_PRIDE_FALLBACK } from "../data/oscarPride";
 import { OSCAR_PALACE_FALLBACK } from "../data/oscarPalace";
@@ -620,17 +621,33 @@ function CtaArrow() {
 
 function HeroEnquiryForm({ title, onSubmit }) {
   const [form, setForm] = useState({ name: String(), phone: String(), email: String() });
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
   const field = (key) => (e) => setForm({ ...form, [key]: e.target.value });
-  return <form className={`victoria-hero-form`} onSubmit={(e) => { e.preventDefault(); onSubmit(form); }}>
+  const valid = form.name.trim() && isValidIndianPhone(form.phone) && otpVerified;
+  const submit = async (event) => {
+    event.preventDefault();
+    if (!valid || sending) return;
+    setSending(true);
+    const succeeded = await onSubmit({ ...form, phone: formatIndianPhoneForLead(form.phone) });
+    if (succeeded) {
+      setForm({ name: "", phone: "", email: "" });
+      setOtpVerified(false);
+      setResetKey((current) => current + 1);
+    }
+    setSending(false);
+  };
+  return <form className={`victoria-hero-form`} onSubmit={submit}>
     <div className="victoria-hero-form__head"><span className="victoria-hero-form__mark" aria-hidden="true"></span><span className={`eyebrow`}>Private Enquiry</span></div>
     <h2>Discover life<br />at {title}</h2>
     <p>Receive current pricing, plans and availability directly from our project team.</p>
     <div className="victoria-hero-form__fields">
       <label className="is-wide"><span>Full name</span><input value={form.name} onChange={field(`name`)} placeholder={`Enter your name`} autoComplete="name" required /></label>
-      <label><span>Phone number</span><input type="tel" value={form.phone} onChange={field(`phone`)} placeholder={`+91 00000 00000`} autoComplete="tel" required /></label>
+      <OtpVerification key={resetKey} value={form.phone} onChange={(phone) => setForm((current) => ({ ...current, phone }))} onVerificationChange={({ verified }) => setOtpVerified(verified)} purpose="enquiry" label="Phone number" className="" />
       <label><span>Email address</span><input type={`email`} value={form.email} onChange={field(`email`)} placeholder={`name@email.com`} autoComplete="email" /></label>
     </div>
-    <button className={`submit-btn`} type={`submit`}>Request Project Details<CtaArrow /></button>
+    <button className={`submit-btn`} type={`submit`} disabled={!valid || sending}>{sending ? "Sending..." : "Request Project Details"}<CtaArrow /></button>
     <small className="victoria-hero-form__privacy">Your information remains private and is only used to respond to this enquiry.</small>
   </form>;
 }
@@ -719,7 +736,8 @@ function BrochurePopup({ data, onClose }) {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
-  const valid = form.name.trim() && form.phone.trim();
+  const [otpVerified, setOtpVerified] = useState(false);
+  const valid = form.name.trim() && isValidIndianPhone(form.phone) && otpVerified;
   const set = (key) => (event) => setForm((current) => ({ ...current, [key]: event.target.value }));
   const submit = async () => {
     if (!valid || sending) return;
@@ -728,7 +746,7 @@ function BrochurePopup({ data, onClose }) {
     try {
       const result = await window.RuchiBackend.leads.submitLead({
         name: form.name,
-        phone: form.phone,
+        phone: formatIndianPhoneForLead(form.phone),
         email: form.email,
         interest: data.title,
         source: `${data.title} brochure popup`,
@@ -757,7 +775,7 @@ function BrochurePopup({ data, onClose }) {
           <h3>Download Brochure</h3>
           <p>Enter your details to receive information about {data.title}.</p>
           <div className="field"><label>Name</label><input value={form.name} onChange={set("name")} placeholder="Your full name" /></div>
-          <div className="field"><label>Phone</label><input value={form.phone} onChange={set("phone")} placeholder="+91" /></div>
+          <OtpVerification value={form.phone} onChange={(phone) => setForm((current) => ({ ...current, phone }))} onVerificationChange={({ verified }) => setOtpVerified(verified)} purpose="brochure" />
           <div className="field"><label>Email</label><input type="email" value={form.email} onChange={set("email")} placeholder="you@email.com" /></div>
           <div className="field"><label>Message</label><input value={form.message} onChange={set("message")} placeholder="I would like to know more." /></div>
           <button className="submit-btn" type="button" onClick={submit} disabled={!valid || sending} style={{ width: "100%", justifyContent: "center", marginTop: "8px" }}>{sending ? "Sending..." : data.brochureUrl ? "Download Now" : "Enquire Now"}<CtaArrow /></button>
@@ -933,8 +951,12 @@ export default function GenericProjectPage({ slugOverride = "" }) {
   const useSplitHero = true;
   const submitHeroLead = async (form) => {
     const result = await window.RuchiBackend.leads.submitLead({ ...form, interest: data.title, source: `${data.title} hero enquiry`, project_slug: data.slug, message: `Hero enquiry` });
-    if (result?.error) window.alert(`Could not submit your enquiry. Please try again.`);
-    else window.alert(`Thank you. Our team will connect with you shortly.`);
+    if (result?.error) {
+      window.alert(`Could not submit your enquiry. Please try again.`);
+      return false;
+    }
+    window.alert(`Thank you. Our team will connect with you shortly.`);
+    return true;
   };
 
   useEffect(() => {

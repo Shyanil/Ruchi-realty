@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Nav from "../components/Nav";
 import { Footer } from "../components/Footer";
 import { Reveal, RImg } from "../components/shared";
+import OtpVerification, { formatIndianPhoneForLead, isValidIndianPhone } from "../components/OtpVerification";
 
 // Parse Video helper supporting youtube, youtu.be, embed, and direct video URLs
 function parseVideoUrl(url) {
@@ -779,6 +780,7 @@ function BrochurePopup({ subpage, onClose }) {
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "", project: "Active Greens", message: "" });
   const [loading, setLoading] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
 
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
@@ -787,6 +789,7 @@ function BrochurePopup({ subpage, onClose }) {
       if (window.RuchiBackend?.leads) {
         await window.RuchiBackend.leads.submitLead({
           ...form,
+          phone: formatIndianPhoneForLead(form.phone),
           source: "Project Subpage Brochure",
           project_slug: "active-greens"
         });
@@ -808,7 +811,7 @@ function BrochurePopup({ subpage, onClose }) {
     }
   };
 
-  const valid = form.name.trim() && form.phone.trim() && form.email.trim();
+  const valid = form.name.trim() && isValidIndianPhone(form.phone) && form.email.trim() && otpVerified;
 
   return (
     <div className="osc-popup-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="Download brochure">
@@ -834,10 +837,7 @@ function BrochurePopup({ subpage, onClose }) {
               <label>Name</label>
               <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your full name" />
             </div>
-            <div className="field">
-              <label>Phone</label>
-              <input required value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+91" />
-            </div>
+            <OtpVerification value={form.phone} onChange={(phone) => setForm((current) => ({ ...current, phone }))} onVerificationChange={({ verified }) => setOtpVerified(verified)} purpose="brochure" />
             <div className="field">
               <label>Email</label>
               <input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="you@email.com" />

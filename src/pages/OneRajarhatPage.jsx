@@ -4,6 +4,7 @@ import Nav from "../components/Nav";
 import { Footer } from "../components/Footer";
 import { Reveal } from "../components/shared";
 import { PROJECT_OPTIONS } from "../data/projects";
+import OtpVerification, { formatIndianPhoneForLead, isValidIndianPhone } from "../components/OtpVerification";
 
 // Helper to extract custom specifications fields
 function extractSpecsAndCustomData(specsArray = []) {
@@ -814,8 +815,9 @@ function BrochurePopup({ subpage, onClose }) {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+  const [otpVerified, setOtpVerified] = useState(false);
   const set = (k) => (e) => setF((s) => ({ ...s, [k]: e.target.value }));
-  const valid = f.name.trim() && f.phone.trim() && f.email.trim();
+  const valid = f.name.trim() && isValidIndianPhone(f.phone) && f.email.trim() && otpVerified;
 
   const submit = async () => {
     if (!valid || sending) return;
@@ -825,7 +827,7 @@ function BrochurePopup({ subpage, onClose }) {
       if (window.RuchiBackend) {
         await window.RuchiBackend.leads.createLead({
           name: f.name,
-          phone: f.phone,
+          phone: formatIndianPhoneForLead(f.phone),
           email: f.email,
           project: f.project,
           message: f.message
@@ -864,8 +866,7 @@ function BrochurePopup({ subpage, onClose }) {
             <p>Enter your details to receive the brochure.</p>
             <div className="field"><label>Name</label>
               <input value={f.name} onChange={set("name")} placeholder="Your full name" /></div>
-            <div className="field"><label>Phone</label>
-              <input value={f.phone} onChange={set("phone")} placeholder="+91" /></div>
+            <OtpVerification value={f.phone} onChange={(phone) => setF((current) => ({ ...current, phone }))} onVerificationChange={({ verified }) => setOtpVerified(verified)} purpose="brochure" />
             <div className="field"><label>Email</label>
               <input type="email" value={f.email} onChange={set("email")} placeholder="you@email.com" /></div>
             <div className="field"><label>Project of interest</label>

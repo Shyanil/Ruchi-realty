@@ -804,6 +804,40 @@ body.nav-locked { overflow: hidden; }
 .submit-btn:hover .ar { transform: translateX(3px); }
 .submit-btn:active { transform: translateY(1px); }
 .submit-btn:disabled { opacity: 0.5; cursor: default; }
+
+/* MSG91 OTP Widget custom UI */
+.otp-verification { min-width: 0; }
+.otp-send-row { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: stretch; gap: 8px; }
+.otp-phone-input { display: flex; align-items: stretch; min-width: 0; }
+.otp-country-code { display: inline-flex; align-items: center; flex: 0 0 auto; padding: 0 11px 0 0; border-bottom: 1px solid rgba(35,31,32,0.22); color: var(--rr-ink); font-size: 15px; font-weight: var(--rr-w-medium); }
+.otp-phone-input input { min-width: 0; flex: 1 1 auto; }
+.otp-hint { color: rgba(35,31,32,.52); font-size: 10px; line-height: 1.45; }
+.otp-action, .otp-resend { border: 0; font-family: inherit; cursor: pointer; transition: opacity var(--rr-dur-fast) var(--rr-ease), color var(--rr-dur-fast) var(--rr-ease), background var(--rr-dur-fast) var(--rr-ease); }
+.otp-action { align-self: flex-start; margin-top: 5px; padding: 9px 14px; border-radius: 5px; background: var(--rr-indigo); color: #fff; font-size: 10px; font-weight: var(--rr-w-medium); letter-spacing: .1em; text-transform: uppercase; }
+.otp-send-row .otp-action { align-self: stretch; margin: 0; white-space: nowrap; }
+.otp-action:disabled, .otp-resend:disabled { cursor: default; opacity: .5; }
+.otp-challenge { display: grid; gap: 8px; margin-top: 4px; }
+.otp-verify-row { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: end; gap: 8px; }
+.otp-verify-row .otp-action { align-self: stretch; margin: 0; }
+.otp-resend { justify-self: start; padding: 2px 0; background: transparent; color: var(--rr-indigo); font-size: 11px; text-decoration: underline; text-underline-offset: 3px; }
+.otp-status { margin: 2px 0 0; font-size: 11px; line-height: 1.45; }
+.otp-status.is-success { color: #24743a; font-weight: var(--rr-w-medium); }
+.otp-status.is-error { color: #a32121; }
+.otp-status.is-info { color: rgba(35,31,32,.68); }
+.otp-captcha:empty { display: none; }
+.otp-captcha:not(:empty) { margin-top: 5px; max-width: 100%; overflow: hidden; }
+.victoria-hero-form .otp-verification label span { margin-bottom: 7px; }
+.victoria-hero-form__fields > .otp-verification { grid-column: 1 / -1; }
+.victoria-hero-form .otp-verification .otp-country-code { height: 47px; padding: 0 10px; border: 1px solid rgba(35,31,32,.13); border-right: 0; border-radius: 7px 0 0 7px; background: rgba(255,255,255,.78); font-size: 12.5px; }
+.victoria-hero-form .otp-phone-input input { border-radius: 0 7px 7px 0; }
+.victoria-hero-form .otp-hint { display: block; margin-top: 5px; }
+.victoria-hero-form .otp-action { min-height: 38px; }
+.victoria-hero-form .otp-verify-row input { height: 38px; }
+.victoria-hero-form .otp-status { margin-top: 4px; }
+.osc-popup .otp-verification { grid-column: 1 / -1; }
+.osc-popup .otp-country-code { padding: 0 10px; border: 1px solid rgba(35,31,32,.15); border-right: 0; border-radius: var(--rr-r-2) 0 0 var(--rr-r-2); background: var(--rr-paper-pure); font-size: 14px; }
+.osc-popup .otp-phone-input input { border-radius: 0 var(--rr-r-2) var(--rr-r-2) 0; }
+@media (max-width: 360px) { .otp-send-row, .otp-verify-row { grid-template-columns: 1fr; } .otp-send-row .otp-action, .otp-verify-row .otp-action { justify-self: start; } }
 .contact-note { font-size: 12.5px; color: rgba(35,31,32,0.45); }
 .contact-error { margin: -8px 0 0; color: #9f2f2f; font-size: 13px; line-height: 1.45; }
 .contact-thanks { min-height: 380px; display: flex; flex-direction: column; justify-content: center; }

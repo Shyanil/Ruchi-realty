@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Reveal } from "./shared";
 import { PROJECT_OPTIONS } from "../data/projects";
+import OtpVerification, { formatIndianPhoneForLead, isValidIndianPhone } from "./OtpVerification";
 
 export function Contact({
   eyebrow = "Plan your visit",
@@ -11,8 +12,9 @@ export function Contact({
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+  const [otpVerified, setOtpVerified] = useState(false);
   const set = (k) => (e) => setF((s) => ({ ...s, [k]: e.target.value }));
-  const valid = f.name.trim() && f.phone.trim() && f.email.trim();
+  const valid = f.name.trim() && isValidIndianPhone(f.phone) && f.email.trim() && otpVerified;
   const submit = async () => {
     if (!valid || sending) return;
     setSending(true);
@@ -20,6 +22,7 @@ export function Contact({
     if (window.RuchiBackend?.leads) {
       const { error: submitError } = await window.RuchiBackend.leads.submitLead({
         ...f,
+        phone: formatIndianPhoneForLead(f.phone),
         interest: f.project || "General",
         notes: f.message,
         source: "Contact form",
@@ -59,12 +62,14 @@ export function Contact({
                 </div>
               ) : (
                 <div className="contact-form">
-                  <div className="cf-row">
-                    <div className="field"><label>Name</label>
-                      <input value={f.name} onChange={set("name")} placeholder="Your full name" /></div>
-                    <div className="field"><label>Phone</label>
-                      <input value={f.phone} onChange={set("phone")} placeholder="+91" /></div>
-                  </div>
+                  <div className="field"><label>Name</label>
+                    <input value={f.name} onChange={set("name")} placeholder="Your full name" /></div>
+                  <OtpVerification
+                    value={f.phone}
+                    onChange={(phone) => setF((current) => ({ ...current, phone }))}
+                    onVerificationChange={({ verified }) => setOtpVerified(verified)}
+                    purpose="contact"
+                  />
                   <div className="field"><label>Email</label>
                     <input type="email" value={f.email} onChange={set("email")} placeholder="you@email.com" /></div>
                   <div className="field"><label>Project of interest</label>
