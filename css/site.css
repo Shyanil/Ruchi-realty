@@ -3221,3 +3221,43 @@ main .eyebrow { font-size: 15px; }
   .projects .ptab { padding-bottom: 10px; }
   .projects .ptab::after { bottom: 0; }
 }
+/* Mobile project category tabs: independent active indicator and scrollable row. */
+@media (max-width: 640px) {
+  .projects .ptabs,
+  .pp-body .ptabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+    gap: 18px;
+    padding-bottom: 0;
+    border-bottom: 1px solid rgba(245,244,241,0.14);
+  }
+  .projects .ptabs::-webkit-scrollbar,
+  .pp-body .ptabs::-webkit-scrollbar { display: none; }
+  .projects .ptab,
+  .pp-body .ptab {
+    position: relative;
+    flex: 0 0 auto;
+    padding: 0 4px 14px;
+    border: 0;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .projects .ptab::after,
+  .pp-body .ptab::after {
+    left: 50%;
+    right: auto;
+    bottom: 3px;
+    width: 100%;
+    height: 2px;
+    border-radius: 999px;
+    transform: translateX(-50%) scaleX(0);
+    transform-origin: center;
+  }
+  .projects .ptab.is-active::after,
+  .pp-body .ptab.is-active::after { transform: translateX(-50%) scaleX(1); }
+  .projects .ptabs { margin-bottom: 30px; }
+  .pp-body .ptabs { margin-bottom: 30px; }
+  .pp-body .pp-status { margin-top: 0; }
+}
