@@ -54,16 +54,25 @@ export default function Hero() {
     video.defaultMuted = true;
     video.muted = true;
     setSoundOn(false);
+    const retryPlayback = () => {
+      video.muted = true;
+      video.play().catch(() => {
+        // Keep the poster visible when autoplay is blocked. A later user
+        // interaction can still start playback through the sound control.
+      });
+    };
+
     video.play().catch(() => {
       retryTimer.current = window.setTimeout(() => {
-        video.load();
-        video.muted = true;
-        video.play().catch(() => setVideoFailed(true));
-      }, 1200);
+        retryPlayback();
+      }, 400);
     });
+
+    video.addEventListener("canplay", retryPlayback, { once: true });
 
     return () => {
       window.clearTimeout(retryTimer.current);
+      video.removeEventListener("canplay", retryPlayback);
     };
   }, []);
 
@@ -104,10 +113,8 @@ export default function Hero() {
         loop
         playsInline
         preload="auto"
+        poster="/assets/hero-poster.webp"
         onPlaying={handlePlaying}
-        onCanPlay={handlePlaying}
-        onLoadedMetadata={handlePlaying}
-        onLoadedData={handlePlaying}
         onError={handleVideoError}
         aria-label="Ruchi Realty showreel"
       >

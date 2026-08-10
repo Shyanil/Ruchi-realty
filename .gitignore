@@ -2,6 +2,7 @@
 node_modules/
 .env
 .env.*
+!.env.example
 *.log
 *.mp4
 !public/assets/hero_video.mp4

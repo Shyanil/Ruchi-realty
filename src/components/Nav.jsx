@@ -493,9 +493,17 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false, soli
         <a className="nav__brand" href="#top" onClick={(e) => go(e, "#top")} aria-label="Ruchi Realty home">
           <img className="nav__logo"
             src={dark ? "/assets/logo-h-white.webp" : "/assets/logo-h.webp"}
-            alt="Ruchi Realty" />
+            alt="Ruchi Realty" loading="eager" decoding="async" />
         </a>
         <nav className="nav__links" aria-label="Primary">
+          <div className="nav__item" onMouseEnter={() => setOpen(null)}>
+            <a
+              className={`nav__link ${location.pathname === "/" && !open ? "is-active" : ""}`}
+              href="/"
+              onClick={(e) => go(e, "/")}>
+              Home
+            </a>
+          </div>
           {MEGA_ORDER.map((label) => (
             <div className="nav__item" key={label} onMouseEnter={() => setOpen(label)}>
               <a className={`nav__link ${open === label ? "is-open" : ""} ${isActive(label) ? "is-active" : ""}`}
@@ -520,6 +528,9 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false, soli
 
       <div className={`mobile ${mobile ? "is-open" : ""}`}>
         <div className="mobile__inner">
+          <div className="mobile-group">
+            <a className="mobile-group__h" href="/" onClick={(e) => go(e, "/")}>Home</a>
+          </div>
           {MEGA_ORDER.map((label) => (
             <div className="mobile-group" key={label}>
               <a className="mobile-group__h" href={canonicalHref(MEGA[label].href)} onClick={(e) => go(e, MEGA[label].href)}>{label}</a>

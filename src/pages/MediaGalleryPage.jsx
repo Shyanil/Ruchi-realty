@@ -14,7 +14,7 @@ function GalleryCard({ item, index, onOpen }) {
 
   return (
     <button className='media-gallery-card' type='button' onClick={() => onOpen(index)}>
-      <img src={source} alt={item.alt_text || item.title || 'Ruchi Realty gallery'} loading={index < 4 ? 'eager' : 'lazy'} onError={() => setImageFailed(true)} />
+      <img decoding="async" src={source} alt={item.alt_text || item.title || 'Ruchi Realty gallery'} loading={index < 4 ? 'eager' : 'lazy'} onError={() => setImageFailed(true)} />
       {item.media_type === 'video' && <b className='media-gallery-card__play' aria-hidden='true'>&#9654;</b>}
       <span>
         <small>{item.album || item.category}</small>

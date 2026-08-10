@@ -316,7 +316,7 @@ function AdminImageUpload({ label, value, onChange }) {
   return (
     <div className="admin-uploader">
       <div className="admin-uploader__preview">
-        {value ? <img src={value} alt="" /> : <span>No image selected</span>}
+        {value ? <img decoding="async" loading="lazy" src={value} alt="" /> : <span>No image selected</span>}
       </div>
       <div className="admin-uploader__body">
         <span className="admin-uploader__label">{label}</span>
@@ -374,7 +374,7 @@ function AdminLogin({ onLogin }) {
   return (
     <main className="admin-login">
       <form className="admin-login__box" onSubmit={submit}>
-        <img src="assets/logo-h.webp" alt="Ruchi Realty" />
+        <img decoding="async" loading="lazy" src="assets/logo-h.webp" alt="Ruchi Realty" />
         <p className="admin-kicker">Secure admin login</p>
         <h1>Admin panel</h1>
         <AdminField label="Email">
@@ -635,7 +635,7 @@ function FloorPlansEditor({ items, onChange }) {
       {list.map((item, index) => (
         <div key={index} style={{ display: "flex", flexDirection: "column", gap: "8px", padding: "10px", background: "rgba(0,0,0,0.02)", border: "1px dashed rgba(35, 31, 32, 0.2)", borderRadius: "4px", marginBottom: "10px" }}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", alignItems: "center" }}>
-            {item.desc ? <img src={item.desc} alt="" style={{ width: "56px", height: "56px", objectFit: "cover", borderRadius: "4px" }} /> : <div style={{ width: "56px", height: "56px", background: "#eee", borderRadius: "4px", display: "grid", placeItems: "center", fontSize: "10px", color: "#999" }}>No plan</div>}
+            {item.desc ? <img decoding="async" loading="lazy" src={item.desc} alt="" style={{ width: "56px", height: "56px", objectFit: "cover", borderRadius: "4px" }} /> : <div style={{ width: "56px", height: "56px", background: "#eee", borderRadius: "4px", display: "grid", placeItems: "center", fontSize: "10px", color: "#999" }}>No plan</div>}
             <input type="text" value={item.title || ""} onChange={(e) => updateRow(index, "title", e.target.value)} placeholder="Plan title (e.g. 10th Floor Plan)" style={{ flex: "1 1 180px", minWidth: "180px", padding: "6px 10px", fontSize: "12px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }} />
             <input type="text" value={item.config || ""} onChange={(e) => updateRow(index, "config", e.target.value)} placeholder="Config (e.g. 3 BHK)" style={{ flex: "0 1 140px", minWidth: "120px", padding: "6px 10px", fontSize: "12px", border: "1px solid rgba(35, 31, 32, 0.2)", borderRadius: "4px" }} />
             <button type="button" onClick={() => removeRow(index)} style={{ background: "#ff4d4d", color: "#fff", border: "none", borderRadius: "4px", padding: "6px 10px", cursor: "pointer", fontSize: "12px" }}>Remove</button>
@@ -690,7 +690,7 @@ function GalleryListEditor({ items, onChange, title = "Gallery Images", addLabel
         <div key={index} style={{ display: "flex", flexDirection: "column", gap: "6px", padding: "10px", background: "rgba(0,0,0,0.02)", border: "1px dashed rgba(35, 31, 32, 0.2)", borderRadius: "4px", marginBottom: "10px" }}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", alignItems: "center" }}>
             {item.src ? (
-              <img src={item.src} alt="" style={{ width: "50px", height: "50px", objectFit: "cover", borderRadius: "4px" }} />
+              <img decoding="async" loading="lazy" src={item.src} alt="" style={{ width: "50px", height: "50px", objectFit: "cover", borderRadius: "4px" }} />
             ) : (
               <div style={{ width: "50px", height: "50px", background: "#eee", borderRadius: "4px", display: "grid", placeItems: "center", fontSize: "10px", color: "#999" }}>No Img</div>
             )}
@@ -1177,7 +1177,7 @@ function ProjectsAdmin() {
         <div className="admin-list">
           {filteredProjects.length ? filteredProjects.map((project) => (
             <article className="admin-row admin-row--media" key={project.id}>
-              <img className="admin-thumb" src={project.image_url || "assets/logo-mark.webp"} alt="" />
+              <img decoding="async" loading="lazy" className="admin-thumb" src={project.image_url || "assets/logo-mark.webp"} alt="" />
               <div>
                 <strong>{project.title}</strong>
                 <span>{project.location} - {project.type} - {project.status}</span>
@@ -1433,7 +1433,7 @@ function BlogsAdmin() {
         <div className="admin-list">
           {filteredBlogs.length ? filteredBlogs.map((blog) => (
             <article className="admin-row admin-row--media" key={blog.id}>
-              <img className="admin-thumb" src={blog.image || "assets/logo-mark.webp"} alt="" />
+              <img decoding="async" loading="lazy" className="admin-thumb" src={blog.image || "assets/logo-mark.webp"} alt="" />
               <div>
                 <strong>{blog.title}</strong>
                 <span>{blog.category} - {blog.author}</span>
@@ -1673,7 +1673,7 @@ export default function AdminPage() {
   return (
     <>
       <div className="admin-top-row">
-        <a href="/" className="admin-brand"><img src="assets/logo-h.webp" alt="Ruchi Realty" /></a>
+        <a href="/" className="admin-brand"><img decoding="async" loading="lazy" src="assets/logo-h.webp" alt="Ruchi Realty" /></a>
         <button type="button" className="admin-logout" onClick={logout}>Logout</button>
       </div>
       <nav className="admin-tabs" aria-label="Admin sections">

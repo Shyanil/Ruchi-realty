@@ -120,7 +120,7 @@ function HighlightIcon({ icon }) {
     infrastructure: "/assets/projects/oscar/icon-infrastructure.webp",
     size: "/assets/projects/oscar/icon-size.webp",
   };
-  return <img src={icons[String(icon || "").toLowerCase()] || icons.location} alt="" style={{ width: 28, height: 28, objectFit: "contain", marginBottom: 4 }} />;
+  return <img decoding="async" loading="lazy" src={icons[String(icon || "").toLowerCase()] || icons.location} alt="" style={{ width: 28, height: 28, objectFit: "contain", marginBottom: 4 }} />;
 }
 
 function amenityKey(item) {
@@ -191,7 +191,7 @@ function FloorPlansSection({ subpage }) {
   const [activePlanIdx, setActivePlanIdx] = useState(0);
   const plans = subpage.floorPlans || [];
   if (!plans.length) return null;
-  return <section className="section-pad osc-section" id="floor-plans"><div className="rr-wrap"><Reveal><div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>FLOOR PLANS</div><h2 className="osc-section__title">Floor plans<br /><span className="rr-grad">for planned living</span></h2></Reveal><div className="osc-floorplans__layout" style={{ marginTop: "40px" }}><Reveal className="osc-floorplans__tabs" style={{ display: "flex", gap: "12px", marginBottom: "30px", flexWrap: "wrap" }}>{plans.map((p, idx) => <button key={p.title || idx} type="button" className={`submit-btn ${activePlanIdx === idx ? "" : "ab-btn-outline"}`} style={{ padding: "10px 24px", fontSize: "13px", textTransform: "uppercase", background: activePlanIdx === idx ? "var(--rr-indigo)" : "transparent", color: activePlanIdx === idx ? "#fff" : "var(--rr-ink)", border: "1px solid var(--rr-indigo)", borderRadius: "20px" }} onClick={() => setActivePlanIdx(idx)}>{p.title}{p.config ? ` - ${p.config}` : ""}</button>)}</Reveal><Reveal key={activePlanIdx} className="osc-floorplans__viewer" style={{ background: "rgba(20,18,26,0.03)", padding: "30px", borderRadius: "12px", border: "1px solid rgba(20,18,26,0.08)", display: "flex", justifyContent: "center", alignItems: "center" }}><img src={plans[activePlanIdx].desc} alt={plans[activePlanIdx].title} style={{ maxWidth: "100%", maxHeight: "550px", objectFit: "contain", borderRadius: "4px" }} /></Reveal></div></div></section>;
+  return <section className="section-pad osc-section" id="floor-plans"><div className="rr-wrap"><Reveal><div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>FLOOR PLANS</div><h2 className="osc-section__title">Floor plans<br /><span className="rr-grad">for planned living</span></h2></Reveal><div className="osc-floorplans__layout" style={{ marginTop: "40px" }}><Reveal className="osc-floorplans__tabs" style={{ display: "flex", gap: "12px", marginBottom: "30px", flexWrap: "wrap" }}>{plans.map((p, idx) => <button key={p.title || idx} type="button" className={`submit-btn ${activePlanIdx === idx ? "" : "ab-btn-outline"}`} style={{ padding: "10px 24px", fontSize: "13px", textTransform: "uppercase", background: activePlanIdx === idx ? "var(--rr-indigo)" : "transparent", color: activePlanIdx === idx ? "#fff" : "var(--rr-ink)", border: "1px solid var(--rr-indigo)", borderRadius: "20px" }} onClick={() => setActivePlanIdx(idx)}>{p.title}{p.config ? ` - ${p.config}` : ""}</button>)}</Reveal><Reveal key={activePlanIdx} className="osc-floorplans__viewer" style={{ background: "rgba(20,18,26,0.03)", padding: "30px", borderRadius: "12px", border: "1px solid rgba(20,18,26,0.08)", display: "flex", justifyContent: "center", alignItems: "center" }}><img decoding="async" loading="lazy" src={plans[activePlanIdx].desc} alt={plans[activePlanIdx].title} style={{ maxWidth: "100%", maxHeight: "550px", objectFit: "contain", borderRadius: "4px" }} /></Reveal></div></div></section>;
 }
 
 function WalkthroughSection({ subpage }) {
@@ -259,7 +259,7 @@ function ImageGridSection({ id = "gallery", eyebrow = "GALLERY", title, accent, 
                 aria-label={`Open ${img.alt || `Gallery image ${imgIdx + 1}`}`}
               >
                 <div className="rimg" style={{ width: "100%", height: "100%", borderRadius: "10px", overflow: "hidden" }}>
-                  <img
+                  <img decoding="async"
                     src={img.src}
                     alt={img.alt || `Gallery image ${imgIdx + 1}`}
                     loading="lazy"
@@ -311,7 +311,7 @@ function ImageGridSection({ id = "gallery", eyebrow = "GALLERY", title, accent, 
             </button>
           )}
           <div className="project-gallery-lightbox__image" onClick={(e) => e.stopPropagation()}>
-            <img src={list[lightboxIndex].src} alt={list[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            <img decoding="async" loading="lazy" src={list[lightboxIndex].src} alt={list[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
             <span>
               {String(lightboxIndex + 1).padStart(2, "0")} / {String(list.length).padStart(2, "0")}
             </span>
@@ -333,7 +333,7 @@ function ImageGridSection({ id = "gallery", eyebrow = "GALLERY", title, accent, 
 }
 
 function LocationSection({ subpage }) {
-  return <section className="section-pad osc-section osc-section--dark" id="location"><div className="rr-wrap"><Reveal><div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}><div><div className="eyebrow" style={{ color: "var(--rr-lime)" }}>LOCATION</div><h2>Prime location,<br /><span className="rr-grad">unmatched connectivity</span></h2></div></div></Reveal><div className="osc-location__grid"><Reveal className="osc-location__visual"><img src={subpage.locationImage} alt="One Prime Residential location map" loading="lazy" className="osc-location__img" /></Reveal><Reveal delay={80} className="osc-location__info"><h3 className="osc-location__heading">Newtown Action Area 1</h3><p style={{ color: "rgba(245,244,241,0.62)", fontSize: "14px", lineHeight: "1.6", marginBottom: "24px" }}>{subpage.locationIntro || ONE_PRIME_RESIDENTIAL_FALLBACK.locationIntro}</p>{subpage.locationDestinations?.length ? <div className="osc-location__list">{subpage.locationDestinations.map((d, i) => <div key={d.name || i} className="osc-location__item"><span className="osc-location__name">{d.name}</span><span className="osc-location__dist">{d.dist}</span></div>)}</div> : null}{subpage.locationMapEmbed ? <div className="osc-location__map-wrap"><iframe title="One Prime Residential location map" src={subpage.locationMapEmbed} width="100%" height="240" style={{ border: 0 }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade" /></div> : null}</Reveal></div></div></section>;
+  return <section className="section-pad osc-section osc-section--dark" id="location"><div className="rr-wrap"><Reveal><div className="sec-head sec-head--dark" style={{ marginBottom: "48px" }}><div><div className="eyebrow" style={{ color: "var(--rr-lime)" }}>LOCATION</div><h2>Prime location,<br /><span className="rr-grad">unmatched connectivity</span></h2></div></div></Reveal><div className="osc-location__grid"><Reveal className="osc-location__visual"><img decoding="async" src={subpage.locationImage} alt="One Prime Residential location map" loading="lazy" className="osc-location__img" /></Reveal><Reveal delay={80} className="osc-location__info"><h3 className="osc-location__heading">Newtown Action Area 1</h3><p style={{ color: "rgba(245,244,241,0.62)", fontSize: "14px", lineHeight: "1.6", marginBottom: "24px" }}>{subpage.locationIntro || ONE_PRIME_RESIDENTIAL_FALLBACK.locationIntro}</p>{subpage.locationDestinations?.length ? <div className="osc-location__list">{subpage.locationDestinations.map((d, i) => <div key={d.name || i} className="osc-location__item"><span className="osc-location__name">{d.name}</span><span className="osc-location__dist">{d.dist}</span></div>)}</div> : null}{subpage.locationMapEmbed ? <div className="osc-location__map-wrap"><iframe title="One Prime Residential location map" src={subpage.locationMapEmbed} width="100%" height="240" style={{ border: 0 }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade" /></div> : null}</Reveal></div></div></section>;
 }
 
 function BrochurePopup({ subpage, onClose }) {

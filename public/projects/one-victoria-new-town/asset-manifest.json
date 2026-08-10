@@ -118,38 +118,38 @@
                    },
                    {
                        "original_url":  "https://ruchirealty.com/one-victoria-new-town/images/g-1.jpg",
-                       "local_path":  "public/projects/one-victoria-new-town/gallery/gallery-1-large.jpg",
-                       "final_path":  "/projects/one-victoria-new-town/gallery/gallery-1-large.jpg",
+                       "local_path":  "public/projects/one-victoria-new-town/gallery/gallery-1-large.webp",
+                       "final_path":  "/projects/one-victoria-new-town/gallery/gallery-1-large.webp",
                        "usage":  "gallery lightbox"
                    },
                    {
                        "original_url":  "https://ruchirealty.com/one-victoria-new-town/images/g-2.jpg",
-                       "local_path":  "public/projects/one-victoria-new-town/gallery/gallery-2-large.jpg",
-                       "final_path":  "/projects/one-victoria-new-town/gallery/gallery-2-large.jpg",
+                       "local_path":  "public/projects/one-victoria-new-town/gallery/gallery-2-large.webp",
+                       "final_path":  "/projects/one-victoria-new-town/gallery/gallery-2-large.webp",
                        "usage":  "gallery lightbox"
                    },
                    {
                        "original_url":  "https://ruchirealty.com/one-victoria-new-town/images/g-3.jpg",
-                       "local_path":  "public/projects/one-victoria-new-town/gallery/gallery-3-large.jpg",
-                       "final_path":  "/projects/one-victoria-new-town/gallery/gallery-3-large.jpg",
+                       "local_path":  "public/projects/one-victoria-new-town/gallery/gallery-3-large.webp",
+                       "final_path":  "/projects/one-victoria-new-town/gallery/gallery-3-large.webp",
                        "usage":  "gallery lightbox"
                    },
                    {
                        "original_url":  "https://ruchirealty.com/one-victoria-new-town/images/g-4.jpg",
-                       "local_path":  "public/projects/one-victoria-new-town/gallery/gallery-4-large.jpg",
-                       "final_path":  "/projects/one-victoria-new-town/gallery/gallery-4-large.jpg",
+                       "local_path":  "public/projects/one-victoria-new-town/gallery/gallery-4-large.webp",
+                       "final_path":  "/projects/one-victoria-new-town/gallery/gallery-4-large.webp",
                        "usage":  "gallery lightbox"
                    },
                    {
                        "original_url":  "https://ruchirealty.com/one-victoria-new-town/images/g-5.jpg",
-                       "local_path":  "public/projects/one-victoria-new-town/gallery/gallery-5-large.jpg",
-                       "final_path":  "/projects/one-victoria-new-town/gallery/gallery-5-large.jpg",
+                       "local_path":  "public/projects/one-victoria-new-town/gallery/gallery-5-large.webp",
+                       "final_path":  "/projects/one-victoria-new-town/gallery/gallery-5-large.webp",
                        "usage":  "gallery lightbox"
                    },
                    {
                        "original_url":  "https://ruchirealty.com/one-victoria-new-town/images/g-6.jpg",
-                       "local_path":  "public/projects/one-victoria-new-town/gallery/gallery-6-large.jpg",
-                       "final_path":  "/projects/one-victoria-new-town/gallery/gallery-6-large.jpg",
+                       "local_path":  "public/projects/one-victoria-new-town/gallery/gallery-6-large.webp",
+                       "final_path":  "/projects/one-victoria-new-town/gallery/gallery-6-large.webp",
                        "usage":  "gallery lightbox"
                    }
                ],

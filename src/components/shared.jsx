@@ -39,22 +39,24 @@ export function RImg({
   loading = "lazy",
 }) {
   const primarySrc = normalizeImageSrc(src);
-  const backupSrc = normalizeImageSrc(fallbackSrc);
-  const [currentSrc, setCurrentSrc] = useState(primarySrc || backupSrc);
-  const [ok, setOk] = useState(Boolean(primarySrc || backupSrc));
+  const backupSources = (Array.isArray(fallbackSrc) ? fallbackSrc : [fallbackSrc]).map(normalizeImageSrc);
+  const candidates = [primarySrc, ...backupSources].filter((value, index, items) => value && items.indexOf(value) === index);
+  const sourceKey = candidates.join("\n");
+  const [sourceIndex, setSourceIndex] = useState(0);
+  const [ok, setOk] = useState(Boolean(candidates.length));
   const [loaded, setLoaded] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
+  const currentSrc = candidates[sourceIndex] || "";
 
   useEffect(() => {
-    const nextSrc = primarySrc || backupSrc;
-    setCurrentSrc(nextSrc);
-    setOk(Boolean(nextSrc));
+    setSourceIndex(0);
+    setOk(Boolean(candidates.length));
     setLoaded(false);
     setShowLoader(false);
-    if (!nextSrc) return undefined;
+    if (!candidates.length) return undefined;
     const timer = window.setTimeout(() => setShowLoader(true), 350);
     return () => window.clearTimeout(timer);
-  }, [primarySrc, backupSrc]);
+  }, [sourceKey]);
 
   const handleLoaded = () => {
     setLoaded(true);
@@ -62,8 +64,8 @@ export function RImg({
   };
 
   const handleError = () => {
-    if (backupSrc && currentSrc !== backupSrc) {
-      setCurrentSrc(backupSrc);
+    if (sourceIndex < candidates.length - 1) {
+      setSourceIndex((index) => index + 1);
       setLoaded(false);
       setShowLoader(false);
       return;
@@ -188,35 +190,41 @@ export function CustomCursor() {
   const ring = useRef(null), dot = useRef(null);
   const [mode, setMode] = useState("");
   const [label, setLabel] = useState("");
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
     if (window.matchMedia("(hover: none)").matches) return;
     let rx = 0, ry = 0, dx = 0, dy = 0, raf;
     const move = (e) => {
       dx = e.clientX; dy = e.clientY;
       if (dot.current) dot.current.style.transform = `translate(${dx}px,${dy}px) translate(-50%,-50%)`;
-      const t = e.target.closest("[data-cursor]");
+      const t = e.target instanceof Element ? e.target.closest("[data-cursor]") : null;
       if (t) { setMode("label"); setLabel(t.getAttribute("data-cursor")); }
       else { setMode(""); setLabel(""); }
-      ring.current && ring.current.classList.add("show");
-      dot.current && dot.current.classList.add("show");
+      setVisible(true);
     };
     const loop = () => {
       rx += (dx - rx) * 0.18; ry += (dy - ry) * 0.18;
       if (ring.current) ring.current.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%)`;
       raf = requestAnimationFrame(loop);
     };
-    const leave = () => { ring.current && ring.current.classList.remove("show"); dot.current && dot.current.classList.remove("show"); };
-    window.addEventListener("mousemove", move);
+    const leave = () => setVisible(false);
+    window.addEventListener("pointermove", move, { passive: true });
     document.addEventListener("mouseleave", leave);
+    window.addEventListener("blur", leave);
     raf = requestAnimationFrame(loop);
-    return () => { window.removeEventListener("mousemove", move); document.removeEventListener("mouseleave", leave); cancelAnimationFrame(raf); };
+    return () => {
+      window.removeEventListener("pointermove", move);
+      document.removeEventListener("mouseleave", leave);
+      window.removeEventListener("blur", leave);
+      cancelAnimationFrame(raf);
+    };
   }, []);
   return (
     <>
-      <div ref={ring} className={`cursor-ring ${mode === "label" ? "label" : ""}`}>
+      <div ref={ring} className={`cursor-ring${visible ? " show" : ""}${mode === "label" ? " label" : ""}`}>
         <span className="cursor-ring__txt">{label}</span>
       </div>
-      <div ref={dot} className="cursor-dot"></div>
+      <div ref={dot} className={`cursor-dot${visible ? " show" : ""}`}></div>
     </>
   );
 }

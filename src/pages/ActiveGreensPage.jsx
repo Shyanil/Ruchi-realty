@@ -198,7 +198,7 @@ function normalizeIconKey(item) {
 function ActiveGreensIcon({ icon, size = 48 }) {
   const rawIcon = typeof icon === "string" ? icon : icon?.icon || icon?.image_url || icon?.img || "";
   if (rawIcon.includes("assets/projects/oscar/")) {
-    return <img src={rawIcon} alt="" style={{ width: size, height: size, objectFit: "contain", marginBottom: size <= 32 ? "4px" : undefined }} />;
+    return <img decoding="async" loading="lazy" src={rawIcon} alt="" style={{ width: size, height: size, objectFit: "contain", marginBottom: size <= 32 ? "4px" : undefined }} />;
   }
 
   const key = normalizeIconKey(icon);
@@ -374,7 +374,7 @@ function LandscapeFeaturesSection({ subpage }) {
         </Reveal>
         <div className="osc-specs__layout">
           <Reveal className="osc-specs__visual">
-            <img src={subpage.galleryImages?.[0]?.src || subpage.heroBg || ACTIVE_GREENS_FALLBACK.heroBg} alt="Active Greens Specifications Visual" loading="lazy" className="osc-specs__img" />
+            <img decoding="async" src={subpage.galleryImages?.[0]?.src || subpage.heroBg || ACTIVE_GREENS_FALLBACK.heroBg} alt="Active Greens Specifications Visual" loading="lazy" className="osc-specs__img" />
           </Reveal>
           <div className="osc-specs__cards">
             {subpage.specifications.map((s, i) => (
@@ -436,7 +436,7 @@ function FloorPlansSection({ subpage }) {
 
           <Reveal key={activePlanIdx} className="osc-floorplans__viewer" style={{ background: "rgba(255,255,255,0.03)", padding: "20px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.08)", display: "flex", justifyContent: "center", alignItems: "center" }}>
             {plans[activePlanIdx] && plans[activePlanIdx].desc && (
-              <img
+              <img decoding="async" loading="lazy"
                 src={plans[activePlanIdx].desc}
                 alt={plans[activePlanIdx].title}
                 style={{ maxWidth: "100%", maxHeight: "550px", objectFit: "contain", borderRadius: "4px" }}
@@ -508,7 +508,7 @@ function GallerySection({ subpage }) {
                 aria-label={`Open ${img.alt || `Active Greens gallery image ${imgIdx + 1}`}`}
               >
                 <div className="rimg" style={{ width: "100%", height: "100%", borderRadius: "10px", overflow: "hidden" }}>
-                  <img
+                  <img decoding="async"
                     src={img.src}
                     alt={img.alt || `Active Greens gallery ${imgIdx + 1}`}
                     loading="lazy"
@@ -560,7 +560,7 @@ function GallerySection({ subpage }) {
             </button>
           )}
           <div className="project-gallery-lightbox__image" onClick={(e) => e.stopPropagation()}>
-            <img src={images[lightboxIndex].src} alt={images[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            <img decoding="async" loading="lazy" src={images[lightboxIndex].src} alt={images[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
             <span>
               {String(lightboxIndex + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
             </span>
@@ -617,7 +617,7 @@ function WalkthroughSection({ subpage }) {
               )
             ) : (
               <button type="button" className="osc-walkthrough__play-btn" onClick={() => setPlaying(true)} aria-label="Play walkthrough video">
-                <img src={thumbnail || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80"} alt="Walkthrough thumbnail" loading="lazy" />
+                <img decoding="async" src={thumbnail || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80"} alt="Walkthrough thumbnail" loading="lazy" />
                 <span className="osc-walkthrough__play-icon">
                   <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="10" />
@@ -648,10 +648,10 @@ function GmbReviewsSection({ subpage }) {
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {subpage.gmbReviews.googleIconUrl && (
-                <img src={subpage.gmbReviews.googleIconUrl} alt="Google" style={{ height: "24px", objectFit: "contain" }} />
+                <img decoding="async" loading="lazy" src={subpage.gmbReviews.googleIconUrl} alt="Google" style={{ height: "24px", objectFit: "contain" }} />
               )}
               {subpage.gmbReviews.starIconUrl ? (
-                <img src={subpage.gmbReviews.starIconUrl} alt="5 stars" style={{ height: "20px", objectFit: "contain" }} />
+                <img decoding="async" loading="lazy" src={subpage.gmbReviews.starIconUrl} alt="5 stars" style={{ height: "20px", objectFit: "contain" }} />
               ) : (
                 <span style={{ color: "#f39c12", fontWeight: "bold" }}>★★★★★</span>
               )}
@@ -696,7 +696,7 @@ function LocationSection({ subpage }) {
           {visualUrl && (
             <Reveal className="osc-location__visual">
               <a href={detailedMapUrl} target="_blank" rel="noopener noreferrer" style={{ display: "block", position: "relative" }}>
-                <img
+                <img decoding="async"
                   src={visualUrl}
                   alt="Active Greens Location"
                   loading="lazy"

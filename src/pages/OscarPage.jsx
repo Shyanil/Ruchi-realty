@@ -219,7 +219,7 @@ function SpecificationsSection({ subpage }) {
         </Reveal>
         <div className="osc-specs__layout">
           <Reveal className="osc-specs__visual">
-            <img src={`${BASE}/specification.webp`} alt="Oscar Specifications" loading="lazy" className="osc-specs__img" />
+            <img decoding="async" src={`${BASE}/specification.webp`} alt="Oscar Specifications" loading="lazy" className="osc-specs__img" />
           </Reveal>
           <div className="osc-specs__cards">
             {(subpage.specifications || []).map((s, i) => (
@@ -249,7 +249,7 @@ function LocationSection({ subpage }) {
         </Reveal>
         <div className="osc-location__grid">
           <Reveal className="osc-location__visual">
-            <img src={subpage.locationImage} alt="Oscar Location Map" loading="lazy" className="osc-location__img" />
+            <img decoding="async" src={subpage.locationImage} alt="Oscar Location Map" loading="lazy" className="osc-location__img" />
           </Reveal>
           <Reveal delay={80} className="osc-location__info">
             <h3 className="osc-location__heading">Key Destinations</h3>
@@ -307,7 +307,7 @@ function WalkthroughSection({ subpage }) {
               />
             ) : (
               <button type="button" className="osc-walkthrough__play-btn" onClick={() => setPlaying(true)} aria-label="Play walkthrough video">
-                <img src={videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : `https://img.youtube.com/vi/HDft2VxWI9k/maxresdefault.jpg`} alt="Walkthrough thumbnail" loading="lazy" />
+                <img decoding="async" src={videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : `https://img.youtube.com/vi/HDft2VxWI9k/maxresdefault.jpg`} alt="Walkthrough thumbnail" loading="lazy" />
                 <span className="osc-walkthrough__play-icon">
                   <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="10" />
@@ -382,7 +382,7 @@ function GallerySection({ subpage }) {
                 aria-label={`Open ${img.alt || `Oscar gallery image ${imgIdx + 1}`}`}
               >
                 <div className="rimg" style={{ width: "100%", height: "100%", borderRadius: "10px", overflow: "hidden" }}>
-                  <img
+                  <img decoding="async"
                     src={img.src}
                     alt={img.alt || `Oscar gallery ${imgIdx + 1}`}
                     loading="lazy"
@@ -434,7 +434,7 @@ function GallerySection({ subpage }) {
             </button>
           )}
           <div className="project-gallery-lightbox__image" onClick={(e) => e.stopPropagation()}>
-            <img src={images[lightboxIndex].src} alt={images[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            <img decoding="async" loading="lazy" src={images[lightboxIndex].src} alt={images[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
             <span>
               {String(lightboxIndex + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
             </span>

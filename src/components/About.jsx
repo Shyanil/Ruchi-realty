@@ -1,4 +1,4 @@
-import { Reveal, RImg, StatCounter } from "./shared";
+import { Reveal, RImg } from "./shared";
 import { HERO_IMG, IMG_TOWER, STATS } from "../data/siteData";
 
 export function About() {
@@ -25,7 +25,11 @@ export function About() {
               <div className="about-stats" aria-label="Ruchi Realty at a glance">
                 {STATS.map((s, i) =>
                 <div key={i} className="about-stat">
-                    <div className="about-stat__num"><StatCounter value={s.num} suffix={s.suffix} /></div>
+                    <div className="about-stat__top">
+                      <span className="about-stat__index">{String(i + 1).padStart(2, "0")}</span>
+                      <span className="about-stat__rule" aria-hidden="true"></span>
+                    </div>
+                    <div className="about-stat__num">{s.num}<span className="suffix">{s.suffix}</span></div>
                     <div className="about-stat__label">{s.label}</div>
                   </div>
                 )}

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Nav from "../components/Nav";
 import { Footer } from "../components/Footer";
@@ -192,7 +192,7 @@ const FALLBACK_SUBPAGES = {
       },
       {
         "title": "__video_section__",
-        "desc": "{\"enabled\":true,\"title\":\"Walk Through\",\"videoUrl\":\"https://player.vimeo.com/video/735387729?h=0982bb9b19\",\"thumbnailUrl\":\"/projects/oscar-fort-indore/hero.webp\"}"
+        "desc": "{\"enabled\":true,\"title\":\"Walk Through\",\"videoUrl\":\"https://www.youtube.com/embed/HvoOxDzKOcA?rel=0\",\"thumbnailUrl\":\"/projects/oscar-fort-indore/hero.webp\"}"
       }
     ],
     "locationImage": "/projects/oscar-fort-indore/exciting-location.webp",
@@ -211,7 +211,7 @@ const FALLBACK_SUBPAGES = {
         "dist": "P-IND-22-3414"
       }
     ],
-    "walkthroughVideoId": "https://player.vimeo.com/video/735387729?h=0982bb9b19",
+    "walkthroughVideoId": "https://www.youtube.com/embed/HvoOxDzKOcA?rel=0",
     "galleryImages": [
       {
         "src": "/projects/oscar-fort-indore/gallery-1.webp",
@@ -472,6 +472,7 @@ function mergeProjectSubpage(fallback, remote) {
     heroLogo: preferText(remote.heroLogo, fallback.heroLogo),
     heroBg: preferText(remote.heroBg, fallback.heroBg),
     heroMobileUrl: preferText(remote.heroMobileUrl, fallback.heroMobileUrl),
+    overviewImage: preferText(remote.overviewImage, fallback.overviewImage),
     overviewParagraphs: preferArray(remote.overviewParagraphs, fallback.overviewParagraphs),
     overviewHighlights: preferArray(remote.overviewHighlights, fallback.overviewHighlights),
     amenities: preferArray(remote.amenities, fallback.amenities),
@@ -552,21 +553,25 @@ function normalizeProjectSubpage(project, sp, fallbackSp = null) {
   const custom = extractCustomSpecs(sp?.specifications || []);
   const fallbackCustom = extractCustomSpecs(fallbackSp?.specifications || []);
   const isAngelica = project?.slug === "active-acres-angelica" || fallbackSp?.heroTitle === "Angelica - Active Acres";
+  const isOscarFort = project?.slug === "oscar-fort-indore" || fallbackSp?.heroTitle === "Oscar Fort";
+  const isOscarPalace = project?.slug === "oscar-palace" || fallbackSp?.heroTitle === "Oscar Palace";
   const isSaatvikGreen = project?.slug === "saatvikgreen-indore" || fallbackSp?.heroTitle === "Saatvik Green";
   const title = (isAngelica ? fallbackSp?.heroTitle : "") || sp?.heroTitle || project?.title || project?.name || "Project";
   const description = project?.description || "Explore this Ruchi Realty project with thoughtfully planned spaces, dependable execution, and a location selected for everyday convenience.";
-  const videoSection = custom.videoSection || sp?.videoSection || fallbackCustom.videoSection || fallbackSp?.videoSection || {};
+  const videoSection = (isOscarFort ? fallbackCustom.videoSection || fallbackSp?.videoSection : custom.videoSection || sp?.videoSection || fallbackCustom.videoSection || fallbackSp?.videoSection) || {};
   const legacyVideoUrl = (videoSection.videoUrl || "").trim() || (sp?.walkthroughVideoId || "").trim() || (fallbackSp?.walkthroughVideoId || "").trim();
   const fallbackVideoItems = Array.isArray(fallbackSp?.videos) && fallbackSp.videos.length ? fallbackSp.videos : [];
-  const videoItems = Array.isArray(sp?.videos) && sp.videos.length ? sp.videos : fallbackVideoItems.length ? fallbackVideoItems : legacyVideoUrl ? [{ ...videoSection, videoUrl: legacyVideoUrl }] : [];
+  const videoItems = isOscarFort ? fallbackVideoItems.length ? fallbackVideoItems : legacyVideoUrl ? [{ ...videoSection, videoUrl: legacyVideoUrl }] : [] : Array.isArray(sp?.videos) && sp.videos.length ? sp.videos : fallbackVideoItems.length ? fallbackVideoItems : legacyVideoUrl ? [{ ...videoSection, videoUrl: legacyVideoUrl }] : [];
   const videos = videoItems
     .filter((item) => item?.videoUrl || item?.url)
     .map((item, index) => ({ title: item.title || (isAngelica ? "Testimonials" : `Project video ${index + 1}`), videoUrl: videoEmbedUrl(item.videoUrl || item.url), thumbnailUrl: assetUrl(item.thumbnailUrl || item.poster || ""), thumbnailFallbackUrl: assetUrl(fallbackVideoItems[index]?.thumbnailUrl || fallbackVideoItems[index]?.poster || "") }));
   const reviewsSource = custom.gmbReviews || sp?.gmbReviews || fallbackCustom.gmbReviews || fallbackSp?.gmbReviews || null;
   const gmbReviews = reviewsSource?.enabled && Array.isArray(reviewsSource.reviews) ? { ...reviewsSource, googleIconUrl: assetUrl(reviewsSource.googleIconUrl || ""), starIconUrl: assetUrl(reviewsSource.starIconUrl || ""), reviews: reviewsSource.reviews.filter((review) => review?.author || review?.text).map((review) => ({ ...review, avatar: assetUrl(review.avatar || review.image || "") })) } : null;
   const clean = (items, predicate) => (Array.isArray(items) ? items : []).filter(predicate);
-  const normalizeImages = (items, fallbackItems = []) => clean(items, (img) => img?.src || img?.image)
-    .map((img, index) => ({ ...img, alt: img.alt || fallbackItems[index]?.alt || "", category: img.category || fallbackItems[index]?.category || "", src: assetUrl(img.src || img.image), largeSrc: assetUrl(img.largeSrc || img.lightboxSrc || img.fullSrc || fallbackItems[index]?.largeSrc || ""), fallbackSrc: assetUrl(fallbackItems[index]?.src || fallbackItems[index]?.image || "") }));
+  const imageSource = (img) => img?.src || img?.image || img?.image_url || img?.imageUrl || img?.url || img?.public_url || img?.publicUrl || "";
+  const largeImageSource = (img) => img?.largeSrc || img?.large_src || img?.lightboxSrc || img?.lightbox_src || img?.fullSrc || img?.full_src || img?.large_url || img?.full_url || "";
+  const normalizeImages = (items, fallbackItems = []) => clean(items, (img) => imageSource(img))
+    .map((img, index) => ({ ...img, alt: img.alt || fallbackItems[index]?.alt || "", category: img.category || fallbackItems[index]?.category || "", src: assetUrl(imageSource(img)), largeSrc: assetUrl(largeImageSource(img) || largeImageSource(fallbackItems[index]) || ""), fallbackSrc: assetUrl(imageSource(fallbackItems[index])) }));
   const remoteGalleryImages = normalizeImages(sp?.galleryImages || [], fallbackSp?.galleryImages || []);
   const fallbackGalleryImages = normalizeImages(fallbackSp?.galleryImages || []);
   const rawGalleryImages = [...remoteGalleryImages, ...fallbackGalleryImages].filter((img, index, items) => items.findIndex((candidate) => candidate.src === img.src || (candidate.alt && candidate.alt === img.alt)) === index);
@@ -581,7 +586,7 @@ function normalizeProjectSubpage(project, sp, fallbackSp = null) {
     location: project?.location || project?.city || "",
     tag: sp?.heroTagline || project?.tag || description,
     heroLogo: project?.slug === "ruchi-lifescapes-indore-project" ? "/projects/ruchi-lifescapes-indore-project/logo.webp" : assetUrl((isAngelica ? fallbackSp?.heroLogo : "") || sp?.heroLogo || ""),
-    heroBg: assetUrl((isAngelica ? fallbackSp?.heroBg : "") || sp?.heroBg || project?.image_url || project?.img || "assets/projects/oscar-billionaires.webp"),
+    heroBg: assetUrl((isAngelica || isOscarFort ? fallbackSp?.heroBg : "") || sp?.heroBg || project?.image_url || project?.img || "assets/projects/oscar-billionaires.webp"),
     heroFallbackLogo: assetUrl(fallbackSp?.heroLogo || ""),
     heroFallbackBg: assetUrl(fallbackSp?.heroBg || project?.img || "assets/projects/oscar-billionaires.webp"),
     heroMobileUrl: assetUrl((isAngelica ? fallbackSp?.heroMobileUrl : "") || custom.heroMobileUrl || sp?.heroMobileUrl || ""),
@@ -589,6 +594,7 @@ function normalizeProjectSubpage(project, sp, fallbackSp = null) {
     heroImageFit: ["cover", "contain"].includes(sp?.heroImageFit) ? sp.heroImageFit : "cover",
     heroMedia: custom.heroMedia,
     status: project?.status || sp?.status || "",
+    overviewImage: assetUrl((isOscarPalace ? fallbackSp?.overviewImage : "") || sp?.overviewImage || fallbackSp?.overviewImage || ""),
     overviewParagraphs: clean(sp?.overviewParagraphs, (item) => typeof item === "string" && item.trim()),
     overviewHighlights: clean(sp?.overviewHighlights, (item) => item?.label || item?.desc).slice(0, 4),
     amenities: clean(sp?.amenities, (item) => item?.name),
@@ -645,29 +651,44 @@ function HeroEnquiryForm({ title, onSubmit }) {
     <div className="victoria-hero-form__fields">
       <label className="is-wide"><span>Full name</span><input value={form.name} onChange={field(`name`)} placeholder={`Enter your name`} autoComplete="name" required /></label>
       <OtpVerification key={resetKey} value={form.phone} onChange={(phone) => setForm((current) => ({ ...current, phone }))} onVerificationChange={({ verified }) => setOtpVerified(verified)} purpose="enquiry" label="Phone number" className="" />
-      <label><span>Email address</span><input type={`email`} value={form.email} onChange={field(`email`)} placeholder={`name@email.com`} autoComplete="email" /></label>
+      <label className="is-wide project-email-field"><span>Email address</span><input type={`email`} value={form.email} onChange={field(`email`)} placeholder={`name@email.com`} autoComplete="email" /></label>
     </div>
     <button className={`submit-btn`} type={`submit`} disabled={!valid || sending}>{sending ? "Sending..." : "Request Project Details"}<CtaArrow /></button>
     <small className="victoria-hero-form__privacy">Your information remains private and is only used to respond to this enquiry.</small>
   </form>;
 }
 function AmenityIcon({ icon, name }) {
-  const key = String(icon || name || "").toLowerCase();
-  const common = { viewBox: "0 0 48 48", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round" };
+  const key = `${icon || ""} ${name || ""}`.toLowerCase();
+  const common = { viewBox: "0 0 48 48", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": true };
   if (key.includes("pool") || key.includes("swim")) return <svg {...common}><path d="M7 31c4 0 4-3 8-3s4 3 8 3 4-3 8-3 4 3 8 3"/><path d="M7 38c4 0 4-3 8-3s4 3 8 3 4-3 8-3 4 3 8 3"/><path d="M18 24V10a5 5 0 0 1 10 0"/><path d="M18 16h12"/></svg>;
+  if (key.includes("spa") || key.includes("jacuzzi")) return <svg {...common}><path d="M8 25h32v6a10 10 0 0 1-10 10H18A10 10 0 0 1 8 31v-6Z"/><path d="M13 25V12a5 5 0 0 1 10 0"/><path d="M13 17h9"/><path d="M30 9c-2 2-2 4 0 6s2 4 0 6M36 9c-2 2-2 4 0 6s2 4 0 6"/></svg>;
   if (key.includes("gym") || key.includes("fitness")) return <svg {...common}><path d="M8 24h32"/><path d="M13 18v12M18 16v16M30 16v16M35 18v12"/></svg>;
-  if (key.includes("badminton") || key.includes("tennis")) return <svg {...common}><circle cx="17" cy="17" r="8"/><path d="M23 23l14 14"/><path d="M12 17h10M17 12v10"/></svg>;
-  if (key.includes("table")) return <svg {...common}><path d="M9 18h30v12H9z"/><path d="M24 18v12M14 30l-3 9M34 30l3 9"/><circle cx="34" cy="13" r="3"/></svg>;
+  if (key.includes("badminton")) return <svg {...common}><path d="m13 10 13 13M9 14l13 13"/><path d="M10 9c7-3 15 5 17 12l-6 6C14 25 6 17 10 9Z"/><path d="m26 24 11 11M33 35l4-4 3 7-2 2-7-3Z"/></svg>;
+  if (key.includes("basketball")) return <svg {...common}><circle cx="24" cy="24" r="17"/><path d="M8 20c9 1 18 9 20 20M20 8c1 9 9 18 20 20M7 28l34-8M28 7 20 41"/></svg>;
+  if (key.includes("tennis") || key.includes("squash") || key.includes("racquet") || key.includes("court")) return <svg {...common}><circle cx="17" cy="17" r="8"/><path d="M23 23l14 14M12 17h10M17 12v10"/><circle cx="36" cy="11" r="3"/></svg>;
+  if (key.includes("table") || key.includes("snooker") || key.includes("billiard")) return <svg {...common}><path d="M9 18h30v12H9z"/><path d="M24 18v12M14 30l-3 9M34 30l3 9"/><circle cx="34" cy="13" r="3"/></svg>;
   if (key.includes("yoga") || key.includes("meditation")) return <svg {...common}><circle cx="24" cy="11" r="4"/><path d="M24 17v10M14 23l10 4 10-4M16 37l8-10 8 10"/></svg>;
-  if (key.includes("jog")) return <svg {...common}><circle cx="29" cy="10" r="4"/><path d="M25 17l-5 8 8 3 4 10"/><path d="M20 25l-7 3M28 28l-8 10"/></svg>;
+  if (key.includes("jog") || key.includes("walk") || key.includes("track") || key.includes("airwalk")) return <svg {...common}><circle cx="29" cy="10" r="4"/><path d="M25 17l-5 8 8 3 4 10"/><path d="M20 25l-7 3M28 28l-8 10"/></svg>;
+  if (key.includes("cycle") || key.includes("bicycle")) return <svg {...common}><circle cx="13" cy="33" r="7"/><circle cx="36" cy="33" r="7"/><path d="m13 33 8-15 7 15h-15ZM21 18l10 1 5 14M18 14h7"/></svg>;
   if (key.includes("library")) return <svg {...common}><path d="M10 11h11v28H10zM27 11h11v28H27z"/><path d="M14 17h3M31 17h3M14 33h3M31 33h3"/></svg>;
-  if (key.includes("hall") || key.includes("club")) return <svg {...common}><path d="M8 21l16-11 16 11"/><path d="M13 20v18h22V20"/><path d="M20 38V27h8v11"/></svg>;
+  if (key.includes("temple") || key.includes("shrine") || key.includes("mandir")) return <svg {...common}><path d="M8 41h32M11 36h26M14 23h20v13H14z"/><path d="m10 23 14-11 14 11M18 23v13M30 23v13M24 12V6M24 6h7"/></svg>;
+  if (key.includes("barbeque") || key.includes("barbecue") || key.includes("bbq") || key.includes("grill")) return <svg {...common}><path d="M11 20h26a13 13 0 0 1-26 0Z"/><path d="M18 33 14 42M30 33l4 9M17 42h14"/><path d="M17 14c-3-3 1-5 0-8M25 14c-3-3 1-5 0-8M33 14c-3-3 1-5 0-8"/></svg>;
+  if (key.includes("fountain") || key.includes("water")) return <svg {...common}><path d="M8 39h32M12 33h24v6H12zM24 33V14M24 16c-7 0-11 4-12 10M24 16c7 0 11 4 12 10"/><path d="M24 9c0 3-2 5-5 5 0-3 2-5 5-5Zm0 0c0 3 2 5 5 5 0-3-2-5-5-5Z"/></svg>;
+  if (key.includes("watch tower") || key.includes("watchtower")) return <svg {...common}><path d="M14 42h20M18 42l4-24h4l4 24M16 18h16l-3-8H19l-3 8ZM24 10V5M24 5h6M19 28h10M17 36h14"/></svg>;
+  if (key.includes("amphitheatre") || key.includes("amphitheater") || key.includes("stepped seating") || key.includes("stage")) return <svg {...common}><path d="M8 35h32M11 29h26M14 23h20M17 17h14M8 35v6h32v-6M11 29v6M14 23v6M17 17v6"/></svg>;
+  if (key.includes("lounge") || key.includes("deck") || key.includes("stargaz")) return <svg {...common}><path d="M10 24v14h28V24M14 24v-4a4 4 0 0 1 8 0v4M26 24v-4a4 4 0 0 1 8 0v4M8 38h32"/><path d="m35 8 1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3Z"/></svg>;
+  if (key.includes("games") || key.includes("action station")) return <svg {...common}><rect x="8" y="16" width="32" height="21" rx="8"/><path d="M15 26h8M19 22v8"/><circle cx="31" cy="24" r="1.5" fill="currentColor" stroke="none"/><circle cx="35" cy="29" r="1.5" fill="currentColor" stroke="none"/></svg>;
+  if (key.includes("road") || key.includes("infrastructure")) return <svg {...common}><path d="m17 42 5-36M31 42 26 6M24 11v6M24 23v6M24 35v6"/></svg>;
+  if (key.includes("hall") || key.includes("club") || key.includes("cabana") || key.includes("gazebo") || key.includes("baradari") || key.includes("pergola") || key.includes("community") || key.includes("villa") || key.includes("row house")) return <svg {...common}><path d="M8 21l16-11 16 11"/><path d="M13 20v18h22V20"/><path d="M20 38V27h8v11"/></svg>;
   if (key.includes("play")) return <svg {...common}><path d="M12 35l12-22 12 22"/><path d="M18 25h12M15 35h18"/><circle cx="24" cy="13" r="3"/></svg>;
-  if (key.includes("landscape") || key.includes("garden")) return <svg {...common}><path d="M24 39V21"/><path d="M24 21c-8 0-12-5-12-12 8 0 12 5 12 12Z"/><path d="M24 25c8 0 12-5 12-12-8 0-12 5-12 12Z"/></svg>;
+  if (key.includes("landscape") || key.includes("garden") || key.includes("park") || key.includes("lawn") || key.includes("green")) return <svg {...common}><path d="M24 39V21"/><path d="M24 21c-8 0-12-5-12-12 8 0 12 5 12 12Z"/><path d="M24 25c8 0 12-5 12-12-8 0-12 5-12 12Z"/></svg>;
   if (key.includes("parking")) return <svg {...common}><path d="M16 39V9h11a9 9 0 0 1 0 18H16"/><path d="M16 27h11"/></svg>;
-  if (key.includes("security")) return <svg {...common}><path d="M24 6l15 6v10c0 10-6 17-15 20-9-3-15-10-15-20V12l15-6Z"/><path d="M18 24l4 4 8-9"/></svg>;
+  if (key.includes("security") || key.includes("gated") || key.includes("cctv") || key.includes("camera")) return <svg {...common}><path d="M24 6l15 6v10c0 10-6 17-15 20-9-3-15-10-15-20V12l15-6Z"/><path d="M18 24l4 4 8-9"/></svg>;
+  if (key.includes("elevator") || key.includes("lift")) return <svg {...common}><rect x="14" y="6" width="20" height="36" rx="2"/><path d="M24 14v20M19 19l5-5 5 5M19 29l5 5 5-5"/></svg>;
+  if (key.includes("fire")) return <svg {...common}><path d="M24 42c8 0 13-5 13-12 0-6-4-10-8-14 0 5-3 8-6 9 1-7-2-12-7-17 1 9-5 13-5 22 0 7 5 12 13 12Z"/><path d="M24 36c3 0 5-2 5-5 0-2-1-4-4-7 0 3-2 4-4 5 0 4 0 7 3 7Z"/></svg>;
+  if (key.includes("intercom")) return <svg {...common}><rect x="16" y="6" width="16" height="36" rx="3"/><path d="M21 14h6M21 22h6M21 30h6M34 14c4 4 4 16 0 20"/></svg>;
   if (key.includes("generator") || key.includes("power")) return <svg {...common}><path d="M14 14h20v24H14z"/><path d="M19 14V9h10v5"/><path d="M26 20l-5 8h6l-5 8"/></svg>;
-  return <svg {...common}><circle cx="24" cy="24" r="17"/><path d="M16 27l5 5 12-15"/></svg>;
+  return <svg {...common}><circle cx="24" cy="24" r="4"/><path d="M24 7v8M24 33v8M7 24h8M33 24h8M12 12l6 6M30 30l6 6M36 12l-6 6M18 30l-6 6"/></svg>;
 }
 
 function SectionNav({ data, visible = false }) {
@@ -807,7 +828,7 @@ function FloorPlansSection({ plans, title }) {
   const [active, setActive] = useState(0);
   if (!plans.length) return null;
   const plan = plans[Math.min(active, plans.length - 1)];
-  return <section className="section-pad osc-section" id="floor-plans"><div className="rr-wrap"><Reveal><div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: 16 }}>Floor Plans</div><h2 className="osc-section__title">Floor plans<br /><span className="rr-grad">for planned living</span></h2><p className="project-section__description">Choose from the available plan layouts to understand the space more clearly.</p></Reveal><div style={{ marginTop: 36 }}><Reveal style={{ display: "flex", gap: 12, marginBottom: 28, flexWrap: "wrap" }}>{plans.map((p, idx) => <button key={p.title || idx} type="button" className={`submit-btn ${active === idx ? "" : "ab-btn-outline"}`} style={{ padding: "10px 20px", background: active === idx ? "var(--rr-indigo)" : "transparent", color: active === idx ? "#fff" : "var(--rr-ink)", border: "1px solid var(--rr-indigo)" }} onClick={() => setActive(idx)}>{p.title || `Plan ${idx + 1}`}{p.config ? ` - ${p.config}` : ""}</button>)}</Reveal><Reveal key={active} style={{ background: "rgba(20,18,26,0.03)", padding: "clamp(16px,4vw,32px)", border: "1px solid rgba(20,18,26,0.08)", borderRadius: 8, display: "grid", placeItems: "center" }}><img src={plan.desc} alt={plan.title || `${title} floor plan`} onError={(event) => { if (plan.fallbackDesc && event.currentTarget.src !== new URL(plan.fallbackDesc, window.location.origin).href) event.currentTarget.src = plan.fallbackDesc; else event.currentTarget.hidden = true; }} style={{ maxWidth: "100%", maxHeight: 560, objectFit: "contain", borderRadius: 4 }} /></Reveal></div></div></section>;
+  return <section className="section-pad osc-section" id="floor-plans"><div className="rr-wrap"><Reveal><div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: 16 }}>Floor Plans</div><h2 className="osc-section__title">Floor plans<br /><span className="rr-grad">for planned living</span></h2><p className="project-section__description">Choose from the available plan layouts to understand the space more clearly.</p></Reveal><div style={{ marginTop: 36 }}><Reveal style={{ display: "flex", gap: 12, marginBottom: 28, flexWrap: "wrap" }}>{plans.map((p, idx) => <button key={p.title || idx} type="button" className={`submit-btn ${active === idx ? "" : "ab-btn-outline"}`} style={{ padding: "10px 20px", background: active === idx ? "var(--rr-indigo)" : "transparent", color: active === idx ? "#fff" : "var(--rr-ink)", border: "1px solid var(--rr-indigo)" }} onClick={() => setActive(idx)}>{p.title || `Plan ${idx + 1}`}{p.config ? ` - ${p.config}` : ""}</button>)}</Reveal><Reveal key={active} style={{ background: "rgba(20,18,26,0.03)", padding: "clamp(16px,4vw,32px)", border: "1px solid rgba(20,18,26,0.08)", borderRadius: 8, display: "grid", placeItems: "center" }}><img decoding="async" loading="lazy" src={plan.desc} alt={plan.title || `${title} floor plan`} onError={(event) => { if (plan.fallbackDesc && event.currentTarget.src !== new URL(plan.fallbackDesc, window.location.origin).href) event.currentTarget.src = plan.fallbackDesc; else event.currentTarget.hidden = true; }} style={{ maxWidth: "100%", maxHeight: 560, objectFit: "contain", borderRadius: 4 }} /></Reveal></div></div></section>;
 }
 
 function WalkthroughSection({ video }) {
@@ -820,8 +841,8 @@ function ProjectOverview({ data }) {
   if (!paragraphs.length) return null;
   const substantiveCopy = paragraphs.filter((text) => text.trim().length > 80);
   const overviewCopy = (substantiveCopy.length ? substantiveCopy : paragraphs).slice(0, 2);
-  const overviewImage = data.galleryImages?.[0]?.src || data.heroBg;
-  const overviewFallbackImage = data.galleryImages?.[0]?.fallbackSrc || data.heroFallbackBg;
+  const overviewImage = data.overviewImage || data.galleryImages?.[0]?.src || data.heroBg;
+  const overviewFallbackImage = data.overviewImage ? data.heroFallbackBg : data.galleryImages?.[0]?.fallbackSrc || data.heroFallbackBg;
   return (
     <section className="section-pad project-section" id="overview"><div className="rr-wrap">
       <div className="project-section__head project-section__head--overview"><span className="eyebrow">Project Overview</span><h2>Designed with purpose,<br/><span className="rr-grad">made for everyday life</span></h2><p className="project-section__description">Learn about the planning, character, and everyday experience created for {data.title}.</p></div>
@@ -849,11 +870,106 @@ function ProjectAmenities({ amenities }) {
   if (!valid.length) return null;
   return <section className="section-pad project-section project-amenities" id="amenities"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Amenities</span><h2>Spaces that support<br/><span className="rr-grad">better everyday living</span></h2><p className="project-section__description">Thoughtfully chosen spaces and services designed for daily comfort and connection.</p></div><div className="project-amenities-grid">{valid.map((item,index)=><article className="project-amenity-card" key={`${item.name}-${index}`}><div className="project-amenity-card__icon"><AmenityIcon icon={item.icon} name={item.name}/></div><h3>{item.name}</h3></article>)}</div></div></section>;
 }
+
+function ZoomableMapImage({ src, fallbackSrc, alt }) {
+  const [open, setOpen] = useState(false);
+  const [scale, setScale] = useState(1);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [dragging, setDragging] = useState(false);
+  const dragRef = useRef(null);
+
+  const resetView = () => {
+    setScale(1);
+    setPosition({ x: 0, y: 0 });
+  };
+  const closeViewer = () => {
+    setOpen(false);
+    setDragging(false);
+    dragRef.current = null;
+    resetView();
+  };
+  const setZoom = (nextScale) => {
+    const limited = Math.min(4, Math.max(1, Number(nextScale.toFixed(2))));
+    setScale(limited);
+    if (limited === 1) setPosition({ x: 0, y: 0 });
+  };
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") closeViewer();
+      if (event.key === "+" || event.key === "=") setZoom(scale + 0.5);
+      if (event.key === "-") setZoom(scale - 0.5);
+      if (event.key === "0") resetView();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open, scale]);
+
+  const startDrag = (event) => {
+    if (scale <= 1) return;
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    dragRef.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, originX: position.x, originY: position.y };
+    setDragging(true);
+  };
+  const moveDrag = (event) => {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    setPosition({ x: drag.originX + event.clientX - drag.x, y: drag.originY + event.clientY - drag.y });
+  };
+  const endDrag = (event) => {
+    if (dragRef.current?.pointerId !== event.pointerId) return;
+    event.currentTarget.releasePointerCapture?.(event.pointerId);
+    dragRef.current = null;
+    setDragging(false);
+  };
+  const wheelZoom = (event) => {
+    event.preventDefault();
+    setZoom(scale + (event.deltaY < 0 ? 0.25 : -0.25));
+  };
+
+  return <>
+    <button type="button" className="project-location__zoom-trigger" onClick={() => setOpen(true)} aria-label={`Open zoomable view of ${alt}`}>
+      <RImg className="project-location__image" src={src} fallbackSrc={fallbackSrc} alt={alt} mono />
+      <span className="project-location__zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5M10.5 7.5v6M7.5 10.5h6"/></svg>Zoom map</span>
+    </button>
+    {open ? <div className="project-map-viewer" role="dialog" aria-modal="true" aria-label={`${alt} zoom viewer`} onClick={closeViewer}>
+      <button type="button" className="project-map-viewer__close" onClick={closeViewer} aria-label="Close map viewer">&#215;</button>
+      <div className="project-map-viewer__toolbar" onClick={(event) => event.stopPropagation()}>
+        <button type="button" onClick={() => setZoom(scale - 0.5)} disabled={scale <= 1} aria-label="Zoom out">&#8722;</button>
+        <output aria-live="polite">{Math.round(scale * 100)}%</output>
+        <button type="button" onClick={() => setZoom(scale + 0.5)} disabled={scale >= 4} aria-label="Zoom in">+</button>
+        <button type="button" className="project-map-viewer__reset" onClick={resetView}>Reset</button>
+      </div>
+      <div
+        className={`project-map-viewer__canvas${dragging ? " is-dragging" : ""}${scale > 1 ? " is-zoomed" : ""}`}
+        onClick={(event) => event.stopPropagation()}
+        onDoubleClick={() => setZoom(scale > 1 ? 1 : 2)}
+        onWheel={wheelZoom}
+        onPointerDown={startDrag}
+        onPointerMove={moveDrag}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+      >
+        <div className="project-map-viewer__image" style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0) scale(${scale})` }}>
+          <RImg src={src} fallbackSrc={fallbackSrc} alt={alt} mono priority />
+        </div>
+      </div>
+      <p className="project-map-viewer__help">Use the controls or scroll to zoom. Drag the map to move around.</p>
+    </div> : null}
+  </>;
+}
+
 function ProjectLocation({ data }) {
   const destinations=(data.locationDestinations||[]).filter(item=>item?.name);
   if (!data.locationImage&&!data.locationMapEmbed&&!destinations.length) return null;
-  const mapVisual = data.locationImage ? <RImg className="project-location__image" src={data.locationImage} fallbackSrc={data.locationFallbackImage} alt={`${data.title} location map`} mono/> : data.locationMapEmbed ? <div className="project-location__image project-location__map"><iframe title={`${data.title} map`} src={data.locationMapEmbed} loading="lazy" referrerPolicy="no-referrer-when-downgrade"/></div> : null;
-  return <section className="section-pad project-section project-location" id="location"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Location &amp; Connectivity</span><h2>A connected address,<br/><span className="rr-grad">close to what matters</span></h2><p className="project-section__description">See how this address keeps daily destinations and essential connections within easy reach.</p></div><div className="project-location__grid">{mapVisual}<div className="project-location__content">{destinations.length?<div className="project-location__list">{destinations.map((item,index)=><div key={`${item.name}-${index}`}><span>{item.name}</span><strong>{item.dist||item.distance||"Nearby"}</strong></div>)}</div>:null}</div></div></div></section>;
+  const mapVisual = data.locationImage ? <ZoomableMapImage src={data.locationImage} fallbackSrc={data.locationFallbackImage} alt={`${data.title} location map`}/> : data.locationMapEmbed ? <div className="project-location__image project-location__map"><iframe title={`${data.title} map`} src={data.locationMapEmbed} loading="lazy" referrerPolicy="no-referrer-when-downgrade"/></div> : null;
+  return <section className="section-pad project-section project-location" id="location"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Location &amp; Connectivity</span><h2>A connected address,<br/><span className="rr-grad">close to what matters</span></h2><p className="project-section__description">See how this address keeps daily destinations and essential connections within easy reach.</p></div><div className="project-location__grid">{mapVisual}<div className="project-location__content">{destinations.length?<div className={`project-location__list${destinations.length % 2 ? " project-location__list--odd" : ""}`}>{destinations.map((item,index)=><div key={`${item.name}-${index}`}><span>{item.name}</span><strong>{item.dist||item.distance||"Nearby"}</strong></div>)}</div>:null}</div></div></div></section>;
 }
 
 function ProjectWalkthrough({ data }) {
@@ -861,14 +977,14 @@ function ProjectWalkthrough({ data }) {
   const videos = data.videos || [];
   const isTestimonial = data.slug === "active-acres-angelica";
   if (!videos.length) return null;
-  return <section className="section-pad project-section project-walkthrough" id="walkthrough"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">{isTestimonial ? "Testimonials" : videos.length > 1 ? "Project Videos" : "Walkthrough Video"}</span><h2>{isTestimonial ? <>Hear from the community<br /><span className="rr-grad">at Active Acres Angelica</span></> : <>Explore the project<br /><span className="rr-grad">from wherever you are</span></>}</h2><p className="project-section__description">{isTestimonial ? "Watch the Active Acres Angelica testimonial and discover the experience of living in this community." : "Take a closer look at the spaces and details that define the project."}</p></div><div className={`project-video-grid ${videos.length === 1 ? "is-single" : ""}`}>{videos.map((video, index) => <article className="project-video-card" key={`${video.videoUrl}-${index}`}>{videos.length > 1 ? <h3>{video.title}</h3> : null}<div className="project-walkthrough__frame">{playingIndex === index ? <iframe title={video.title || `${data.title} video ${index + 1}`} src={video.videoUrl} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen /> : <button type="button" onClick={() => setPlayingIndex(index)} aria-label={`Play ${video.title || "project video"}`} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", padding: 0, border: 0, background: "#111", cursor: "pointer" }}><img src={video.thumbnailUrl || data.heroBg} alt={`${video.title || data.title} video thumbnail`} onError={(event) => { if (video.thumbnailFallbackUrl && event.currentTarget.src !== new URL(video.thumbnailFallbackUrl, window.location.origin).href) event.currentTarget.src = video.thumbnailFallbackUrl; }} style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }} /><span aria-hidden="true" style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", background: "linear-gradient(180deg,rgba(10,9,24,.08),rgba(10,9,24,.62))", color: "#fff", fontSize: "48px" }}>▶</span></button>}</div></article>)}</div></div></section>;
+  return <section className="section-pad project-section project-walkthrough" id="walkthrough"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">{isTestimonial ? "Testimonials" : videos.length > 1 ? "Project Videos" : "Walkthrough Video"}</span><h2>{isTestimonial ? <>Hear from the community<br /><span className="rr-grad">at Active Acres Angelica</span></> : <>Explore the project<br /><span className="rr-grad">from wherever you are</span></>}</h2><p className="project-section__description">{isTestimonial ? "Watch the Active Acres Angelica testimonial and discover the experience of living in this community." : "Take a closer look at the spaces and details that define the project."}</p></div><div className={`project-video-grid ${videos.length === 1 ? "is-single" : ""}`}>{videos.map((video, index) => <article className="project-video-card" key={`${video.videoUrl}-${index}`}>{videos.length > 1 ? <h3>{video.title}</h3> : null}<div className="project-walkthrough__frame">{playingIndex === index ? <iframe title={video.title || `${data.title} video ${index + 1}`} src={video.videoUrl} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen /> : <button type="button" onClick={() => setPlayingIndex(index)} aria-label={`Play ${video.title || "project video"}`} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", padding: 0, border: 0, background: "#111", cursor: "pointer" }}><img decoding="async" loading="lazy" src={video.thumbnailUrl || data.heroBg} alt={`${video.title || data.title} video thumbnail`} onError={(event) => { if (video.thumbnailFallbackUrl && event.currentTarget.src !== new URL(video.thumbnailFallbackUrl, window.location.origin).href) event.currentTarget.src = video.thumbnailFallbackUrl; }} style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }} /><span aria-hidden="true" style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", background: "linear-gradient(180deg,rgba(10,9,24,.08),rgba(10,9,24,.62))", color: "#fff", fontSize: "48px" }}>▶</span></button>}</div></article>)}</div></div></section>;
 }
 
 function ProjectTestimonials({ data }) {
   const reviews = data.gmbReviews?.reviews || [];
   if (!reviews.length) return null;
   const stars = data.gmbReviews?.starIconUrl;
-  return <section className="section-pad project-section" id="reviews"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Google Reviews</span><h2>What residents say<br /><span className="rr-grad">about Active Acres</span></h2><p className="project-section__description">Feedback shared by the Active Acres community.</p></div><div className="gmb-reviews__grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "20px" }}>{reviews.map((review, index) => <article key={`${review.author}-${index}`} style={{ display: "flex", flexDirection: "column", gap: "18px", minHeight: "230px", padding: "24px", background: "#fff", border: "1px solid rgba(35,31,32,.1)", borderRadius: "12px", boxShadow: "0 10px 28px rgba(24,21,53,.06)" }}><div style={{ display: "flex", alignItems: "center", gap: "12px" }}>{review.avatar ? <img src={review.avatar} alt="" style={{ display: "block", width: "44px", height: "44px", borderRadius: "50%", objectFit: "cover" }} /> : <span style={{ display: "grid", placeItems: "center", width: "44px", height: "44px", borderRadius: "50%", background: "var(--rr-indigo)", color: "#fff" }}>{String(review.author || "G").charAt(0)}</span>}<div><strong style={{ display: "block", fontSize: "14px" }}>{review.author || "Google review"}</strong><small style={{ color: "rgba(35,31,32,.55)" }}>{review.time || "Recent"}</small></div></div>{stars ? <img src={stars} alt="5 stars" style={{ width: "100px", height: "auto", objectFit: "contain", objectPosition: "left" }} /> : null}<p style={{ margin: 0, color: "rgba(35,31,32,.7)", lineHeight: 1.65, fontSize: "14px" }}>“{review.text}”</p></article>)}</div></div></section>;
+  return <section className="section-pad project-section" id="reviews"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Google Reviews</span><h2>What residents say<br /><span className="rr-grad">about Active Acres</span></h2><p className="project-section__description">Feedback shared by the Active Acres community.</p></div><div className="gmb-reviews__grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "20px" }}>{reviews.map((review, index) => <article key={`${review.author}-${index}`} style={{ display: "flex", flexDirection: "column", gap: "18px", minHeight: "230px", padding: "24px", background: "#fff", border: "1px solid rgba(35,31,32,.1)", borderRadius: "12px", boxShadow: "0 10px 28px rgba(24,21,53,.06)" }}><div style={{ display: "flex", alignItems: "center", gap: "12px" }}>{review.avatar ? <img decoding="async" loading="lazy" src={review.avatar} alt="" style={{ display: "block", width: "44px", height: "44px", borderRadius: "50%", objectFit: "cover" }} /> : <span style={{ display: "grid", placeItems: "center", width: "44px", height: "44px", borderRadius: "50%", background: "var(--rr-indigo)", color: "#fff" }}>{String(review.author || "G").charAt(0)}</span>}<div><strong style={{ display: "block", fontSize: "14px" }}>{review.author || "Google review"}</strong><small style={{ color: "rgba(35,31,32,.55)" }}>{review.time || "Recent"}</small></div></div>{stars ? <img decoding="async" loading="lazy" src={stars} alt="5 stars" style={{ width: "100px", height: "auto", objectFit: "contain", objectPosition: "left" }} /> : null}<p style={{ margin: 0, color: "rgba(35,31,32,.7)", lineHeight: 1.65, fontSize: "14px" }}>“{review.text}”</p></article>)}</div></div></section>;
 }
 
 function ProjectFaq({ data }) {
@@ -889,7 +1005,7 @@ function ProjectGallery({ data, construction = false }) {
   const visibleIndexes=useThreeBoxGallery?Array.from({length:Math.min(3,images.length)},(_,index)=>(galleryStart+index)%images.length):images.map((_,index)=>index);
   const moveGallery=(direction)=>setGalleryStart(index=>(index+direction+images.length)%images.length);
   const moveLightbox=(direction)=>setLightboxIndex(index=>(index+direction+images.length)%images.length);
-  return <section className={`section-pad project-section project-gallery${construction ? " project-construction" : ""}`} id={sectionId}><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">{sectionLabel}</span><h2>{title}<br/><span className="rr-grad">{accent}</span></h2><p className="project-section__description">{construction ? "Follow the latest construction milestones and on-site progress." : `Browse images that capture the spaces, materials, and character of ${data.title}.`}</p></div>{visibleIndexes.length?<><div className={useThreeBoxGallery?"project-gallery-trio":"project-gallery-grid"}>{visibleIndexes.map((imageIndex,position)=>{const image=images[imageIndex];return useThreeBoxGallery?<button type="button" onClick={()=>setLightboxIndex(imageIndex)} aria-label={`Open ${image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}`} key={`${image.src}-${imageIndex}`}><RImg className={/amenit/i.test(String(image.category || "")) ? "project-gallery-image--contain" : ""} src={image.src} fallbackSrc={image.fallbackSrc} alt={image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}/></button>:<a href={image.src} target="_blank" rel="noreferrer" className={position===0?"is-featured":""} key={`${image.src}-${imageIndex}`}><RImg className={/amenit/i.test(String(image.category || "")) ? "project-gallery-image--contain" : ""} src={image.src} fallbackSrc={image.fallbackSrc} alt={image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}/></a>})}</div>{useThreeBoxGallery&&images.length>3?<div className="project-gallery-trio__controls"><span>{String(galleryStart+1).padStart(2,"0")} / {String(images.length).padStart(2,"0")}</span><button type="button" onClick={()=>moveGallery(-1)} aria-label={`Previous ${sectionLabel.toLowerCase()} images`}>&#8592;</button><button type="button" onClick={()=>moveGallery(1)} aria-label={`Next ${sectionLabel.toLowerCase()} images`}>&#8594;</button></div>:null}</>:null}</div>{lightboxIndex!==null?<div className="project-gallery-lightbox" role="dialog" aria-modal="true" aria-label={`${data.title} ${sectionLabel.toLowerCase()} preview`} onClick={()=>setLightboxIndex(null)}><button className="project-gallery-lightbox__close" type="button" onClick={()=>setLightboxIndex(null)} aria-label="Close image preview">&#215;</button>{images.length>1?<button className="project-gallery-lightbox__arrow is-prev" type="button" onClick={event=>{event.stopPropagation();moveLightbox(-1)}} aria-label="Previous image">&#8592;</button>:null}<div className="project-gallery-lightbox__image" onClick={event=>event.stopPropagation()}><RImg src={images[lightboxIndex].largeSrc||images[lightboxIndex].src} fallbackSrc={images[lightboxIndex].src||images[lightboxIndex].fallbackSrc} alt={images[lightboxIndex].alt||`${data.title} ${imageLabel} ${lightboxIndex+1}`}/><span>{String(lightboxIndex+1).padStart(2,"0")} / {String(images.length).padStart(2,"0")}</span></div>{images.length>1?<button className="project-gallery-lightbox__arrow is-next" type="button" onClick={event=>{event.stopPropagation();moveLightbox(1)}} aria-label="Next image">&#8594;</button>:null}</div>:null}</section>;
+  return <section className={`section-pad project-section project-gallery${construction ? " project-construction" : ""}`} id={sectionId}><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">{sectionLabel}</span><h2>{title}<br/><span className="rr-grad">{accent}</span></h2><p className="project-section__description">{construction ? "Follow the latest construction milestones and on-site progress." : `Browse images that capture the spaces, materials, and character of ${data.title}.`}</p></div>{visibleIndexes.length?<><div className={useThreeBoxGallery?"project-gallery-trio":"project-gallery-grid"}>{visibleIndexes.map((imageIndex,position)=>{const image=images[imageIndex];return useThreeBoxGallery?<button type="button" onClick={()=>setLightboxIndex(imageIndex)} aria-label={`Open ${image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}`} key={`${image.src}-${imageIndex}`}><RImg className={/amenit/i.test(String(image.category || "")) ? "project-gallery-image--contain" : ""} src={image.src} fallbackSrc={image.fallbackSrc} alt={image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}/></button>:<a href={image.src} target="_blank" rel="noreferrer" className={position===0?"is-featured":""} key={`${image.src}-${imageIndex}`}><RImg className={/amenit/i.test(String(image.category || "")) ? "project-gallery-image--contain" : ""} src={image.src} fallbackSrc={image.fallbackSrc} alt={image.alt||`${data.title} ${imageLabel} ${imageIndex+1}`}/></a>})}</div>{useThreeBoxGallery&&images.length>3?<div className="project-gallery-trio__controls"><span>{String(galleryStart+1).padStart(2,"0")} / {String(images.length).padStart(2,"0")}</span><button type="button" onClick={()=>moveGallery(-1)} aria-label={`Previous ${sectionLabel.toLowerCase()} images`}>&#8592;</button><button type="button" onClick={()=>moveGallery(1)} aria-label={`Next ${sectionLabel.toLowerCase()} images`}>&#8594;</button></div>:null}</>:null}</div>{lightboxIndex!==null?<div className="project-gallery-lightbox" role="dialog" aria-modal="true" aria-label={`${data.title} ${sectionLabel.toLowerCase()} preview`} onClick={()=>setLightboxIndex(null)}><button className="project-gallery-lightbox__close" type="button" onClick={()=>setLightboxIndex(null)} aria-label="Close image preview">&#215;</button>{images.length>1?<button className="project-gallery-lightbox__arrow is-prev" type="button" onClick={event=>{event.stopPropagation();moveLightbox(-1)}} aria-label="Previous image">&#8592;</button>:null}<div className="project-gallery-lightbox__image" onClick={event=>event.stopPropagation()}><RImg src={images[lightboxIndex].largeSrc||images[lightboxIndex].src} fallbackSrc={[images[lightboxIndex].src,images[lightboxIndex].fallbackSrc]} alt={images[lightboxIndex].alt||`${data.title} ${imageLabel} ${lightboxIndex+1}`}/><span>{String(lightboxIndex+1).padStart(2,"0")} / {String(images.length).padStart(2,"0")}</span></div>{images.length>1?<button className="project-gallery-lightbox__arrow is-next" type="button" onClick={event=>{event.stopPropagation();moveLightbox(1)}} aria-label="Next image">&#8594;</button>:null}</div>:null}</section>;
 }
 function ProjectEnquiryCTA({ data, onEnquire }) {
   return <section className="section-pad project-final-cta" id="enquire"><div className="rr-wrap project-final-cta__inner"><span className="eyebrow">Take a Closer Look</span><h2>Discover {data.title}<br/><span>in complete detail</span></h2><p>{data.brochureUrl?"Download the project brochure for plans, amenities, specifications and location highlights—all in one place.":"Share your details and our project team will help with plans, availability and a site visit."}</p><button className="submit-btn" type="button" onClick={onEnquire}>{data.brochureUrl?data.ctaLabels.brochure:data.ctaLabels.visit}<CtaArrow/></button></div></section>;
@@ -1014,12 +1130,12 @@ export default function GenericProjectPage({ slugOverride = "" }) {
       <Nav onContact={onBrochure} hidden={brochurePopup || heroPassed} solid={useSplitHero} />
       <main>
         <header className={`osc-hero ${useSplitHero ? `victoria-hero project-hero--${data.slug}` : String()}`} data-screen-label={data.title}>
-          <div className={`osc-hero__bg project-hero-media project-hero-media--${data.heroImageFit}`} style={{ "--project-hero-position": data.heroImagePosition }}><picture>{data.heroMobileUrl ? <source media="(max-width: 720px)" srcSet={data.heroMobileUrl} /> : null}<img src={data.heroBg} alt={`${data.title} project view`} fetchPriority="high" onError={(event) => { const fallbackSrc = data.heroFallbackBg; if (fallbackSrc && event.currentTarget.src !== new URL(fallbackSrc, window.location.origin).href) { event.currentTarget.parentElement?.querySelectorAll("source").forEach((source) => source.removeAttribute("srcset")); event.currentTarget.src = fallbackSrc; } }} /></picture>{data.heroMedia?.type === "youtube_video" && data.heroMedia.url ? <iframe className="osc-hero__video" src={data.heroMedia.url} title={`${data.title} hero video`} allow="autoplay; encrypted-media" tabIndex="-1" aria-hidden="true" /> : null}</div>
+          <div className={`osc-hero__bg project-hero-media project-hero-media--${data.heroImageFit}`} style={{ "--project-hero-position": data.heroImagePosition }}><picture>{data.heroMobileUrl ? <source media="(max-width: 720px)" srcSet={data.heroMobileUrl} /> : null}<img decoding="async" loading="eager" src={data.heroBg} alt={`${data.title} project view`} fetchpriority="high" onError={(event) => { const fallbackSrc = data.heroFallbackBg; if (fallbackSrc && event.currentTarget.src !== new URL(fallbackSrc, window.location.origin).href) { event.currentTarget.parentElement?.querySelectorAll("source").forEach((source) => source.removeAttribute("srcset")); event.currentTarget.src = fallbackSrc; } }} /></picture>{data.heroMedia?.type === "youtube_video" && data.heroMedia.url ? <iframe className="osc-hero__video" src={data.heroMedia.url} title={`${data.title} hero video`} allow="autoplay; encrypted-media" tabIndex="-1" aria-hidden="true" /> : null}</div>
           <div className="osc-hero__overlay"></div>
           <div className="osc-hero__sig" aria-hidden="true"></div>
           {useSplitHero ? <div className={`rr-wrap victoria-hero__form-wrap`}><HeroEnquiryForm title={data.title} onSubmit={submitHeroLead} /></div> : <div className="rr-wrap osc-hero__wrap">
             <Reveal><div className="osc-hero__content">
-              {data.heroLogo ? <img src={data.heroLogo} alt={`${data.title} logo`} onError={(event) => { if (data.heroFallbackLogo && event.currentTarget.src !== new URL(data.heroFallbackLogo, window.location.origin).href) event.currentTarget.src = data.heroFallbackLogo; else event.currentTarget.hidden = true; }} style={{ maxWidth: "min(260px,70vw)", maxHeight: 90, objectFit: "contain", marginBottom: 18 }} /> : null}
+              {data.heroLogo ? <img decoding="async" loading="lazy" src={data.heroLogo} alt={`${data.title} logo`} onError={(event) => { if (data.heroFallbackLogo && event.currentTarget.src !== new URL(data.heroFallbackLogo, window.location.origin).href) event.currentTarget.src = data.heroFallbackLogo; else event.currentTarget.hidden = true; }} style={{ maxWidth: "min(260px,70vw)", maxHeight: 90, objectFit: "contain", marginBottom: 18 }} /> : null}
               <h1 className="osc-hero__title">{data.title}</h1>
               {data.location ? <p className="osc-hero__city">{data.location}</p> : null}
               <p className="osc-hero__tagline">{data.tag}</p>
@@ -1030,7 +1146,7 @@ export default function GenericProjectPage({ slugOverride = "" }) {
 
         <SectionNav data={data} visible={heroPassed && !brochurePopup} />
 
-        {useSplitHero ? <section className={`victoria-intro`} id={`project-details`}><div className={`rr-wrap victoria-intro__top`}><div className={`victoria-intro__identity`}>{data.heroLogo ? <img src={data.heroLogo} alt={`${data.title} logo`} onError={(event)=>{if (data.heroFallbackLogo && event.currentTarget.src !== new URL(data.heroFallbackLogo, window.location.origin).href) event.currentTarget.src = data.heroFallbackLogo; else event.currentTarget.hidden=true;}} /> : null}<div><span className={`eyebrow`}>{data.type}</span><h1>{data.title}</h1>{data.location?<p>{data.location}</p>:null}<strong>{data.tag}</strong></div></div><div className={`victoria-intro__actions`}><Link className={`ab-btn-outline ab-btn-outline--white`} to={`/projects`}>More Projects<CtaArrow /></Link><button className={`submit-btn victoria-intro__brochure`} type={`button`} onClick={onBrochure}>{data.brochureUrl?data.ctaLabels.brochure:data.ctaLabels.visit}<CtaArrow /></button></div></div>{data.overviewHighlights.length?<div className={`rr-wrap victoria-intro__facts`}>{data.overviewHighlights.map((h, i) => <div className={`victoria-fact`} key={h.label || i}><span>{String(i + 1).padStart(2, `0`)}</span><div><small>{h.label}</small><strong>{h.desc}</strong></div></div>)}</div>:null}</section> : null}
+        {useSplitHero ? <section className={`victoria-intro`} id={`project-details`}><div className={`rr-wrap victoria-intro__top`}><div className={`victoria-intro__identity`}>{data.heroLogo ? <img decoding="async" loading="lazy" src={data.heroLogo} alt={`${data.title} logo`} onError={(event)=>{if (data.heroFallbackLogo && event.currentTarget.src !== new URL(data.heroFallbackLogo, window.location.origin).href) event.currentTarget.src = data.heroFallbackLogo; else event.currentTarget.hidden=true;}} /> : null}<div><span className={`eyebrow`}>{data.type}</span><h1>{data.title}</h1>{data.location?<p>{data.location}</p>:null}<strong>{data.tag}</strong></div></div><div className={`victoria-intro__actions`}><Link className={`ab-btn-outline ab-btn-outline--white`} to={`/projects`}>More Projects<CtaArrow /></Link><button className={`submit-btn victoria-intro__brochure`} type={`button`} onClick={onBrochure}>{data.brochureUrl?data.ctaLabels.brochure:data.ctaLabels.visit}<CtaArrow /></button></div></div>{data.overviewHighlights.length?<div className={`rr-wrap victoria-intro__facts`}>{data.overviewHighlights.map((h, i) => <div className={`victoria-fact`} key={h.label || i}><span>{String(i + 1).padStart(2, `0`)}</span><div><small>{h.label}</small><strong>{h.desc}</strong></div></div>)}</div>:null}</section> : null}
 
         <ProjectOverview data={data} />
 

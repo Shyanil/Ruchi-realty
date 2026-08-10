@@ -62,7 +62,7 @@ export const ONE_VICTORIA_FALLBACK = {
   galleryImages: [
     ...Array.from({ length: 6 }, (_, index) => ({
       src: `${BASE}/gallery/gallery-${index + 1}.webp`,
-      largeSrc: `${BASE}/gallery/gallery-${index + 1}-large.jpg`,
+      largeSrc: `${BASE}/gallery/gallery-${index + 1}-large.webp`,
       alt: `One Victoria gallery image ${index + 1}`,
       category: "Gallery",
     })),

@@ -5,7 +5,7 @@
   "notes": [
     "Source project page redirects from https://ruchirealty.com/oscar-fort/ to https://oscarfort.com/.",
     "No standalone brochure PDF was found. brochure_4.jpg was downloadable, but brochure_1.jpg, brochure_2.jpg, brochure_3.jpg and mobile brochure variants failed from the source server, so brochure is VERIFY.",
-    "Walkthrough video is not downloaded. The source Vimeo URL is stored directly: https://player.vimeo.com/video/735387729?h=0982bb9b19.",
+    "The source Vimeo embed returns 401. The official source page's public YouTube fallback is used instead: https://www.youtube.com/embed/HvoOxDzKOcA?rel=0.",
     "walkThrough.jpg could not be downloaded from the source server; local hero.jpg is used as the walkthrough thumbnail.",
     "No Google Maps embed was found in the inspected contact page, so map embed is VERIFY."
   ],
@@ -25,7 +25,7 @@
       "exists": true
     },
     {
-      "originalUrl": "https://oscarfort.com/images/oscarFort.jpg",
+      "originalUrl": "assets/projects/oscar-fort-indore.png (client supplied)",
       "downloadedLocalPath": "public/projects/oscar-fort-indore/hero.webp",
       "finalPublicPath": "/projects/oscar-fort-indore/hero.webp",
       "usage": "hero, card",

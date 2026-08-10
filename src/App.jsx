@@ -17,6 +17,9 @@ import AdminPage from './pages/AdminPage'
 import GenericProjectPage from './pages/GenericProjectPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import DisclaimerPage from './pages/DisclaimerPage'
+import WhatsAppChat from './components/WhatsAppChat'
+import { CustomCursor } from './components/shared'
+import ProgressiveImages from './components/ProgressiveImages'
 
 function ScrollToTop() {
   const { pathname, hash, key } = useLocation();
@@ -60,6 +63,9 @@ export default function App() {
   return (
     <>
       <ScrollToTop />
+      <ProgressiveImages />
+      <CustomCursor />
+      <WhatsAppChat />
       <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/oscar-indore" element={<Navigate to="/projects/oscar-indore" replace />} />

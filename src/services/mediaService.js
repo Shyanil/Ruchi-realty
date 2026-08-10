@@ -9,20 +9,20 @@ const normalizeGallery = (item) => { const image=item.image_url||item.media_asse
 export async function getGallery(admin = false) { const fn = admin ? window.RuchiBackend?.media?.getAllGallery : window.RuchiBackend?.media?.getGallery; const result = await fn?.(); if (result?.data?.length) return result.data.map(normalizeGallery); return GALLERY_MEDIA.map(normalizeGallery); }
 const normalizeAwardTitle = (value = "") => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const AWARD_COVERS = {
-  "mega property expo award": "/assets/media/award-mega-property-expo-2025.webp",
-  "ultra high luxury developer of the year": "/assets/media/award-ultra-high-luxury-developer.webp",
-  "luxury project of the year": "/assets/media/award-luxury-project-golden-brick-2025.webp",
-  "golden brick award": "/assets/media/award-luxury-project-golden-brick-2025.webp",
-  "company of the year": "/assets/media/award-company-of-the-year.webp",
-  "times property show award": "/assets/media/award-times-property-show.webp",
-  "property show award credai": "/assets/media/award-credai-property-show.webp",
-  "property fair awards hdfc": "/assets/media/award-hdfc-property-fair.webp",
-  "malwa vyapar awards": "/assets/media/award-malwa-vyapar.webp",
-  "vishisht atithi awards": "/assets/media/award-vishesh-atithi.webp",
-  "vishesh atithi awards": "/assets/media/award-vishesh-atithi.webp",
-  "real estate fair award": "/assets/media/award-real-estate-fair-2025.webp",
-  "most prestigious property exhibition": "/assets/media/award-prestigious-property-exhibition.webp",
-  "property auto expo award": "/assets/media/award-property-auto-expo.webp",
+  "mega property expo award": "/assets/media/award-mega-property-expo-2025-transparent.webp",
+  "ultra high luxury developer of the year": "/assets/media/award-ultra-high-luxury-developer-transparent.webp",
+  "luxury project of the year": "/assets/media/award-luxury-project-golden-brick-2025-transparent.webp",
+  "golden brick award": "/assets/media/award-luxury-project-golden-brick-2025-transparent.webp",
+  "company of the year": "/assets/media/award-company-of-the-year-transparent.webp",
+  "times property show award": "/assets/media/award-times-property-show-transparent.webp",
+  "property show award credai": "/assets/media/award-credai-property-show-transparent.webp",
+  "property fair awards hdfc": "/assets/media/award-hdfc-property-fair-transparent.webp",
+  "malwa vyapar awards": "/assets/media/award-malwa-vyapar-transparent.webp",
+  "vishisht atithi awards": "/assets/media/award-vishesh-atithi-transparent.webp",
+  "vishesh atithi awards": "/assets/media/award-vishesh-atithi-transparent.webp",
+  "real estate fair award": "/assets/media/award-real-estate-fair-2025-transparent.webp",
+  "most prestigious property exhibition": "/assets/media/award-prestigious-property-exhibition-transparent.webp",
+  "property auto expo award": "/assets/media/award-property-auto-expo-transparent.webp",
 };
 const withCover = (item) => {
   const localAwardCover = AWARD_COVERS[normalizeAwardTitle(item.title)];

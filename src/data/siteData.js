@@ -29,9 +29,9 @@ const IMG_PEOPLE = [
 
 const STATS = [
   { num: 4, suffix: " Million+", label: "Ready-to-move sq. ft. sold across our developments." },
-  { num: 14, suffix: " Years+", label: "Experience creating places people value." },
+  { num: 12, suffix: " Years+", label: "Experience creating places people value." },
   { num: 3, suffix: " Cities", label: "Kolkata, Indore and Bhopal." },
-  { num: 11, suffix: "+", label: "Ready-to-move projects." },
+  { num: 10, suffix: "+", label: "Ready-to-move projects." },
 ];
 
 const TRUST = [

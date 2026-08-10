@@ -7,7 +7,7 @@ function AwardCard({ a, hidden }) {
   return (
     <div className="awcard" aria-hidden={hidden ? "true" : undefined}>
       <div className="awcard__wreath">
-        <img src={AWARD_WREATH} alt="" loading="lazy" />
+        <img decoding="async" src={AWARD_WREATH} alt="" loading="lazy" />
         {a.year ?
           <span className="awcard__inwreath">{a.year}</span> :
           <svg className="awcard__star" viewBox="0 0 24 24" aria-hidden="true">

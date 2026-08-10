@@ -12,7 +12,6 @@ import { BlogSection } from "../components/BlogSection";
 import { HOME_FAQS } from "../components/Faq";
 import { Contact } from "../components/Contact";
 import { Footer } from "../components/Footer";
-import { CustomCursor } from "../components/shared";
 import SEO from "../components/SEO";
 
 const HOME_SCHEMAS = [
@@ -73,7 +72,6 @@ export default function HomePage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }}
         />
       ))}
-      <CustomCursor />
       <Nav onContact={scrollToContact} />
       <main>
         <Hero />

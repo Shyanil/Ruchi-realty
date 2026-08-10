@@ -126,7 +126,7 @@ export default function ProjectsPage() {
                 )}
               </div> : null}
             </Reveal>
-            <div className="pgrid" key={`${city}-${status}`}>
+            <div className={`pgrid${list.length === 1 ? " pgrid--single" : ""}`} key={`${city}-${status}`}>
               {list.map((p, i) =>
                 <Reveal key={`${p.name}-${p.city}-${i}`} delay={(i % 3) * 70}>
                   <ProjectTile p={p} i={i} n={i} />
@@ -134,7 +134,7 @@ export default function ProjectsPage() {
               )}
             </div>
             {list.length === 0 ?
-              <p className="pp-empty">Nothing here yet - try a different city or status.</p> : null}
+              <p className="pp-empty">More exciting projects are coming soon. Meanwhile, explore another city or project status.</p> : null}
           </div>
         </section>
 

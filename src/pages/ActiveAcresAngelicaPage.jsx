@@ -295,7 +295,7 @@ function SpecificationsSection({ subpage }) {
             return (
               <article className={`project-spec-row ${index % 2 ? "is-reversed" : ""}`} key={spec.title || index}>
                 <div className="project-spec-row__visual">
-                  <img src={image} alt={`Angelica ${spec.title}`} loading="lazy" />
+                  <img decoding="async" src={image} alt={`Angelica ${spec.title}`} loading="lazy" />
                 </div>
                 <div className="project-spec-row__content">
                   <span className="project-spec-row__number">{String(index + 1).padStart(2, "0")}</span>
@@ -339,7 +339,7 @@ function AmenitiesSection({ subpage }) {
               <Reveal key={a.name || i} delay={i * 70} className="osc-amenity-card">
                 <div className="osc-amenity-card__icon" style={{ display: "flex", justifyContent: "center", alignItems: "center", background: "rgba(245,244,241,0.08)", padding: "10px", borderRadius: "50%", width: "52px", height: "52px", color: "var(--rr-paper)" }}>
                   {isUrl ? (
-                    <img src={iconKey} alt={a.name} style={{ width: "32px", height: "32px", objectFit: "contain" }} />
+                    <img decoding="async" loading="lazy" src={iconKey} alt={a.name} style={{ width: "32px", height: "32px", objectFit: "contain" }} />
                   ) : (
                     <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: "24px", height: "24px" }}>
                       <circle cx="24" cy="24" r="18" />
@@ -403,7 +403,7 @@ function FloorPlansSection({ subpage }) {
 
           <Reveal key={activePlanIdx} className="osc-floorplans__viewer" style={{ background: "rgba(255,255,255,0.03)", padding: "20px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.08)", display: "flex", justifyContent: "center", alignItems: "center" }}>
             {plans[activePlanIdx] && plans[activePlanIdx].desc && (
-              <img
+              <img decoding="async" loading="lazy"
                 src={plans[activePlanIdx].desc}
                 alt={plans[activePlanIdx].title}
                 style={{ maxWidth: "100%", maxHeight: "550px", objectFit: "contain", borderRadius: "4px" }}
@@ -475,7 +475,7 @@ function GallerySection({ subpage }) {
                 aria-label={`Open ${img.alt || `Angelica gallery image ${imgIdx + 1}`}`}
               >
                 <div className="rimg" style={{ width: "100%", height: "100%", borderRadius: "10px", overflow: "hidden" }}>
-                  <img
+                  <img decoding="async"
                     src={img.src}
                     alt={img.alt || `Angelica gallery ${imgIdx + 1}`}
                     loading="lazy"
@@ -527,7 +527,7 @@ function GallerySection({ subpage }) {
             </button>
           )}
           <div className="project-gallery-lightbox__image" onClick={(e) => e.stopPropagation()}>
-            <img src={images[lightboxIndex].largeSrc || images[lightboxIndex].src} alt={images[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain", background: "transparent" }} />
+            <img decoding="async" loading="lazy" src={images[lightboxIndex].largeSrc || images[lightboxIndex].src} alt={images[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain", background: "transparent" }} />
             <span>
               {String(lightboxIndex + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
             </span>
@@ -584,7 +584,7 @@ function WalkthroughSection({ subpage }) {
               )
             ) : (
               <button type="button" className="osc-walkthrough__play-btn" onClick={() => setPlaying(true)} aria-label="Play testimonial video">
-                <img src={thumbnail || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80"} alt="Active Acres testimonial video thumbnail" loading="lazy" />
+                <img decoding="async" src={thumbnail || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80"} alt="Active Acres testimonial video thumbnail" loading="lazy" />
                 <span className="osc-walkthrough__play-icon">
                   <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="10" />
@@ -610,14 +610,14 @@ function GmbReviewsSection({ subpage }) {
         <Reveal>
           <div className="sec-head" style={{ marginBottom: "48px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px" }}>
-              {gmb.googleIconUrl && <img src={gmb.googleIconUrl} alt="Google" style={{ width: "24px", height: "24px", objectFit: "contain" }} />}
+              {gmb.googleIconUrl && <img decoding="async" loading="lazy" src={gmb.googleIconUrl} alt="Google" style={{ width: "24px", height: "24px", objectFit: "contain" }} />}
               <div className="eyebrow" style={{ color: "var(--rr-indigo)", margin: 0 }}>GOOGLE REVIEWS</div>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "20px" }}>
               <h2>What our clients say<br /><span className="rr-grad">about Active Acres</span></h2>
               {gmb.starIconUrl && (
                 <div style={{ display: "flex", alignItems: "center", gap: "8px", background: "rgba(20,18,26,0.04)", padding: "10px 16px", borderRadius: "30px", border: "1px solid rgba(20,18,26,0.08)" }}>
-                  <img src={gmb.starIconUrl} alt="5 Stars" style={{ height: "18px", objectFit: "contain" }} />
+                  <img decoding="async" loading="lazy" src={gmb.starIconUrl} alt="5 Stars" style={{ height: "18px", objectFit: "contain" }} />
                   <span style={{ fontSize: "14px", fontWeight: "600" }}>4.8 / 5 Rating</span>
                 </div>
               )}
@@ -632,7 +632,7 @@ function GmbReviewsSection({ subpage }) {
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
                   <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
                     {r.avatar ? (
-                      <img src={r.avatar} alt="" style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} />
+                      <img decoding="async" loading="lazy" src={r.avatar} alt="" style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} />
                     ) : (
                       <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "var(--rr-indigo)", color: "#fff", display: "grid", placeItems: "center", fontWeight: "600", fontSize: "16px" }}>
                         {r.author ? r.author.charAt(0) : "G"}
@@ -643,7 +643,7 @@ function GmbReviewsSection({ subpage }) {
                       <span style={{ fontSize: "12px", color: "rgba(20,18,26,0.5)" }}>{r.time || "Recent"}</span>
                     </div>
                   </div>
-                  {gmb.starIconUrl && <img src={gmb.starIconUrl} alt="Stars" style={{ height: "14px", objectFit: "contain" }} />}
+                  {gmb.starIconUrl && <img decoding="async" loading="lazy" src={gmb.starIconUrl} alt="Stars" style={{ height: "14px", objectFit: "contain" }} />}
                 </div>
                 <p style={{ fontSize: "14px", lineHeight: "1.6", color: "rgba(20,18,26,0.7)", fontStyle: "italic", margin: 0 }}>
                   "{r.text}"
@@ -674,7 +674,7 @@ function LocationSection({ subpage }) {
         <div className="osc-location__grid">
           {mapUrl && (
             <Reveal className="osc-location__visual">
-              <img src={mapUrl} alt="Active Acres Location Map" loading="lazy" className="osc-location__img" />
+              <img decoding="async" src={mapUrl} alt="Active Acres Location Map" loading="lazy" className="osc-location__img" />
             </Reveal>
           )}
           <Reveal delay={80} className="osc-location__info">

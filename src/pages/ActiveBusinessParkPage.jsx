@@ -273,7 +273,7 @@ function AmenitiesSection({ subpage }) {
             <Reveal key={a.name || i} delay={i * 70} className="osc-amenity-card">
               <div className="osc-amenity-card__icon" style={{ display: "flex", justifyContent: "center", alignItems: "center", background: "rgba(245,244,241,0.08)", padding: "10px", borderRadius: "50%", width: "52px", height: "52px" }}>
                 {a.icon && (a.icon.startsWith("assets/") || a.icon.includes(".")) ? (
-                  <img src={a.icon} alt={a.name} style={{ width: "32px", height: "32px", objectFit: "contain", filter: "brightness(1) invert(0)" }} />
+                  <img decoding="async" loading="lazy" src={a.icon} alt={a.name} style={{ width: "32px", height: "32px", objectFit: "contain", filter: "brightness(1) invert(0)" }} />
                 ) : (
                   <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: "24px", height: "24px" }}>
                     <circle cx="24" cy="24" r="18" /><path d="M12 24h24M24 12v24" />
@@ -333,7 +333,7 @@ function FloorPlansSection({ subpage }) {
 
           <Reveal key={activePlanIdx} className="osc-floorplans__viewer" style={{ background: "rgba(20,18,26,0.03)", padding: "30px", borderRadius: "12px", border: "1px solid rgba(20,18,26,0.08)", display: "flex", justifyContent: "center", alignItems: "center" }}>
             {plans[activePlanIdx] && (
-              <img
+              <img decoding="async" loading="lazy"
                 src={plans[activePlanIdx].desc}
                 alt={plans[activePlanIdx].title}
                 style={{ maxWidth: "100%", maxHeight: "550px", objectFit: "contain", borderRadius: "4px" }}
@@ -395,7 +395,7 @@ function LocationSection({ subpage }) {
         </Reveal>
         <div className="osc-location__grid">
           <Reveal className="osc-location__visual">
-            <img src={subpage.locationImage} alt="Active Business Park Location Map" loading="lazy" className="osc-location__img" />
+            <img decoding="async" src={subpage.locationImage} alt="Active Business Park Location Map" loading="lazy" className="osc-location__img" />
           </Reveal>
           <Reveal delay={80} className="osc-location__info">
             <h3 className="osc-location__heading">Key Destinations</h3>
@@ -486,7 +486,7 @@ function GallerySection({ subpage }) {
                 aria-label={`Open ${img.alt || `Active Business Park gallery image ${imgIdx + 1}`}`}
               >
                 <div className="rimg" style={{ width: "100%", height: "100%", borderRadius: "10px", overflow: "hidden" }}>
-                  <img
+                  <img decoding="async"
                     src={img.src}
                     alt={img.alt || `Active Business Park gallery ${imgIdx + 1}`}
                     loading="lazy"
@@ -538,7 +538,7 @@ function GallerySection({ subpage }) {
             </button>
           )}
           <div className="project-gallery-lightbox__image" onClick={(e) => e.stopPropagation()}>
-            <img src={images[lightboxIndex].src} alt={images[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            <img decoding="async" loading="lazy" src={images[lightboxIndex].src} alt={images[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
             <span>
               {String(lightboxIndex + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
             </span>

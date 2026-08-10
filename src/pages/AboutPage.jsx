@@ -142,7 +142,7 @@ function AboutHero() {
       <div className="rr-wrap ab-hero__grid">
         <Reveal>
           <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>About Ruchi Realty</div>
-          <h1 className="ab-hero__title">About Ruchi Realty <span className="rr-grad">Real Estate</span><br /><span className="rr-grad">Developer Since 2008</span></h1>
+          <h1 className="ab-hero__title">Real Estate Developer <span className="rr-grad">Since 2008</span></h1>
         </Reveal>
       </div>
     </header>
@@ -157,7 +157,7 @@ function AboutLegacy() {
           <div className="ab-legacy__left section-intro--left">
             <Reveal>
               <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>OUR STORY</div>
-              <h2 className="ab-legacy__title"><span className="ab-title-line">Real Estate With Purpose</span><span className="rr-grad ab-title-line">Built For Lasting Value</span></h2>
+              <h2 className="ab-legacy__title"><span className="ab-title-line">Real Estate <span className="ab-title-laptop-break">With Purpose</span></span><span className="rr-grad ab-title-line">Built For Lasting Value</span></h2>
               <p className="ab-legacy__intro">
                 Founded in 2008, Ruchi Realty develops well-planned residential, commercial and plotted community projects across growing Indian cities. Each project is shaped around location, usability and long-term value.
               </p>
@@ -169,9 +169,9 @@ function AboutLegacy() {
 
           <Reveal delay={80} className="ab-legacy__showcase">
             <div className="ab-legacy__media-grid">
-              <div className="ab-legacy__image-box"><img src="assets/projects/one-victoria.webp" alt="One Victoria" /></div>
-              <div className="ab-legacy__image-box"><img src="uploads/hero-active-acres.webp" alt="Active Acres Concept" /></div>
-              <div className="ab-legacy__image-box"><img src="assets/projects/one-rajarhat.webp" alt="One Rajarhat" /></div>
+              <div className="ab-legacy__image-box"><img src="assets/projects/one-victoria.webp" alt="One Victoria" loading="lazy" decoding="async" /></div>
+              <div className="ab-legacy__image-box"><img src="uploads/hero-active-acres.webp" alt="Active Acres Concept" loading="lazy" decoding="async" /></div>
+              <div className="ab-legacy__image-box"><img src="assets/projects/one-rajarhat.webp" alt="One Rajarhat" loading="lazy" decoding="async" /></div>
             </div>
             <div className="ab-legacy__stats-strip">
               <div className="ab-glass-stat"><span className="ab-glass-stat__val">33</span><span className="ab-glass-stat__lbl">Years of Legacy</span></div>
@@ -194,7 +194,7 @@ function AboutPhilosophy() {
         <div className="ab-philosophy__header">
           <Reveal>
             <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>HOW WE WORK</div>
-              <h2 className="ab-philosophy__title">Clear Principles for Planning, Delivery <span className="rr-grad">&amp; Support</span></h2>
+              <h2 className="ab-philosophy__title">Clear Principles for Planning, Project Delivery <span className="rr-grad">&amp; Support</span></h2>
               <p className="ab-philosophy__lead">
                 Our real estate development approach is built on practical design, documented specifications and responsible construction. From project planning to handover, we prioritize clear communication and reliable customer support, even after possession.
               </p>
@@ -208,6 +208,8 @@ function AboutPhilosophy() {
                 key={idx}
                 src={item.img}
                 alt={item.title}
+                loading="lazy"
+                decoding="async"
                 className={`ab-philosophy__panel-img ${activeLedger === idx ? "is-visible" : ""}`}
               />
             ))}
@@ -249,7 +251,7 @@ function AboutVisionMission() {
     <section className="ab-vm section-pad" id="vision-mission">
       <div className="rr-wrap">
         <Reveal className="ab-vm__feature">
-          <img src="/assets/about-committed-to-you.webp" alt="Ruchi Realty committed to you" />
+          <img src="/assets/about-committed-to-you.webp" alt="Ruchi Realty committed to you" loading="lazy" decoding="async" />
         </Reveal>
         <div className="ab-vm__grid">
           <Reveal className="ab-vm-card ab-vm-card--dark">
@@ -448,7 +450,7 @@ function TeamModal({ member, onClose }) {
         </button>
         <div className="ab-modal__layout">
           <div className="ab-modal__media">
-            <img src={member.img} alt={member.name} className="ab-modal__img" />
+            <img src={member.img} alt={member.name} className="ab-modal__img" loading="eager" decoding="async" />
           </div>
           <div className="ab-modal__content">
             <span className="ab-modal__role">{member.role}</span>
@@ -483,7 +485,7 @@ function AboutTeam() {
           {TEAM_MEMBERS.filter((m) => !m.hidden).map((m, i) => (
             <Reveal key={m.name} delay={i * 80} className="ab-team-card">
               <div className="ab-team-card__media">
-                <img src={m.img} alt={m.name} className="ab-team-card__img" />
+                <img src={m.img} alt={m.name} className="ab-team-card__img" loading="lazy" decoding="async" />
               </div>
               <div className="ab-team-card__content">
                 <h3 className="ab-team-card__name">{m.name}</h3>

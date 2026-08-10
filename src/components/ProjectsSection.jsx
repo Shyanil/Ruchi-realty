@@ -107,11 +107,14 @@ export function ProjectTile({ p, i, n }) {
   const url = projectUrl(p);
   const isInternal = url && url.startsWith("/");
   const fallbackImg = projectFallbackImage(p);
+  const hasBrightImage = String(p.name || "").toLowerCase().includes("oscar fort");
+  const primaryImg = hasBrightImage ? "/projects/oscar-fort-indore/hero.webp" : p.img;
+  const tileClass = hasBrightImage ? "ptile ptile--bright-image" : "ptile";
 
   if (isInternal) {
     return (
-      <Link className="ptile" data-cursor="View" to={url}>
-        <RImg src={p.img} fallbackSrc={fallbackImg} alt={`${p.name}, ${p.city}`} className="ptile__media" grade />
+      <Link className={tileClass} data-cursor="View" to={url}>
+        <RImg src={primaryImg} fallbackSrc={fallbackImg} alt={`${p.name}, ${p.city}`} className="ptile__media" grade={!hasBrightImage} />
         <div className="ptile__scrim"></div>
         <div className="ptile__top">
           <span className={`status ${cls}`}><span className="dot"></span>{p.status}</span>
@@ -128,8 +131,8 @@ export function ProjectTile({ p, i, n }) {
 
   const Tile = url ? "a" : "article";
   return (
-    <Tile className="ptile" data-cursor={url ? "View" : undefined} href={url || undefined}>
-      <RImg src={p.img} fallbackSrc={fallbackImg} alt={`${p.name}, ${p.city}`} className="ptile__media" grade />
+    <Tile className={tileClass} data-cursor={url ? "View" : undefined} href={url || undefined}>
+      <RImg src={primaryImg} fallbackSrc={fallbackImg} alt={`${p.name}, ${p.city}`} className="ptile__media" grade={!hasBrightImage} />
       <div className="ptile__scrim"></div>
       <div className="ptile__top">
         <span className={`status ${cls}`}><span className="dot"></span>{p.status}</span>
@@ -191,7 +194,7 @@ export function ProjectsSection() {
           <div className="sec-head sec-head--dark">
             <div className="projects__intro">
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>Explore our projects</div>
-              <h2>Find a project in the city<br /><span className="rr-grad">that matters to you</span></h2>
+              <h2>Find the Right Project in<br /><span className="rr-grad">Your Preferred City</span></h2>
             </div>
             <p className="sec-head__lead">
               Browse luxury apartments, residential plots and commercial spaces in Kolkata, Indore and Bhopal. Filter by city to find the right next step.

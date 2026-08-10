@@ -13,8 +13,6 @@ const offices = [
     sales: "+91 89292 25275",
     corporate: "0731-4018010 | 4018015 | 4018120",
         area: "Serving South Tukoganj, Bicholi Hapsi and greater Indore.",
-    action: "Call Sales",
-    href: "tel:+918929225275",
   },
   {
     id: "kolkata-office",
@@ -25,8 +23,6 @@ const offices = [
     sales: "+91 98364 18000",
     corporate: "033-66066777",
         area: "Serving Tangra, New Town, Rajarhat and greater Kolkata.",
-    action: "Call Sales",
-    href: "tel:+919836418000",
   },
   {
     id: "bhopal-office",
@@ -37,8 +33,6 @@ const offices = [
     sales: "+91 89292 25275",
     corporate: "Customer Care: +91 89292 25275",
         area: "Serving Hoshangabad Road and greater Bhopal.",
-    action: "Call Customer Care",
-    href: "tel:+918929225275",
   },
 ];
 
@@ -82,9 +76,6 @@ export default function ContactPage() {
                       </p>
                     )}
                   </div>
-                  <a href={office.href} className="contact-office-btn">
-                    {office.action}<span>→</span>
-                  </a>
                 </article>
               ))}
             </div>

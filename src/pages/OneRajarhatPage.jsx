@@ -190,7 +190,7 @@ function HighlightIcon({ icon }) {
   };
 
   if (iconMap[key]) {
-    return <img src={iconMap[key]} alt="" className="one-raj-highlight-icon" />;
+    return <img decoding="async" loading="lazy" src={iconMap[key]} alt="" className="one-raj-highlight-icon" />;
   }
 
   return (
@@ -392,7 +392,7 @@ function LandscapeFeaturesSection({ subpage }) {
             return (
               <article className={`project-spec-row ${index % 2 ? "is-reversed" : ""}`} key={spec.title || index}>
                 <div className="project-spec-row__visual">
-                  <img src={image} alt={`One Rajarhat ${spec.title}`} loading="lazy" />
+                  <img decoding="async" src={image} alt={`One Rajarhat ${spec.title}`} loading="lazy" />
                 </div>
                 <div className="project-spec-row__content">
                   <span className="project-spec-row__number">{String(index + 1).padStart(2, "0")}</span>
@@ -456,7 +456,7 @@ function FloorPlansSection({ subpage }) {
 
           <Reveal key={activePlanIdx} className="osc-floorplans__viewer" style={{ background: "rgba(255,255,255,0.03)", padding: "20px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.08)", display: "flex", justifyContent: "center", alignItems: "center" }}>
             {plans[activePlanIdx] && plans[activePlanIdx].desc && (
-              <img
+              <img decoding="async" loading="lazy"
                 src={plans[activePlanIdx].desc}
                 alt={plans[activePlanIdx].title}
                 style={{ maxWidth: "100%", maxHeight: "550px", objectFit: "contain", borderRadius: "4px" }}
@@ -528,7 +528,7 @@ function GallerySection({ subpage }) {
                 aria-label={`Open ${img.alt || `One Rajarhat gallery image ${imgIdx + 1}`}`}
               >
                 <div className="rimg" style={{ width: "100%", height: "100%", borderRadius: "10px", overflow: "hidden" }}>
-                  <img
+                  <img decoding="async"
                     src={img.src}
                     alt={img.alt || `One Rajarhat gallery ${imgIdx + 1}`}
                     loading="lazy"
@@ -580,7 +580,7 @@ function GallerySection({ subpage }) {
             </button>
           )}
           <div className="project-gallery-lightbox__image" onClick={(e) => e.stopPropagation()}>
-            <img src={images[lightboxIndex].src} alt={images[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            <img decoding="async" loading="lazy" src={images[lightboxIndex].src} alt={images[lightboxIndex].alt || `Gallery image ${lightboxIndex + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
             <span>
               {String(lightboxIndex + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
             </span>
@@ -659,14 +659,14 @@ function GmbReviewsSection({ subpage }) {
         <Reveal>
           <div className="sec-head" style={{ marginBottom: "48px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px" }}>
-              {gmb.googleIconUrl && <img src={gmb.googleIconUrl} alt="Google" style={{ width: "24px", height: "24px", objectFit: "contain" }} />}
+              {gmb.googleIconUrl && <img decoding="async" loading="lazy" src={gmb.googleIconUrl} alt="Google" style={{ width: "24px", height: "24px", objectFit: "contain" }} />}
               <div className="eyebrow" style={{ color: "var(--rr-indigo)", margin: 0 }}>GOOGLE REVIEWS</div>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "20px" }}>
               <h2>What our clients say<br /><span className="rr-grad">about One Rajarhat</span></h2>
               {gmb.starIconUrl && (
                 <div style={{ display: "flex", alignItems: "center", gap: "8px", background: "rgba(20,18,26,0.04)", padding: "10px 16px", borderRadius: "30px", border: "1px solid rgba(20,18,26,0.08)" }}>
-                  <img src={gmb.starIconUrl} alt="5 Stars" style={{ height: "18px", objectFit: "contain" }} />
+                  <img decoding="async" loading="lazy" src={gmb.starIconUrl} alt="5 Stars" style={{ height: "18px", objectFit: "contain" }} />
                   <span style={{ fontSize: "14px", fontWeight: "600" }}>4.8 / 5 Rating</span>
                 </div>
               )}
@@ -687,7 +687,7 @@ function GmbReviewsSection({ subpage }) {
                       <span style={{ fontSize: "12px", color: "rgba(20,18,26,0.5)" }}>{r.time || "Recent"}</span>
                     </div>
                   </div>
-                  {gmb.starIconUrl && <img src={gmb.starIconUrl} alt="Stars" style={{ height: "14px", objectFit: "contain" }} />}
+                  {gmb.starIconUrl && <img decoding="async" loading="lazy" src={gmb.starIconUrl} alt="Stars" style={{ height: "14px", objectFit: "contain" }} />}
                 </div>
                 <p style={{ fontSize: "14px", lineHeight: "1.6", color: "rgba(20,18,26,0.7)", fontStyle: "italic", margin: 0 }}>
                   "{r.text}"
@@ -720,7 +720,7 @@ function LocationSection({ subpage }) {
           {visualUrl && (
             <Reveal className="osc-location__visual">
               <a href={detailedMapUrl} target="_blank" rel="noopener noreferrer" style={{ display: "block", position: "relative" }}>
-                <img
+                <img decoding="async"
                   src={visualUrl}
                   alt="One Rajarhat Location Map"
                   loading="lazy"

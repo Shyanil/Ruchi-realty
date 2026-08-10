@@ -1,6 +1,7 @@
 import { readdir, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { extname, join, relative, resolve } from "node:path";
 import sharp from "sharp";
 
@@ -9,6 +10,29 @@ const publicDir = resolve(root, "public");
 const sourceExtensions = new Set([".png", ".jpg", ".jpeg"]);
 const textExtensions = new Set([".css", ".html", ".js", ".jsx", ".json", ".md", ".mjs", ".cjs", ".sql", ".toml", ".txt", ".xml"]);
 const excludedDirectories = new Set([".git", "node_modules", "dist", "build"]);
+const manifestPath = resolve(root, "scripts", "image-optimization-manifest.json");
+const optimizationVersion = 1;
+
+function webpSettings(publicPath, hasAlpha = false) {
+  const isBrandAsset = /(?:^|\/)(?:logo|icon|favicon|mark|signature|award|wreath)/i.test(publicPath);
+  const isDetailAsset = /(?:floor|plan|layout|map|diagram|specification)/i.test(publicPath);
+  const isHeroAsset = /(?:hero|banner|cover|poster)/i.test(publicPath);
+  const maxDimension = isDetailAsset ? 2400 : isHeroAsset ? 2200 : 1920;
+  const quality = isBrandAsset ? 90 : isDetailAsset ? 86 : isHeroAsset ? 82 : hasAlpha ? 84 : 80;
+  return { maxDimension, quality, alphaQuality: isBrandAsset ? 100 : 92 };
+}
+
+function contentHash(buffer) {
+  return createHash("sha256").update(buffer).digest("hex");
+}
+
+let optimizationManifest = { version: optimizationVersion, files: {} };
+try {
+  const savedManifest = JSON.parse(await readFile(manifestPath, "utf8"));
+  if (savedManifest.version === optimizationVersion && savedManifest.files) optimizationManifest = savedManifest;
+} catch {
+  // The first optimization run creates the manifest.
+}
 
 async function walk(directory, files = []) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
@@ -26,19 +50,25 @@ let convertedImages = 0;
 let beforeBytes = 0;
 let afterBytes = 0;
 let normalizedWebps = 0;
+let optimizedWebps = 0;
+let webpBeforeBytes = 0;
+let webpAfterBytes = 0;
 
 for (const source of imageFiles) {
   const extension = extname(source);
   const target = source.slice(0, -extension.length) + ".webp";
   const temporary = `${target}.optimizing`;
-  const sourceSize = (await stat(source)).size;
+  const sourceInput = await readFile(source);
+  const sourceSize = sourceInput.length;
   const publicPath = relative(publicDir, source).split(String.fromCharCode(92)).join("/");
-  const isBrandAsset = /(?:^|\/)(?:logo|icon|favicon|mark|signature|award|wreath)/i.test(publicPath);
+  const metadata = await sharp(sourceInput).metadata();
+  const settings = webpSettings(publicPath, metadata.hasAlpha);
 
-  await sharp(source)
+  await rm(temporary, { force: true });
+  await sharp(sourceInput)
     .rotate()
-    .resize({ width: 2560, height: 2560, fit: "inside", withoutEnlargement: true })
-    .webp({ quality: isBrandAsset ? 90 : 84, alphaQuality: 100, effort: 6, smartSubsample: true })
+    .resize({ width: settings.maxDimension, height: settings.maxDimension, fit: "inside", withoutEnlargement: true })
+    .webp({ quality: settings.quality, alphaQuality: settings.alphaQuality, effort: 6, smartSubsample: true })
     .toFile(temporary);
   await rm(target, { force: true });
   await rename(temporary, target);
@@ -51,22 +81,49 @@ for (const source of imageFiles) {
     source: publicPath,
     target: relative(publicDir, target).split(String.fromCharCode(92)).join("/"),
   });
+  optimizationManifest.files[mappings.at(-1).target] = contentHash(await readFile(target));
   convertedImages += 1;
 }
 
 for (const file of (await walk(publicDir)).filter((entry) => extname(entry).toLowerCase() === ".webp")) {
-  const metadata = await sharp(file).metadata();
-  if (metadata.format === "webp") continue;
-  const temporary = `${file}.normalizing`;
-  await sharp(file)
+  const publicPath = relative(publicDir, file).split(String.fromCharCode(92)).join("/");
+  const input = await readFile(file);
+  const inputHash = contentHash(input);
+  if (optimizationManifest.files[publicPath] === inputHash) continue;
+
+  const metadata = await sharp(input).metadata();
+  const settings = webpSettings(publicPath, metadata.hasAlpha);
+  const needsResize = (metadata.width || 0) > settings.maxDimension || (metadata.height || 0) > settings.maxDimension;
+  if (metadata.format === "webp" && input.length < 64 * 1024 && !needsResize) {
+    optimizationManifest.files[publicPath] = inputHash;
+    continue;
+  }
+
+  const temporary = `${file}.optimizing`;
+  await rm(temporary, { force: true });
+  await sharp(input)
     .rotate()
-    .resize({ width: 2560, height: 2560, fit: "inside", withoutEnlargement: true })
-    .webp({ quality: 84, alphaQuality: 100, effort: 6, smartSubsample: true })
+    .resize({ width: settings.maxDimension, height: settings.maxDimension, fit: "inside", withoutEnlargement: true })
+    .webp({ quality: settings.quality, alphaQuality: settings.alphaQuality, effort: 6, smartSubsample: true })
     .toFile(temporary);
-  await rm(file, { force: true });
-  await rename(temporary, file);
-  normalizedWebps += 1;
+  const candidateSize = (await stat(temporary)).size;
+  const shouldReplace = metadata.format !== "webp" || needsResize || candidateSize <= input.length * 0.98;
+  if (shouldReplace) {
+    await rm(file, { force: true });
+    await rename(temporary, file);
+    const output = await readFile(file);
+    webpBeforeBytes += input.length;
+    webpAfterBytes += output.length;
+    optimizationManifest.files[publicPath] = contentHash(output);
+    if (metadata.format !== "webp") normalizedWebps += 1;
+    else optimizedWebps += 1;
+  } else {
+    await rm(temporary, { force: true });
+    optimizationManifest.files[publicPath] = inputHash;
+  }
 }
+
+await writeFile(manifestPath, `${JSON.stringify(optimizationManifest, null, 2)}\n`);
 
 const deletedSources = execFileSync("git", ["diff", "--name-only", "--diff-filter=D", "--", "public"], { encoding: "utf8" })
   .split(/\r?\n/)
@@ -110,8 +167,12 @@ console.log(JSON.stringify({
   convertedImages,
   mappedReferences: mappings.length,
   normalizedWebps,
+  optimizedWebps,
   changedTextFiles,
   beforeMB: Number((beforeBytes / 1024 / 1024).toFixed(2)),
   afterMB: Number((afterBytes / 1024 / 1024).toFixed(2)),
   savedPercent: beforeBytes ? Number(((1 - afterBytes / beforeBytes) * 100).toFixed(1)) : 0,
+  webpBeforeMB: Number((webpBeforeBytes / 1024 / 1024).toFixed(2)),
+  webpAfterMB: Number((webpAfterBytes / 1024 / 1024).toFixed(2)),
+  webpSavedPercent: webpBeforeBytes ? Number(((1 - webpAfterBytes / webpBeforeBytes) * 100).toFixed(1)) : 0,
 }, null, 2));

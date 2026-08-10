@@ -143,7 +143,7 @@ function CareersHero({ onApply }) {
         <div className="cr-hero__collage">
           <Reveal>
             <div className="cr-collage__card cr-collage__card--main">
-              <img src="uploads/careers_hero_main.webp" alt="Luxury Residential Tower" />
+              <img src="uploads/careers_hero_main.webp" alt="Luxury Residential Tower" loading="eager" decoding="async" fetchpriority="high" />
               <div className="cr-collage__chip cr-collage__chip--top">
                 <span className="num">17+</span>
                 <span className="lbl">Years</span>
@@ -151,7 +151,7 @@ function CareersHero({ onApply }) {
             </div>
 
             <div className="cr-collage__card cr-collage__card--team">
-              <img src="uploads/careers_hero_team.webp" alt="Team Planning Session" />
+              <img src="uploads/careers_hero_team.webp" alt="Team Planning Session" loading="eager" decoding="async" />
               <div className="cr-collage__chip cr-collage__chip--bottom">
                 <span className="num">3</span>
                 <span className="lbl">Key Cities</span>
@@ -189,7 +189,7 @@ function CareersCulture() {
           <div className="cr-culture__media">
             <Reveal>
               <div className="cr-culture__img-wrap">
-                <img src="uploads/careers_culture.webp" alt="Indian Real Estate Project Team" className="cr-culture__img" />
+                <img src="uploads/careers_culture.webp" alt="Indian Real Estate Project Team" className="cr-culture__img" loading="lazy" decoding="async" />
               </div>
             </Reveal>
           </div>

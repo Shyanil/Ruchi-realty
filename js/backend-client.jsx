@@ -649,6 +649,7 @@
     heroMobileUrl: sp.hero_mobile_url || "",
     heroImagePosition: sp.hero_image_position || "center center",
     heroImageFit: sp.hero_image_fit || "cover",
+    overviewImage: sp.overview_image || "",
     overviewParagraphs: Array.isArray(sp.overview_paragraphs) ? sp.overview_paragraphs : [],
     overviewHighlights: Array.isArray(sp.overview_highlights) ? sp.overview_highlights : [],
     amenities: Array.isArray(sp.amenities) ? sp.amenities : [],

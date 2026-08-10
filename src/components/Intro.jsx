@@ -6,7 +6,7 @@ export default function Intro() {
       <div className="intro__sig" aria-hidden="true"></div>
       <div className="rr-wrap">
         <Reveal>
-          <div className="intro__eyebrow eyebrow sec-eyebrow">Built on commitment</div>
+          <div className="intro__eyebrow eyebrow sec-eyebrow">Welcome to Ruchi Realty — Built on commitment</div>
         </Reveal>
         <Reveal delay={80}>
           <h1 className="intro__head">

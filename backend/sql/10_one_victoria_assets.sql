@@ -88,12 +88,12 @@ SET hero_title = 'One Victoria',
       jsonb_build_object('name','Airport','dist','12 km'), jsonb_build_object('name','Tata Medical Center','dist','2.8 km')
     ),
     gallery_images = jsonb_build_array(
-      jsonb_build_object('src','/projects/one-victoria-new-town/gallery/gallery-1.webp','largeSrc','/projects/one-victoria-new-town/gallery/gallery-1-large.jpg','alt','One Victoria gallery image 1','category','Gallery'),
-      jsonb_build_object('src','/projects/one-victoria-new-town/gallery/gallery-2.webp','largeSrc','/projects/one-victoria-new-town/gallery/gallery-2-large.jpg','alt','One Victoria gallery image 2','category','Gallery'),
-      jsonb_build_object('src','/projects/one-victoria-new-town/gallery/gallery-3.webp','largeSrc','/projects/one-victoria-new-town/gallery/gallery-3-large.jpg','alt','One Victoria gallery image 3','category','Gallery'),
-      jsonb_build_object('src','/projects/one-victoria-new-town/gallery/gallery-4.webp','largeSrc','/projects/one-victoria-new-town/gallery/gallery-4-large.jpg','alt','One Victoria gallery image 4','category','Gallery'),
-      jsonb_build_object('src','/projects/one-victoria-new-town/gallery/gallery-5.webp','largeSrc','/projects/one-victoria-new-town/gallery/gallery-5-large.jpg','alt','One Victoria gallery image 5','category','Gallery'),
-      jsonb_build_object('src','/projects/one-victoria-new-town/gallery/gallery-6.webp','largeSrc','/projects/one-victoria-new-town/gallery/gallery-6-large.jpg','alt','One Victoria gallery image 6','category','Gallery')
+      jsonb_build_object('src','/projects/one-victoria-new-town/gallery/gallery-1.webp','largeSrc','/projects/one-victoria-new-town/gallery/gallery-1-large.webp','alt','One Victoria gallery image 1','category','Gallery'),
+      jsonb_build_object('src','/projects/one-victoria-new-town/gallery/gallery-2.webp','largeSrc','/projects/one-victoria-new-town/gallery/gallery-2-large.webp','alt','One Victoria gallery image 2','category','Gallery'),
+      jsonb_build_object('src','/projects/one-victoria-new-town/gallery/gallery-3.webp','largeSrc','/projects/one-victoria-new-town/gallery/gallery-3-large.webp','alt','One Victoria gallery image 3','category','Gallery'),
+      jsonb_build_object('src','/projects/one-victoria-new-town/gallery/gallery-4.webp','largeSrc','/projects/one-victoria-new-town/gallery/gallery-4-large.webp','alt','One Victoria gallery image 4','category','Gallery'),
+      jsonb_build_object('src','/projects/one-victoria-new-town/gallery/gallery-5.webp','largeSrc','/projects/one-victoria-new-town/gallery/gallery-5-large.webp','alt','One Victoria gallery image 5','category','Gallery'),
+      jsonb_build_object('src','/projects/one-victoria-new-town/gallery/gallery-6.webp','largeSrc','/projects/one-victoria-new-town/gallery/gallery-6-large.webp','alt','One Victoria gallery image 6','category','Gallery')
     ),
     construction_updates = jsonb_build_array(
       jsonb_build_object('src','/projects/one-victoria-new-town/gallery/construction-1.webp','alt','One Victoria construction update 1','category','Construction'),

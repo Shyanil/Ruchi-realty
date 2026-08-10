@@ -93,9 +93,9 @@ export function Footer() {
   ];
 
   const offices = [
-    ["Kolkata Office", "54, 10, D. C. Dey Rd, near ITC Sonar, Tangra,\nKolkata – 700015 (W.B.), India.\nSales – +91 9836418000\nCorporate – 033-66066777"],
-    ["Indore Office", "2/1, South Tukoganj, Behind High Court,\nIndore – 452001 (M.P.), India.\nSales – +91 8929225275\nCorporate – 0731-4018010 | 4018015 | 4018120"],
-    ["Bhopal Office", "Behind Bhabha College, Jatkhedi Hoshangabad Road,\nBhopal – 462026 (M.P.), India."],
+    ["Kolkata Office", "54, 10, D. C. Dey Rd, near ITC Sonar, Tangra,\nKolkata: 700015 (W.B.), India.\nSales: +91 9836418000\nCorporate: 033-66066777"],
+    ["Indore Office", "2/1, South Tukoganj, Behind High Court,\nIndore: 452001 (M.P.), India.\nSales: +91 8929225275\nCorporate: 0731-4018010 | 4018015 | 4018120"],
+    ["Bhopal Office", "Behind Bhabha College, Jatkhedi Hoshangabad Road,\nBhopal: 462026 (M.P.), India."],
   ];
 
   function renderLink(it, href) {
@@ -125,7 +125,7 @@ export function Footer() {
         <div className="footer__rule"></div>
         <div className="footer-cols">
           <div className="footer__brandcol">
-            <img src="/assets/logo-h-white.webp" alt="Ruchi Realty" className="footer__logo" />
+            <img src="/assets/logo-h-white.webp" alt="Ruchi Realty" className="footer__logo" loading="lazy" decoding="async" />
             <p className="footer__tagline">Trusted real estate developer building residential, commercial and plotted communities across Kolkata, Indore and Bhopal.</p>
           </div>
 
