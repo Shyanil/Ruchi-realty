@@ -80,8 +80,8 @@ export const ACTIVE_GREENS_FALLBACK = {
   heroTitle: "Active Greens",
   heroTagline: "In the heart of the city, away from the concrete jungle",
   heroLogo: "/projects/active-greens/logo.webp",
-  heroBg: "/projects/active-greens/thumbnail.webp",
-  heroMobileUrl: "/projects/active-greens/thumbnail.webp",
+  heroBg: "/assets/projects/active-green.webp",
+  heroMobileUrl: "/assets/projects/active-green.webp",
   companyLogoUrl: "/projects/active-greens/ruchi-logo.webp",
   locationMapUrl: "/projects/active-greens/location-map.webp",
   gmbGoogleIconUrl: "",
@@ -912,8 +912,12 @@ export default function ActiveGreensPage() {
               heroTitle: sp.heroTitle || ACTIVE_GREENS_FALLBACK.heroTitle,
               heroTagline: sp.heroTagline || ACTIVE_GREENS_FALLBACK.heroTagline,
               heroLogo: sp.heroLogo || ACTIVE_GREENS_FALLBACK.heroLogo,
-              heroBg: sp.heroBg || ACTIVE_GREENS_FALLBACK.heroBg,
-              heroMobileUrl: extracted.heroMobileUrl || ACTIVE_GREENS_FALLBACK.heroMobileUrl,
+              heroBg: !sp.heroBg || sp.heroBg.endsWith("/projects/active-greens/thumbnail.webp")
+                ? ACTIVE_GREENS_FALLBACK.heroBg
+                : sp.heroBg,
+              heroMobileUrl: !extracted.heroMobileUrl || extracted.heroMobileUrl.endsWith("/projects/active-greens/thumbnail.webp")
+                ? ACTIVE_GREENS_FALLBACK.heroMobileUrl
+                : extracted.heroMobileUrl,
               companyLogoUrl: extracted.companyLogoUrl || ACTIVE_GREENS_FALLBACK.companyLogoUrl,
               locationMapUrl: extracted.locationMapUrl || ACTIVE_GREENS_FALLBACK.locationMapUrl,
               gmbGoogleIconUrl: extracted.gmbGoogleIconUrl || ACTIVE_GREENS_FALLBACK.gmbGoogleIconUrl,
