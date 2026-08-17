@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { MOBILE_SHOWREEL, SHOWREEL } from "../data/siteData";
+
+const SOUND_HEADER_SCROLL_THRESHOLD = 1;
 
 export default function Hero() {
   const vid = useRef(null);
@@ -8,6 +11,11 @@ export default function Hero() {
   const [videoReady, setVideoReady] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [soundOn, setSoundOn] = useState(false);
+  const [soundHost, setSoundHost] = useState(null);
+
+  useEffect(() => {
+    setSoundHost(document.querySelector("[data-hero-sound-slot]"));
+  }, []);
 
   useEffect(() => {
     let raf;
@@ -15,16 +23,15 @@ export default function Hero() {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         const y = window.scrollY;
-        const heroHeight = window.innerHeight * 0.75;
-
         if (vid.current) {
           if (y < window.innerHeight && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
             const scale = 1 + Math.min(y / window.innerHeight, 1) * 0.14;
             vid.current.style.transform = `scale(${scale.toFixed(4)})`;
           }
 
-          // Keep audio off once the showreel is no longer the focus.
-          if (y >= heroHeight) {
+          // The sound control leaves with the transparent hero header, so mute
+          // the video at the same point to avoid audio without a visible control.
+          if (y > SOUND_HEADER_SCROLL_THRESHOLD) {
             if (!vid.current.muted) {
               vid.current.muted = true;
               setSoundOn(false);
@@ -78,7 +85,7 @@ export default function Hero() {
 
   const toggleAudio = () => {
     const video = vid.current;
-    if (!video || window.scrollY >= window.innerHeight * 0.75) return;
+    if (!video || window.scrollY > SOUND_HEADER_SCROLL_THRESHOLD) return;
     if (!video.muted) {
       video.muted = true;
       setSoundOn(false);
@@ -123,7 +130,7 @@ export default function Hero() {
       </video>
       <div className="hero__scrim"></div>
 
-      <button className={`hero__sound${soundOn ? " is-on" : ""}`} type="button"
+      {soundHost ? createPortal(<button className={`hero__sound${soundOn ? " is-on" : ""}`} type="button"
         onClick={toggleAudio} aria-pressed={soundOn} aria-label={soundOn ? "Mute hero video" : "Play hero video sound"}>
         <span className="hero__sound-icon" aria-hidden="true">
           {soundOn ? (
@@ -132,8 +139,7 @@ export default function Hero() {
             <svg viewBox="0 0 24 24"><path d="M11 5 6.8 9H3v6h3.8l4.2 4V5Z"/><path d="m16 9 5 5M21 9l-5 5"/></svg>
           )}
         </span>
-        <span>{soundOn ? "Sound on" : "Sound off"}</span>
-      </button>
+      </button>, soundHost) : null}
 
       <a className="hero__scroll" href="#intro"
          onClick={(e) => { e.preventDefault(); document.querySelector("#intro").scrollIntoView({ behavior: "smooth" }); }}

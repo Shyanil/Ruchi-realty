@@ -72,7 +72,7 @@ export default function HomePage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }}
         />
       ))}
-      <Nav onContact={scrollToContact} />
+      <Nav onContact={scrollToContact} heroSound solidAt={1} />
       <main>
         <Hero />
         <Intro />

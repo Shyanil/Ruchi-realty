@@ -9,7 +9,7 @@ export const HOME_FAQS = [
   },
   {
     question: "How can I book a site visit?",
-    answer: "Click “Book a Visit” on the website or submit an enquiry form. Our team will contact you to arrange a convenient time.",
+    answer: "Click “Schedule a Site Visit” on the website or submit an enquiry form. Our team will contact you to arrange a convenient time.",
   },
   {
     question: "Can I download a project brochure and floor plan?",

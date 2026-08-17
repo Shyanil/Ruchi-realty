@@ -1,5 +1,7 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import MediaAdmin from "../components/admin/MediaAdmin";
+import AdminShell, { showAdminToast } from "../components/admin/AdminShell";
+import AdminDashboard from "../components/admin/AdminDashboard";
 
 const toJSON = (value) => {
   try { return JSON.stringify(value, null, 2); } catch { return ""; }
@@ -97,7 +99,7 @@ const emptyProject = {
   brochureUrl: "",
   faqs: [],
   relatedProjectSlugs: [],
-  ctaLabels: { brochure: "Download Brochure", visit: "Book a Visit" },
+  ctaLabels: { brochure: "Download Brochure", visit: "Schedule a Site Visit" },
   ogImage: "",
   metaTitle: "",
   metaDescription: "",
@@ -832,8 +834,15 @@ function ProjectsAdmin() {
   const [editingId, setEditingId] = useState(null);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
+  const [typeFilter, setTypeFilter] = useState("All");
+  const [locationFilter, setLocationFilter] = useState("All");
+  const [featuredFilter, setFeaturedFilter] = useState("All");
+  const [projectSort, setProjectSort] = useState("updated");
   const [overviewText, setOverviewText] = useState("");
   const [updating, setUpdating] = useState(false);
+  const [editorTab, setEditorTab] = useState("overview");
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [projectPage, setProjectPage] = useState(1);
 
   const load = async () => {
     const { data } = await window.RuchiBackend.projects.getAllProjects();
@@ -846,6 +855,8 @@ function ProjectsAdmin() {
   
   const edit = async (project) => {
     setEditingId(project.id);
+    setEditorTab("overview");
+    setEditorOpen(true);
     
     // Smooth scroll to the form container
     const formElement = document.querySelector(".admin-grid form");
@@ -898,7 +909,7 @@ function ProjectsAdmin() {
       specificationImage: sp?.specificationImage || "",
       faqs: sp?.faqs || [],
       relatedProjectSlugs: sp?.relatedProjectSlugs || [],
-      ctaLabels: sp?.ctaLabels || { brochure: "Download Brochure", visit: "Book a Visit" },
+      ctaLabels: sp?.ctaLabels || { brochure: "Download Brochure", visit: "Schedule a Site Visit" },
       ogImage: sp?.ogImage || "",
       metaTitle: sp?.metaTitle || "",
       metaDescription: sp?.metaDescription || "",
@@ -910,6 +921,8 @@ function ProjectsAdmin() {
     setEditingId(null);
     setForm(emptyProject);
     setOverviewText("");
+    setEditorTab("overview");
+    setEditorOpen(false);
   };
 
   const save = async (event) => {
@@ -960,7 +973,7 @@ function ProjectsAdmin() {
         brochureUrl: form.brochureUrl || "",
         faqs: form.faqs || [],
         relatedProjectSlugs: form.relatedProjectSlugs || [],
-        ctaLabels: form.ctaLabels || { brochure: "Download Brochure", visit: "Book a Visit" },
+        ctaLabels: form.ctaLabels || { brochure: "Download Brochure", visit: "Schedule a Site Visit" },
         ogImage: form.ogImage || form.heroBg || form.image_url || "",
         metaTitle: form.metaTitle || `${form.title} | Ruchi Realty`,
         metaDescription: form.metaDescription || form.description,
@@ -978,6 +991,7 @@ function ProjectsAdmin() {
           if (subpageError) throw subpageError;
         }
       }
+      showAdminToast(editingId ? "Project updated" : "Project created", `${form.title || "Project"} was saved successfully.`);
       reset();
       load();
     } catch (e) {
@@ -989,21 +1003,82 @@ function ProjectsAdmin() {
 
   const remove = async (id) => {
     const project = projects.find((item) => item.id === id) || {};
+    if (!confirm(`Delete ${project.title || "this project"} and its uploaded project assets permanently?`)) return;
     const { data: sp } = await window.RuchiBackend.projectSubpages.getByProjectId(id);
     await Promise.all(collectProjectAssetUrls(project, sp).map((url) => deleteUploadedAsset(url)));
     await window.RuchiBackend.projectSubpages.delete(id);
     await window.RuchiBackend.projects.deleteProject(id);
+    showAdminToast("Project deleted", `${project.title || "The project"} and its managed assets were removed.`);
     if (editingId === id) reset();
     load();
   };
 
+  const duplicateProject = async (project) => {
+    const { data: created, error } = await window.RuchiBackend.projects.createProject({
+      ...project,
+      title: `${project.title} Copy`,
+      featured: false,
+      feature_order: "",
+    });
+    if (error) return alert(`Could not duplicate project: ${error.message}`);
+    const { data: subpage } = await window.RuchiBackend.projectSubpages.getByProjectId(project.id);
+    if (created?.id && subpage) await window.RuchiBackend.projectSubpages.upsert({ ...subpage, project_id: created.id, isPublished: false });
+    showAdminToast("Project duplicated", "A new unpublished copy is ready to review.");
+    load();
+  };
+
+  const projectLocations = [...new Set(projects.map((project) => project.location).filter(Boolean))].sort();
   const filteredProjects = projects.filter((project) => {
     const haystack = `${project.title} ${project.location} ${project.type} ${project.status}`.toLowerCase();
-    return haystack.includes(query.toLowerCase()) && (statusFilter === "All" || project.status === statusFilter);
+    return haystack.includes(query.toLowerCase())
+      && (statusFilter === "All" || project.status === statusFilter)
+      && (typeFilter === "All" || project.type === typeFilter)
+      && (locationFilter === "All" || project.location === locationFilter)
+      && (featuredFilter === "All" || Boolean(project.featured) === (featuredFilter === "Featured"));
+  }).sort((a, b) => {
+    if (projectSort === "name") return String(a.title || "").localeCompare(String(b.title || ""));
+    if (projectSort === "order") return Number(a.sort_order ?? 9999) - Number(b.sort_order ?? 9999);
+    return new Date(b.updated_at || b.created_at || 0) - new Date(a.updated_at || a.created_at || 0);
   });
+  const projectsPerPage = editorOpen ? 2 : 9;
+  const projectPageCount = Math.max(1, Math.ceil(filteredProjects.length / projectsPerPage));
+  const safeProjectPage = Math.min(projectPage, projectPageCount);
+  const pagedProjects = filteredProjects.slice((safeProjectPage - 1) * projectsPerPage, safeProjectPage * projectsPerPage);
+
+  useEffect(() => { setProjectPage(1); }, [query, statusFilter, typeFilter, locationFilter, featuredFilter, projectSort, editorOpen]);
+
+  useEffect(() => {
+    const container = document.querySelector(".admin-project-editor-content");
+    if (!container) return;
+    const details = container.querySelector(":scope > .admin-details");
+    Array.from(container.children).forEach((child) => {
+      child.hidden = editorTab === "overview" ? child === details : child !== details;
+    });
+    if (!details || editorTab === "overview") return;
+    details.open = true;
+    const summary = details.querySelector(":scope > summary");
+    if (summary) summary.hidden = true;
+    const body = details.querySelector(":scope > div");
+    if (!body) return;
+    const sectionFor = (heading) => {
+      const value = heading.toLowerCase();
+      if (value.includes("floor plan")) return "floorplans";
+      if (["hero", "gallery", "construction updates", "brochure"].some((item) => value.includes(item))) return "media";
+      if (["overview", "amenities", "specifications", "faq"].some((item) => value.includes(item))) return "content";
+      if (value.includes("location")) return "location";
+      if (["walkthrough", "video / testimonial", "gmb reviews"].some((item) => value.includes(item))) return "reviews";
+      if (value.includes("seo")) return "seo";
+      return "content";
+    };
+    let currentSection = "content";
+    Array.from(body.children).forEach((child) => {
+      if (child.tagName === "H3") currentSection = sectionFor(child.textContent || "");
+      child.hidden = currentSection !== editorTab;
+    });
+  }, [editorTab, editingId, editorOpen]);
 
   return (
-    <section className="admin-grid">
+    <section className={`admin-projects-page${editorOpen ? " is-editing" : ""}`}>
       <style>{`
         @keyframes spin {
           0% { transform: rotate(0deg); }
@@ -1046,11 +1121,17 @@ function ProjectsAdmin() {
           </div>
         </div>
       )}
-      <form className="admin-panel" onSubmit={save} style={{ maxWidth: "100%", overflowX: "hidden" }}>
+      <div className="admin-collection-head"><div><span className="admin-section-kicker">Website portfolio</span><h2>Projects</h2><p>Manage all residential and commercial projects.</p></div><button type="button" className="admin-primary" onClick={() => { setEditingId(null); setForm(emptyProject); setOverviewText(""); setEditorTab("overview"); setEditorOpen(true); }}>+ Add project</button></div>
+      <div className="admin-projects-layout">
+      {editorOpen ? <form className="admin-panel admin-project-editor" onSubmit={save} style={{ maxWidth: "100%", overflowX: "hidden" }}>
         <div className="admin-panel__head">
-          <h2>{editingId ? "Update project" : "Create project"}</h2>
+          <div><span className="admin-section-kicker">Project editor</span><h2>{editingId ? form.title || "Update project" : "Create project"}</h2></div>
           {editingId ? <button type="button" className="admin-text-btn" onClick={reset}>Cancel edit</button> : null}
         </div>
+        <div className="admin-editor-tabs admin-project-editor-tabs" role="tablist" aria-label="Project editor sections">
+          {[["overview", "Overview"], ["media", "Media"], ["content", "Content"], ["floorplans", "Floor plans"], ["location", "Location"], ["reviews", "Reviews and video"], ["seo", "SEO and publishing"]].map(([id, label], index) => <button type="button" role="tab" aria-selected={editorTab === id} className={editorTab === id ? "is-active" : ""} key={id} onClick={() => setEditorTab(id)}><span>{String(index + 1).padStart(2, "0")}</span><b>{label}</b></button>)}
+        </div>
+        <div className={`admin-project-editor-content is-${editorTab}`}>
         <div className="admin-form-grid">
           <AdminField label="Title"><input required value={form.title} onChange={(event) => set("title", event.target.value)} /></AdminField>
           <AdminField label="Tag"><input required value={form.tag} onChange={(event) => set("tag", event.target.value)} /></AdminField>
@@ -1094,6 +1175,7 @@ function ProjectsAdmin() {
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Specifications / Landscape</h3>
             <KeyValueListEditor title="Specifications / Landscape" items={form.specifications} onChange={(list) => set("specifications", list)} keyPlaceholder="Specification Title" valuePlaceholder="Specification Details" keyProp="title" valueProp="desc" />
             <AdminImageUpload label="Optional shared specification image" value={form.specificationImage} onChange={(v) => set("specificationImage", v)} />
+            <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Floor Plans</h3>
             <FloorPlansEditor items={form.floorPlans} onChange={(list) => set("floorPlans", list)} />
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Location</h3>
@@ -1147,7 +1229,10 @@ function ProjectsAdmin() {
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>FAQ & Related Projects</h3>
             <KeyValueListEditor title="Frequently Asked Questions" items={form.faqs} onChange={(list) => set("faqs", list)} keyPlaceholder="Question" valuePlaceholder="Answer" keyProp="question" valueProp="answer" />
-            <AdminField label="Related project slugs (comma separated)"><input value={(form.relatedProjectSlugs || []).join(", ")} onChange={(e) => set("relatedProjectSlugs", e.target.value.split(",").map((item) => item.trim()).filter(Boolean))} placeholder="one-rajarhat, active-greens" /></AdminField>
+            <AdminField label="Related projects">
+              <select value="" onChange={(event) => { if (event.target.value) set("relatedProjectSlugs", [...new Set([...(form.relatedProjectSlugs || []), event.target.value])]); }}><option value="">Search or select a project</option>{projects.filter((project) => project.id !== editingId && !(form.relatedProjectSlugs || []).includes(project.slug)).map((project) => <option key={project.id} value={project.slug}>{project.title} · {project.location}</option>)}</select>
+              {(form.relatedProjectSlugs || []).length ? <div className="admin-selected-projects">{form.relatedProjectSlugs.map((slug) => <button type="button" key={slug} onClick={() => set("relatedProjectSlugs", form.relatedProjectSlugs.filter((item) => item !== slug))}>{projects.find((project) => project.slug === slug)?.title || slug}<span aria-hidden="true">×</span></button>)}</div> : <small className="admin-field-hint">No related projects selected.</small>}
+            </AdminField>
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>SEO</h3>
             <AdminField label="Meta title"><input value={form.metaTitle} onChange={(e) => set("metaTitle", e.target.value)} /></AdminField>
@@ -1160,35 +1245,60 @@ function ProjectsAdmin() {
           </div>
         </details>
 
-        <button className="admin-primary" type="submit">{editingId ? "Update project" : "Create project"}</button>
-      </form>
+        </div>
+        <div className="admin-editor-actions"><span>{editingId ? "Changes update the existing project and its public subpage." : "Complete the project details, then create the new entry."}</span><button className="admin-primary" type="submit">{editingId ? "Save changes" : "Create project"}</button></div>
+      </form> : null}
 
       <div className="admin-panel">
-        <div className="admin-panel__head">
-          <h2>Admin-added projects</h2>
-          <span className="admin-count">{filteredProjects.length}</span>
+        <div className="admin-panel__head admin-project-list-head">
+          <div><h2>Admin-added projects</h2><small>{filteredProjects.length ? `${(safeProjectPage - 1) * projectsPerPage + 1}-${Math.min(safeProjectPage * projectsPerPage, filteredProjects.length)} of ${filteredProjects.length}` : "No projects"}</small></div>
+          <div className="admin-project-pagination" aria-label="Project pages">
+            <button type="button" aria-label="Previous project page" disabled={safeProjectPage <= 1} onClick={() => setProjectPage((page) => Math.max(1, page - 1))}>{"\u2190"}</button>
+            <span>{safeProjectPage} / {projectPageCount}</span>
+            <button type="button" aria-label="Next project page" disabled={safeProjectPage >= projectPageCount} onClick={() => setProjectPage((page) => Math.min(projectPageCount, page + 1))}>{"\u2192"}</button>
+          </div>
         </div>
-        <div className="admin-toolbar">
-          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search projects" />
-          <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}>
-            {["All", "Ready to Move", "Ongoing", "Upcoming", "New Launch", "For Sale"].map((item) => <option key={item}>{item}</option>)}
-          </select>
+        <div className="admin-project-filterbar" aria-label="Project filters">
+          <label className="admin-project-filter admin-project-filter--search"><span>Search</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search projects..." /></label>
+          <label className="admin-project-filter"><span>Status</span><select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}>
+            {["All", "Ready to Move", "Ongoing", "Upcoming", "New Launch", "For Sale"].map((item) => <option value={item} key={item}>{item === "All" ? "All statuses" : item}</option>)}
+          </select></label>
+          <label className="admin-project-filter"><span>Type</span><select value={typeFilter} onChange={(event) => setTypeFilter(event.target.value)}>
+            <option value="All">All types</option><option>Residential</option><option>Commercial</option>
+          </select></label>
+          <label className="admin-project-filter"><span>Location</span><select value={locationFilter} onChange={(event) => setLocationFilter(event.target.value)}>
+            <option value="All">All locations</option>{projectLocations.map((item) => <option key={item}>{item}</option>)}
+          </select></label>
+          <label className="admin-project-filter"><span>Visibility</span><select value={featuredFilter} onChange={(event) => setFeaturedFilter(event.target.value)}>
+            <option value="All">All projects</option><option value="Featured">Featured</option><option value="Standard">Not featured</option>
+          </select></label>
+          <label className="admin-project-filter"><span>Sort by</span><select value={projectSort} onChange={(event) => setProjectSort(event.target.value)}>
+            <option value="updated">Recently updated</option><option value="name">Name A-Z</option><option value="order">Display order</option>
+          </select></label>
         </div>
         <div className="admin-list">
-          {filteredProjects.length ? filteredProjects.map((project) => (
+          {pagedProjects.length ? pagedProjects.map((project) => (
             <article className="admin-row admin-row--media" key={project.id}>
               <img decoding="async" loading="lazy" className="admin-thumb" src={project.image_url || "assets/logo-mark.webp"} alt="" />
               <div>
                 <strong>{project.title}</strong>
-                <span>{project.location} - {project.type} - {project.status}</span>
+                <span>{project.location} · {project.type}</span>
+                <div className="admin-card-meta">
+                  <span className={`admin-status admin-status--${String(project.status || "").toLowerCase().replace(/\s+/g, "-")}`}><i />{project.status}</span>
+                  {project.featured ? <span className="admin-featured-pill">Featured</span> : null}
+                  {project.updated_at ? <small>Updated {new Date(project.updated_at).toLocaleDateString()}</small> : null}
+                </div>
               </div>
               <div className="admin-actions">
+                <button type="button" onClick={() => window.open(project.url || `/projects/${project.slug}`, "_blank", "noopener,noreferrer")}>View</button>
                 <button type="button" onClick={() => edit(project)}>Edit</button>
+                <button type="button" onClick={() => duplicateProject(project)}>Duplicate</button>
                 <button type="button" onClick={() => remove(project.id)}>Delete</button>
               </div>
             </article>
           )) : <p className="admin-empty">No matching projects in Supabase yet.</p>}
         </div>
+      </div>
       </div>
     </section>
   );
@@ -1198,6 +1308,10 @@ function LeadsAdmin() {
   const [leads, setLeads] = useState([]);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
+  const [sourceFilter, setSourceFilter] = useState("All");
+  const [dateFilter, setDateFilter] = useState("All");
+  const [leadSort, setLeadSort] = useState("newest");
+  const [selectedLead, setSelectedLead] = useState(null);
   const load = async () => {
     const { data } = await window.RuchiBackend.leads.getAllLeads();
     setLeads(data || []);
@@ -1206,22 +1320,36 @@ function LeadsAdmin() {
 
   const updateStatus = async (id, status) => {
     await window.RuchiBackend.leads.updateLeadStatus(id, status);
+    showAdminToast("Lead status updated", `The lead is now marked ${status}.`);
     load();
   };
   const remove = async (id) => {
+    if (!confirm("Delete this lead permanently?")) return;
     await window.RuchiBackend.leads.deleteLead(id);
+    showAdminToast("Lead deleted", "The enquiry was removed from the CRM.");
+    setSelectedLead(null);
     load();
   };
 
   const filteredLeads = leads.filter((lead) => {
     const haystack = `${lead.name} ${lead.phone} ${lead.email} ${lead.interest} ${lead.source}`.toLowerCase();
-    return haystack.includes(query.toLowerCase()) && (statusFilter === "All" || lead.status === statusFilter);
-  });
+    const cutoff = dateFilter === "All" ? 0 : Date.now() - Number(dateFilter) * 86400000;
+    return haystack.includes(query.toLowerCase())
+      && (statusFilter === "All" || lead.status === statusFilter)
+      && (sourceFilter === "All" || lead.source === sourceFilter)
+      && (!cutoff || new Date(lead.created_at || 0).getTime() >= cutoff);
+  }).sort((a, b) => leadSort === "oldest" ? new Date(a.created_at || 0) - new Date(b.created_at || 0) : new Date(b.created_at || 0) - new Date(a.created_at || 0));
+
+  const leadStatuses = ["new", "contacted", "qualified", "lost", "closed"];
+  const leadSources = [...new Set(leads.map((lead) => lead.source).filter(Boolean))].sort();
 
   return (
-    <section className="admin-panel">
+    <section className="admin-crm-page">
+      <div className="admin-collection-head"><div><span className="admin-section-kicker">Customer relationships</span><h2>Leads</h2><p>Review and progress enquiries received from the website.</p></div><span className="admin-record-total">{leads.length} total leads</span></div>
+      <div className="admin-pipeline-stats">{[["Total", leads.length], ...leadStatuses.map((status) => [status, leads.filter((lead) => lead.status === status).length])].map(([label, value]) => <button type="button" className={statusFilter.toLowerCase() === String(label).toLowerCase() || (label === "Total" && statusFilter === "All") ? "is-active" : ""} key={label} onClick={() => setStatusFilter(label === "Total" ? "All" : label)}><span>{label}</span><strong>{value}</strong></button>)}</div>
+      <div className="admin-panel admin-data-panel">
       <div className="admin-panel__head">
-        <h2>Leads</h2>
+        <div><span className="admin-section-kicker">Lead directory</span><h2>All enquiries</h2></div>
         <span className="admin-count">{filteredLeads.length}</span>
       </div>
       <div className="admin-toolbar">
@@ -1229,36 +1357,60 @@ function LeadsAdmin() {
         <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}>
           {["All", "new", "contacted", "qualified", "lost", "closed"].map((item) => <option key={item}>{item}</option>)}
         </select>
+        <select aria-label="Lead source" value={sourceFilter} onChange={(event) => setSourceFilter(event.target.value)}><option value="All">All sources</option>{leadSources.map((source) => <option key={source}>{source}</option>)}</select>
+        <select aria-label="Lead date" value={dateFilter} onChange={(event) => setDateFilter(event.target.value)}><option value="All">Any date</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option></select>
+        <select aria-label="Sort leads" value={leadSort} onChange={(event) => setLeadSort(event.target.value)}><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select>
       </div>
       <div className="admin-list">
         {filteredLeads.length ? filteredLeads.map((lead) => (
-          <article className="admin-row admin-row--lead" key={lead.id}>
-            <div>
-              <strong>{lead.name}</strong>
-              <span>{lead.phone} - {lead.email}</span>
-              <span>{lead.interest} - {lead.source}</span>
-              {lead.notes ? <p>{lead.notes}</p> : null}
+          <article className="admin-row admin-row--lead admin-lead-card" key={lead.id}>
+            <div className="admin-lead-card__main">
+              <header className="admin-lead-card__header">
+                <span className="admin-lead-avatar" aria-hidden="true">{String(lead.name || "L").trim().slice(0, 1).toUpperCase()}</span>
+                <div><strong>{lead.name || "Unnamed lead"}</strong><small>{lead.created_at ? new Date(lead.created_at).toLocaleString() : "Recently received"}</small></div>
+                <span className={`admin-status admin-status--${lead.status || "new"}`}><i />{lead.status || "new"}</span>
+              </header>
+              <div className="admin-lead-card__details">
+                <span><small>Phone</small>{lead.phone || "Not provided"}</span>
+                <span><small>Email</small>{lead.email || "Not provided"}</span>
+                <span><small>Interest</small>{lead.interest || "Not specified"}</span>
+                <span><small>Source</small>{lead.source || "Website"}</span>
+              </div>
+              {lead.notes ? <p className="admin-lead-card__notes">{lead.notes}</p> : null}
             </div>
-            <div className="admin-actions">
-              <select value={lead.status} onChange={(event) => updateStatus(lead.id, event.target.value)}>
+            <div className="admin-actions admin-lead-card__actions">
+              <button type="button" onClick={() => setSelectedLead(lead)}>View details</button>
+              <select aria-label={`Status for ${lead.name || "lead"}`} value={lead.status || "new"} onChange={(event) => updateStatus(lead.id, event.target.value)}>
                 {["new", "contacted", "qualified", "lost", "closed"].map((item) => <option key={item}>{item}</option>)}
               </select>
               <button type="button" onClick={() => remove(lead.id)}>Delete</button>
             </div>
           </article>
-        )) : <p className="admin-empty">No matching leads. Submit the public contact form to create one.</p>}
+        )) : <div className="admin-empty-state"><h3>No matching leads</h3><p>New website enquiries will appear here. Adjust the search or status filter to see other records.</p><a href="/#contact" target="_blank" rel="noreferrer">View website form</a></div>}
       </div>
+      </div>
+      {selectedLead ? <div className="admin-drawer-layer" role="dialog" aria-modal="true" aria-label={`Lead details for ${selectedLead.name}`}><button className="admin-drawer-scrim" type="button" aria-label="Close lead details" onClick={() => setSelectedLead(null)} /><aside className="admin-drawer"><header><div><span>Lead details</span><h2>{selectedLead.name}</h2></div><button type="button" onClick={() => setSelectedLead(null)} aria-label="Close">×</button></header><div className="admin-drawer__body"><span className={`admin-app-status admin-app-status--${selectedLead.status}`}>{selectedLead.status}</span><dl><div><dt>Email</dt><dd><a href={`mailto:${selectedLead.email}`}>{selectedLead.email || "Not provided"}</a></dd></div><div><dt>Phone</dt><dd><a href={`tel:${selectedLead.phone}`}>{selectedLead.phone || "Not provided"}</a></dd></div><div><dt>Project interest</dt><dd>{selectedLead.interest || "Not specified"}</dd></div><div><dt>Source</dt><dd>{selectedLead.source || "Not specified"}</dd></div><div><dt>Received</dt><dd>{selectedLead.created_at ? new Date(selectedLead.created_at).toLocaleString() : "Not available"}</dd></div></dl>{selectedLead.notes ? <section><h3>Notes</h3><p>{selectedLead.notes}</p></section> : null}</div><footer><select value={selectedLead.status} onChange={async (event) => { const status = event.target.value; await updateStatus(selectedLead.id, status); setSelectedLead((lead) => ({ ...lead, status })); }}>{leadStatuses.map((item) => <option key={item}>{item}</option>)}</select><button type="button" className="admin-danger" onClick={() => remove(selectedLead.id)}>Delete lead</button></footer></aside></div> : null}
     </section>
   );
 }
 
 function SettingsAdmin() {
   const [settings, setSettings] = useState(null);
+  const [baseline, setBaseline] = useState(null);
   const [saved, setSaved] = useState(false);
+  const [section, setSection] = useState("general");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    window.RuchiBackend.settings.getSettings().then(({ data }) => setSettings(data));
+    window.RuchiBackend.settings.getSettings().then(({ data }) => { setSettings(data); setBaseline(data); });
   }, []);
+
+  const dirty = Boolean(settings && baseline && JSON.stringify(settings) !== JSON.stringify(baseline));
+  useEffect(() => {
+    const warn = (event) => { if (dirty) { event.preventDefault(); event.returnValue = ""; } };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [dirty]);
 
   if (!settings) return null;
 
@@ -1269,44 +1421,60 @@ function SettingsAdmin() {
 
   const save = async (event) => {
     event.preventDefault();
-    const { data } = await window.RuchiBackend.settings.updateSettings(settings);
-    setSettings(data);
-    setSaved(true);
+    setSaving(true);
+    try {
+      const { data } = await window.RuchiBackend.settings.updateSettings(settings);
+      setSettings(data);
+      setBaseline(data);
+      setSaved(true);
+      showAdminToast("Settings saved", "The current website contact and company details were updated.");
+      window.setTimeout(() => setSaved(false), 3000);
+    } finally { setSaving(false); }
   };
 
   return (
-    <form className="admin-panel" onSubmit={save}>
-      <h2>Site settings</h2>
-      <div className="admin-form-grid">
-        {["siteName", "phone", "whatsapp", "email", "workingHours", "facebook", "instagram", "youtube", "linkedin"].map((key) => (
+    <section className="admin-settings-page">
+      <div className="admin-collection-head"><div><span className="admin-section-kicker">Website configuration</span><h2>Settings</h2><p>Maintain the public contact, social and location information already stored in Supabase.</p></div>{dirty ? <span className="admin-unsaved">Unsaved changes</span> : null}</div>
+      <div className="admin-settings-layout">
+        <nav aria-label="Settings sections">{[["general", "General"], ["social", "Social"], ["location", "Location"]].map(([id, label]) => <button type="button" className={section === id ? "is-active" : ""} key={id} onClick={() => setSection(id)}>{label}</button>)}</nav>
+        <form className="admin-panel admin-settings-form" onSubmit={save}>
+          <div className="admin-panel__head"><div><span className="admin-section-kicker">{section}</span><h2>{section === "general" ? "Contact and business" : section === "social" ? "Social profiles" : "Office location"}</h2></div></div>
+          {section === "general" ? <div className="admin-form-grid">
+        {["siteName", "phone", "whatsapp", "email", "workingHours"].map((key) => (
           <AdminField key={key} label={key}>
             <input value={settings[key] || ""} onChange={(event) => set(key, event.target.value)} />
           </AdminField>
         ))}
+          </div> : null}
+          {section === "social" ? <div className="admin-form-grid">{["facebook", "instagram", "youtube", "linkedin"].map((key) => <AdminField key={key} label={key}><input type="url" value={settings[key] || ""} onChange={(event) => set(key, event.target.value)} /></AdminField>)}</div> : null}
+          {section === "location" ? <div className="admin-settings-stack"><AdminField label="Address"><textarea rows={3} value={settings.address || ""} onChange={(event) => set("address", event.target.value)} /></AdminField><AdminField label="Map embed URL"><input value={settings.mapEmbedUrl || ""} onChange={(event) => set("mapEmbedUrl", event.target.value)} /></AdminField><AdminField label="Map link"><input value={settings.mapLink || ""} onChange={(event) => set("mapLink", event.target.value)} /></AdminField></div> : null}
+          <div className="admin-settings-actions"><span>{dirty ? "Review and save your changes." : "All changes are saved."}</span><button className="admin-primary" type="submit" disabled={!dirty || saving}>{saving ? "Saving…" : "Save changes"}</button></div>
+        </form>
       </div>
-      <AdminField label="Address"><textarea rows={3} value={settings.address || ""} onChange={(event) => set("address", event.target.value)} /></AdminField>
-      <AdminField label="Map embed URL"><input value={settings.mapEmbedUrl || ""} onChange={(event) => set("mapEmbedUrl", event.target.value)} /></AdminField>
-      <AdminField label="Map link"><input value={settings.mapLink || ""} onChange={(event) => set("mapLink", event.target.value)} /></AdminField>
-      <button className="admin-primary" type="submit">Save settings</button>
-      {saved ? <p className="admin-success">Settings saved in Supabase.</p> : null}
-    </form>
+      {saved ? <div className="admin-toast" role="status"><strong>Changes saved</strong><span>Website settings were updated successfully.</span></div> : null}
+    </section>
   );
 }
 
 function BlogsAdmin() {
   const [blogs, setBlogs] = useState([]);
+  const [relatedProjects, setRelatedProjects] = useState([]);
   const [form, setForm] = useState(emptyBlog);
   const [editingId, setEditingId] = useState(null);
   const [query, setQuery] = useState("");
   const [updating, setUpdating] = useState(false);
   const [comments, setComments] = useState([]);
   const [subTab, setSubTab] = useState("posts");
+  const [postFilter, setPostFilter] = useState("all");
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [editorTab, setEditorTab] = useState("content");
 
   const load = async () => {
     const { data } = await window.RuchiBackend.blogs.getAllBlogs();
     setBlogs(data || []);
   };
   useEffect(() => { load(); }, []);
+  useEffect(() => { window.RuchiBackend.projects.getAllProjects().then(({ data }) => setRelatedProjects(data || [])); }, []);
   const loadComments = async () => { const { data } = await window.RuchiBackend.blogs.getAllComments(); setComments(data || []); };
   useEffect(() => { loadComments(); }, []);
 
@@ -1314,6 +1482,8 @@ function BlogsAdmin() {
   const reset = () => {
     setEditingId(null);
     setForm(emptyBlog);
+    setEditorOpen(false);
+    setEditorTab("content");
   };
   const save = async (event) => {
     event.preventDefault();
@@ -1322,6 +1492,7 @@ function BlogsAdmin() {
       const payload = { ...form, related_project_links: String(form.related_project_links || "").split(",").map((item) => item.trim()).filter(Boolean) };
       const result = editingId ? await window.RuchiBackend.blogs.updateBlog(editingId, payload) : await window.RuchiBackend.blogs.createBlog(payload);
       if (result.error) throw result.error;
+      showAdminToast(editingId ? "Blog updated" : "Blog created", `${form.title || "The article"} was saved successfully.`);
       reset();
       load();
     } catch (e) {
@@ -1332,6 +1503,8 @@ function BlogsAdmin() {
   };
   const edit = (blog) => {
     setEditingId(blog.id);
+    setEditorOpen(true);
+    setEditorTab("content");
     
     // Smooth scroll to the form container
     const formElement = document.querySelector(".admin-grid form");
@@ -1342,19 +1515,66 @@ function BlogsAdmin() {
     setForm({ ...emptyBlog, ...blog, tags: Array.isArray(blog.tags) ? blog.tags.join(", ") : blog.tags || "", related_project_links: Array.isArray(blog.related_project_links) ? blog.related_project_links.join(", ") : blog.related_project_links || "", published_at: blog.published_at ? blog.published_at.slice(0, 16) : "" });
   };
   const remove = async (id) => {
+    if (!confirm("Delete this blog post permanently?")) return;
     await window.RuchiBackend.blogs.deleteBlog(id);
+    showAdminToast("Blog deleted", "The article was removed from the content library.");
     if (editingId === id) reset();
     load();
   };
 
-  const filteredBlogs = blogs.filter((blog) =>
-    `${blog.title} ${blog.category} ${blog.author}`.toLowerCase().includes(query.toLowerCase())
-  );
-  const moderate = async (id, status) => { const { error } = await window.RuchiBackend.blogs.updateCommentStatus(id, status); if (!error) loadComments(); };
+  const duplicateBlog = async (blog) => {
+    const suffix = Date.now().toString().slice(-6);
+    const { error } = await window.RuchiBackend.blogs.createBlog({
+      ...blog,
+      title: `${blog.title} Copy`,
+      slug: `${blog.slug || "article"}-copy-${suffix}`,
+      status: "draft",
+      featured: false,
+      published_at: new Date().toISOString(),
+    });
+    if (error) return alert(`Could not duplicate blog: ${error.message}`);
+    showAdminToast("Blog duplicated", "A draft copy is ready for editing.");
+    load();
+  };
+
+  const relatedLinks = String(form.related_project_links || "").split(",").map((item) => item.trim()).filter(Boolean);
+  const addRelatedProject = (url) => {
+    if (!url) return;
+    set("related_project_links", [...new Set([...relatedLinks, url])].join(", "));
+  };
+  const removeRelatedProject = (url) => set("related_project_links", relatedLinks.filter((item) => item !== url).join(", "));
+
+  const filteredBlogs = blogs.filter((blog) => {
+    const matchesQuery = `${blog.title} ${blog.category} ${blog.author}`.toLowerCase().includes(query.toLowerCase());
+    const matchesFilter = postFilter === "all" || (postFilter === "featured" ? blog.featured : blog.status === postFilter);
+    return matchesQuery && matchesFilter;
+  });
+  const moderate = async (id, status) => { const { error } = await window.RuchiBackend.blogs.updateCommentStatus(id, status); if (!error) { showAdminToast("Comment updated", `The comment is now marked ${status}.`); loadComments(); } };
   const removeComment = async (id) => { if (!confirm("Delete this comment permanently?")) return; await window.RuchiBackend.blogs.deleteComment(id); loadComments(); };
 
+  useEffect(() => {
+    const formElement = document.querySelector(".admin-blog-editor");
+    if (!formElement) return;
+    const sectionFor = (label) => {
+      const value = label.toLowerCase();
+      if (value.includes("image")) return value.includes("og") ? "social" : "media";
+      if (value.includes("og ")) return "social";
+      if (["status", "publish date", "reading time", "featured"].some((item) => value.includes(item))) return "publishing";
+      if (["seo", "canonical"].some((item) => value.includes(item))) return "seo";
+      return "content";
+    };
+    formElement.querySelectorAll(".admin-field").forEach((field) => {
+      field.hidden = sectionFor(field.querySelector(":scope > span")?.textContent || "") !== editorTab;
+    });
+    formElement.querySelectorAll(":scope > .admin-uploader").forEach((uploader) => { uploader.hidden = editorTab !== "media"; });
+    formElement.querySelectorAll(":scope > .admin-check").forEach((field) => { field.hidden = editorTab !== "publishing"; });
+    formElement.querySelectorAll(":scope > .admin-form-grid").forEach((grid) => { grid.hidden = Array.from(grid.children).every((child) => child.hidden); });
+  }, [editorTab, editorOpen]);
+
   return (
-    <section className="admin-grid">
+    <section className="admin-blogs-page">
+      <div className="admin-collection-head"><div><span className="admin-section-kicker">Editorial CMS</span><h2>Blogs</h2><p>Create, publish and maintain website articles.</p></div><button type="button" className="admin-primary" onClick={() => { setEditingId(null); setForm(emptyBlog); setEditorOpen(true); setEditorTab("content"); setSubTab("posts"); }}>+ Add blog</button></div>
+      <div className="admin-pipeline-stats admin-blog-stats">{[["All", blogs.length, "all"], ["Published", blogs.filter((blog) => blog.status === "published").length, "published"], ["Drafts", blogs.filter((blog) => blog.status === "draft").length, "draft"], ["Featured", blogs.filter((blog) => blog.featured).length, "featured"]].map(([label, value, filter]) => <button type="button" className={postFilter === filter ? "is-active" : ""} key={label} onClick={() => { setPostFilter(filter); setSubTab("posts"); }}><span>{label}</span><strong>{value}</strong></button>)}</div>
       <div className="admin-subtabs"><button type="button" className={subTab === "posts" ? "is-active" : ""} onClick={() => setSubTab("posts")}>Blog posts ({blogs.length})</button><button type="button" className={subTab === "comments" ? "is-active" : ""} onClick={() => setSubTab("comments")}>Comments ({comments.length})</button></div>
       {updating && (
         <div style={{
@@ -1392,11 +1612,12 @@ function BlogsAdmin() {
           </div>
         </div>
       )}
-      {subTab === "posts" ? <><form className="admin-panel" onSubmit={save}>
+      {subTab === "posts" ? <div className={`admin-blogs-layout${editorOpen ? " is-editing" : ""}`}>{editorOpen ? <form className="admin-panel admin-blog-editor" onSubmit={save}>
         <div className="admin-panel__head">
-          <h2>{editingId ? "Update blog" : "Create blog"}</h2>
+          <div><span className="admin-section-kicker">Blog editor</span><h2>{editingId ? form.title || "Update blog" : "Create blog"}</h2></div>
           {editingId ? <button type="button" className="admin-text-btn" onClick={reset}>Cancel edit</button> : null}
         </div>
+        <div className="admin-editor-tabs" role="tablist" aria-label="Blog editor sections">{[["content", "Content"], ["media", "Featured image"], ["publishing", "Publishing"], ["seo", "SEO"], ["social", "Social"]].map(([id, label]) => <button type="button" role="tab" aria-selected={editorTab === id} className={editorTab === id ? "is-active" : ""} key={id} onClick={() => setEditorTab(id)}>{label}</button>)}</div>
         <div className="admin-form-grid">
           <AdminField label="Title"><input required value={form.title} onChange={(event) => set("title", event.target.value)} /></AdminField>
           <AdminField label="Category">
@@ -1418,10 +1639,13 @@ function BlogsAdmin() {
         <AdminField label="SEO description"><textarea maxLength="170" rows={3} value={form.seo_description} onChange={(event) => set("seo_description", event.target.value)} /></AdminField>
         <div className="admin-form-grid"><AdminField label="OG title"><input value={form.og_title} onChange={(event) => set("og_title", event.target.value)} /></AdminField><AdminField label="OG image URL"><input value={form.og_image_url} onChange={(event) => set("og_image_url", event.target.value)} /></AdminField></div>
         <AdminField label="OG description"><textarea rows={2} value={form.og_description} onChange={(event) => set("og_description", event.target.value)} /></AdminField>
-        <AdminField label="Related project links, comma separated"><input value={form.related_project_links} onChange={(event) => set("related_project_links", event.target.value)} placeholder="/projects/one-victoria-new-town, /projects/oscar-pride-indore" /></AdminField>
+        <AdminField label="Related projects">
+          <select value="" onChange={(event) => addRelatedProject(event.target.value)}><option value="">Search or select a project</option>{relatedProjects.filter((project) => !relatedLinks.includes(project.url || `/projects/${project.slug}`)).map((project) => <option key={project.id} value={project.url || `/projects/${project.slug}`}>{project.title} · {project.location}</option>)}</select>
+          {relatedLinks.length ? <div className="admin-selected-projects">{relatedLinks.map((url) => { const project = relatedProjects.find((item) => (item.url || `/projects/${item.slug}`) === url); return <button type="button" key={url} onClick={() => removeRelatedProject(url)}>{project?.title || url}<span aria-hidden="true">×</span></button>; })}</div> : <small className="admin-field-hint">No related projects selected.</small>}
+        </AdminField>
         <label className="admin-check"><input type="checkbox" checked={form.featured} onChange={(event) => set("featured", event.target.checked)} /> Featured article</label>
-        <button className="admin-primary" type="submit">{editingId ? "Update blog" : "Create blog"}</button>
-      </form>
+        <div className="admin-editor-actions"><span>{form.status === "published" ? "This article is set to publish on the website." : "This article is not publicly published."}</span><button className="admin-primary" type="submit">{editingId ? "Save article" : "Create article"}</button></div>
+      </form> : null}
       <div className="admin-panel">
         <div className="admin-panel__head">
           <h2>Blogs</h2>
@@ -1436,16 +1660,19 @@ function BlogsAdmin() {
               <img decoding="async" loading="lazy" className="admin-thumb" src={blog.image || "assets/logo-mark.webp"} alt="" />
               <div>
                 <strong>{blog.title}</strong>
-                <span>{blog.category} - {blog.author}</span>
+                <span>{blog.category} · {blog.author}</span>
+                <div className="admin-card-meta"><span className={`admin-status admin-status--${blog.status}`}><i />{blog.status}</span>{blog.featured ? <span className="admin-featured-pill">Featured</span> : null}{blog.published_at ? <small>{new Date(blog.published_at).toLocaleDateString()}</small> : null}</div>
               </div>
               <div className="admin-actions">
+                {blog.slug ? <button type="button" onClick={() => window.open(`/blogs/${blog.slug}`, "_blank", "noopener,noreferrer")}>Preview</button> : null}
                 <button type="button" onClick={() => edit(blog)}>Edit</button>
+                <button type="button" onClick={() => duplicateBlog(blog)}>Duplicate</button>
                 <button type="button" onClick={() => remove(blog.id)}>Delete</button>
               </div>
             </article>
           )) : <p className="admin-empty">No matching blogs yet.</p>}
         </div>
-      </div></> : <div className="admin-panel admin-comments"><div className="admin-panel__head"><h2>Comment moderation</h2><span className="admin-count">{comments.length}</span></div><div className="admin-list">{comments.map((item) => <article className="admin-comment" key={item.id}><div><strong>{item.name}</strong><span>{item.email} · {item.blogs?.title || "Blog"} · {new Date(item.created_at).toLocaleString()}</span><p>{item.comment}</p><em className={`comment-status comment-status--${item.status}`}>{item.status}</em></div><div className="admin-actions"><button type="button" onClick={() => moderate(item.id, "approved")}>Approve</button><button type="button" onClick={() => moderate(item.id, "rejected")}>Reject</button><button type="button" onClick={() => moderate(item.id, "spam")}>Spam</button><button type="button" onClick={() => removeComment(item.id)}>Delete</button></div></article>)}</div></div>}
+      </div></div> : <div className="admin-panel admin-comments"><div className="admin-panel__head"><h2>Comment moderation</h2><span className="admin-count">{comments.length}</span></div><div className="admin-list">{comments.map((item) => <article className="admin-comment" key={item.id}><div><strong>{item.name}</strong><span>{item.email} · {item.blogs?.title || "Blog"} · {new Date(item.created_at).toLocaleString()}</span><p>{item.comment}</p><em className={`comment-status comment-status--${item.status}`}>{item.status}</em></div><div className="admin-actions"><button type="button" onClick={() => moderate(item.id, "approved")}>Approve</button><button type="button" onClick={() => moderate(item.id, "rejected")}>Reject</button><button type="button" onClick={() => moderate(item.id, "spam")}>Spam</button><button type="button" onClick={() => removeComment(item.id)}>Delete</button></div></article>)}</div></div>}
     </section>
   );
 }
@@ -1457,6 +1684,11 @@ function CareersAdmin() {
   const [form, setForm] = useState(emptyJob);
   const [editingId, setEditingId] = useState(null);
   const [query, setQuery] = useState("");
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [selectedApplication, setSelectedApplication] = useState(null);
+  const [applicationQuery, setApplicationQuery] = useState("");
+  const [applicationStatus, setApplicationStatus] = useState("All");
+  const [applicationJob, setApplicationJob] = useState("All");
 
   const loadJobs = async () => {
     const { data } = await window.RuchiBackend.careers.getAll();
@@ -1473,16 +1705,19 @@ function CareersAdmin() {
   const reset = () => {
     setEditingId(null);
     setForm(emptyJob);
+    setEditorOpen(false);
   };
   const save = async (event) => {
     event.preventDefault();
     if (editingId) await window.RuchiBackend.careers.update(editingId, form);
     else await window.RuchiBackend.careers.create(form);
+    showAdminToast(editingId ? "Job updated" : "Job created", `${form.title || "The position"} was saved successfully.`);
     reset();
     loadJobs();
   };
   const edit = (job) => {
     setEditingId(job.id);
+    setEditorOpen(true);
     setForm({
       title: job.title || "",
       dept: job.dept || "",
@@ -1496,7 +1731,9 @@ function CareersAdmin() {
     });
   };
   const remove = async (id) => {
+    if (!confirm("Delete this job listing permanently?")) return;
     await window.RuchiBackend.careers.remove(id);
+    showAdminToast("Job deleted", "The career listing was removed.");
     if (editingId === id) reset();
     loadJobs();
   };
@@ -1514,13 +1751,20 @@ function CareersAdmin() {
   const filteredJobs = jobs.filter((job) =>
     `${job.title} ${job.dept} ${job.type}`.toLowerCase().includes(query.toLowerCase())
   );
+  const filteredApplications = applications.filter((app) => {
+    const matchesQuery = `${app.full_name} ${app.email} ${app.phone} ${app.city}`.toLowerCase().includes(applicationQuery.toLowerCase());
+    return matchesQuery && (applicationStatus === "All" || app.status === applicationStatus) && (applicationJob === "All" || app.job_title === applicationJob);
+  });
 
   return (
     <>
+      <div className="admin-collection-head"><div><span className="admin-section-kicker">Recruitment</span><h2>Careers</h2><p>Manage open positions and candidate applications.</p></div><button type="button" className="admin-primary" onClick={() => { setEditingId(null); setForm(emptyJob); setEditorOpen(true); setSubTab("jobs"); }}>+ Add job</button></div>
+      <div className="admin-pipeline-stats admin-career-stats">{[["Active jobs", jobs.filter((job) => job.is_active).length], ["Total applications", applications.length], ["New applications", applications.filter((app) => app.status === "new").length], ["Closed positions", jobs.filter((job) => !job.is_active).length]].map(([label, value]) => <article key={label}><span>{label}</span><strong>{value}</strong></article>)}</div>
       <div className="admin-careers-head">
         <div className="admin-subtabs admin-careers-subtabs">
           <button type="button" className={subTab === "jobs" ? "is-active" : ""} onClick={() => setSubTab("jobs")}>Job Listings</button>
           <button type="button" className={subTab === "applications" ? "is-active" : ""} onClick={() => setSubTab("applications")}>Applications ({applications.length})</button>
+          <button type="button" className={subTab === "analytics" ? "is-active" : ""} onClick={() => setSubTab("analytics")}>Analytics</button>
         </div>
       </div>
 
@@ -1542,6 +1786,8 @@ function CareersAdmin() {
                     <div className="admin-job-meta">
                       <span className="admin-job-dept">{job.dept}</span>
                       <span className="admin-job-type">{job.type}</span>
+                      <span>{applications.filter((app) => app.job_title === job.title).length} applications</span>
+                      {job.created_at ? <span>Created {new Date(job.created_at).toLocaleDateString()}</span> : null}
                       {!job.is_active ? <span className="admin-job-inactive">Inactive</span> : null}
                     </div>
                   </div>
@@ -1555,7 +1801,7 @@ function CareersAdmin() {
             </div>
           </div>
 
-          <form className="admin-panel" onSubmit={save}>
+          {editorOpen ? <form className="admin-panel admin-job-editor" onSubmit={save}>
             <div className="admin-panel__head">
               <h2>{editingId ? "Update job" : "Add job"}</h2>
               {editingId ? <button type="button" className="admin-text-btn" onClick={reset}>Cancel</button> : null}
@@ -1576,19 +1822,20 @@ function CareersAdmin() {
             <AdminField label="Requirements (one per line)"><textarea rows={4} value={form.requirements} onChange={(event) => set("requirements", event.target.value)} /></AdminField>
             <label className="admin-check"><input type="checkbox" checked={form.is_active} onChange={(event) => set("is_active", event.target.checked)} /> Active listing</label>
             <button className="admin-primary" type="submit">{editingId ? "Update job" : "Add job"}</button>
-          </form>
+          </form> : null}
         </div>
-      ) : (
+      ) : subTab === "applications" ? (
         <>
           <div className="admin-apps-toolbar">
             <div className="admin-apps-toolbar-left">
               <h3 style={{ margin: 0 }}>Applications</h3>
-              <span className="admin-apps-count">{applications.length} application{applications.length !== 1 ? "s" : ""}</span>
+              <span className="admin-apps-count">{filteredApplications.length} application{filteredApplications.length !== 1 ? "s" : ""}</span>
             </div>
             <button type="button" className="admin-primary" onClick={download}>Download CSV</button>
           </div>
+          <div className="admin-toolbar admin-app-filterbar"><input value={applicationQuery} onChange={(event) => setApplicationQuery(event.target.value)} placeholder="Search candidates..." /><select value={applicationStatus} onChange={(event) => setApplicationStatus(event.target.value)}><option value="All">All statuses</option>{["new", "contacted", "qualified", "lost", "closed"].map((item) => <option key={item}>{item}</option>)}</select><select value={applicationJob} onChange={(event) => setApplicationJob(event.target.value)}><option value="All">All positions</option>{jobs.map((job) => <option key={job.id} value={job.title}>{job.title}</option>)}</select></div>
           <div className="admin-list">
-            {applications.length ? applications.map((app) => (
+            {filteredApplications.length ? filteredApplications.map((app) => (
               <article className="admin-row admin-app-card" key={app.id}>
                 <div className="admin-app-main">
                   <div className="admin-app-header">
@@ -1611,6 +1858,7 @@ function CareersAdmin() {
                 </div>
                 <div className="admin-app-side">
                   <span className={`admin-app-status admin-app-status--${app.status}`}>{app.status}</span>
+                  <button type="button" className="admin-text-btn" onClick={() => setSelectedApplication(app)}>View details</button>
                   <select value={app.status} onChange={async (event) => {
                     await window.RuchiBackend.careerApplications.updateStatus(app.id, event.target.value);
                     loadApplications();
@@ -1622,7 +1870,27 @@ function CareersAdmin() {
             )) : <p className="admin-empty">No career applications yet.</p>}
           </div>
         </>
-      )}
+      ) : <div className="admin-analytics-grid admin-career-analytics"><article className="admin-chart-card"><header><div><span>Application pipeline</span><h3>Status overview</h3></div></header><div className="admin-bars">{["new", "contacted", "qualified", "lost", "closed"].map((status) => { const value = applications.filter((app) => app.status === status).length; const max = Math.max(1, applications.length); return <div key={status}><span>{status}</span><div><i style={{ width: `${Math.max(4, value / max * 100)}%` }} /></div><strong>{value}</strong></div>; })}</div></article><article className="admin-chart-card"><header><div><span>Openings</span><h3>Applications by job</h3></div></header><div className="admin-bars">{jobs.map((job) => { const value = applications.filter((app) => app.job_title === job.title).length; const max = Math.max(1, applications.length); return <div key={job.id}><span>{job.title}</span><div><i style={{ width: `${Math.max(4, value / max * 100)}%` }} /></div><strong>{value}</strong></div>; })}</div></article></div>}
+      {selectedApplication ? <div className="admin-drawer-layer" role="presentation">
+        <button type="button" className="admin-drawer-scrim" aria-label="Close application details" onClick={() => setSelectedApplication(null)} />
+        <aside className="admin-drawer" role="dialog" aria-modal="true" aria-labelledby="application-drawer-title">
+          <header><div><span>Candidate application</span><h2 id="application-drawer-title">{selectedApplication.full_name}</h2></div><button type="button" aria-label="Close" onClick={() => setSelectedApplication(null)}>×</button></header>
+          <div className="admin-drawer__body">
+            <span className={`admin-status admin-status--${selectedApplication.status}`}><i />{selectedApplication.status}</span>
+            <dl>
+              <div><dt>Applied position</dt><dd>{selectedApplication.job_title || "General application"}</dd></div>
+              <div><dt>Email</dt><dd><a href={`mailto:${selectedApplication.email}`}>{selectedApplication.email || "Not provided"}</a></dd></div>
+              <div><dt>Phone</dt><dd><a href={`tel:${selectedApplication.phone}`}>{selectedApplication.phone || "Not provided"}</a></dd></div>
+              {selectedApplication.city ? <div><dt>City</dt><dd>{selectedApplication.city}</dd></div> : null}
+              <div><dt>Received</dt><dd>{selectedApplication.created_at ? new Date(selectedApplication.created_at).toLocaleString() : "Not available"}</dd></div>
+            </dl>
+            {selectedApplication.candidate_profile ? <section><h3>Candidate profile</h3><p>{selectedApplication.candidate_profile}</p></section> : null}
+            {selectedApplication.message ? <section><h3>Message</h3><p>{selectedApplication.message}</p></section> : null}
+            {selectedApplication.resume_url ? <a href={selectedApplication.resume_url} target="_blank" rel="noopener noreferrer" className="admin-primary admin-drawer-resume">Open resume</a> : null}
+          </div>
+          <footer><span>Application status</span><select value={selectedApplication.status} onChange={async (event) => { const status = event.target.value; await window.RuchiBackend.careerApplications.updateStatus(selectedApplication.id, status); setSelectedApplication((current) => ({ ...current, status })); loadApplications(); }}>{["new", "contacted", "qualified", "lost", "closed"].map((item) => <option key={item}>{item}</option>)}</select></footer>
+        </aside>
+      </div> : null}
     </>
   );
 }
@@ -1631,16 +1899,6 @@ export default function AdminPage() {
   const [user, setUser] = useState(() => window.RuchiBackend?.auth?.currentUser());
   const [checkingSession, setCheckingSession] = useState(Boolean(window.RuchiBackend?.auth?.currentUser()));
   const [tab, setTab] = useState("dashboard");
-  const tabs = useMemo(() => [
-    ["dashboard", "Dashboard"],
-    ["projects", "Projects"],
-    ["careers", "Careers"],
-    ["leads", "Leads"],
-    ["settings", "Settings"],
-    ["blogs", "Blogs"],
-    ["media", "Media"],
-  ], []);
-
   useEffect(() => {
     document.body.classList.add("admin-body");
     return () => document.body.classList.remove("admin-body");
@@ -1671,25 +1929,14 @@ export default function AdminPage() {
   };
 
   return (
-    <>
-      <div className="admin-top-row">
-        <a href="/" className="admin-brand"><img decoding="async" loading="lazy" src="assets/logo-h.webp" alt="Ruchi Realty" /></a>
-        <button type="button" className="admin-logout" onClick={logout}>Logout</button>
-      </div>
-      <nav className="admin-tabs" aria-label="Admin sections">
-        {tabs.map(([id, label]) => (
-          <button key={id} className={tab === id ? "is-active" : ""} type="button" onClick={() => setTab(id)}>{label}</button>
-        ))}
-      </nav>
-      <main className="admin-main">
-        {tab === "dashboard" ? <DashboardAdmin onTab={setTab} /> : null}
+    <AdminShell tab={tab} onTab={setTab} user={user} onLogout={logout}>
+        {tab === "dashboard" ? <AdminDashboard onTab={setTab} user={user} /> : null}
         {tab === "projects" ? <ProjectsAdmin /> : null}
         {tab === "careers" ? <CareersAdmin /> : null}
         {tab === "leads" ? <LeadsAdmin /> : null}
         {tab === "settings" ? <SettingsAdmin /> : null}
         {tab === "blogs" ? <BlogsAdmin /> : null}
-        {tab === "media" ? <MediaAdmin /> : null}
-      </main>
-    </>
+        {tab === "media" || tab.startsWith("media_") ? <MediaAdmin initialTab={tab === "media_press" ? "press" : tab === "media_events" ? "events" : "gallery"} onSectionChange={(section) => setTab(`media_${section}`)} /> : null}
+    </AdminShell>
   );
 }

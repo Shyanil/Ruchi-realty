@@ -29,7 +29,7 @@ export function WhyChoose() {
                 </button>
                 <div className="wacc__panel">
                   <div className="wacc__panelin">
-                    <p>{i === 2 ? <>Click &ldquo;Book a Visit&rdquo; on the website or submit an enquiry form. Our team will contact you to arrange a convenient time.</> : item.answer}</p>
+                    <p>{i === 2 ? <>Click &ldquo;Schedule a Site Visit&rdquo; on the website or submit an enquiry form. Our team will contact you to arrange a convenient time.</> : item.answer}</p>
                   </div>
                 </div>
               </div>

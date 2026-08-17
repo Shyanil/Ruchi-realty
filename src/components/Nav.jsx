@@ -36,7 +36,10 @@ const MEGA = (() => {
     Projects: {
       href: "Projects.html",
       projectNested: true,
-      blurb: "Homes, offices and plots across Kolkata, Indore and Bhopal.",
+      blurb: [
+        "Explore thoughtfully planned homes, commercial spaces and plotted communities across Kolkata, Indore and Bhopal.",
+        "Discover projects shaped around practical design, connected locations and lasting value.",
+      ],
       cols: [
         { h: "By city", items: [
           ["Kolkata", "Projects.html#city=Kolkata"],
@@ -56,7 +59,10 @@ const MEGA = (() => {
     },
     About: {
       href: "About.html",
-      blurb: "Residential, commercial and plotted developments since 2008.",
+      blurb: [
+        "Learn about Ruchi Realty's journey in residential, commercial and plotted development since 2008.",
+        "Meet the people and principles behind places built with clarity, quality and long term commitment.",
+      ],
       cols: [
         { h: "Company", items: [["About Us", "About.html"], ["Our Team", "About.html#team"], ["Careers", "Careers.html"]] },
       ],
@@ -64,7 +70,10 @@ const MEGA = (() => {
     },
     Blogs: {
       href: "/blogs",
-      blurb: "Plain-language guides to plans, materials and property decisions.",
+      blurb: [
+        "Explore clear, practical guidance on homebuying, property investment and changing real estate markets.",
+        "Read useful perspectives that help you compare locations, plans, value and everyday livability.",
+      ],
       cols: [
         { h: "Latest insights", items: insightItems },
       ],
@@ -72,7 +81,10 @@ const MEGA = (() => {
     },
     Media: {
       href: "/media",
-      blurb: "Galleries, press releases, events and awards from Ruchi Realty.",
+      blurb: [
+        "See project galleries, company news, events and recognitions from across Ruchi Realty.",
+        "Follow the moments, milestones and updates shaping our work in every city.",
+      ],
       cols: [
         { h: "Media", items: [["Gallery", "/media/gallery"], ["Press Releases", "/media/press-releases"], ["Events & Awards", "/media/events-awards"]] },
         { h: "Discover", items: [["Recognitions", "/media/events-awards"]] },
@@ -81,7 +93,10 @@ const MEGA = (() => {
     },
     Contact: {
       href: "Contact.html",
-      blurb: "Share what you need; our project team will get back to you.",
+      blurb: [
+        "Connect with our teams in Indore, Kolkata and Bhopal for project information and site visits.",
+        "Share what you are looking for and the right team will help you take the next step.",
+      ],
       cols: [
         { h: "Offices", items: [["Indore Office", "Contact.html#indore-office"], ["Kolkata Office", "Contact.html#kolkata-office"], ["Bhopal Office", "Contact.html#bhopal-office"]] },
         { h: "Reach us", items: [["+91 89292 25275", "tel:+918929225275"], ["ruchirealty.com", "#contact"], ["Indore, Kolkata and Bhopal", "#contact"]] },
@@ -366,7 +381,11 @@ function MegaPanel({ cfg, go }) {
   return (
     <div className={`mega__inner rr-wrap ${cfg.projectNested ? "mega__inner--projects" : ""} ${cfg === MEGA.About ? "mega__inner--about" : ""}`}>
       <div className="mega__lead" onMouseEnter={handleDefaultPreview}>
-        <p className="mega__blurb">{cfg.blurb}</p>
+        <div className="mega__blurbs">
+          {(Array.isArray(cfg.blurb) ? cfg.blurb : [cfg.blurb]).map((paragraph, index) => (
+            <p className="mega__blurb" key={`${cfg.href}-blurb-${index}`}>{paragraph}</p>
+          ))}
+        </div>
         <a className="mega__all" href={canonicalHref(cfg.href)} onClick={(e) => go(e, cfg.href)}>
           View section<span className="ar">&rarr;</span>
         </a>
@@ -407,7 +426,7 @@ function MegaPanel({ cfg, go }) {
   );
 }
 
-export default function Nav({ onContact, hidden, solid: forceSolid = false, solidAt }) {
+export default function Nav({ onContact, hidden, solid: forceSolid = false, solidAt, heroSound = false }) {
   const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(null);
   const [mobile, setMobile] = useState(false);
@@ -516,7 +535,10 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false, soli
             </div>
           ))}
         </nav>
-        <button className="nav__cta" onClick={() => navigate("/#contact")}>Book a Visit</button>
+        <div className="nav__actions">
+          {heroSound ? <div className="nav__sound-slot" data-hero-sound-slot /> : null}
+          <button className="nav__cta" onClick={() => navigate("/#contact")}>Schedule a Site Visit</button>
+        </div>
         <button className={`nav__burger ${mobile ? "is-open" : ""}`} onClick={() => setMobile((m) => !m)} aria-label="Menu">
           <span></span><span></span><span></span>
         </button>
@@ -541,7 +563,7 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false, soli
               </div>}
             </div>
           ))}
-          <button className="mobile__cta" onClick={() => { setMobile(false); navigate("/#contact"); }}>Book a Visit</button>
+          <button className="mobile__cta" onClick={() => { setMobile(false); navigate("/#contact"); }}>Schedule a Site Visit</button>
         </div>
       </div>
     </header>

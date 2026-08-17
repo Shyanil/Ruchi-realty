@@ -614,7 +614,7 @@ function normalizeProjectSubpage(project, sp, fallbackSp = null) {
     brochureUrl: assetUrl(sp?.brochureUrl || ""),
     faqs: clean(sp?.faqs, (item) => item?.question && item?.answer),
     relatedProjectSlugs: clean(sp?.relatedProjectSlugs, (item) => typeof item === "string" && item.trim()),
-    ctaLabels: { brochure: sp?.ctaLabels?.brochure || "Download Brochure", visit: sp?.ctaLabels?.visit || "Book a Visit" },
+    ctaLabels: { brochure: sp?.ctaLabels?.brochure || "Download Brochure", visit: sp?.ctaLabels?.visit || "Schedule a Site Visit" },
     ogImage: assetUrl(sp?.ogImage || sp?.heroBg || project?.image_url || ""),
     metaTitle: sp?.metaTitle || `${title} | Ruchi Realty`,
     metaDescription: sp?.metaDescription || description,
