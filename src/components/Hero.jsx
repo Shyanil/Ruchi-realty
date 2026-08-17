@@ -128,8 +128,6 @@ export default function Hero() {
         <source media="(max-width: 720px)" src={MOBILE_SHOWREEL} type="video/mp4" />
         <source src={SHOWREEL} type="video/mp4" />
       </video>
-      <div className="hero__scrim"></div>
-
       {soundHost ? createPortal(<button className={`hero__sound${soundOn ? " is-on" : ""}`} type="button"
         onClick={toggleAudio} aria-pressed={soundOn} aria-label={soundOn ? "Mute hero video" : "Play hero video sound"}>
         <span className="hero__sound-icon" aria-hidden="true">
