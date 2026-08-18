@@ -604,7 +604,25 @@
       return result.error ? result : { data: result.data || [], error: null };
     },
     async createComment(blogId, data) {
-      return rest("blog_comments", { select: "id" }, { method: "POST", headers: { Prefer: "return=minimal" }, json: { blog_id: blogId, name: String(data.name || "").trim().slice(0, 80), email: String(data.email || "").trim().toLowerCase().slice(0, 160), comment: String(data.comment || "").trim().slice(0, 3000), status: "pending" } });
+      try {
+        const response = await fetch("/api/blog-comments", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            blogId,
+            name: String(data.name || "").trim().slice(0, 80),
+            email: String(data.email || "").trim().toLowerCase().slice(0, 160),
+            comment: String(data.comment || "").trim().slice(0, 3000),
+            website: String(data.website || "").trim(),
+            turnstileToken: String(data.turnstileToken || ""),
+          }),
+        });
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok) return { data: null, error: new Error(payload.error || "Could not submit your comment.") };
+        return { data: null, error: null };
+      } catch {
+        return { data: null, error: new Error("Could not reach the comment service. Please try again.") };
+      }
     },
     async getAllComments() {
       return rest("blog_comments", { select: "*,blogs(title,slug)", order: "created_at.desc" }, { auth: true });

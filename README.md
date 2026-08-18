@@ -77,3 +77,20 @@ Admin:
   when you need a fresh single-file copy.
 - Nothing in `build/` or `archive/` is needed to run the live site — only the root pages,
   `js/`, `css/`, `assets/`, `uploads/` and `fonts/` are.
+
+## Blog comment spam protection
+
+Blog comments use Cloudflare Turnstile and the Netlify `/api/blog-comments` function.
+Configure these server-side environment variables in Netlify before deploying:
+
+- `TURNSTILE_SITE_KEY`
+- `TURNSTILE_SECRET_KEY`
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+
+Create the Turnstile widget for `ruchirealty.com` with the free Managed mode. Never
+place the Turnstile secret or Supabase service-role key in client-side code. After the
+protected function is deployed, run
+`backend/sql/13_protect_blog_comments_with_turnstile.sql` once in Supabase SQL Editor
+to prevent bots from bypassing Turnstile through the old direct insert permission.
+Local development automatically uses Cloudflare's official always-pass test keys.
