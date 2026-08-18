@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import otpHandler from './netlify/functions/msg91-otp.mjs'
 import blogCommentsHandler from './netlify/functions/blog-comments.mjs'
@@ -37,9 +37,13 @@ function netlifyFunctionDevMiddleware() {
   }
 }
 
-export default defineConfig({
-  plugins: [react(), netlifyFunctionDevMiddleware()],
-  build: {
-    outDir: 'dist',
-  },
+export default defineConfig(({ mode }) => {
+  Object.assign(process.env, loadEnv(mode, process.cwd(), ''))
+
+  return {
+    plugins: [react(), netlifyFunctionDevMiddleware()],
+    build: {
+      outDir: 'dist',
+    },
+  }
 })

@@ -1,7 +1,4 @@
 const TURNSTILE_VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
-const TEST_SITE_KEY = "1x00000000000000000000AA";
-const TEST_SECRET_KEY = "1x0000000000000000000000000000000AA";
-const DEFAULT_SUPABASE_URL = "https://dychmqnydalfthfxzpnl.supabase.co";
 const JSON_HEADERS = {
   "Content-Type": "application/json; charset=utf-8",
   "Cache-Control": "no-store",
@@ -9,7 +6,6 @@ const JSON_HEADERS = {
 
 const env = (name) => globalThis?.process?.env?.[name] || globalThis?.Netlify?.env?.get?.(name) || "";
 const json = (status, body) => new Response(JSON.stringify(body), { status, headers: JSON_HEADERS });
-const isLocalRequest = (request) => ["localhost", "127.0.0.1", "0.0.0.0"].includes(new URL(request.url).hostname);
 
 function clientIp(request) {
   return String(
@@ -34,8 +30,9 @@ async function verifyTurnstile(token, secret, remoteIp) {
 }
 
 async function insertComment(comment) {
-  const supabaseUrl = env("SUPABASE_URL") || DEFAULT_SUPABASE_URL;
+  const supabaseUrl = env("SUPABASE_URL");
   const serviceRoleKey = env("SUPABASE_SERVICE_ROLE_KEY");
+  if (!supabaseUrl) throw new Error("SUPABASE_URL is not configured.");
   if (!serviceRoleKey) throw new Error("SUPABASE_SERVICE_ROLE_KEY is not configured.");
 
   const response = await fetch(`${supabaseUrl}/rest/v1/blog_comments`, {
@@ -57,8 +54,7 @@ async function insertComment(comment) {
 }
 
 export default async (request) => {
-  const local = isLocalRequest(request);
-  const siteKey = env("TURNSTILE_SITE_KEY") || (local ? TEST_SITE_KEY : "");
+  const siteKey = env("TURNSTILE_SITE_KEY");
 
   if (request.method === "GET") {
     if (!siteKey) return json(503, { error: "Comment verification is not configured." });
@@ -92,12 +88,12 @@ export default async (request) => {
     return json(400, { error: "Please complete the security verification." });
   }
 
-  const secretKey = env("TURNSTILE_SECRET_KEY") || (local ? TEST_SECRET_KEY : "");
+  const secretKey = env("TURNSTILE_SECRET_KEY");
   if (!siteKey || !secretKey) return json(503, { error: "Comment verification is not configured." });
 
   try {
     const verification = await verifyTurnstile(turnstileToken, secretKey, clientIp(request));
-    const actionIsValid = secretKey === TEST_SECRET_KEY || verification.action === "blog_comment";
+    const actionIsValid = verification.action === "blog_comment";
     if (!verification.success || !actionIsValid) {
       console.warn("Turnstile rejected a blog comment:", verification["error-codes"] || [], verification.action || "");
       return json(400, { error: "Security verification failed or expired. Please try again." });

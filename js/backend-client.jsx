@@ -51,7 +51,7 @@
   };
 
   const request = async (path, options = {}) => {
-    if (!configured) return disabled("Supabase is not configured. Check js/supabase-config.js.");
+    if (!configured) return disabled("Supabase is not configured. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.");
     const token = options.token || authHeader(options.auth);
     if (options.auth && !token) return { data: null, error: new Error("Please sign in again before uploading or saving admin content.") };
     const headers = {

@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_CONFIG = Object.freeze({
-  url: 'https://dychmqnydalfthfxzpnl.supabase.co',
-  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5Y2htcW55ZGFsZnRoZnh6cG5sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyODI3MjMsImV4cCI6MjA5Nzg1ODcyM30.hiFOSJkv1vPygCCBT1cQ6EY1OJ0TIYV90SETEJ-Vh3w',
+  url: import.meta.env?.VITE_SUPABASE_URL || globalThis?.process?.env?.VITE_SUPABASE_URL || '',
+  anonKey: import.meta.env?.VITE_SUPABASE_ANON_KEY || globalThis?.process?.env?.VITE_SUPABASE_ANON_KEY || '',
 });
 
 export const isSupabaseConfigured = Boolean(
@@ -11,7 +11,7 @@ export const isSupabaseConfigured = Boolean(
 
 const disabledResult = () => ({
   data: null,
-  error: new Error('Supabase is not configured. Add your project URL and anon key in backend/integration/supabase.js.'),
+  error: new Error('Supabase is not configured. Add its URL and anon key to the environment.'),
 });
 
 const createDisabledQuery = () => {

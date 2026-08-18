@@ -81,16 +81,26 @@ Admin:
 ## Blog comment spam protection
 
 Blog comments use Cloudflare Turnstile and the Netlify `/api/blog-comments` function.
-Configure these server-side environment variables in Netlify before deploying:
+Copy `.env.example` to `.env` for local development. Configure the same values in
+Netlify under **Site configuration -> Environment variables** before deploying.
+
+Public browser variables (these are embedded in the browser build):
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+
+Server-only variables (never prefix these with `VITE_`):
 
 - `TURNSTILE_SITE_KEY`
 - `TURNSTILE_SECRET_KEY`
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
+- `MSG91_AUTH_KEY`
+- `MSG91_TEMPLATE_ID`
 
 Create the Turnstile widget for `ruchirealty.com` with the free Managed mode. Never
 place the Turnstile secret or Supabase service-role key in client-side code. After the
 protected function is deployed, run
 `backend/sql/13_protect_blog_comments_with_turnstile.sql` once in Supabase SQL Editor
 to prevent bots from bypassing Turnstile through the old direct insert permission.
-Local development automatically uses Cloudflare's official always-pass test keys.
+The local `.env` is ignored by Git; `.env.example` must contain placeholders only.
