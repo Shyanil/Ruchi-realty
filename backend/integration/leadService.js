@@ -3,15 +3,20 @@ import { supabase } from './supabase';
 export const leadService = {
   async submitLead(leadData) {
     const payload = {
+      id: crypto.randomUUID(),
       name: leadData.name?.trim(),
-      email: leadData.email?.trim(),
+      email: leadData.email?.trim() || null,
       phone: leadData.phone?.trim(),
       interest: leadData.interest || leadData.project || 'General',
+      city: leadData.city || null,
       // Which form/page the enquiry came from, and the specific project (if any),
       // so the admin can tell which form was filled for which project.
       source: leadData.source || null,
       project_slug: leadData.project_slug || null,
+      lead_action: leadData.lead_action || 'callback',
       status: 'new',
+      verification_status: 'unverified',
+      crm_status: 'not_sent',
       notes: leadData.notes || null,
     };
 

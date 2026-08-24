@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Nav from "../components/Nav";
 import { Footer } from "../components/Footer";
 import { Reveal, RImg } from "../components/shared";
-import OtpVerification, { formatIndianPhoneForLead, isValidIndianPhone } from "../components/OtpVerification";
+import BrochureLeadPopup from "../components/BrochureLeadPopup";
 
 // Parse Video helper supporting youtube, youtu.be, embed, and direct video URLs
 function parseVideoUrl(url) {
@@ -777,89 +777,7 @@ function CtaSection({ subpage, onBrochureClick }) {
 }
 
 function BrochurePopup({ subpage, onClose }) {
-  const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", phone: "", project: "Active Greens", message: "" });
-  const [loading, setLoading] = useState(false);
-  const [otpVerified, setOtpVerified] = useState(false);
-
-  const handleSubmit = async (e) => {
-    if (e) e.preventDefault();
-    setLoading(true);
-    try {
-      if (window.RuchiBackend?.leads) {
-        await window.RuchiBackend.leads.submitLead({
-          ...form,
-          phone: formatIndianPhoneForLead(form.phone),
-          source: "Project Subpage Brochure",
-          project_slug: "active-greens"
-        });
-      }
-      setSubmitted(true);
-      // Trigger brochure download
-      const link = document.createElement("a");
-      link.href = subpage.brochureUrl || ACTIVE_GREENS_FALLBACK.brochureUrl;
-      link.download = "Active_Greens_Brochure.pdf";
-      link.target = "_blank";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (err) {
-      console.error(err);
-      alert("Submission failed, please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const valid = form.name.trim() && isValidIndianPhone(form.phone) && form.email.trim() && otpVerified;
-
-  return (
-    <div className="osc-popup-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="Download brochure">
-      <div className="osc-popup" onClick={(e) => e.stopPropagation()}>
-        <button type="button" className="osc-popup__close" onClick={onClose} aria-label="Close form">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
-        {submitted ? (
-          <>
-            <h3>Thank You!</h3>
-            <p>Your details have been submitted. Your brochure download has started automatically.</p>
-            <button type="button" className="submit-btn" onClick={onClose} style={{ width: "100%", justifyContent: "center" }}>
-              Close Window<span className="ar">→</span>
-            </button>
-          </>
-        ) : (
-          <>
-            <h3>Download Brochure</h3>
-            <p>Enter your details below to receive the brochure.</p>
-            <div className="field">
-              <label>Name</label>
-              <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your full name" />
-            </div>
-            <OtpVerification value={form.phone} onChange={(phone) => setForm((current) => ({ ...current, phone }))} onVerificationChange={({ verified }) => setOtpVerified(verified)} purpose="brochure" />
-            <div className="field">
-              <label>Email</label>
-              <input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="you@email.com" />
-            </div>
-            <div className="field">
-              <label>Project of interest</label>
-              <select value={form.project} onChange={(e) => setForm({ ...form, project: e.target.value })}>
-                <option value="Active Greens">Active Greens</option>
-              </select>
-            </div>
-            <div className="field">
-              <label>Message</label>
-              <textarea rows={3} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="I'd like to know more about the project." />
-            </div>
-            <button className="submit-btn" onClick={handleSubmit} disabled={!valid || loading} style={{ width: "100%", justifyContent: "center", marginTop: "8px" }}>
-              {loading ? "Sending..." : "Download Now"}<span className="ar">→</span>
-            </button>
-          </>
-        )}
-      </div>
-    </div>
-  );
+  return <BrochureLeadPopup project="Active Greens" city="Kolkata" slug="active-greens" source="Active Greens page brochure download" brochureUrl={subpage.brochureUrl || ACTIVE_GREENS_FALLBACK.brochureUrl} onClose={onClose} />;
 }
 
 function MobileFixedCta({ onBrochureClick }) {

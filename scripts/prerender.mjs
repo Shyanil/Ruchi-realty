@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { render } from "../.ssr/entry-server.js";
 import { PROJECTS } from "../src/data/projects.js";
 import { BLOG } from "../src/data/siteData.js";
+import { LOCAL_SEO_PAGE_LIST } from "../src/data/localSeoPages.js";
 
 const root = resolve(".");
 const dist = resolve(root, "dist");
@@ -10,7 +11,7 @@ const template = await readFile(resolve(dist, "index.html"), "utf8");
 const siteUrl = "https://ruchirealty.com";
 
 const staticPages = [
-  { path: "/", title: "Ruchi Realty | Real Estate Developer in Kolkata, Indore & Bhopal", description: "Explore residential, commercial and plotted projects by Ruchi Realty across Kolkata, Indore and Bhopal. View locations, status and enquiry options." },
+  { path: "/", title: "Ruchi Realty | Real Estate Developer in Kolkata, Indore & Bhopal", description: "Explore residential apartments, commercial spaces and plotted developments by Ruchi Realty across Kolkata, Indore and Bhopal. View project details, locations, status, brochures and site visit options." },
   { path: "/about", title: "About Ruchi Realty | Company, Projects and Leadership", description: "Learn about Ruchi Realty, founded in 2008, its residential, commercial and plotted developments across Kolkata, Indore and Bhopal, and its leadership." },
   { path: "/projects", title: "Ruchi Realty Projects | Kolkata, Indore & Bhopal", description: "Explore Ruchi Realty residential, commercial and plotted developments across Kolkata, Indore and Bhopal." },
   { path: "/blogs", title: "Real Estate Insights & Guides | Ruchi Realty", description: "Read Ruchi Realty insights on home buying, property investment, plotted developments and real estate markets in Kolkata, Indore and Bhopal." },
@@ -36,7 +37,13 @@ const blogPages = BLOG.map((post) => ({
   description: post.excerpt,
 }));
 
-const pages = [...new Map([...staticPages, ...projectPages, ...blogPages].map((page) => [page.path, page])).values()];
+const localSeoPages = LOCAL_SEO_PAGE_LIST.map((page) => ({
+  path: page.path,
+  title: page.title,
+  description: page.description,
+}));
+
+const pages = [...new Map([...staticPages, ...localSeoPages, ...projectPages, ...blogPages].map((page) => [page.path, page])).values()];
 
 function escapeAttribute(value) {
   return value.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");

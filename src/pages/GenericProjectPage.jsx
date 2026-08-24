@@ -2,10 +2,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Nav from "../components/Nav";
 import { Footer } from "../components/Footer";
+import SEO from "../components/SEO";
 import { Reveal, RImg } from "../components/shared";
 import { CardArrow } from "../components/ProjectsSection";
-import OtpVerification, { formatIndianPhoneForLead, isValidIndianPhone } from "../components/OtpVerification";
+import LeadCaptureFlow, { inferLeadCity } from "../components/LeadCaptureFlow";
 import { PROJECTS } from "../data/projects";
+import { ORGANIZATION_ID, absoluteUrl, breadcrumbSchema, faqSchema } from "../data/structuredData";
 import { OSCAR_PRIDE_FALLBACK } from "../data/oscarPride";
 import { OSCAR_PALACE_FALLBACK } from "../data/oscarPalace";
 import { RUCHI_LIFESCAPES_INDORE_FALLBACK } from "../data/ruchiLifescapesIndore";
@@ -482,11 +484,19 @@ function mergeProjectSubpage(fallback, remote) {
     locationImage: preferText(remote.locationImage, fallback.locationImage),
     locationMapEmbed: preferText(remote.locationMapEmbed, fallback.locationMapEmbed),
     locationDestinations: preferArray(remote.locationDestinations, fallback.locationDestinations),
+    nearbyLandmarks: preferArray(remote.nearbyLandmarks, fallback.nearbyLandmarks || fallback.locationDestinations),
+    schools: preferArray(remote.schools, fallback.schools),
+    hospitals: preferArray(remote.hospitals, fallback.hospitals),
+    metroRoadConnectivity: preferArray(remote.metroRoadConnectivity, fallback.metroRoadConnectivity),
+    airportRailwayDistances: preferArray(remote.airportRailwayDistances, fallback.airportRailwayDistances),
+    businessHubs: preferArray(remote.businessHubs, fallback.businessHubs),
+    shoppingCentres: preferArray(remote.shoppingCentres, fallback.shoppingCentres),
     walkthroughVideoId: preferText(remote.walkthroughVideoId, fallback.walkthroughVideoId),
     videos: preferArray(remote.videos, fallback.videos),
     galleryImages: preferArray(remote.galleryImages, fallback.galleryImages),
     constructionUpdates: preferArray(remote.constructionUpdates, fallback.constructionUpdates),
     brochureUrl: preferText(remote.brochureUrl, fallback.brochureUrl),
+    reraNumber: preferText(remote.reraNumber, fallback.reraNumber),
     faqs: preferArray(remote.faqs, fallback.faqs),
     relatedProjectSlugs: preferArray(remote.relatedProjectSlugs, fallback.relatedProjectSlugs),
     ctaLabels: { ...(fallback.ctaLabels || {}), ...(remote.ctaLabels || {}) },
@@ -549,6 +559,41 @@ function highlightIconSrc(icon, index) {
   return assetUrl(ICONS[DEFAULT_HIGHLIGHTS[index]?.icon] || ICONS.location);
 }
 
+function findReraNumber(...sources) {
+  const text = sources.filter(Boolean).map((source) => typeof source === "string" ? source : JSON.stringify(source)).join(" ");
+  const match = text.match(/\b(?:(?:WB)?(?:RERA|HIRA)\/[A-Z]\/[A-Z]+\/\d{4}\/\d+|P-[A-Z]+-\d{2}-\d+)\b/i);
+  return match?.[0] || "";
+}
+
+function defaultProjectFaqs({ title, type, location, status, reraNumber, hasBrochure, hasFloorPlans }) {
+  const projectType = String(type || "real estate").toLowerCase();
+  const locationText = location || "its listed location";
+  return [
+    {
+      question: `What type of property is ${title}?`,
+      answer: `${title} is a ${projectType} project by Ruchi Realty in ${locationText}. Review the overview, amenities, specifications and plans on this page for full project details.`,
+    },
+    {
+      question: `What is the current status of ${title}?`,
+      answer: `${title} is currently listed as ${status || "available for enquiry"}. Contact the project team to confirm the latest construction, possession and inventory status before making a decision.`,
+    },
+    {
+      question: `Is ${title} RERA registered?`,
+      answer: reraNumber
+        ? `Yes. The RERA registration number displayed for ${title} is ${reraNumber}. Buyers should also verify the registration on the relevant official state RERA portal.`
+        : `RERA registration and approval details for ${title}, where applicable, can be confirmed with the project team and verified on the relevant official state RERA portal.`,
+    },
+    {
+      question: `How can I check the current price and availability for ${title}?`,
+      answer: `Submit the enquiry form on this page to receive the latest price, available units or plots, configurations and applicable offers directly from the ${title} sales team.`,
+    },
+    {
+      question: `Can I schedule a site visit or view plans for ${title}?`,
+      answer: `Yes. Use the enquiry option to schedule a site visit.${hasFloorPlans ? " Available floor plans can be viewed on this page." : " The project team can share available plans and specifications."}${hasBrochure ? " You can also request the project brochure online." : " Brochure details can be requested from the project team."}`,
+    },
+  ];
+}
+
 function normalizeProjectSubpage(project, sp, fallbackSp = null) {
   const custom = extractCustomSpecs(sp?.specifications || []);
   const fallbackCustom = extractCustomSpecs(fallbackSp?.specifications || []);
@@ -568,6 +613,10 @@ function normalizeProjectSubpage(project, sp, fallbackSp = null) {
   const reviewsSource = custom.gmbReviews || sp?.gmbReviews || fallbackCustom.gmbReviews || fallbackSp?.gmbReviews || null;
   const gmbReviews = reviewsSource?.enabled && Array.isArray(reviewsSource.reviews) ? { ...reviewsSource, googleIconUrl: assetUrl(reviewsSource.googleIconUrl || ""), starIconUrl: assetUrl(reviewsSource.starIconUrl || ""), reviews: reviewsSource.reviews.filter((review) => review?.author || review?.text).map((review) => ({ ...review, avatar: assetUrl(review.avatar || review.image || "") })) } : null;
   const clean = (items, predicate) => (Array.isArray(items) ? items : []).filter(predicate);
+  const normalizeLocationItems = (items) => clean(items, (item) => item?.name).map((item) => ({
+    name: String(item.name).trim(),
+    distance: String(item.distance || item.dist || item.time || "Nearby").trim(),
+  }));
   const imageSource = (img) => img?.src || img?.image || img?.image_url || img?.imageUrl || img?.url || img?.public_url || img?.publicUrl || "";
   const largeImageSource = (img) => img?.largeSrc || img?.large_src || img?.lightboxSrc || img?.lightbox_src || img?.fullSrc || img?.full_src || img?.large_url || img?.full_url || "";
   const normalizeImages = (items, fallbackItems = []) => clean(items, (img) => imageSource(img))
@@ -579,11 +628,18 @@ function normalizeProjectSubpage(project, sp, fallbackSp = null) {
   const galleryImages = rawGalleryImages.filter((img) => !isConstructionImage(img));
   const constructionUpdates = [...normalizeImages(sp?.constructionUpdates || [], fallbackSp?.constructionUpdates || []), ...normalizeImages(custom.constructionUpdates, fallbackCustom.constructionUpdates), ...rawGalleryImages.filter(isConstructionImage)]
     .filter((img, index, items) => items.findIndex((candidate) => candidate.src === img.src) === index);
+  const type = project?.type || "Residential";
+  const location = project?.location || project?.city || "";
+  const status = project?.status || sp?.status || "";
+  const floorPlans = (custom.floorPlans?.length ? custom.floorPlans : (sp?.floorPlans || [])).filter((plan) => plan?.desc || plan?.image).map((plan, index) => { const fallbackPlans = fallbackCustom.floorPlans?.length ? fallbackCustom.floorPlans : (fallbackSp?.floorPlans || []); return { ...plan, desc: assetUrl(plan.desc || plan.image), fallbackDesc: assetUrl(fallbackPlans[index]?.desc || fallbackPlans[index]?.image || "") }; });
+  const reraNumber = String(sp?.reraNumber || fallbackSp?.reraNumber || "").trim() || findReraNumber(sp?.specifications, fallbackSp?.specifications, sp?.locationDestinations, fallbackSp?.locationDestinations);
+  const savedFaqs = clean(sp?.faqs, (item) => item?.question && item?.answer);
+  const faqs = savedFaqs.length ? savedFaqs : defaultProjectFaqs({ title, type, location, status, reraNumber, hasBrochure: Boolean(sp?.brochureUrl), hasFloorPlans: Boolean(floorPlans.length) });
   return {
     title,
-    type: project?.type || "Residential",
+    type,
     slug: project?.slug || (isAngelica ? "active-acres-angelica" : ""),
-    location: project?.location || project?.city || "",
+    location,
     tag: sp?.heroTagline || project?.tag || description,
     heroLogo: project?.slug === "ruchi-lifescapes-indore-project" ? "/projects/ruchi-lifescapes-indore-project/logo.webp" : assetUrl((isAngelica ? fallbackSp?.heroLogo : "") || sp?.heroLogo || ""),
     heroBg: assetUrl((isAngelica || isOscarFort ? fallbackSp?.heroBg : "") || sp?.heroBg || project?.image_url || project?.img || "assets/projects/oscar-billionaires.webp"),
@@ -593,7 +649,7 @@ function normalizeProjectSubpage(project, sp, fallbackSp = null) {
     heroImagePosition: sp?.heroImagePosition || "center center",
     heroImageFit: ["cover", "contain"].includes(sp?.heroImageFit) ? sp.heroImageFit : "cover",
     heroMedia: custom.heroMedia,
-    status: project?.status || sp?.status || "",
+    status,
     overviewImage: assetUrl((isOscarPalace ? fallbackSp?.overviewImage : "") || sp?.overviewImage || fallbackSp?.overviewImage || ""),
     overviewParagraphs: clean(sp?.overviewParagraphs, (item) => typeof item === "string" && item.trim()),
     overviewHighlights: clean(sp?.overviewHighlights, (item) => item?.label || item?.desc).slice(0, 4),
@@ -601,7 +657,7 @@ function normalizeProjectSubpage(project, sp, fallbackSp = null) {
     specifications: clean(custom.specifications, (item) => item?.title && (item?.desc || item?.details || item?.value)),
     specificationImage: assetUrl(sp?.specificationImage || ""),
     specificationFallbackImage: assetUrl(fallbackSp?.specificationImage || ""),
-    floorPlans: (custom.floorPlans?.length ? custom.floorPlans : (sp?.floorPlans || [])).filter((plan) => plan?.desc || plan?.image).map((plan, index) => { const fallbackPlans = fallbackCustom.floorPlans?.length ? fallbackCustom.floorPlans : (fallbackSp?.floorPlans || []); return { ...plan, desc: assetUrl(plan.desc || plan.image), fallbackDesc: assetUrl(fallbackPlans[index]?.desc || fallbackPlans[index]?.image || "") }; }),
+    floorPlans,
     videos,
     videoSection: videos[0] || { title: "", videoUrl: "", thumbnailUrl: "" },
     gmbReviews,
@@ -609,10 +665,18 @@ function normalizeProjectSubpage(project, sp, fallbackSp = null) {
     locationFallbackImage: assetUrl(fallbackSp?.locationImage || fallbackCustom.locationMapUrl || ""),
     locationMapEmbed: embedSrc((isSaatvikGreen ? fallbackSp?.locationMapEmbed : "") || sp?.locationMapEmbed || ""),
     locationDestinations: isSaatvikGreen ? (fallbackSp?.locationDestinations || []) : (Array.isArray(sp?.locationDestinations) ? sp.locationDestinations : []),
+    nearbyLandmarks: normalizeLocationItems(sp?.nearbyLandmarks?.length ? sp.nearbyLandmarks : sp?.locationDestinations?.length ? sp.locationDestinations : fallbackSp?.nearbyLandmarks || fallbackSp?.locationDestinations),
+    schools: normalizeLocationItems(sp?.schools?.length ? sp.schools : fallbackSp?.schools),
+    hospitals: normalizeLocationItems(sp?.hospitals?.length ? sp.hospitals : fallbackSp?.hospitals),
+    metroRoadConnectivity: normalizeLocationItems(sp?.metroRoadConnectivity?.length ? sp.metroRoadConnectivity : fallbackSp?.metroRoadConnectivity),
+    airportRailwayDistances: normalizeLocationItems(sp?.airportRailwayDistances?.length ? sp.airportRailwayDistances : fallbackSp?.airportRailwayDistances),
+    businessHubs: normalizeLocationItems(sp?.businessHubs?.length ? sp.businessHubs : fallbackSp?.businessHubs),
+    shoppingCentres: normalizeLocationItems(sp?.shoppingCentres?.length ? sp.shoppingCentres : fallbackSp?.shoppingCentres),
     galleryImages,
     constructionUpdates,
     brochureUrl: assetUrl(sp?.brochureUrl || ""),
-    faqs: clean(sp?.faqs, (item) => item?.question && item?.answer),
+    reraNumber,
+    faqs,
     relatedProjectSlugs: clean(sp?.relatedProjectSlugs, (item) => typeof item === "string" && item.trim()),
     ctaLabels: { brochure: sp?.ctaLabels?.brochure || "Download Brochure", visit: sp?.ctaLabels?.visit || "Schedule a Site Visit" },
     ogImage: assetUrl(sp?.ogImage || sp?.heroBg || project?.image_url || ""),
@@ -625,37 +689,13 @@ function CtaArrow() {
   return <CardArrow />;
 }
 
-function HeroEnquiryForm({ title, onSubmit }) {
-  const [form, setForm] = useState({ name: String(), phone: String(), email: String() });
-  const [otpVerified, setOtpVerified] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [resetKey, setResetKey] = useState(0);
-  const field = (key) => (e) => setForm({ ...form, [key]: e.target.value });
-  const valid = form.name.trim() && isValidIndianPhone(form.phone) && otpVerified;
-  const submit = async (event) => {
-    event.preventDefault();
-    if (!valid || sending) return;
-    setSending(true);
-    const succeeded = await onSubmit({ ...form, phone: formatIndianPhoneForLead(form.phone) });
-    if (succeeded) {
-      setForm({ name: "", phone: "", email: "" });
-      setOtpVerified(false);
-      setResetKey((current) => current + 1);
-    }
-    setSending(false);
-  };
-  return <form className={`victoria-hero-form`} onSubmit={submit}>
+function HeroEnquiryForm({ data }) {
+  return <div className={`victoria-hero-form`}>
     <div className="victoria-hero-form__head"><span className="victoria-hero-form__mark" aria-hidden="true"></span><span className={`eyebrow`}>Private Enquiry</span></div>
-    <h2>Discover life<br />at {title}</h2>
+    <h2>Discover life<br />at {data.title}</h2>
     <p>Receive current pricing, plans and availability directly from our project team.</p>
-    <div className="victoria-hero-form__fields">
-      <label className="is-wide"><span>Full name</span><input value={form.name} onChange={field(`name`)} placeholder={`Enter your name`} autoComplete="name" required /></label>
-      <OtpVerification key={resetKey} value={form.phone} onChange={(phone) => setForm((current) => ({ ...current, phone }))} onVerificationChange={({ verified }) => setOtpVerified(verified)} purpose="enquiry" label="Phone number" className="" />
-      <label className="is-wide project-email-field"><span>Email address</span><input type={`email`} value={form.email} onChange={field(`email`)} placeholder={`name@email.com`} autoComplete="email" /></label>
-    </div>
-    <button className={`submit-btn`} type={`submit`} disabled={!valid || sending}>{sending ? "Sending..." : "Request Project Details"}<CtaArrow /></button>
-    <small className="victoria-hero-form__privacy">Your information remains private and is only used to respond to this enquiry.</small>
-  </form>;
+    <LeadCaptureFlow initialProject={data.title} initialCity={inferLeadCity(data.city, data.location, data.slug)} projectSlug={data.slug} source={`${data.title} hero enquiry`} leadAction="project_details" buttonLabel="Get Project Details" purpose="project-enquiry" projectLocked compact />
+  </div>;
 }
 function AmenityIcon({ icon, name }) {
   const key = `${icon || ""} ${name || ""}`.toLowerCase();
@@ -704,7 +744,7 @@ function SectionNav({ data, visible = false }) {
       ["gallery", "Gallery", data.galleryImages?.length],
       ["construction-updates", "Construction", data.constructionUpdates?.length],
       ["floor-plans", "Floor Plans", data.floorPlans?.length],
-      ["location", "Location", data.locationMapEmbed || data.locationImage || data.locationDestinations?.length],
+      ["location", "Location", data.locationMapEmbed || data.locationImage || data.locationDestinations?.length || data.nearbyLandmarks?.length || data.schools?.length || data.hospitals?.length || data.metroRoadConnectivity?.length || data.airportRailwayDistances?.length || data.businessHubs?.length || data.shoppingCentres?.length],
       ["faq", "FAQ", data.faqs?.length],
 
     ].filter(([, , show]) => Boolean(show)).map(([id, label]) => ({ id, label }));
@@ -753,35 +793,17 @@ function SectionNav({ data, visible = false }) {
 }
 
 function BrochurePopup({ data, onClose }) {
-  const [form, setForm] = useState({ name: "", phone: "", email: "", message: "" });
-  const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
-  const [error, setError] = useState("");
-  const [otpVerified, setOtpVerified] = useState(false);
-  const valid = form.name.trim() && isValidIndianPhone(form.phone) && otpVerified;
-  const set = (key) => (event) => setForm((current) => ({ ...current, [key]: event.target.value }));
-  const submit = async () => {
-    if (!valid || sending) return;
-    setSending(true);
-    setError("");
-    try {
-      const result = await window.RuchiBackend.leads.submitLead({
-        name: form.name,
-        phone: formatIndianPhoneForLead(form.phone),
-        email: form.email,
-        interest: data.title,
-        source: `${data.title} brochure popup`,
-        project_slug: data.slug,
-        message: form.message || "Brochure/enquiry request from project subpage.",
-      });
-      if (result?.error) throw result.error;
-      setSent(true);
-      if (data.brochureUrl) window.open(data.brochureUrl, "_blank", "noopener,noreferrer");
-    } catch (err) {
-      setError(err?.message || "Could not submit your enquiry. Please try again.");
-    } finally {
-      setSending(false);
-    }
+  const deliverBrochure = () => {
+    setSent(true);
+    if (!data.brochureUrl) return;
+    const link = document.createElement("a");
+    link.href = data.brochureUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
   };
 
   return (
@@ -794,13 +816,8 @@ function BrochurePopup({ data, onClose }) {
           <button className="submit-btn" type="button" onClick={onClose} style={{ width: "100%", justifyContent: "center" }}>Close<CtaArrow /></button>
         </> : <>
           <h3>Download Brochure</h3>
-          <p>Enter your details to receive information about {data.title}.</p>
-          <div className="field"><label>Name</label><input value={form.name} onChange={set("name")} placeholder="Your full name" /></div>
-          <OtpVerification value={form.phone} onChange={(phone) => setForm((current) => ({ ...current, phone }))} onVerificationChange={({ verified }) => setOtpVerified(verified)} purpose="brochure" />
-          <div className="field"><label>Email</label><input type="email" value={form.email} onChange={set("email")} placeholder="you@email.com" /></div>
-          <div className="field"><label>Message</label><input value={form.message} onChange={set("message")} placeholder="I would like to know more." /></div>
-          <button className="submit-btn" type="button" onClick={submit} disabled={!valid || sending} style={{ width: "100%", justifyContent: "center", marginTop: "8px" }}>{sending ? "Sending..." : data.brochureUrl ? "Download Now" : "Enquire Now"}<CtaArrow /></button>
-          {error ? <p className="contact-error" style={{ margin: "12px 0 0", fontSize: "13px" }}>{error}</p> : null}
+          <p>Share your details first, then verify your mobile number to {data.brochureUrl ? "download the brochure" : "complete your enquiry"}.</p>
+          <LeadCaptureFlow initialProject={data.title} initialCity={inferLeadCity(data.city, data.location, data.slug)} projectSlug={data.slug} source={`${data.title} brochure popup`} leadAction="brochure" buttonLabel={data.brochureUrl ? "Continue to Download" : "Request Callback"} purpose="brochure" projectLocked onVerified={deliverBrochure} />
         </>}
       </div>
     </div>
@@ -965,11 +982,34 @@ function ZoomableMapImage({ src, fallbackSrc, alt }) {
   </>;
 }
 
+function LocationCategoryIcon({ type }) {
+  const common = { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.7", strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true" };
+  if (type === "schools") return <svg {...common}><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H12v18H7.5A3.5 3.5 0 0 0 4 23.5zM20 5.5A3.5 3.5 0 0 0 16.5 2H12v18h4.5a3.5 3.5 0 0 1 3.5 3.5z" /></svg>;
+  if (type === "hospitals") return <svg {...common}><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z" /></svg>;
+  if (type === "connectivity") return <svg {...common}><path d="M8 21 11 3M16 21 13 3M12 7v3M12 14v3" /><path d="M3 17h5M5 15l-2 2 2 2M21 7h-5M19 5l2 2-2 2" /></svg>;
+  if (type === "transit") return <svg {...common}><path d="M4 17h16M6 17V7a6 6 0 0 1 12 0v10M8 21l2-4M16 17l2 4" /><path d="M8 10h8M9 14h.01M15 14h.01" /></svg>;
+  if (type === "business") return <svg {...common}><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7V4h8v3M3 12h18M10 12v2h4v-2" /></svg>;
+  if (type === "shopping") return <svg {...common}><path d="M5 8h14l1 13H4zM9 9V6a3 3 0 0 1 6 0v3" /></svg>;
+  return <svg {...common}><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0z" /><circle cx="12" cy="10" r="2.5" /></svg>;
+}
+
 function ProjectLocation({ data }) {
-  const destinations=(data.locationDestinations||[]).filter(item=>item?.name);
-  if (!data.locationImage&&!data.locationMapEmbed&&!destinations.length) return null;
-  const mapVisual = data.locationImage ? <ZoomableMapImage src={data.locationImage} fallbackSrc={data.locationFallbackImage} alt={`${data.title} location map`}/> : data.locationMapEmbed ? <div className="project-location__image project-location__map"><iframe title={`${data.title} map`} src={data.locationMapEmbed} loading="lazy" referrerPolicy="no-referrer-when-downgrade"/></div> : null;
-  return <section className="section-pad project-section project-location" id="location"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Location &amp; Connectivity</span><h2>A connected address,<br/><span className="rr-grad">close to what matters</span></h2><p className="project-section__description">See how this address keeps daily destinations and essential connections within easy reach.</p></div><div className="project-location__grid">{mapVisual}<div className="project-location__content">{destinations.length?<div className={`project-location__list${destinations.length % 2 ? " project-location__list--odd" : ""}`}>{destinations.map((item,index)=><div key={`${item.name}-${index}`}><span>{item.name}</span><strong>{item.dist||item.distance||"Nearby"}</strong></div>)}</div>:null}</div></div></div></section>;
+  const groups = [
+    { type: "landmarks", title: "Nearby landmarks", items: data.nearbyLandmarks },
+    { type: "schools", title: "Schools", items: data.schools },
+    { type: "hospitals", title: "Hospitals", items: data.hospitals },
+    { type: "connectivity", title: "Metro & road connectivity", items: data.metroRoadConnectivity },
+    { type: "transit", title: "Airport & railway", items: data.airportRailwayDistances },
+    { type: "business", title: "Business hubs", items: data.businessHubs },
+    { type: "shopping", title: "Shopping centres", items: data.shoppingCentres },
+  ].map((group) => ({ ...group, items: (group.items || []).filter((item) => item?.name) })).filter((group) => group.items.length);
+  if (!data.locationImage && !data.locationMapEmbed && !groups.length) return null;
+  const mapVisual = data.locationMapEmbed
+    ? <div className="project-location__image project-location__map"><iframe title={`${data.title} Google Map`} src={data.locationMapEmbed} loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen /></div>
+    : data.locationImage
+      ? <ZoomableMapImage src={data.locationImage} fallbackSrc={data.locationFallbackImage} alt={`${data.title} location map`} />
+      : null;
+  return <section className="section-pad project-section project-location" id="location"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Location &amp; Connectivity</span><h2>A connected address,<br/><span className="rr-grad">close to what matters</span></h2><p className="project-section__description">Explore nearby essentials, transport connections and important destinations around {data.title}.</p></div><div className={`project-location__grid${mapVisual ? "" : " is-details-only"}`}>{mapVisual}<div className="project-location__content">{groups.length ? <div className="project-location__groups">{groups.map((group) => <article className="project-location__group" key={group.type}><header><span><LocationCategoryIcon type={group.type} /></span><h3>{group.title}</h3></header><ul>{group.items.map((item, index) => <li key={`${group.type}-${item.name}-${index}`}><span>{item.name}</span><strong>{item.distance || item.dist || "Nearby"}</strong></li>)}</ul></article>)}</div> : null}</div></div></div></section>;
 }
 
 function ProjectWalkthrough({ data }) {
@@ -989,7 +1029,7 @@ function ProjectTestimonials({ data }) {
 
 function ProjectFaq({ data }) {
   if (!data.faqs?.length) return null;
-  return <section className="section-pad project-section project-faq" id="faq"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Frequently Asked Questions</span><h2>Helpful project<br/><span className="rr-grad">information</span></h2><p className="project-section__description">Answers to common questions about the project, its features, and the next steps.</p></div><div className="project-faq__list">{data.faqs.map((item,index)=><details key={`${item.question}-${index}`}><summary>{item.question}<span aria-hidden="true">+</span></summary><div><p>{item.answer}</p></div></details>)}</div></div></section>;
+  return <section className="section-pad project-section project-faq" id="faq"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Frequently Asked Questions</span><h2>Helpful project <span className="rr-grad">information</span></h2><p className="project-section__description">Answers to common questions about the project, its features, and the next steps.</p></div><div className="project-faq__list">{data.faqs.map((item,index)=><details key={`${item.question}-${index}`}><summary>{item.question}<span aria-hidden="true">+</span></summary><div><p>{item.answer}</p></div></details>)}</div></div></section>;
 }
 function ProjectGallery({ data, construction = false }) {
   const images=((construction ? data.constructionUpdates : data.galleryImages) || []).filter(image=>image?.src);
@@ -1063,18 +1103,74 @@ export default function GenericProjectPage({ slugOverride = "" }) {
   }, [slug]);
 
   const data = useMemo(() => normalizeProjectSubpage(project, subpage, fallback), [project, subpage, fallback]);
+  const canonical = `https://ruchirealty.com/projects/${slug}`;
+  const projectSchemas = useMemo(() => {
+    const primaryType = String(data.type || "").toLowerCase();
+    const searchableType = `${primaryType} ${data.tag} ${data.metaDescription}`.toLowerCase();
+    const isCommercial = /commercial|office/.test(primaryType) && !/residential/.test(primaryType);
+    const isPlotted = /plot|plotted|land/.test(searchableType);
+    const placeTypes = isCommercial ? ["Place"] : isPlotted ? ["Residence"] : ["Residence", "ApartmentComplex"];
+    const image = absoluteUrl(data.ogImage || data.heroBg || "/assets/logo-h.webp");
+    const productId = `${canonical}#product`;
+    const propertyId = `${canonical}#property`;
+    const propertySchema = {
+      "@context": "https://schema.org",
+      "@type": placeTypes,
+      "@id": propertyId,
+      name: data.title,
+      description: data.metaDescription,
+      url: canonical,
+      image,
+      address: data.location ? {
+        "@type": "PostalAddress",
+        streetAddress: data.location,
+        addressCountry: "IN",
+      } : undefined,
+      amenityFeature: (data.amenities || []).slice(0, 20).map((amenity) => ({
+        "@type": "LocationFeatureSpecification",
+        name: amenity.name,
+        value: true,
+      })),
+      identifier: data.reraNumber || undefined,
+    };
+    const productSchema = {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "@id": productId,
+      name: data.title,
+      description: data.metaDescription,
+      url: canonical,
+      image,
+      category: data.type,
+      sku: data.reraNumber || data.slug,
+      brand: { "@id": ORGANIZATION_ID },
+      manufacturer: { "@id": ORGANIZATION_ID },
+      itemCondition: "https://schema.org/NewCondition",
+      isRelatedTo: { "@id": propertyId },
+    };
+    const reviewSchemas = (data.gmbReviews?.reviews || []).filter((review) => review?.text).map((review, index) => ({
+      "@context": "https://schema.org",
+      "@type": "Review",
+      "@id": `${canonical}#review-${index + 1}`,
+      name: `${data.title} resident review`,
+      reviewBody: review.text,
+      author: { "@type": "Person", name: review.author || "Resident" },
+      itemReviewed: { "@id": productId },
+    }));
+    return [
+      propertySchema,
+      productSchema,
+      breadcrumbSchema([
+        { name: "Home", url: "/" },
+        { name: "Projects", url: "/projects" },
+        { name: data.title, url: `/projects/${slug}` },
+      ]),
+      faqSchema(data.faqs),
+      ...reviewSchemas,
+    ];
+  }, [canonical, data, slug]);
   const onBrochure = () => setBrochurePopup(true);
   const useSplitHero = true;
-  const submitHeroLead = async (form) => {
-    const result = await window.RuchiBackend.leads.submitLead({ ...form, interest: data.title, source: `${data.title} hero enquiry`, project_slug: data.slug, message: `Hero enquiry` });
-    if (result?.error) {
-      window.alert(`Could not submit your enquiry. Please try again.`);
-      return false;
-    }
-    window.alert(`Thank you. Our team will connect with you shortly.`);
-    return true;
-  };
-
   useEffect(() => {
     const onScroll = () => {
       const hero = document.querySelector(".osc-hero");
@@ -1090,33 +1186,6 @@ export default function GenericProjectPage({ slugOverride = "" }) {
     };
   }, [loaded]);
 
-  useEffect(() => {
-    document.title = data.metaTitle;
-    let meta = document.querySelector('meta[name="description"]');
-    if (!meta) {
-      meta = document.createElement("meta");
-      meta.name = "description";
-      document.head.appendChild(meta);
-    }
-    meta.content = data.metaDescription;
-    const setOg = (property, content) => {
-      if (!content) return;
-      let element = document.querySelector(`meta[property="${property}"]`);
-      if (!element) { element = document.createElement("meta"); element.setAttribute("property", property); document.head.appendChild(element); }
-      element.content = content;
-    };
-    setOg("og:title", data.metaTitle);
-    setOg("og:description", data.metaDescription);
-    setOg("og:image", data.ogImage);
-    let canonical = document.querySelector('link[rel="canonical"]');
-    if (!canonical) {
-      canonical = document.createElement("link");
-      canonical.rel = "canonical";
-      document.head.appendChild(canonical);
-    }
-    canonical.href = `${window.location.origin}/projects/${slug}`;
-  }, [data.metaTitle, data.metaDescription, data.ogImage, slug]);
-
   if (!loaded) {
     return <><Nav onContact={onBrochure} /><main className="section-pad rr-light"><div className="rr-wrap" style={{ paddingTop: 120 }}><p className="eyebrow" style={{ color: "var(--rr-indigo)" }}>Project</p><h1 className="osc-section__title">Loading project</h1></div></main><Footer /></>;
   }
@@ -1127,13 +1196,14 @@ export default function GenericProjectPage({ slugOverride = "" }) {
 
   return (
     <>
+      <SEO title={data.metaTitle} description={data.metaDescription} canonical={canonical} image={data.ogImage || data.heroBg} schemas={projectSchemas} />
       <Nav onContact={onBrochure} hidden={brochurePopup || heroPassed} solid={useSplitHero} />
       <main>
         <header className={`osc-hero ${useSplitHero ? `victoria-hero project-hero--${data.slug}` : String()}`} data-screen-label={data.title}>
           <div className={`osc-hero__bg project-hero-media project-hero-media--${data.heroImageFit}`} style={{ "--project-hero-position": data.heroImagePosition }}><picture>{data.heroMobileUrl ? <source media="(max-width: 720px)" srcSet={data.heroMobileUrl} /> : null}<img decoding="async" loading="eager" src={data.heroBg} alt={`${data.title} project view`} fetchpriority="high" onError={(event) => { const fallbackSrc = data.heroFallbackBg; if (fallbackSrc && event.currentTarget.src !== new URL(fallbackSrc, window.location.origin).href) { event.currentTarget.parentElement?.querySelectorAll("source").forEach((source) => source.removeAttribute("srcset")); event.currentTarget.src = fallbackSrc; } }} /></picture>{data.heroMedia?.type === "youtube_video" && data.heroMedia.url ? <iframe className="osc-hero__video" src={data.heroMedia.url} title={`${data.title} hero video`} allow="autoplay; encrypted-media" tabIndex="-1" aria-hidden="true" /> : null}</div>
           <div className="osc-hero__overlay"></div>
           <div className="osc-hero__sig" aria-hidden="true"></div>
-          {useSplitHero ? <div className={`rr-wrap victoria-hero__form-wrap`}><HeroEnquiryForm title={data.title} onSubmit={submitHeroLead} /></div> : <div className="rr-wrap osc-hero__wrap">
+          {useSplitHero ? <div className={`rr-wrap victoria-hero__form-wrap`}><HeroEnquiryForm data={data} /></div> : <div className="rr-wrap osc-hero__wrap">
             <Reveal><div className="osc-hero__content">
               {data.heroLogo ? <img decoding="async" loading="lazy" src={data.heroLogo} alt={`${data.title} logo`} onError={(event) => { if (data.heroFallbackLogo && event.currentTarget.src !== new URL(data.heroFallbackLogo, window.location.origin).href) event.currentTarget.src = data.heroFallbackLogo; else event.currentTarget.hidden = true; }} style={{ maxWidth: "min(260px,70vw)", maxHeight: 90, objectFit: "contain", marginBottom: 18 }} /> : null}
               <h1 className="osc-hero__title">{data.title}</h1>
@@ -1146,7 +1216,7 @@ export default function GenericProjectPage({ slugOverride = "" }) {
 
         <SectionNav data={data} visible={heroPassed && !brochurePopup} />
 
-        {useSplitHero ? <section className={`victoria-intro`} id={`project-details`}><div className={`rr-wrap victoria-intro__top`}><div className={`victoria-intro__identity`}>{data.heroLogo ? <img decoding="async" loading="lazy" src={data.heroLogo} alt={`${data.title} logo`} onError={(event)=>{if (data.heroFallbackLogo && event.currentTarget.src !== new URL(data.heroFallbackLogo, window.location.origin).href) event.currentTarget.src = data.heroFallbackLogo; else event.currentTarget.hidden=true;}} /> : null}<div><span className={`eyebrow`}>{data.type}</span><h1>{data.title}</h1>{data.location?<p>{data.location}</p>:null}<strong>{data.tag}</strong></div></div><div className={`victoria-intro__actions`}><Link className={`ab-btn-outline ab-btn-outline--white`} to={`/projects`}>More Projects<CtaArrow /></Link><button className={`submit-btn victoria-intro__brochure`} type={`button`} onClick={onBrochure}>{data.brochureUrl?data.ctaLabels.brochure:data.ctaLabels.visit}<CtaArrow /></button></div></div>{data.overviewHighlights.length?<div className={`rr-wrap victoria-intro__facts`}>{data.overviewHighlights.map((h, i) => <div className={`victoria-fact`} key={h.label || i}><span>{String(i + 1).padStart(2, `0`)}</span><div><small>{h.label}</small><strong>{h.desc}</strong></div></div>)}</div>:null}</section> : null}
+        {useSplitHero ? <section className={`victoria-intro`} id={`project-details`}><div className={`rr-wrap victoria-intro__top`}><div className={`victoria-intro__identity`}>{data.heroLogo ? <img decoding="async" loading="lazy" src={data.heroLogo} alt={`${data.title} logo`} onError={(event)=>{if (data.heroFallbackLogo && event.currentTarget.src !== new URL(data.heroFallbackLogo, window.location.origin).href) event.currentTarget.src = data.heroFallbackLogo; else event.currentTarget.hidden=true;}} /> : null}<div><span className={`eyebrow`}>{data.type}</span><h1>{data.title}</h1>{data.location?<p>{data.location}</p>:null}<strong>{data.tag}</strong>{data.reraNumber?<div className="project-rera"><small>RERA Registration</small><span>{data.reraNumber}</span></div>:null}</div></div><div className={`victoria-intro__actions`}><Link className={`ab-btn-outline ab-btn-outline--white`} to={`/projects`}>More Projects<CtaArrow /></Link><button className={`submit-btn victoria-intro__brochure`} type={`button`} onClick={onBrochure}>{data.brochureUrl?data.ctaLabels.brochure:data.ctaLabels.visit}<CtaArrow /></button></div></div>{data.overviewHighlights.length?<div className={`rr-wrap victoria-intro__facts`}>{data.overviewHighlights.map((h, i) => <div className={`victoria-fact`} key={h.label || i}><span>{String(i + 1).padStart(2, `0`)}</span><div><small>{h.label}</small><strong>{h.desc}</strong></div></div>)}</div>:null}</section> : null}
 
         <ProjectOverview data={data} />
 

@@ -13,37 +13,21 @@ import { HOME_FAQS } from "../components/Faq";
 import { Contact } from "../components/Contact";
 import { Footer } from "../components/Footer";
 import SEO from "../components/SEO";
+import { VIDEO_TESTIMONIALS } from "../data/siteData";
+import { LOCAL_BUSINESS_SCHEMAS, ORGANIZATION_SCHEMA, REAL_ESTATE_AGENT_SCHEMA, faqSchema, testimonialReviewSchema } from "../data/structuredData";
 
 const HOME_SCHEMAS = [
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "Ruchi Realty",
-    url: "https://ruchirealty.com/",
-    logo: "https://ruchirealty.com/assets/logo-h.webp",
-    foundingDate: "2008",
-    sameAs: [
-      "https://www.facebook.com/RuchiRealty",
-      "https://www.instagram.com/ruchi_realty",
-      "https://www.linkedin.com/company/ruchi-realty-holdings-limited/",
-      "https://www.youtube.com/@ruchirealty.comrealestatec8583",
-    ],
-  },
+  ORGANIZATION_SCHEMA,
+  REAL_ESTATE_AGENT_SCHEMA,
+  ...LOCAL_BUSINESS_SCHEMAS,
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "Ruchi Realty",
     url: "https://ruchirealty.com/",
   },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: HOME_FAQS.map((item) => ({
-      "@type": "Question",
-      name: item.question,
-      acceptedAnswer: { "@type": "Answer", text: item.answer },
-    })),
-  },
+  faqSchema(HOME_FAQS),
+  ...VIDEO_TESTIMONIALS.map(testimonialReviewSchema),
 ];
 
 export default function HomePage() {
@@ -64,14 +48,7 @@ export default function HomePage() {
 
   return (
     <>
-      <SEO title="Ruchi Realty | Real Estate Developer in Kolkata, Indore & Bhopal" description="Explore residential, commercial and plotted projects by Ruchi Realty across Kolkata, Indore and Bhopal. View locations, status and enquiry options." canonical="https://ruchirealty.com/" image="/uploads/hero-one-victoria.webp" />
-      {HOME_SCHEMAS.map((schema) => (
-        <script
-          key={schema["@type"]}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }}
-        />
-      ))}
+      <SEO title="Ruchi Realty | Real Estate Developer in Kolkata, Indore & Bhopal" description="Explore residential apartments, commercial spaces and plotted developments by Ruchi Realty across Kolkata, Indore and Bhopal. View project details, locations, status, brochures and site visit options." canonical="https://ruchirealty.com/" image="/uploads/hero-one-victoria.webp" schemas={HOME_SCHEMAS} />
       <Nav onContact={scrollToContact} heroSound solidAt={1} />
       <main>
         <Hero />

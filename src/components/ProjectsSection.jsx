@@ -61,6 +61,38 @@ function projectFallbackImage(p) {
   return PROJECTS.find((project) => String(project.name || "").toLowerCase().trim() === name && cityOf(project) === city)?.img || "";
 }
 
+const PROJECT_CARD_DETAILS = {
+  "/projects/one-victoria-new-town": { configuration: "3 & 4 BHK luxury apartments" },
+  "/projects/one-prime-residential": { configuration: "2 & 3 BHK apartments" },
+  "/projects/oscar-indore": { configuration: "Premium residential plots", sizeRange: "4,000–12,500 sq. ft." },
+  "/projects/one-rajarhat": { configuration: "1, 2, 3 & 4 BHK apartments", sizeRange: "900–3,000 sq. ft." },
+  "/projects/active-business-park": { configuration: "Offices, retail & commercial spaces", sizeRange: "652–33,000 sq. ft." },
+  "/projects/active-greens": { configuration: "2 & 3 BHK apartments", sizeRange: "1,065–1,555 sq. ft." },
+  "/projects/oscar-pride-indore": { configuration: "Residential plots", sizeRange: "1,250–3,200 sq. ft." },
+  "/projects/saatvik-vihar-indore": { configuration: "Residential plots", sizeRange: "600–1,800 sq. ft." },
+  "/projects/ruchi-lifescapes-indore-project": { configuration: "Villa plots", sizeRange: "1,400–10,000 sq. ft." },
+  "/projects/saatvikgreen-indore": { configuration: "Residential & commercial plots", sizeRange: "850–3,500 sq. ft." },
+  "/projects/anand-vihar-indore": { configuration: "Premium residential plots" },
+  "/projects/lifescapes-bhopal": { configuration: "2.5 & 3 BHK, row houses & shops", sizeRange: "1,000–4,000 sq. ft." },
+  "/projects/oscar-fort-indore": { configuration: "Limited-edition residential plots" },
+  "/projects/oscar-palace": { configuration: "Premium residential plots", sizeRange: "3,500–20,000 sq. ft." },
+};
+
+function projectCardDetails(project) {
+  const url = projectUrl(project);
+  const configured = PROJECT_CARD_DETAILS[url] || {};
+  const name = String(project.name || project.title || "").toLowerCase();
+  if (url === "/projects/active-acres-angelica") {
+    return name.includes("angelica")
+      ? { configuration: "4 BHK luxury residences" }
+      : { configuration: "2, 3 & 4 BHK apartments & penthouses" };
+  }
+  return {
+    configuration: project.configuration || project.card_configuration || configured.configuration || (project.type === "Commercial" ? "Commercial spaces" : "Residential homes"),
+    sizeRange: project.sizeRange || project.size_range || configured.sizeRange || "",
+  };
+}
+
 export function prioritizeOnePrime(items = []) {
   return items;
 }
@@ -110,6 +142,11 @@ export function ProjectTile({ p, i, n }) {
   const hasBrightImage = String(p.name || "").toLowerCase().includes("oscar fort");
   const primaryImg = hasBrightImage ? "/projects/oscar-fort-indore/hero.webp" : p.img;
   const tileClass = hasBrightImage ? "ptile ptile--bright-image" : "ptile";
+  const cardDetails = projectCardDetails(p);
+  const detailsMarkup = <div className="ptile__facts">
+    <span><small>Configuration</small><strong>{cardDetails.configuration}</strong></span>
+    {cardDetails.sizeRange ? <span><small>Size range</small><strong>{cardDetails.sizeRange}</strong></span> : null}
+  </div>;
 
   if (isInternal) {
     return (
@@ -123,7 +160,8 @@ export function ProjectTile({ p, i, n }) {
         <div className="ptile__body">
           <div className="ptile__loc">{p.city}</div>
           <div className="ptile__name">{p.name}</div>
-          <span className="ptile__view">{projectViewLabel(p)}<CardArrow /></span>
+          {detailsMarkup}
+          <span className="ptile__view" aria-label={projectViewLabel(p)}>View Details<CardArrow /></span>
         </div>
       </Link>
     );
@@ -141,7 +179,8 @@ export function ProjectTile({ p, i, n }) {
       <div className="ptile__body">
         <div className="ptile__loc">{p.city}</div>
         <div className="ptile__name">{p.name}</div>
-        <span className="ptile__view">{projectViewLabel(p)}<CardArrow /></span>
+        {detailsMarkup}
+        <span className="ptile__view" aria-label={projectViewLabel(p)}>View Details<CardArrow /></span>
       </div>
     </Tile>
   );

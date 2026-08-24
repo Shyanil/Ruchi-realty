@@ -27,7 +27,7 @@ export default function DisclaimerPage() {
 
         <section><h2>Changes to this Disclaimer</h2><p>We may update this disclaimer at any time without prior notice. Changes become effective when published on this page. Users should review this page periodically.</p></section>
 
-        <section><h2>Contact Us</h2><p>For questions or verification of project information, email <a href="mailto:emarketing@rrhlrealty.com">emarketing@rrhlrealty.com</a> or visit our <a href="/contact">Contact Us</a> page.</p></section>
+        <section><h2>Contact Us</h2><p>For questions or verification of project information, email <a href="mailto:emarketing@ruchirealty.com">emarketing@ruchirealty.com</a> or visit our <a href="/contact">Contact Us</a> page.</p></section>
       </article>
     </main>
     <Footer />

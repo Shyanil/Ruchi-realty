@@ -93,10 +93,18 @@ const emptyProject = {
   locationImage: "",
   locationMapEmbed: "",
   locationDestinations: [],
+  nearbyLandmarks: [],
+  schools: [],
+  hospitals: [],
+  metroRoadConnectivity: [],
+  airportRailwayDistances: [],
+  businessHubs: [],
+  shoppingCentres: [],
   walkthroughVideoId: "",
   galleryImages: [],
   constructionUpdates: [],
   brochureUrl: "",
+  reraNumber: "",
   faqs: [],
   relatedProjectSlugs: [],
   ctaLabels: { brochure: "Download Brochure", visit: "Schedule a Site Visit" },
@@ -115,6 +123,7 @@ const emptyBlog = {
   image: "",
   category: "News",
   tags: "",
+  internal_links: [],
   featured: false,
   status: "draft",
   image_alt: "",
@@ -902,10 +911,18 @@ function ProjectsAdmin() {
       locationImage: sp?.locationImage || "",
       locationMapEmbed: sp?.locationMapEmbed || "",
       locationDestinations: sp?.locationDestinations || [],
+      nearbyLandmarks: sp?.nearbyLandmarks?.length ? sp.nearbyLandmarks : sp?.locationDestinations || [],
+      schools: sp?.schools || [],
+      hospitals: sp?.hospitals || [],
+      metroRoadConnectivity: sp?.metroRoadConnectivity || [],
+      airportRailwayDistances: sp?.airportRailwayDistances || [],
+      businessHubs: sp?.businessHubs || [],
+      shoppingCentres: sp?.shoppingCentres || [],
       walkthroughVideoId: extracted.videoSection?.videoUrl || sp?.walkthroughVideoId || "",
       galleryImages: sp?.galleryImages || [],
       constructionUpdates: sp?.constructionUpdates?.length ? sp.constructionUpdates : extracted.constructionUpdates || [],
       brochureUrl: sp?.brochureUrl || "",
+      reraNumber: sp?.reraNumber || "",
       specificationImage: sp?.specificationImage || "",
       faqs: sp?.faqs || [],
       relatedProjectSlugs: sp?.relatedProjectSlugs || [],
@@ -965,12 +982,20 @@ function ProjectsAdmin() {
         floorPlans: form.floorPlans || [],
         locationImage: form.locationImage,
         locationMapEmbed: form.locationMapEmbed,
-        locationDestinations: form.locationDestinations,
+        locationDestinations: form.nearbyLandmarks || [],
+        nearbyLandmarks: form.nearbyLandmarks || [],
+        schools: form.schools || [],
+        hospitals: form.hospitals || [],
+        metroRoadConnectivity: form.metroRoadConnectivity || [],
+        airportRailwayDistances: form.airportRailwayDistances || [],
+        businessHubs: form.businessHubs || [],
+        shoppingCentres: form.shoppingCentres || [],
         walkthroughVideoId: vidUrl,
         videos: vidUrl ? [videoSectionPayload] : [],
         galleryImages: form.galleryImages,
         constructionUpdates: form.constructionUpdates,
         brochureUrl: form.brochureUrl || "",
+        reraNumber: form.reraNumber || "",
         faqs: form.faqs || [],
         relatedProjectSlugs: form.relatedProjectSlugs || [],
         ctaLabels: form.ctaLabels || { brochure: "Download Brochure", visit: "Schedule a Site Visit" },
@@ -1180,7 +1205,15 @@ function ProjectsAdmin() {
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Location</h3>
             <AdminField label="Google Maps embed iframe URL"><input value={form.locationMapEmbed} onChange={(e) => set("locationMapEmbed", e.target.value)} placeholder="Paste Google Maps embed URL or iframe code only" /></AdminField>
-            <KeyValueListEditor title="Location Destinations" items={form.locationDestinations} onChange={(list) => set("locationDestinations", list)} keyPlaceholder="Destination Name" valuePlaceholder="Distance (e.g. 5 km)" keyProp="name" valueProp="dist" />
+            <AdminImageUpload label="Static location map (used when no Google Map embed is provided)" value={form.locationImage} onChange={(value) => set("locationImage", value)} />
+            <p className="admin-field-hint" style={{ margin: "4px 0 16px" }}>Add a name and its distance or travel time. Empty groups remain hidden on the public project page.</p>
+            <KeyValueListEditor title="Nearby landmarks" items={form.nearbyLandmarks} onChange={(list) => set("nearbyLandmarks", list)} keyPlaceholder="Landmark name" valuePlaceholder="Distance / time (e.g. 2.5 km)" keyProp="name" valueProp="distance" />
+            <KeyValueListEditor title="Schools" items={form.schools} onChange={(list) => set("schools", list)} keyPlaceholder="School name" valuePlaceholder="Distance / time" keyProp="name" valueProp="distance" />
+            <KeyValueListEditor title="Hospitals" items={form.hospitals} onChange={(list) => set("hospitals", list)} keyPlaceholder="Hospital name" valuePlaceholder="Distance / time" keyProp="name" valueProp="distance" />
+            <KeyValueListEditor title="Metro / road connectivity" items={form.metroRoadConnectivity} onChange={(list) => set("metroRoadConnectivity", list)} keyPlaceholder="Metro station, road or junction" valuePlaceholder="Distance / travel time" keyProp="name" valueProp="distance" />
+            <KeyValueListEditor title="Airport / railway distance" items={form.airportRailwayDistances} onChange={(list) => set("airportRailwayDistances", list)} keyPlaceholder="Airport or railway station" valuePlaceholder="Distance / travel time" keyProp="name" valueProp="distance" />
+            <KeyValueListEditor title="Business hubs" items={form.businessHubs} onChange={(list) => set("businessHubs", list)} keyPlaceholder="Business or IT hub" valuePlaceholder="Distance / travel time" keyProp="name" valueProp="distance" />
+            <KeyValueListEditor title="Shopping centres" items={form.shoppingCentres} onChange={(list) => set("shoppingCentres", list)} keyPlaceholder="Mall or shopping centre" valuePlaceholder="Distance / travel time" keyProp="name" valueProp="distance" />
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Walkthrough</h3>
             <AdminField label="Walkthrough YouTube URL (e.g. https://www.youtube.com/watch?v=...)">
@@ -1228,7 +1261,8 @@ function ProjectsAdmin() {
             <AdminField label="Enquiry / visit CTA label"><input value={form.ctaLabels?.visit || ""} onChange={(e) => set("ctaLabels", { ...form.ctaLabels, visit: e.target.value })} /></AdminField>
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>FAQ & Related Projects</h3>
-            <KeyValueListEditor title="Frequently Asked Questions" items={form.faqs} onChange={(list) => set("faqs", list)} keyPlaceholder="Question" valuePlaceholder="Answer" keyProp="question" valueProp="answer" />
+            <AdminField label="RERA registration number"><input value={form.reraNumber} onChange={(e) => set("reraNumber", e.target.value)} placeholder="For example: WBRERA/P/NOR/2024/001080" /></AdminField>
+            <KeyValueListEditor title="Project-specific Frequently Asked Questions" items={form.faqs} onChange={(list) => set("faqs", list)} keyPlaceholder="Question" valuePlaceholder="Answer" keyProp="question" valueProp="answer" />
             <AdminField label="Related projects">
               <select value="" onChange={(event) => { if (event.target.value) set("relatedProjectSlugs", [...new Set([...(form.relatedProjectSlugs || []), event.target.value])]); }}><option value="">Search or select a project</option>{projects.filter((project) => project.id !== editingId && !(form.relatedProjectSlugs || []).includes(project.slug)).map((project) => <option key={project.id} value={project.slug}>{project.title} · {project.location}</option>)}</select>
               {(form.relatedProjectSlugs || []).length ? <div className="admin-selected-projects">{form.relatedProjectSlugs.map((slug) => <button type="button" key={slug} onClick={() => set("relatedProjectSlugs", form.relatedProjectSlugs.filter((item) => item !== slug))}>{projects.find((project) => project.slug === slug)?.title || slug}<span aria-hidden="true">×</span></button>)}</div> : <small className="admin-field-hint">No related projects selected.</small>}
@@ -1308,6 +1342,7 @@ function LeadsAdmin() {
   const [leads, setLeads] = useState([]);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
+  const [verificationFilter, setVerificationFilter] = useState("All");
   const [sourceFilter, setSourceFilter] = useState("All");
   const [dateFilter, setDateFilter] = useState("All");
   const [leadSort, setLeadSort] = useState("newest");
@@ -1326,27 +1361,30 @@ function LeadsAdmin() {
   const remove = async (id) => {
     if (!confirm("Delete this lead permanently?")) return;
     await window.RuchiBackend.leads.deleteLead(id);
-    showAdminToast("Lead deleted", "The enquiry was removed from the CRM.");
+    showAdminToast("Lead deleted", "The enquiry was removed from the website lead database.");
     setSelectedLead(null);
     load();
   };
 
   const filteredLeads = leads.filter((lead) => {
-    const haystack = `${lead.name} ${lead.phone} ${lead.email} ${lead.interest} ${lead.source}`.toLowerCase();
+    const haystack = `${lead.name} ${lead.phone} ${lead.email} ${lead.interest} ${lead.city} ${lead.source}`.toLowerCase();
     const cutoff = dateFilter === "All" ? 0 : Date.now() - Number(dateFilter) * 86400000;
     return haystack.includes(query.toLowerCase())
       && (statusFilter === "All" || lead.status === statusFilter)
+      && (verificationFilter === "All" || (lead.verification_status || "unverified") === verificationFilter)
       && (sourceFilter === "All" || lead.source === sourceFilter)
       && (!cutoff || new Date(lead.created_at || 0).getTime() >= cutoff);
   }).sort((a, b) => leadSort === "oldest" ? new Date(a.created_at || 0) - new Date(b.created_at || 0) : new Date(b.created_at || 0) - new Date(a.created_at || 0));
 
   const leadStatuses = ["new", "contacted", "qualified", "lost", "closed"];
   const leadSources = [...new Set(leads.map((lead) => lead.source).filter(Boolean))].sort();
+  const verifiedCount = leads.filter((lead) => lead.verification_status === "verified").length;
+  const unverifiedCount = leads.length - verifiedCount;
 
   return (
     <section className="admin-crm-page">
-      <div className="admin-collection-head"><div><span className="admin-section-kicker">Customer relationships</span><h2>Leads</h2><p>Review and progress enquiries received from the website.</p></div><span className="admin-record-total">{leads.length} total leads</span></div>
-      <div className="admin-pipeline-stats">{[["Total", leads.length], ...leadStatuses.map((status) => [status, leads.filter((lead) => lead.status === status).length])].map(([label, value]) => <button type="button" className={statusFilter.toLowerCase() === String(label).toLowerCase() || (label === "Total" && statusFilter === "All") ? "is-active" : ""} key={label} onClick={() => setStatusFilter(label === "Total" ? "All" : label)}><span>{label}</span><strong>{value}</strong></button>)}</div>
+      <div className="admin-collection-head"><div><span className="admin-section-kicker">Website lead database</span><h2>Leads</h2><p>Verified leads are sent to the CRM. Unverified enquiries remain here for manual follow-up and export.</p></div><span className="admin-record-total">{leads.length} total leads</span></div>
+      <div className="admin-pipeline-stats">{[["All leads", leads.length, "All"], ["Verified", verifiedCount, "verified"], ["Unverified", unverifiedCount, "unverified"]].map(([label, value, filter]) => <button type="button" className={verificationFilter === filter ? "is-active" : ""} key={label} onClick={() => setVerificationFilter(filter)}><span>{label}</span><strong>{value}</strong></button>)}</div>
       <div className="admin-panel admin-data-panel">
       <div className="admin-panel__head">
         <div><span className="admin-section-kicker">Lead directory</span><h2>All enquiries</h2></div>
@@ -1357,9 +1395,11 @@ function LeadsAdmin() {
         <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}>
           {["All", "new", "contacted", "qualified", "lost", "closed"].map((item) => <option key={item}>{item}</option>)}
         </select>
+        <select aria-label="Verification status" value={verificationFilter} onChange={(event) => setVerificationFilter(event.target.value)}><option value="All">All verification</option><option value="verified">Verified</option><option value="unverified">Unverified</option></select>
         <select aria-label="Lead source" value={sourceFilter} onChange={(event) => setSourceFilter(event.target.value)}><option value="All">All sources</option>{leadSources.map((source) => <option key={source}>{source}</option>)}</select>
         <select aria-label="Lead date" value={dateFilter} onChange={(event) => setDateFilter(event.target.value)}><option value="All">Any date</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option></select>
         <select aria-label="Sort leads" value={leadSort} onChange={(event) => setLeadSort(event.target.value)}><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select>
+        <button type="button" onClick={() => window.RuchiBackend.leads.downloadCSV(filteredLeads)}>Download CSV</button>
       </div>
       <div className="admin-list">
         {filteredLeads.length ? filteredLeads.map((lead) => (
@@ -1369,12 +1409,15 @@ function LeadsAdmin() {
                 <span className="admin-lead-avatar" aria-hidden="true">{String(lead.name || "L").trim().slice(0, 1).toUpperCase()}</span>
                 <div><strong>{lead.name || "Unnamed lead"}</strong><small>{lead.created_at ? new Date(lead.created_at).toLocaleString() : "Recently received"}</small></div>
                 <span className={`admin-status admin-status--${lead.status || "new"}`}><i />{lead.status || "new"}</span>
+                <span className={`admin-app-status admin-app-status--${lead.verification_status || "unverified"}`}>{lead.verification_status || "unverified"}</span>
               </header>
               <div className="admin-lead-card__details">
                 <span><small>Phone</small>{lead.phone || "Not provided"}</span>
                 <span><small>Email</small>{lead.email || "Not provided"}</span>
                 <span><small>Interest</small>{lead.interest || "Not specified"}</span>
+                <span><small>City</small>{lead.city || "Not specified"}</span>
                 <span><small>Source</small>{lead.source || "Website"}</span>
+                <span><small>CRM</small>{lead.crm_status || "not_sent"}</span>
               </div>
               {lead.notes ? <p className="admin-lead-card__notes">{lead.notes}</p> : null}
             </div>
@@ -1389,7 +1432,7 @@ function LeadsAdmin() {
         )) : <div className="admin-empty-state"><h3>No matching leads</h3><p>New website enquiries will appear here. Adjust the search or status filter to see other records.</p><a href="/#contact" target="_blank" rel="noreferrer">View website form</a></div>}
       </div>
       </div>
-      {selectedLead ? <div className="admin-drawer-layer" role="dialog" aria-modal="true" aria-label={`Lead details for ${selectedLead.name}`}><button className="admin-drawer-scrim" type="button" aria-label="Close lead details" onClick={() => setSelectedLead(null)} /><aside className="admin-drawer"><header><div><span>Lead details</span><h2>{selectedLead.name}</h2></div><button type="button" onClick={() => setSelectedLead(null)} aria-label="Close">×</button></header><div className="admin-drawer__body"><span className={`admin-app-status admin-app-status--${selectedLead.status}`}>{selectedLead.status}</span><dl><div><dt>Email</dt><dd><a href={`mailto:${selectedLead.email}`}>{selectedLead.email || "Not provided"}</a></dd></div><div><dt>Phone</dt><dd><a href={`tel:${selectedLead.phone}`}>{selectedLead.phone || "Not provided"}</a></dd></div><div><dt>Project interest</dt><dd>{selectedLead.interest || "Not specified"}</dd></div><div><dt>Source</dt><dd>{selectedLead.source || "Not specified"}</dd></div><div><dt>Received</dt><dd>{selectedLead.created_at ? new Date(selectedLead.created_at).toLocaleString() : "Not available"}</dd></div></dl>{selectedLead.notes ? <section><h3>Notes</h3><p>{selectedLead.notes}</p></section> : null}</div><footer><select value={selectedLead.status} onChange={async (event) => { const status = event.target.value; await updateStatus(selectedLead.id, status); setSelectedLead((lead) => ({ ...lead, status })); }}>{leadStatuses.map((item) => <option key={item}>{item}</option>)}</select><button type="button" className="admin-danger" onClick={() => remove(selectedLead.id)}>Delete lead</button></footer></aside></div> : null}
+      {selectedLead ? <div className="admin-drawer-layer" role="dialog" aria-modal="true" aria-label={`Lead details for ${selectedLead.name}`}><button className="admin-drawer-scrim" type="button" aria-label="Close lead details" onClick={() => setSelectedLead(null)} /><aside className="admin-drawer"><header><div><span>Lead details</span><h2>{selectedLead.name}</h2></div><button type="button" onClick={() => setSelectedLead(null)} aria-label="Close">×</button></header><div className="admin-drawer__body"><span className={`admin-app-status admin-app-status--${selectedLead.status}`}>{selectedLead.status}</span> <span className={`admin-app-status admin-app-status--${selectedLead.verification_status || "unverified"}`}>{selectedLead.verification_status || "unverified"}</span><dl><div><dt>Email</dt><dd><a href={`mailto:${selectedLead.email}`}>{selectedLead.email || "Not provided"}</a></dd></div><div><dt>Phone</dt><dd><a href={`tel:${selectedLead.phone}`}>{selectedLead.phone || "Not provided"}</a></dd></div><div><dt>Project interest</dt><dd>{selectedLead.interest || "Not specified"}</dd></div><div><dt>City</dt><dd>{selectedLead.city || "Not specified"}</dd></div><div><dt>Verification</dt><dd>{selectedLead.verification_status || "unverified"}{selectedLead.verified_at ? ` on ${new Date(selectedLead.verified_at).toLocaleString()}` : ""}</dd></div><div><dt>CRM delivery</dt><dd>{selectedLead.crm_status || "not_sent"}{selectedLead.crm_error ? ` — ${selectedLead.crm_error}` : ""}</dd></div><div><dt>Source</dt><dd>{selectedLead.source || "Not specified"}</dd></div><div><dt>Received</dt><dd>{selectedLead.created_at ? new Date(selectedLead.created_at).toLocaleString() : "Not available"}</dd></div></dl>{selectedLead.notes ? <section><h3>Notes</h3><p>{selectedLead.notes}</p></section> : null}</div><footer><select value={selectedLead.status} onChange={async (event) => { const status = event.target.value; await updateStatus(selectedLead.id, status); setSelectedLead((lead) => ({ ...lead, status })); }}>{leadStatuses.map((item) => <option key={item}>{item}</option>)}</select><button type="button" className="admin-danger" onClick={() => remove(selectedLead.id)}>Delete lead</button></footer></aside></div> : null}
     </section>
   );
 }
@@ -1537,12 +1580,18 @@ function BlogsAdmin() {
     load();
   };
 
+  const internalLinks = Array.isArray(form.internal_links) ? form.internal_links : [];
   const relatedLinks = String(form.related_project_links || "").split(",").map((item) => item.trim()).filter(Boolean);
   const addRelatedProject = (url) => {
     if (!url) return;
-    set("related_project_links", [...new Set([...relatedLinks, url])].join(", "));
+    const project = relatedProjects.find((item) => (item.url || `/projects/${item.slug}`) === url);
+    setForm((current) => ({
+      ...current,
+      internal_links: current.internal_links?.some((item) => item.url === url) ? current.internal_links : [...(current.internal_links || []), { label: project?.title || "Related project", url }],
+      related_project_links: [...new Set([...relatedLinks, url])].join(", "),
+    }));
   };
-  const removeRelatedProject = (url) => set("related_project_links", relatedLinks.filter((item) => item !== url).join(", "));
+  const removeRelatedProject = (url) => setForm((current) => ({ ...current, internal_links: (current.internal_links || []).filter((item) => item.url !== url), related_project_links: relatedLinks.filter((item) => item !== url).join(", ") }));
 
   const filteredBlogs = blogs.filter((blog) => {
     const matchesQuery = `${blog.title} ${blog.category} ${blog.author}`.toLowerCase().includes(query.toLowerCase());
@@ -1639,9 +1688,10 @@ function BlogsAdmin() {
         <AdminField label="SEO description"><textarea maxLength="170" rows={3} value={form.seo_description} onChange={(event) => set("seo_description", event.target.value)} /></AdminField>
         <div className="admin-form-grid"><AdminField label="OG title"><input value={form.og_title} onChange={(event) => set("og_title", event.target.value)} /></AdminField><AdminField label="OG image URL"><input value={form.og_image_url} onChange={(event) => set("og_image_url", event.target.value)} /></AdminField></div>
         <AdminField label="OG description"><textarea rows={2} value={form.og_description} onChange={(event) => set("og_description", event.target.value)} /></AdminField>
+        <KeyValueListEditor title="Internal hyperlinks" items={form.internal_links} onChange={(list) => set("internal_links", list)} keyPlaceholder="Link label" valuePlaceholder="Internal path, e.g. /projects/one-victoria-new-town" keyProp="label" valueProp="url" />
         <AdminField label="Related projects">
-          <select value="" onChange={(event) => addRelatedProject(event.target.value)}><option value="">Search or select a project</option>{relatedProjects.filter((project) => !relatedLinks.includes(project.url || `/projects/${project.slug}`)).map((project) => <option key={project.id} value={project.url || `/projects/${project.slug}`}>{project.title} · {project.location}</option>)}</select>
-          {relatedLinks.length ? <div className="admin-selected-projects">{relatedLinks.map((url) => { const project = relatedProjects.find((item) => (item.url || `/projects/${item.slug}`) === url); return <button type="button" key={url} onClick={() => removeRelatedProject(url)}>{project?.title || url}<span aria-hidden="true">×</span></button>; })}</div> : <small className="admin-field-hint">No related projects selected.</small>}
+          <select value="" onChange={(event) => addRelatedProject(event.target.value)}><option value="">Search or select a project</option>{relatedProjects.filter((project) => !internalLinks.some((link) => link.url === (project.url || `/projects/${project.slug}`))).map((project) => <option key={project.id} value={project.url || `/projects/${project.slug}`}>{project.title} · {project.location}</option>)}</select>
+          {internalLinks.length ? <div className="admin-selected-projects">{internalLinks.filter((link) => String(link.url || "").startsWith("/projects/")).map((link) => <button type="button" key={`${link.label}-${link.url}`} onClick={() => removeRelatedProject(link.url)}>{link.label || link.url}<span aria-hidden="true">×</span></button>)}</div> : <small className="admin-field-hint">No related projects selected.</small>}
         </AdminField>
         <label className="admin-check"><input type="checkbox" checked={form.featured} onChange={(event) => set("featured", event.target.checked)} /> Featured article</label>
         <div className="admin-editor-actions"><span>{form.status === "published" ? "This article is set to publish on the website." : "This article is not publicly published."}</span><button className="admin-primary" type="submit">{editingId ? "Save article" : "Create article"}</button></div>

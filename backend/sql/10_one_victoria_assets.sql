@@ -71,7 +71,7 @@ SET hero_title = 'One Victoria',
     ),
     specifications = jsonb_build_array(
       jsonb_build_object('title','Location Context','desc','At One Victoria, the best of East Kolkata is outside your doorstep. Whether you travel by metro, cab or flight, commuting from one place to another will be simplified beyond your expectations.','image','/projects/one-victoria-new-town/gallery/gallery-1.webp'),
-      jsonb_build_object('title','Project Details','desc','Residential + Retail / Apartment Complex. RERA: WBRERA/P/NOR/2024/001080. Phone: 033 6902 9144. Email: info@ruchirealty.com','image','/projects/one-victoria-new-town/gallery/gallery-2.webp')
+      jsonb_build_object('title','Project Details','desc','Residential + Retail / Apartment Complex. RERA: WBRERA/P/NOR/2024/001080. Phone: 033 6902 9144. Email: emarketing@ruchirealty.com','image','/projects/one-victoria-new-town/gallery/gallery-2.webp')
     ),
     floor_plans = jsonb_build_array(
       jsonb_build_object('title','Typical Floor Plan','desc','/projects/one-victoria-new-town/plans/typical-floor-plan.webp'),

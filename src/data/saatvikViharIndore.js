@@ -23,7 +23,7 @@ export const SAATVIK_VIHAR_INDORE_FALLBACK = {
     { name: "Gymnasium", icon: "gym" },
   ],
   specifications: [
-    { title: "Project Details", desc: "Opposite Sanchi Plant, A.B. Road, Mangliya Sadak, Indore (M.P.). Registration ID: P-SWR-19-2266. Phone: +91 731 401 8009. Email: emarketing@rrhlrealty.com" },
+    { title: "Project Details", desc: "Opposite Sanchi Plant, A.B. Road, Mangliya Sadak, Indore (M.P.). Registration ID: P-SWR-19-2266. Phone: +91 731 401 8009. Email: emarketing@ruchirealty.com" },
     { title: "__hero_mobile_url__", desc: "/projects/saatvik-vihar-indore/hero-mobile.webp" },
     { title: "__company_logo_url__", desc: "/projects/saatvik-vihar-indore/company-logo.webp" },
     { title: "__video_section__", desc: JSON.stringify({ enabled: true, title: "Saatvik Vihar Walkthrough", videoUrl: "https://www.youtube.com/embed/_7QV5Mp_prE?controls=1&rel=0&autoplay=0&start=7", thumbnailUrl: "/projects/saatvik-vihar-indore/hero.webp" }) },

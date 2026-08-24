@@ -17,6 +17,7 @@ import AdminPage from './pages/AdminPage'
 import GenericProjectPage from './pages/GenericProjectPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import DisclaimerPage from './pages/DisclaimerPage'
+import LocalSeoPage from './pages/LocalSeoPage'
 import WhatsAppChat from './components/WhatsAppChat'
 import { CustomCursor } from './components/shared'
 import ProgressiveImages from './components/ProgressiveImages'
@@ -81,6 +82,15 @@ export default function App() {
       <Route path="/projects/one-prime-residential" element={<GenericProjectPage slugOverride="one-prime-residential" />} />
       <Route path="/OneRajarhat.html" element={<Navigate to="/projects/one-rajarhat" replace />} />
       <Route path="/projects" element={<ProjectsPage />} />
+      <Route path="/projects/kolkata" element={<LocalSeoPage />} />
+      <Route path="/projects/indore" element={<LocalSeoPage />} />
+      <Route path="/projects/bhopal" element={<LocalSeoPage />} />
+      <Route path="/residential-projects-in-kolkata" element={<LocalSeoPage />} />
+      <Route path="/plots-in-indore" element={<LocalSeoPage />} />
+      <Route path="/commercial-property-in-kolkata" element={<LocalSeoPage />} />
+      <Route path="/flats-in-new-town-kolkata" element={<LocalSeoPage />} />
+      <Route path="/real-estate-developer-in-indore" element={<LocalSeoPage />} />
+      <Route path="/real-estate-developer-in-kolkata" element={<LocalSeoPage />} />
       <Route path="/one-victoria" element={<Navigate to="/projects/one-victoria-new-town" replace />} />
       <Route path="/one-victoria-new-town" element={<Navigate to="/projects/one-victoria-new-town" replace />} />
       <Route path="/lifescapes-bhopal" element={<Navigate to="/projects/lifescapes-bhopal" replace />} />

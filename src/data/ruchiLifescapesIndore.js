@@ -21,7 +21,7 @@ export const RUCHI_LIFESCAPES_INDORE_FALLBACK = {
     { name: "Basketball Court / Tennis Court", icon: "tennis" },
   ],
   specifications: [
-    { title: "Project Details", desc: "VISHAL RESORTS & HOTELS PVT. LTD. Behind Shishukunj School, Off Indore Bypass, Jhalaria Village, Indore (M.P.) - India. Registration ID: P-IND-22-3276. Phone: +91 731 401 8009. Email: emarketing@rrhlrealty.com" },
+    { title: "Project Details", desc: "VISHAL RESORTS & HOTELS PVT. LTD. Behind Shishukunj School, Off Indore Bypass, Jhalaria Village, Indore (M.P.) - India. Registration ID: P-IND-22-3276. Phone: +91 731 401 8009. Email: emarketing@ruchirealty.com" },
     { title: "__hero_mobile_url__", desc: "/projects/ruchi-lifescapes-indore-project/hero-mobile.webp" },
     { title: "__company_logo_url__", desc: "/projects/ruchi-lifescapes-indore-project/company-logo.webp" },
     { title: "__floor_plans__", desc: JSON.stringify([{ title: "Layout Plan", desc: "/projects/ruchi-lifescapes-indore-project/layout-plan.webp" }]) },

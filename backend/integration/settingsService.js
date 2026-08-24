@@ -11,14 +11,14 @@ export const DEFAULT_SETTINGS = {
   siteName: APP_NAME,
   phone: CONTACT_INFO.phone,
   whatsapp: CONTACT_INFO.whatsapp,
-  email: CONTACT_INFO.email,
+  email: "emarketing@ruchirealty.com",
   address: CONTACT_INFO.address,
   workingHours: CONTACT_INFO.workingHours,
   mapEmbedUrl: mapsEmbed(CONTACT_INFO.address),
   mapLink: mapsLink(CONTACT_INFO.address),
   facebook: SOCIAL_LINKS.facebook,
   instagram: SOCIAL_LINKS.instagram,
-  youtube: SOCIAL_LINKS.youtube,
+  youtube: "https://www.youtube.com/@ruchirealtygroup",
   linkedin: SOCIAL_LINKS.linkedin,
 };
 

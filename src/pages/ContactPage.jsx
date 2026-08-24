@@ -2,6 +2,7 @@ import Nav from "../components/Nav";
 import { Contact } from "../components/Contact";
 import { Footer } from "../components/Footer";
 import SEO from "../components/SEO";
+import { LOCAL_BUSINESS_SCHEMAS, breadcrumbSchema } from "../data/structuredData";
 
 const offices = [
   {
@@ -36,6 +37,11 @@ const offices = [
   },
 ];
 
+const CONTACT_SCHEMAS = [
+  ...LOCAL_BUSINESS_SCHEMAS,
+  breadcrumbSchema([{ name: "Home", url: "/" }, { name: "Contact", url: "/contact" }]),
+];
+
 export default function ContactPage() {
   return (
     <>
@@ -44,6 +50,7 @@ export default function ContactPage() {
         description="Get in touch with Ruchi Realty. Schedule a site visit, request pricing, or contact our Kolkata, Indore or Bhopal office directly."
         canonical="https://ruchirealty.com/contact"
         image="/assets/projects/one-victoria.webp"
+        schemas={CONTACT_SCHEMAS}
       />
       <Nav solid />
       <main className="contact-page">

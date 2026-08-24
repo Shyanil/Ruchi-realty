@@ -19,7 +19,7 @@
     { name: "Garden 1", icon: "garden" }, { name: "Garden 2", icon: "garden" }, { name: "Barbeque", icon: "club" }
   ],
   specifications: [
-    { title: "Project Details", desc: "Premium plotted residential development beside Ekayana School, Bypass Road, Near Kanadia, Indore. Registration ID: P-IND-22-3276. Contact: +91 89292 25275 | emarketing@rrhlrealty.com" },
+    { title: "Project Details", desc: "Premium plotted residential development beside Ekayana School, Bypass Road, Near Kanadia, Indore. Registration ID: P-IND-22-3276. Contact: +91 89292 25275 | emarketing@ruchirealty.com" },
     { title: "__floor_plans__", desc: "[{\"title\":\"Layout Plan\",\"desc\":\"/projects/oscar-pride-indore/plans-plan.webp\"}]" },
     { title: "__video_section__", desc: "{\"enabled\":false,\"videoUrl\":\"\",\"thumbnailUrl\":\"\"}" }
   ],

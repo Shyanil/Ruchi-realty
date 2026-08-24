@@ -1,10 +1,10 @@
 const OTP_API_URL = "/api/otp";
 
-async function requestOtp(action, mobile, otp = "") {
+async function requestOtp(action, mobile, otp = "", leadId = "") {
   const response = await fetch(OTP_API_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action, mobile, ...(otp ? { otp } : {}) }),
+    body: JSON.stringify({ action, mobile, ...(otp ? { otp } : {}), ...(leadId ? { leadId } : {}) }),
   });
 
   let payload = {};
@@ -24,8 +24,8 @@ export function sendMsg91Otp(mobile) {
   return requestOtp("send", mobile);
 }
 
-export function verifyMsg91Otp(mobile, otp) {
-  return requestOtp("verify", mobile, otp);
+export function verifyMsg91Otp(mobile, otp, leadId = "") {
+  return requestOtp("verify", mobile, otp, leadId);
 }
 
 export function resendMsg91Otp(mobile) {

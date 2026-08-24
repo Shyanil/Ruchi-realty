@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import InternalLinks from "../InternalLinks";
 
 const GALLERY_FALLBACK_IMAGE = "/assets/media/gallery/gallery-4.webp";
 
@@ -30,6 +31,7 @@ export default function MediaLightbox({ items, index, onClose, onChange }) {
     <figure onClick={(e) => e.stopPropagation()}>
       {item.media_type === "video" ? (embed ? <iframe className="media-lightbox__video" src={embed} title={item.title} allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen /> : <video className="media-lightbox__video" src={item.video_url} controls autoPlay playsInline />) : <img src={item.image_url || GALLERY_FALLBACK_IMAGE} alt={item.alt_text} loading="eager" decoding="async" onError={useFallbackImage} />}
       <figcaption><strong>{item.title}</strong>{item.caption && <span>{item.caption}</span>}<small>{index + 1} / {items.length}</small></figcaption>
+      <InternalLinks links={item.internal_links} title="Explore related pages" compact />
     </figure>
     <button className="media-lightbox__next" onClick={(e) => { e.stopPropagation(); onChange((index + 1) % items.length); }} aria-label="Next">›</button>
   </div>;

@@ -122,7 +122,7 @@ const ABOUT_SCHEMAS = [
       "https://www.facebook.com/RuchiRealty",
       "https://www.instagram.com/ruchi_realty",
       "https://www.linkedin.com/company/ruchi-realty-holdings-limited/",
-      "https://www.youtube.com/@ruchirealty.comrealestatec8583",
+      "https://www.youtube.com/@ruchirealtygroup",
     ],
   },
   {
@@ -169,9 +169,9 @@ function AboutLegacy() {
 
           <Reveal delay={80} className="ab-legacy__showcase">
             <div className="ab-legacy__media-grid">
-              <div className="ab-legacy__image-box"><img src="assets/projects/one-victoria.webp" alt="One Victoria" loading="lazy" decoding="async" /></div>
-              <div className="ab-legacy__image-box"><img src="uploads/hero-active-acres.webp" alt="Active Acres Concept" loading="lazy" decoding="async" /></div>
-              <div className="ab-legacy__image-box"><img src="assets/projects/one-rajarhat.webp" alt="One Rajarhat" loading="lazy" decoding="async" /></div>
+              <div className="ab-legacy__image-box"><img src="assets/projects/oscar-fort.webp" alt="Oscar Fort" loading="lazy" decoding="async" /></div>
+              <div className="ab-legacy__image-box"><img src="assets/projects/oscar-palace.webp" alt="Oscar Palace" loading="lazy" decoding="async" /></div>
+              <div className="ab-legacy__image-box"><img src="assets/projects/active-acres.webp" alt="Active Acres" loading="lazy" decoding="async" /></div>
             </div>
             <div className="ab-legacy__stats-strip">
               <div className="ab-glass-stat"><span className="ab-glass-stat__val">33</span><span className="ab-glass-stat__lbl">Years of Legacy</span></div>

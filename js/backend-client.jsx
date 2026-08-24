@@ -221,14 +221,14 @@
     siteName: "Ruchi Realty",
     phone: "+91 892 922 5275",
     whatsapp: "918929225275",
-    email: "sales@ruchirealty.com",
+    email: "emarketing@ruchirealty.com",
     address: "54, 10 D. C. Dey Road, Tangra, Kolkata 700015",
     workingHours: "Monday to Saturday, 10:00 AM to 6:30 PM",
     mapEmbedUrl: mapsEmbed("54, 10 D. C. Dey Road, Tangra, Kolkata 700015"),
     mapLink: mapsLink("54, 10 D. C. Dey Road, Tangra, Kolkata 700015"),
     facebook: "",
     instagram: "",
-    youtube: "",
+    youtube: "https://www.youtube.com/@ruchirealtygroup",
     linkedin: "",
   };
 
@@ -243,7 +243,7 @@
     mapLink: settings.map_link || settings.mapLink || mapsLink(settings.address || defaultSettings.address),
     facebook: settings.facebook || "",
     instagram: settings.instagram || "",
-    youtube: settings.youtube || "",
+    youtube: settings.youtube || defaultSettings.youtube,
     linkedin: settings.linkedin || "",
   });
 
@@ -296,6 +296,7 @@
     reading_time_minutes: Number(blog.reading_time_minutes) || null,
     old_url: blog.old_url || null,
     related_project_links: Array.isArray(blog.related_project_links) ? blog.related_project_links : [],
+    internal_links: Array.isArray(blog.internal_links) ? blog.internal_links : [],
   });
 
   const projectService = {
@@ -338,20 +339,27 @@
 
   const leadService = {
     async submitLead(leadData) {
-      return rest("leads", {}, {
+      const payload = {
+        id: crypto.randomUUID(),
+        name: (leadData.name || "").trim(),
+        email: (leadData.email || "").trim() || null,
+        phone: (leadData.phone || "").trim(),
+        interest: leadData.interest || leadData.project || "General",
+        city: leadData.city || null,
+        source: leadData.source || "Website",
+        project_slug: leadData.project_slug || null,
+        lead_action: leadData.lead_action || "callback",
+        status: "new",
+        verification_status: "unverified",
+        crm_status: "not_sent",
+        notes: leadData.notes || leadData.message || null,
+      };
+      const result = await rest("leads", {}, {
         method: "POST",
         headers: { Prefer: "return=minimal" },
-        json: {
-          name: (leadData.name || "").trim(),
-          email: (leadData.email || "").trim(),
-          phone: (leadData.phone || "").trim(),
-          interest: leadData.interest || leadData.project || "General",
-          source: leadData.source || "Website",
-          project_slug: leadData.project_slug || null,
-          status: "new",
-          notes: leadData.notes || leadData.message || null,
-        },
+        json: payload,
       });
+      return result.error ? result : { data: payload, error: null };
     },
     async getAllLeads() {
       return rest("leads", { select: "*", order: "created_at.desc" }, { auth: true });
@@ -373,7 +381,7 @@
     },
     async downloadCSV(leads) {
       const rows = Array.isArray(leads) ? leads : [];
-      const headers = ["Name", "Email", "Phone", "Interest", "Source", "Status", "Notes", "Submitted At"];
+      const headers = ["Name", "Email", "Phone", "Interest", "City", "Source", "Verification", "CRM Status", "Status", "Notes", "Submitted At"];
       const csv = [
         headers.join(","),
         ...rows.map((lead) => [
@@ -381,7 +389,10 @@
           `"${(lead.email || "").replace(/"/g, '""')}"`,
           `"${(lead.phone || "").replace(/"/g, '""')}"`,
           `"${(lead.interest || "").replace(/"/g, '""')}"`,
+          `"${(lead.city || "").replace(/"/g, '""')}"`,
           `"${(lead.source || "").replace(/"/g, '""')}"`,
+          `"${(lead.verification_status || "unverified").replace(/"/g, '""')}"`,
+          `"${(lead.crm_status || "not_sent").replace(/"/g, '""')}"`,
           `"${(lead.status || "").replace(/"/g, '""')}"`,
           `"${(lead.notes || "").replace(/"/g, '""')}"`,
           `"${lead.created_at ? new Date(lead.created_at).toLocaleString() : ""}"`,
@@ -391,7 +402,7 @@
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `career-applications-${new Date().toISOString().slice(0, 10)}.csv`;
+      link.download = `website-leads-${new Date().toISOString().slice(0, 10)}.csv`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -677,11 +688,19 @@
     locationImage: sp.location_image || "",
     locationMapEmbed: sp.location_map_embed || "",
     locationDestinations: Array.isArray(sp.location_destinations) ? sp.location_destinations : [],
+    nearbyLandmarks: Array.isArray(sp.nearby_landmarks) ? sp.nearby_landmarks : [],
+    schools: Array.isArray(sp.schools) ? sp.schools : [],
+    hospitals: Array.isArray(sp.hospitals) ? sp.hospitals : [],
+    metroRoadConnectivity: Array.isArray(sp.metro_road_connectivity) ? sp.metro_road_connectivity : [],
+    airportRailwayDistances: Array.isArray(sp.airport_railway_distances) ? sp.airport_railway_distances : [],
+    businessHubs: Array.isArray(sp.business_hubs) ? sp.business_hubs : [],
+    shoppingCentres: Array.isArray(sp.shopping_centres) ? sp.shopping_centres : [],
     walkthroughVideoId: sp.walkthrough_video_id || "",
     videos: Array.isArray(sp.videos) ? sp.videos : [],
     galleryImages: Array.isArray(sp.gallery_images) ? sp.gallery_images : [],
     constructionUpdates: Array.isArray(sp.construction_updates) ? sp.construction_updates : [],
     brochureUrl: sp.brochure_url || "",
+    reraNumber: sp.rera_number || "",
     faqs: Array.isArray(sp.faqs) ? sp.faqs : [],
     relatedProjectSlugs: Array.isArray(sp.related_project_slugs) ? sp.related_project_slugs : [],
     ctaLabels: sp.cta_labels && typeof sp.cta_labels === "object" ? sp.cta_labels : {},
@@ -709,11 +728,19 @@
     location_image: sp.locationImage || "",
     location_map_embed: sp.locationMapEmbed || "",
     location_destinations: Array.isArray(sp.locationDestinations) ? sp.locationDestinations : [],
+    nearby_landmarks: Array.isArray(sp.nearbyLandmarks) ? sp.nearbyLandmarks : [],
+    schools: Array.isArray(sp.schools) ? sp.schools : [],
+    hospitals: Array.isArray(sp.hospitals) ? sp.hospitals : [],
+    metro_road_connectivity: Array.isArray(sp.metroRoadConnectivity) ? sp.metroRoadConnectivity : [],
+    airport_railway_distances: Array.isArray(sp.airportRailwayDistances) ? sp.airportRailwayDistances : [],
+    business_hubs: Array.isArray(sp.businessHubs) ? sp.businessHubs : [],
+    shopping_centres: Array.isArray(sp.shoppingCentres) ? sp.shoppingCentres : [],
     walkthrough_video_id: sp.walkthroughVideoId || "",
     videos: Array.isArray(sp.videos) ? sp.videos : [],
     gallery_images: Array.isArray(sp.galleryImages) ? sp.galleryImages : [],
     construction_updates: Array.isArray(sp.constructionUpdates) ? sp.constructionUpdates : [],
     brochure_url: sp.brochureUrl || "",
+    rera_number: sp.reraNumber || "",
     faqs: Array.isArray(sp.faqs) ? sp.faqs : [],
     related_project_slugs: Array.isArray(sp.relatedProjectSlugs) ? sp.relatedProjectSlugs : [],
     cta_labels: sp.ctaLabels && typeof sp.ctaLabels === "object" ? sp.ctaLabels : {},

@@ -16,7 +16,7 @@ export const SAATVIK_GREEN_INDORE_FALLBACK = {
   ],
   amenities: [],
   specifications: [
-    { title: "Project Details", desc: "Rahukhedi, Mangliya, Indore-Dewas Bypass, near Manglia Toll Plaza, Indore. Registration IDs: P-SWR-24-4662 and P-SWR-24-4859. Phone: +91 89292 25275. Email: info@ruchirealty.com" },
+    { title: "Project Details", desc: "Rahukhedi, Mangliya, Indore-Dewas Bypass, near Manglia Toll Plaza, Indore. Registration IDs: P-SWR-24-4662 and P-SWR-24-4859. Phone: +91 89292 25275. Email: emarketing@ruchirealty.com" },
     { title: "__hero_mobile_url__", desc: "/projects/saatvikgreen-indore/hero-mobile.webp" },
     { title: "__company_logo_url__", desc: "/projects/saatvikgreen-indore/company-logo.webp" },
     { title: "__video_section__", desc: JSON.stringify({ enabled: false, videoUrl: "", thumbnailUrl: "" }) },

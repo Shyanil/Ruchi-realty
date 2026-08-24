@@ -1,23 +1,23 @@
 export const HOME_FAQS = [
   {
-    question: "What types of properties does Ruchi Realty offer?",
-    answer: "Ruchi Realty offers residential homes, commercial spaces, and plotted developments across key locations.",
+    question: "Are Ruchi Realty projects RERA registered?",
+    answer: "RERA registration details are provided for applicable Ruchi Realty projects. Buyers should review the registration number and approval information on the relevant project page and verify it on the official state RERA portal before making a decision.",
   },
   {
-    question: "Where are Ruchi Realty projects located?",
-    answer: "Our projects are located across Kolkata, Indore, and Bhopal, with options in established and emerging neighbourhoods.",
+    question: "Which Ruchi Realty projects are ready to move?",
+    answer: "Ready-to-move options shown on our website include One Prime Residential, One Rajarhat, Active Greens and Active Business Park in Kolkata; Oscar Billionaires, Oscar Pride, Saatvik Vihar, Ruchi Lifescapes, Saatvik Green, Anand Vihar and Ruchi Enclave in Indore; and Ruchi Lifescapes in Bhopal. Visit the Projects page for the latest status of each development.",
   },
   {
-    question: "How can I book a site visit?",
-    answer: "Click “Schedule a Site Visit” on the website or submit an enquiry form. Our team will contact you to arrange a convenient time.",
+    question: "Does Ruchi Realty offer plotted developments in Indore?",
+    answer: "Yes. Ruchi Realty offers plotted developments in Indore, including Oscar Billionaires, Oscar Pride, Saatvik Vihar, Ruchi Lifescapes, Saatvik Green, Anand Vihar, Oscar Fort, Oscar Sanctuary, Oscar Palace and Ruchi Enclave. Availability varies by project and plot size.",
   },
   {
-    question: "Can I download a project brochure and floor plan?",
-    answer: "Yes. Visit the relevant project page to view available details and request or download the brochure and floor plans.",
+    question: "Which projects are available in New Town, Kolkata?",
+    answer: "Ruchi Realty projects in New Town, Kolkata include One Victoria in Action Area 1 and the ready-to-move One Prime Residential. Visit their project pages to compare configurations, amenities, location details and current availability.",
   },
   {
-    question: "How can I get pricing and availability details?",
-    answer: "Submit an enquiry through the website or contact our sales team. They will share current availability, pricing, and relevant project information.",
+    question: "How do I check current price and availability?",
+    answer: "Select a project and submit the enquiry form with your contact details. The relevant sales team will share the latest price, available units or plots, configurations and applicable offers, as inventory and pricing may change.",
   },
 ];
 

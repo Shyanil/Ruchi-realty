@@ -72,7 +72,7 @@ export default function PrivacyPolicyPage() {
 
         <section><h2>Changes to this Privacy Policy</h2><p>We may update this Policy from time to time. Changes will be posted on this page and the Last updated date will be revised. Where appropriate, We may also provide email or prominent Service notice before changes take effect.</p><p>You are advised to review this Policy periodically. Changes are effective when posted here.</p></section>
 
-        <section><h2>Contact Us</h2><p>For questions about this Privacy Policy:</p><ul><li>Email: <a href="mailto:emarketing@rrhlrealty.com">emarketing@rrhlrealty.com</a></li><li>Visit: <a href="https://ruchirealty.com/contact-us/">ruchirealty.com/contact-us/</a></li></ul></section>
+        <section><h2>Contact Us</h2><p>For questions about this Privacy Policy:</p><ul><li>Email: <a href="mailto:emarketing@ruchirealty.com">emarketing@ruchirealty.com</a></li><li>Visit: <a href="https://ruchirealty.com/contact-us/">ruchirealty.com/contact-us/</a></li></ul></section>
       </article>
     </main>
     <Footer />

@@ -1,41 +1,14 @@
 import { useState } from "react";
 import { Reveal } from "./shared";
-import { PROJECT_OPTIONS } from "../data/projects";
-import OtpVerification, { formatIndianPhoneForLead, isValidIndianPhone } from "./OtpVerification";
+import LeadCaptureFlow from "./LeadCaptureFlow";
 
 export function Contact({
   eyebrow = "Plan your visit",
   heading = <>Tell us which project<br /><span className="rr-grad">you would like to explore.</span></>,
   lead = "Share your preferred city, project and contact details. A member of the relevant project team will get in touch to answer questions or arrange a site visit.",
 }) {
-  const [f, setF] = useState({ name: "", phone: "", email: "", project: "", message: "" });
   const [sent, setSent] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [error, setError] = useState("");
-  const [otpVerified, setOtpVerified] = useState(false);
-  const set = (k) => (e) => setF((s) => ({ ...s, [k]: e.target.value }));
-  const valid = f.name.trim() && isValidIndianPhone(f.phone) && f.email.trim() && otpVerified;
-  const submit = async () => {
-    if (!valid || sending) return;
-    setSending(true);
-    setError("");
-    if (window.RuchiBackend?.leads) {
-      const { error: submitError } = await window.RuchiBackend.leads.submitLead({
-        ...f,
-        phone: formatIndianPhoneForLead(f.phone),
-        interest: f.project || "General",
-        notes: f.message,
-        source: "Contact form",
-      });
-      if (submitError) {
-        setError(submitError.message || "Could not send enquiry. Please try again.");
-        setSending(false);
-        return;
-      }
-    }
-    setSending(false);
-    setSent(true);
-  };
+  const [leadName, setLeadName] = useState("");
 
   return (
     <section className="contact section-pad" id="contact" style={{ backgroundColor: "rgb(245, 244, 241)" }}>
@@ -57,36 +30,11 @@ export function Contact({
                   <div className="contact-thanks__tick">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#231f20" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l4 4 10-10" /></svg>
                   </div>
-                  <h3>Thank you, {f.name.split(" ")[0] || "there"}</h3>
+                  <h3>Thank you, {leadName.split(" ")[0] || "there"}</h3>
                   <p>We have your note. Someone from our team will be in touch without the hard sell.</p>
                 </div>
               ) : (
-                <div className="contact-form">
-                  <div className="field"><label>Name</label>
-                    <input value={f.name} onChange={set("name")} placeholder="Your full name" /></div>
-                  <OtpVerification
-                    value={f.phone}
-                    onChange={(phone) => setF((current) => ({ ...current, phone }))}
-                    onVerificationChange={({ verified }) => setOtpVerified(verified)}
-                    purpose="contact"
-                  />
-                  <div className="field"><label>Email</label>
-                    <input type="email" value={f.email} onChange={set("email")} placeholder="you@email.com" /></div>
-                  <div className="field"><label>Project of interest</label>
-                    <select value={f.project} onChange={set("project")}>
-                      <option value="">Select a project</option>
-                      {PROJECT_OPTIONS.map((o) => <option key={o} value={o}>{o}</option>)}
-                    </select></div>
-                  <div className="field"><label>Message</label>
-                    <textarea rows={3} value={f.message} onChange={set("message")} placeholder="A short note is enough. We'll write back." /></div>
-                  <div className="contact-actions">
-                    <button className="submit-btn" onClick={submit} disabled={!valid || sending}>
-                      {sending ? "Sending..." : "Send enquiry"}<span className="ar">→</span>
-                    </button>
-                    <span className="contact-note">No marketing. We reply within two working days.</span>
-                  </div>
-                  {error ? <p className="contact-error">{error}</p> : null}
-                </div>
+                <div className="contact-form"><LeadCaptureFlow source="Contact form" leadAction="callback" buttonLabel="Request Callback" purpose="contact" onVerified={({ form }) => { setLeadName(form.name); setSent(true); }} /></div>
               )}
             </div>
           </Reveal>

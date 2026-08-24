@@ -35,7 +35,7 @@ export const ONE_VICTORIA_FALLBACK = {
   ],
   specifications: [
     { title: "Location Context", desc: "At One Victoria, the best of East Kolkata is outside your doorstep. Whether you travel by metro, cab or flight, commuting from one place to another will be simplified beyond your expectations.", image: `${BASE}/gallery/gallery-1.webp` },
-    { title: "Project Details", desc: "Residential + Retail / Apartment Complex. RERA: WBRERA/P/NOR/2024/001080. Phone: 033 6902 9144. Email: info@ruchirealty.com", image: `${BASE}/gallery/gallery-2.webp` },
+    { title: "Project Details", desc: "Residential + Retail / Apartment Complex. RERA: WBRERA/P/NOR/2024/001080. Phone: 033 6902 9144. Email: emarketing@ruchirealty.com", image: `${BASE}/gallery/gallery-2.webp` },
     { title: "__hero_mobile_url__", desc: `${BASE}/hero-mobile.webp` },
     { title: "__company_logo_url__", desc: `${BASE}/company-logo.webp` },
     { title: "__floor_plans__", desc: JSON.stringify([

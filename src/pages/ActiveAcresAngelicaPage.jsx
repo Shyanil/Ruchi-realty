@@ -3,8 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import Nav from "../components/Nav";
 import { Footer } from "../components/Footer";
 import { Reveal } from "../components/shared";
-import { PROJECT_OPTIONS } from "../data/projects";
-import OtpVerification, { formatIndianPhoneForLead, isValidIndianPhone } from "../components/OtpVerification";
+import BrochureLeadPopup from "../components/BrochureLeadPopup";
 
 // Helper to parse video URLs to embeddable formats or direct sources
 function parseVideoUrl(url) {
@@ -130,7 +129,7 @@ export const ACTIVE_ACRES_ANGELICA_FALLBACK = {
     { title: "High Speed Elevators", desc: "High-speed elevators and 24 hours treated water supply support comfortable everyday living.", image: `${ACTIVE_ACRES_ASSET_BASE}/gallery/gallery-1.webp` },
     { title: "Safety & Connectivity", desc: "CCTV surveillance, intercom facility, underground electric cabling and fire-fighting arrangements provide reliable support.", image: `${ACTIVE_ACRES_ASSET_BASE}/gallery/gallery-2.webp` },
     { title: "Infrastructure", desc: "Concrete and interlocking pebble roads, plus power back-up for common areas, create a well-planned residential environment.", image: `${ACTIVE_ACRES_ASSET_BASE}/gallery/gallery-3.webp` },
-    { title: "Project Details", desc: "HIRA Registration No: HIRA/P/KOL/2020/000778. Contact: 033 6902 9144 | info@ruchirealty.com.", image: `${ACTIVE_ACRES_ASSET_BASE}/gallery/gallery-4.webp` }
+    { title: "Project Details", desc: "HIRA Registration No: HIRA/P/KOL/2020/000778. Contact: 033 6902 9144 | emarketing@ruchirealty.com.", image: `${ACTIVE_ACRES_ASSET_BASE}/gallery/gallery-4.webp` }
   ],
   floorPlans: [
     { title: "Master Plan 1", desc: `${ACTIVE_ACRES_ASSET_BASE}/plans/master-1.webp` },
@@ -708,79 +707,7 @@ function LocationSection({ subpage }) {
 }
 
 function BrochurePopup({ subpage, onClose }) {
-  const [f, setF] = useState({ name: "", phone: "", email: "", project: "Active Acres - Kolkata", message: "" });
-  const [sent, setSent] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [error, setError] = useState("");
-  const [otpVerified, setOtpVerified] = useState(false);
-  const set = (k) => (e) => setF((s) => ({ ...s, [k]: e.target.value }));
-  const valid = f.name.trim() && isValidIndianPhone(f.phone) && f.email.trim() && otpVerified;
-
-  const submit = async () => {
-    if (!valid || sending) return;
-    setSending(true);
-    setError("");
-    if (window.RuchiBackend?.leads) {
-      const { error: submitError } = await window.RuchiBackend.leads.submitLead({
-        ...f,
-        phone: formatIndianPhoneForLead(f.phone),
-        interest: f.project || "Active Acres Angelica",
-        notes: f.message,
-        source: "Angelica page brochure download",
-      });
-      if (submitError) {
-        setError(submitError.message || "Could not submit. Please try again.");
-        setSending(false);
-        return;
-      }
-    }
-    setSending(false);
-    setSent(true);
-    if (subpage.brochureUrl) {
-      window.open(subpage.brochureUrl, "_blank");
-    }
-  };
-
-  return (
-    <div className="osc-popup-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="Download brochure">
-      <div className="osc-popup" onClick={(e) => e.stopPropagation()}>
-        <button type="button" className="osc-popup__close" onClick={onClose} aria-label="Close">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
-        {sent ? (
-          <>
-            <h3>Thank You!</h3>
-            <p>Your brochure is being downloaded. A team member will also reach out to you shortly.</p>
-            <button className="submit-btn" onClick={onClose} style={{ width: "100%", justifyContent: "center" }}>
-              Close<span className="ar">→</span>
-            </button>
-          </>
-        ) : (
-          <>
-            <h3>Download Brochure</h3>
-            <p>Enter your details to receive the brochure.</p>
-            <div className="field"><label>Name</label>
-              <input value={f.name} onChange={set("name")} placeholder="Your full name" /></div>
-            <OtpVerification value={f.phone} onChange={(phone) => setF((current) => ({ ...current, phone }))} onVerificationChange={({ verified }) => setOtpVerified(verified)} purpose="brochure" />
-            <div className="field"><label>Email</label>
-              <input type="email" value={f.email} onChange={set("email")} placeholder="you@email.com" /></div>
-            <div className="field"><label>Project of interest</label>
-              <select value={f.project} onChange={set("project")}>
-                {PROJECT_OPTIONS.map((o) => <option key={o} value={o}>{o}</option>)}
-              </select></div>
-            <div className="field"><label>Message</label>
-              <textarea rows={3} value={f.message} onChange={set("message")} placeholder="I'd like to know more about the project." /></div>
-            <button className="submit-btn" onClick={submit} disabled={!valid || sending} style={{ width: "100%", justifyContent: "center", marginTop: "8px" }}>
-              {sending ? "Sending..." : "Download Now"}<span className="ar">→</span>
-            </button>
-            {error ? <p className="contact-error" style={{ margin: "12px 0 0", fontSize: "13px" }}>{error}</p> : null}
-          </>
-        )}
-      </div>
-    </div>
-  );
+  return <BrochureLeadPopup project="Active Acres - Kolkata" city="Kolkata" slug="active-acres-angelica" source="Angelica page brochure download" brochureUrl={subpage.brochureUrl || ACTIVE_ACRES_ANGELICA_FALLBACK.brochureUrl} onClose={onClose} />;
 }
 
 function CtaSection({ subpage, onBrochureClick }) {
@@ -798,7 +725,7 @@ function CtaSection({ subpage, onBrochureClick }) {
             Download Brochure<span className="ar">→</span>
           </button>
           <p style={{ fontSize: "12px", color: "rgba(35,31,32,0.45)", marginTop: "24px" }}>
-            HIRA Registration No: HIRA/P/KOL/2020/000778 | Contact: 03369029144 | info@ruchirealty.com
+            HIRA Registration No: HIRA/P/KOL/2020/000778 | Contact: 03369029144 | emarketing@ruchirealty.com
           </p>
         </Reveal>
       </div>

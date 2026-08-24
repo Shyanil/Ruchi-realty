@@ -78,7 +78,7 @@ const AWARDS = [
   { name: "Ultra High Luxury Developer of the Year Award", year: "" },
   { name: "Visith Atithi Awards", year: "" },
   { name: "Property Fair Awards by HDFC", year: "" },
-  { name: "Most Prestegious Property Exhibition", year: "" },
+  { name: "Most Prestigious Property Exhibition", year: "" },
   { name: "Property Auto Expo Award", year: "" },
   { name: "Property & Auto Fair Awards", year: "" },
   { name: "Times Property Show Award", year: "" },
@@ -139,6 +139,13 @@ const BLOG = [
     content: "This listicle introduces five Ruchi Realty residential projects in Kolkata: Active Acres, One Victoria, One Prime, One Rajarhat, and Angelica.\n\nThe focus is on location, lifestyle value, everyday convenience, and amenities, helping buyers compare multiple Ruchi Realty addresses in one place.\n\nIt is useful for project discovery, internal linking, and search-led content around residential projects in Kolkata.",
     cta: "Read Original",
     internalLink: "Projects.html#city=Kolkata",
+    internal_links: [
+      { label: "One Victoria", url: "/projects/one-victoria-new-town" },
+      { label: "Active Acres", url: "/projects/active-acres-angelica" },
+      { label: "One Rajarhat", url: "/projects/one-rajarhat" },
+      { label: "One Prime Residential", url: "/projects/one-prime-residential" },
+      { label: "Angelica", url: "/projects/active-acres-angelica#project-details" },
+    ],
   },
   {
     cat: "Plot buyer education",
@@ -300,15 +307,15 @@ const HERO_IMG = {
 };
 
 const VIDEO_TESTIMONIALS = [
-  { name: "Active Acres", project: "Ruchi Realty", city: "Kolkata", dur: "2:14", line: "We moved in on the date in our agreement.", poster: "assets/testimonial_1.webp", video: "https://www.youtube.com/embed/GTYs3ZynAQU?feature=oembed&autoplay=1&rel=0&controls=0" },
-  { name: "Saatvik Vihar", project: "Ruchi Realty", city: "Indore", dur: "1:48", line: "The same person still picks up the phone.", poster: "assets/testimonial_2.webp", video: "https://www.youtube.com/embed/S4hnOtmQA9s?feature=oembed&autoplay=1&rel=0&controls=0" },
-  { name: "Ruchi Lifescapes", project: "Ruchi Realty", city: "Indore", dur: "2:32", line: "Exactly what the specification showed us.", poster: "assets/testimonial_3.webp", video: "https://www.youtube.com/embed/ZDJWHNFzjXc?feature=oembed&autoplay=1&rel=0&controls=0" },
-  { name: "Ruchi Lifescapes", project: "Ruchi Realty", city: "Indore", dur: "3:05", line: "A home our children grew into.", poster: "assets/testimonial_4.webp", video: "https://www.youtube.com/embed/rRzZ4gAwLjY?feature=oembed&autoplay=1&rel=0&controls=0" },
-  { name: "Ruchi Lifescapes", project: "Ruchi Realty", city: "Indore", dur: "1:57", line: "Handed over, exactly as promised.", poster: "assets/testimonial_5.webp", video: "https://www.youtube.com/embed/Gsv3Kwl4k8U?feature=oembed&autoplay=1&rel=0&controls=0" },
-  { name: "One Victoria", project: "Ruchi Realty", city: "Kolkata", dur: "2:41", line: "Light and air in every room.", poster: "assets/testimonial_6.webp", video: "https://player.vimeo.com/video/1106022712?autoplay=1&rel=0&controls=0#t=" },
-  { name: "One Victoria", project: "Ruchi Realty", city: "Kolkata", dur: "2:09", line: "A community that began with shade.", poster: "assets/testimonial_7.webp", video: "https://player.vimeo.com/video/1106028174?autoplay=1&rel=0&controls=0#t=" },
-  { name: "One Victoria", project: "Ruchi Realty", city: "Kolkata", dur: "1:39", line: "Trust we could check before we signed.", poster: "assets/testimonial_8.webp", video: "https://player.vimeo.com/video/1106030671?autoplay=1&rel=0&controls=0#t=" },
-  { name: "One Victoria", project: "Ruchi Realty", city: "Kolkata", dur: "1:39", line: "Trust we could check before we signed.", poster: "assets/testimonial_9.webp", video: "https://player.vimeo.com/video/1106031951?autoplay=1&rel=0&controls=0#t=" },
+  { customerName: "Active Acres Homeowners", customerRole: "Resident couple", project: "Active Acres", city: "Kolkata", dur: "2:14", quote: "We moved in on the date in our agreement.", poster: "assets/testimonial_1.webp", video: "https://www.youtube.com/embed/GTYs3ZynAQU?feature=oembed&autoplay=1&rel=0&controls=0" },
+  { customerName: "Saatvik Vihar Homeowner", customerRole: "Resident", project: "Saatvik Vihar", city: "Indore", dur: "1:48", quote: "The same person still picks up the phone.", poster: "assets/testimonial_2.webp", video: "https://www.youtube.com/embed/S4hnOtmQA9s?feature=oembed&autoplay=1&rel=0&controls=0" },
+  { customerName: "Ruchi Lifescapes Homeowner", customerRole: "Resident", project: "Ruchi Lifescapes", city: "Indore", dur: "2:32", quote: "Exactly what the specification showed us.", poster: "assets/testimonial_3.webp", video: "https://www.youtube.com/embed/ZDJWHNFzjXc?feature=oembed&autoplay=1&rel=0&controls=0" },
+  { customerName: "Ashmit Patel", customerRole: "Project reviewer", project: "Ruchi Lifescapes", city: "Indore", dur: "3:05", quote: "A home our children grew into.", poster: "assets/testimonial_4.webp", video: "https://www.youtube.com/embed/rRzZ4gAwLjY?feature=oembed&autoplay=1&rel=0&controls=0" },
+  { customerName: "Ruchi Lifescapes Family", customerRole: "Resident family", project: "Ruchi Lifescapes", city: "Indore", dur: "1:57", quote: "Handed over, exactly as promised.", poster: "assets/testimonial_5.webp", video: "https://www.youtube.com/embed/Gsv3Kwl4k8U?feature=oembed&autoplay=1&rel=0&controls=0" },
+  { customerName: "One Victoria Homeowners", customerRole: "Resident couple", project: "One Victoria", city: "Kolkata", dur: "2:41", quote: "Light and air in every room.", poster: "assets/testimonial_6.webp", video: "https://player.vimeo.com/video/1106022712?autoplay=1&rel=0&controls=0#t=" },
+  { customerName: "One Victoria Residents", customerRole: "Resident family", project: "One Victoria", city: "Kolkata", dur: "2:09", quote: "A community that began with shade.", poster: "assets/testimonial_7.webp", video: "https://player.vimeo.com/video/1106028174?autoplay=1&rel=0&controls=0#t=" },
+  { customerName: "One Victoria Homeowners", customerRole: "Resident testimonial", project: "One Victoria", city: "Kolkata", dur: "1:39", quote: "Trust we could check before we signed.", poster: "assets/testimonial_8.webp", video: "https://player.vimeo.com/video/1106030671?autoplay=1&rel=0&controls=0#t=" },
+  { customerName: "One Victoria Residents", customerRole: "Resident testimonial", project: "One Victoria", city: "Kolkata", dur: "1:39", quote: "Trust we could check before we signed.", poster: "assets/testimonial_9.webp", video: "https://player.vimeo.com/video/1106031951?autoplay=1&rel=0&controls=0#t=" },
 ];
 
 export const SHOWREEL = "/assets/hero_video.mp4";

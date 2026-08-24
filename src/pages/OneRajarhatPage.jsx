@@ -3,8 +3,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import Nav from "../components/Nav";
 import { Footer } from "../components/Footer";
 import { Reveal } from "../components/shared";
-import { PROJECT_OPTIONS } from "../data/projects";
-import OtpVerification, { formatIndianPhoneForLead, isValidIndianPhone } from "../components/OtpVerification";
+import BrochureLeadPopup from "../components/BrochureLeadPopup";
 
 // Helper to extract custom specifications fields
 function extractSpecsAndCustomData(specsArray = []) {
@@ -811,79 +810,7 @@ function MobileFixedCta({ onBrochureClick }) {
 }
 
 function BrochurePopup({ subpage, onClose }) {
-  const [f, setF] = useState({ name: "", phone: "", email: "", project: "One Rajarhat - Kolkata", message: "" });
-  const [sent, setSent] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [error, setError] = useState("");
-  const [otpVerified, setOtpVerified] = useState(false);
-  const set = (k) => (e) => setF((s) => ({ ...s, [k]: e.target.value }));
-  const valid = f.name.trim() && isValidIndianPhone(f.phone) && f.email.trim() && otpVerified;
-
-  const submit = async () => {
-    if (!valid || sending) return;
-    setSending(true);
-    setError("");
-    try {
-      if (window.RuchiBackend) {
-        await window.RuchiBackend.leads.createLead({
-          name: f.name,
-          phone: formatIndianPhoneForLead(f.phone),
-          email: f.email,
-          project: f.project,
-          message: f.message
-        });
-      }
-      setSent(true);
-      const link = document.createElement("a");
-      link.href = subpage.brochureUrl || ONE_RAJARHAT_FALLBACK.brochureUrl;
-      link.download = "One-Rajarhat-Brochure.pdf";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (e) {
-      console.error(e);
-      setError("Failed to submit enquiry. Please try again.");
-    } finally {
-      setSending(false);
-    }
-  };
-
-  return (
-    <div className="osc-popup-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="Download brochure">
-      <div className="osc-popup" onClick={(e) => e.stopPropagation()}>
-        <button className="osc-popup__close" onClick={onClose} aria-label="Close modal">×</button>
-        {sent ? (
-          <>
-            <h3>Thank You!</h3>
-            <p>Your brochure is being downloaded. A team member will also reach out to you shortly.</p>
-            <button className="submit-btn" onClick={onClose} style={{ width: "100%", justifyContent: "center" }}>
-              Close<span className="ar">→</span>
-            </button>
-          </>
-        ) : (
-          <>
-            <h3>Download Brochure</h3>
-            <p>Enter your details to receive the brochure.</p>
-            <div className="field"><label>Name</label>
-              <input value={f.name} onChange={set("name")} placeholder="Your full name" /></div>
-            <OtpVerification value={f.phone} onChange={(phone) => setF((current) => ({ ...current, phone }))} onVerificationChange={({ verified }) => setOtpVerified(verified)} purpose="brochure" />
-            <div className="field"><label>Email</label>
-              <input type="email" value={f.email} onChange={set("email")} placeholder="you@email.com" /></div>
-            <div className="field"><label>Project of interest</label>
-              <select value={f.project} onChange={set("project")}>
-                {PROJECT_OPTIONS.map((o) => <option key={o} value={o}>{o}</option>)}
-              </select></div>
-            <div className="field"><label>Message</label>
-              <textarea rows={3} value={f.message} onChange={set("message")} placeholder="I'd like to know more about the project." /></div>
-            <button className="submit-btn" onClick={submit} disabled={!valid || sending} style={{ width: "100%", justifyContent: "center", marginTop: "8px" }}>
-              {sending ? "Sending..." : "Download Now"}<span className="ar">→</span>
-            </button>
-            {error ? <p className="contact-error" style={{ margin: "12px 0 0", fontSize: "13px" }}>{error}</p> : null}
-          </>
-        )}
-      </div>
-    </div>
-  );
+  return <BrochureLeadPopup project="One Rajarhat - Kolkata" city="Kolkata" slug="one-rajarhat" source="One Rajarhat page brochure download" brochureUrl={subpage.brochureUrl || ONE_RAJARHAT_FALLBACK.brochureUrl} onClose={onClose} />;
 }
 
 export default function OneRajarhatPage() {

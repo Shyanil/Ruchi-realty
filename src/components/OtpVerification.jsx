@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import {
   getMsg91ErrorMessage,
   resendMsg91Otp,
@@ -31,6 +31,9 @@ export default function OtpVerification({
   label = "Phone",
   className = "field",
   required = true,
+  leadId = "",
+  autoSend = false,
+  phoneLocked = false,
 }) {
   const reactId = useId();
   const safeId = useMemo(() => `${purpose}-${reactId}`.replace(/[^a-zA-Z0-9_-]/g, ""), [purpose, reactId]);
@@ -40,6 +43,7 @@ export default function OtpVerification({
   const [otp, setOtp] = useState("");
   const [message, setMessage] = useState("");
   const [countdown, setCountdown] = useState(0);
+  const autoSendStarted = useRef(false);
 
   const verified = phase === "verified";
   const busy = phase === "sending" || phase === "verifying" || phase === "resending";
@@ -50,11 +54,12 @@ export default function OtpVerification({
     return () => window.clearInterval(timer);
   }, [countdown > 0]);
 
-  const notifyVerification = (nextVerified) => {
+  const notifyVerification = (nextVerified, details = {}) => {
     onVerificationChange?.({
       verified: nextVerified,
       normalizedPhone: localPhone ? `91${localPhone}` : "",
       purpose,
+      ...details,
     });
   };
 
@@ -99,10 +104,10 @@ export default function OtpVerification({
     setPhase("verifying");
     setMessage("");
     try {
-      await verifyMsg91Otp(localPhone, otp);
+      const result = await verifyMsg91Otp(localPhone, otp, leadId);
       setPhase("verified");
       setMessage("Mobile number verified");
-      notifyVerification(true);
+      notifyVerification(true, { leadId: result.leadId || leadId, crmStatus: result.crmStatus });
     } catch (error) {
       setPhase("sent");
       setMessage(getMsg91ErrorMessage(error, "verify"));
@@ -125,6 +130,12 @@ export default function OtpVerification({
     }
   };
 
+  useEffect(() => {
+    if (!autoSend || autoSendStarted.current || phase !== "idle" || !isValidIndianPhone(localPhone)) return;
+    autoSendStarted.current = true;
+    sendOtp();
+  }, [autoSend, localPhone, phase]);
+
   return (
     <div className={`otp-verification ${className}`.trim()} data-otp-purpose={purpose}>
       <label htmlFor={inputId}><span>{label}</span></label>
@@ -138,6 +149,7 @@ export default function OtpVerification({
             autoComplete="tel-national"
             pattern="[6-9][0-9]{9}"
             required={required}
+            disabled={phoneLocked}
             value={localPhone}
             onChange={changePhone}
             placeholder="10-digit mobile number"

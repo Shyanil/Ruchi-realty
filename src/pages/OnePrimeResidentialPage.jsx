@@ -3,8 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import Nav from "../components/Nav";
 import { Footer } from "../components/Footer";
 import { Reveal } from "../components/shared";
-import { PROJECT_OPTIONS } from "../data/projects";
-import OtpVerification, { formatIndianPhoneForLead, isValidIndianPhone } from "../components/OtpVerification";
+import BrochureLeadPopup from "../components/BrochureLeadPopup";
 
 const BASE = "/projects/one-prime-residential";
 
@@ -337,26 +336,7 @@ function LocationSection({ subpage }) {
 }
 
 function BrochurePopup({ subpage, onClose }) {
-  const [form, setForm] = useState({ name: "", phone: "", email: "", project: "One Prime Residential - New Town, Kolkata", message: "" });
-  const [sent, setSent] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [error, setError] = useState("");
-  const [otpVerified, setOtpVerified] = useState(false);
-  const set = (key) => (e) => setForm((prev) => ({ ...prev, [key]: e.target.value }));
-  const valid = form.name.trim() && isValidIndianPhone(form.phone) && form.email.trim() && otpVerified;
-  const submit = async () => {
-    if (!valid || sending) return;
-    setSending(true); setError("");
-    try {
-      if (window.RuchiBackend?.leads) {
-        const { error: leadError } = await window.RuchiBackend.leads.submitLead({ ...form, phone: formatIndianPhoneForLead(form.phone), interest: form.project, notes: form.message, source: "One Prime Residential page brochure download", project_slug: "one-prime-residential" });
-        if (leadError) throw leadError;
-      }
-      setSent(true); window.open(subpage.brochureUrl || ONE_PRIME_RESIDENTIAL_FALLBACK.brochureUrl, "_blank");
-    } catch (err) { setError(err.message || "Failed to submit enquiry. Please try again."); }
-    finally { setSending(false); }
-  };
-  return <div className="osc-popup-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="Download brochure"><div className="osc-popup" onClick={(e) => e.stopPropagation()}><button type="button" className="osc-popup__close" onClick={onClose} aria-label="Close">x</button>{sent ? <><h3>Thank You!</h3><p>Your brochure is being downloaded. A team member will also reach out to you shortly.</p><button className="submit-btn" onClick={onClose} style={{ width: "100%", justifyContent: "center" }}>Close<CtaArrow /></button></> : <><h3>Download Brochure</h3><p>Enter your details to receive the brochure.</p><div className="field"><label>Name</label><input value={form.name} onChange={set("name")} placeholder="Your full name" /></div><OtpVerification value={form.phone} onChange={(phone) => setForm((current) => ({ ...current, phone }))} onVerificationChange={({ verified }) => setOtpVerified(verified)} purpose="brochure" /><div className="field"><label>Email</label><input type="email" value={form.email} onChange={set("email")} placeholder="you@email.com" /></div><div className="field"><label>Project of interest</label><select value={form.project} onChange={set("project")}>{PROJECT_OPTIONS.map((o) => <option key={o} value={o}>{o}</option>)}</select></div><div className="field"><label>Message</label><textarea rows={3} value={form.message} onChange={set("message")} placeholder="I'd like to know more about the project." /></div><button className="submit-btn" onClick={submit} disabled={!valid || sending} style={{ width: "100%", justifyContent: "center", marginTop: "8px" }}>{sending ? "Sending..." : "Download Now"}<CtaArrow /></button>{error ? <p className="contact-error" style={{ margin: "12px 0 0", fontSize: "13px" }}>{error}</p> : null}</>}</div></div>;
+  return <BrochureLeadPopup project="One Prime Residential - New Town, Kolkata" city="Kolkata" slug="one-prime-residential" source="One Prime Residential page brochure download" brochureUrl={subpage.brochureUrl || ONE_PRIME_RESIDENTIAL_FALLBACK.brochureUrl} onClose={onClose} />;
 }
 
 function MobileFixedCta({ onBrochureClick }) {

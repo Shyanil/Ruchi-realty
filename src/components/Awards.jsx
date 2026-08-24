@@ -38,7 +38,13 @@ export function Awards() {
       <Reveal>
         <div className="awmq" aria-label="Awards received by Ruchi Realty">
           <div className="awmq__track">
-            {loop.map((a, i) => <AwardCard key={i} a={a} hidden={i >= AWARDS.length} />)}
+            {loop.map((award, index) => (
+              <AwardCard
+                key={`${award.name}-${index}`}
+                a={award}
+                hidden={index >= AWARDS.length}
+              />
+            ))}
           </div>
         </div>
       </Reveal>

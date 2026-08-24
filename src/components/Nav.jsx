@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { RImg } from "./shared";
 import { BLOG, IMG_TOWER } from "../data/siteData";
@@ -93,15 +93,15 @@ const MEGA = (() => {
     },
     Contact: {
       href: "Contact.html",
+      contactLayout: true,
       blurb: [
         "Connect with our teams in Indore, Kolkata and Bhopal for project information and site visits.",
         "Share what you are looking for and the right team will help you take the next step.",
       ],
       cols: [
         { h: "Offices", items: [["Indore Office", "Contact.html#indore-office"], ["Kolkata Office", "Contact.html#kolkata-office"], ["Bhopal Office", "Contact.html#bhopal-office"]] },
-        { h: "Reach us", items: [["+91 89292 25275", "tel:+918929225275"], ["ruchirealty.com", "#contact"], ["Indore, Kolkata and Bhopal", "#contact"]] },
       ],
-      feat: { kind: "project", eyebrow: "Get in touch", title: "Contact us", sub: "A real person, not a call centre.", href: "Contact.html#indore-office", img: "/assets/contact-us.webp" },
+      feat: { kind: "project", eyebrow: "Get in touch", title: "Contact our team", sub: "Project details, pricing and site visits", href: "Contact.html", img: "/assets/contact-us.webp" },
     },
   };
 })();
@@ -158,12 +158,10 @@ function MegaFeat({ feat, go }) {
 }
 
 const PROJECT_CITIES = ["Kolkata", "Indore", "Bhopal"];
-const PROJECT_STATUSES = ["Ready to Move", "Ongoing", "Upcoming"];
 
-function projectFilterHref(city, status) {
+function projectFilterHref(city) {
   const params = new URLSearchParams();
   if (city) params.set("city", city);
-  if (status) params.set("status", status);
   return `/projects#${params.toString()}`;
 }
 
@@ -274,7 +272,7 @@ function ProjectCarouselFeature({ city, status, go }) {
   );
 }
 
-function ProjectNestedMenu({ go, activeCity, activeStatus, onCityHover, onStatusHover, onAllProjectsHover }) {
+function ProjectNestedMenu({ go, activeCity, onCityHover, onAllProjectsHover }) {
   return (
     <div className="project-menu">
       <div className="mega-col__h">By City</div>
@@ -286,8 +284,8 @@ function ProjectNestedMenu({ go, activeCity, activeStatus, onCityHover, onStatus
             onMouseEnter={() => onCityHover(city)}
             onFocus={() => onCityHover(city)}
           >
-            <a href={projectFilterHref(city)} onClick={(e) => go(e, projectFilterHref(city))}>
-              {city}<span aria-hidden="true">&#8250;</span>
+            <a href={projectFilterHref(city)} onClick={(event) => go(event, projectFilterHref(city))}>
+              {city}
             </a>
           </li>
         ))}
@@ -302,31 +300,45 @@ function ProjectNestedMenu({ go, activeCity, activeStatus, onCityHover, onStatus
           </a>
         </li>
       </ul>
-      <div className={`project-menu__status-panel ${activeCity ? "is-visible" : ""}`} aria-live="polite">
-        <div className="project-menu__label">By Status{activeCity ? `, ${activeCity}` : ""}</div>
-        {activeCity ? (
-          <>
-            <a
-              className={!activeStatus ? "is-active" : ""}
-              href={projectFilterHref(activeCity)}
-              onMouseEnter={() => onStatusHover(null)}
-              onClick={(e) => go(e, projectFilterHref(activeCity))}
-            >
-              All statuses
-            </a>
-            {PROJECT_STATUSES.map((status) => (
-              <a
-                key={status}
-                className={activeStatus === status ? "is-active" : ""}
-                href={projectFilterHref(activeCity, status)}
-                onMouseEnter={() => onStatusHover(status)}
-                onClick={(e) => go(e, projectFilterHref(activeCity, status))}
-              >
-                {status}
+    </div>
+  );
+}
+
+function ContactMegaLinks({ cols, go }) {
+  const offices = cols[0]?.items || [];
+  return (
+    <div className="contact-mega-links">
+      <div className="contact-mega-offices">
+        <div className="mega-col__h">Visit an office</div>
+        <ul>
+          {offices.map(([label, href]) => (
+            <li key={label}>
+              <a href={canonicalHref(href)} onClick={(e) => go(e, href)}>
+                <span>{label}</span><span aria-hidden="true">&rarr;</span>
               </a>
-            ))}
-          </>
-        ) : null}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="contact-mega-reach">
+        <div className="mega-col__h">Reach us directly</div>
+        <a className="contact-mega-action" href="tel:+918929225275">
+          <span className="contact-mega-action__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M7.1 3.5 9.6 7l-1.8 2.1a14.2 14.2 0 0 0 7.1 7.1l2.1-1.8 3.5 2.5-.8 3a2 2 0 0 1-2 1.5C9.4 20.5 3.5 14.6 2.6 6.3a2 2 0 0 1 1.5-2l3-.8Z"/></svg>
+          </span>
+          <span className="contact-mega-action__copy"><small>Call our sales team</small><strong>+91 89292 25275</strong></span>
+          <span className="contact-mega-action__arrow" aria-hidden="true">&rarr;</span>
+        </a>
+        <a className="contact-mega-action" href="mailto:emarketing@ruchirealty.com">
+          <span className="contact-mega-action__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3.5 6.5h17v11h-17z"/><path d="m4 7 8 6 8-6"/></svg>
+          </span>
+          <span className="contact-mega-action__copy"><small>Email us</small><strong>emarketing@ruchirealty.com</strong></span>
+          <span className="contact-mega-action__arrow" aria-hidden="true">&rarr;</span>
+        </a>
+        <a className="contact-mega-enquire" href="/contact" onClick={(e) => go(e, "/contact")}>
+          Send an enquiry <span aria-hidden="true">&rarr;</span>
+        </a>
       </div>
     </div>
   );
@@ -336,15 +348,7 @@ function ProjectMobileMenu({ go }) {
   return (
     <div className="mobile-project-menu">
       {PROJECT_CITIES.map((city) => (
-        <details key={city}>
-          <summary>{city}<span aria-hidden="true">+</span></summary>
-          <div>
-            <a href={projectFilterHref(city)} onClick={(e) => go(e, projectFilterHref(city))}>All statuses</a>
-            {PROJECT_STATUSES.map((status) => (
-              <a key={status} href={projectFilterHref(city, status)} onClick={(e) => go(e, projectFilterHref(city, status))}>{status}</a>
-            ))}
-          </div>
-        </details>
+        <a className="mobile-project-menu__city" key={city} href={projectFilterHref(city)} onClick={(event) => go(event, projectFilterHref(city))}>{city}</a>
       ))}
       <a className="mobile-project-menu__all" href="/projects" onClick={(e) => go(e, "Projects.html")}>All projects</a>
     </div>
@@ -379,7 +383,7 @@ function MegaPanel({ cfg, go }) {
   };
 
   return (
-    <div className={`mega__inner rr-wrap ${cfg.projectNested ? "mega__inner--projects" : ""} ${cfg === MEGA.About ? "mega__inner--about" : ""}`}>
+    <div className={`mega__inner rr-wrap ${cfg.projectNested ? "mega__inner--projects" : ""} ${cfg === MEGA.About ? "mega__inner--about" : ""} ${cfg.contactLayout ? "mega__inner--contact" : ""}`}>
       <div className="mega__lead" onMouseEnter={handleDefaultPreview}>
         <div className="mega__blurbs">
           {(Array.isArray(cfg.blurb) ? cfg.blurb : [cfg.blurb]).map((paragraph, index) => (
@@ -400,6 +404,8 @@ function MegaPanel({ cfg, go }) {
             onStatusHover={handleStatusHover}
             onAllProjectsHover={handleAllProjectsHover}
           />
+        ) : cfg.contactLayout ? (
+          <ContactMegaLinks cols={cfg.cols} go={go} />
         ) : (
           cfg.cols.map((c) => (
             <div className="mega-col" key={c.h}>
@@ -430,8 +436,24 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false, soli
   const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(null);
   const [mobile, setMobile] = useState(false);
+  const closeTimer = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const cancelMenuClose = () => {
+    if (closeTimer.current) window.clearTimeout(closeTimer.current);
+    closeTimer.current = null;
+  };
+
+  const scheduleMenuClose = () => {
+    cancelMenuClose();
+    closeTimer.current = window.setTimeout(() => {
+      setOpen(null);
+      closeTimer.current = null;
+    }, 140);
+  };
+
+  useEffect(() => () => cancelMenuClose(), []);
 
   useEffect(() => {
     const mediaRoute = location.pathname.startsWith("/media");
@@ -455,6 +477,7 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false, soli
   }, [mobile]);
 
   const go = (e, href) => {
+    cancelMenuClose();
     setOpen(null);
     setMobile(false);
     if (!href) return;
@@ -494,7 +517,8 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false, soli
   };
 
   const routeNeedsSolidHeader = location.pathname.startsWith("/media/press-releases");
-  const dark = !forceSolid && !routeNeedsSolidHeader && !solid && !open;
+  const topContext = !forceSolid && !routeNeedsSolidHeader && !solid;
+  const dark = topContext && !open;
 
   const isActive = (label) => {
     const href = MEGA[label]?.href;
@@ -506,8 +530,9 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false, soli
 
   return (
     <header
-      className={`nav ${dark ? "nav--top" : "nav--solid"} ${open ? "nav--mega" : ""} ${hidden ? "nav--hidden" : ""}`}
-      onMouseLeave={() => setOpen(null)}>
+      className={`nav ${dark ? "nav--top" : "nav--solid"} ${topContext ? "nav--top-context" : ""} ${open ? "nav--mega" : ""} ${hidden ? "nav--hidden" : ""}`}
+      onMouseEnter={cancelMenuClose}
+      onMouseLeave={scheduleMenuClose}>
       <div className="nav__bar">
         <a className="nav__brand" href="#top" onClick={(e) => go(e, "#top")} aria-label="Ruchi Realty home">
           <img className="nav__logo"
@@ -515,7 +540,7 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false, soli
             alt="Ruchi Realty" loading="eager" decoding="async" />
         </a>
         <nav className="nav__links" aria-label="Primary">
-          <div className="nav__item" onMouseEnter={() => setOpen(null)}>
+          <div className="nav__item" onMouseEnter={scheduleMenuClose}>
             <a
               className={`nav__link ${location.pathname === "/" && !open ? "is-active" : ""}`}
               href="/"
@@ -524,7 +549,7 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false, soli
             </a>
           </div>
           {MEGA_ORDER.map((label) => (
-            <div className="nav__item" key={label} onMouseEnter={() => setOpen(label)}>
+            <div className="nav__item" key={label} onMouseEnter={() => { cancelMenuClose(); setOpen(label); }}>
               <a className={`nav__link ${open === label ? "is-open" : ""} ${isActive(label) ? "is-active" : ""}`}
                 href={canonicalHref(MEGA[label].href)} onClick={(e) => go(e, MEGA[label].href)}>
                 {label}

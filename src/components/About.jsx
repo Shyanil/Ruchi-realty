@@ -18,7 +18,7 @@ export function About() {
             </Reveal>
             <Reveal delay={80}>
               <p className="about-lead">
-                Since 2008, Ruchi Realty has developed residential, commercial and plotted communities across Kolkata, Indore and Bhopal, bringing together considered locations, practical planning, responsible construction and support beyond possession.
+                Since 2008, Ruchi Realty has developed residential, commercial and plotted communities across Kolkata, Indore and Bhopal. Our developments combine strategic locations, thoughtful planning, quality construction and customer support that continues beyond possession.
               </p>
             </Reveal>
             <Reveal delay={140}>

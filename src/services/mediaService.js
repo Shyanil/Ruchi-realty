@@ -5,7 +5,7 @@ export const slugifyMedia = (value = "") => value.toLowerCase().trim().replace(/
 let manifestCache;
 const manifest = async () => manifestCache || (manifestCache = await fetch("/assets/media/gallery/media-assets-manifest.json").then((r) => r.json()));
 const youtubeThumb = (url = "") => { const id=url.match(/[?&]v=([^&]+)/)?.[1]||url.match(/youtu\.be\/([^?]+)/)?.[1]; return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : ""; };
-const normalizeGallery = (item) => { const image=item.image_url||item.media_assets?.public_url||item.public_url||youtubeThumb(item.video_url); return { ...item, id:item.id||item.hash, media_type:item.media_type||(item.video_url?"video":"image"), image_url:image, thumbnail_url:item.thumbnail_url||item.media_assets?.thumbnail_url||image, title:item.title||item.alt_text, is_featured:Boolean(item.is_featured) }; };
+const normalizeGallery = (item) => { const image=item.image_url||item.media_assets?.public_url||item.public_url||youtubeThumb(item.video_url); return { ...item, id:item.id||item.hash, media_type:item.media_type||(item.video_url?"video":"image"), image_url:image, thumbnail_url:item.thumbnail_url||item.media_assets?.thumbnail_url||image, title:item.title||item.alt_text, is_featured:Boolean(item.is_featured), internal_links:Array.isArray(item.internal_links)?item.internal_links:[] }; };
 export async function getGallery(admin = false) { const fn = admin ? window.RuchiBackend?.media?.getAllGallery : window.RuchiBackend?.media?.getGallery; const result = await fn?.(); if (result?.data?.length) return result.data.map(normalizeGallery); return GALLERY_MEDIA.map(normalizeGallery); }
 const normalizeAwardTitle = (value = "") => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const AWARD_COVERS = {
@@ -27,7 +27,7 @@ const AWARD_COVERS = {
 const withCover = (item) => {
   const localAwardCover = AWARD_COVERS[normalizeAwardTitle(item.title)];
   const image = localAwardCover || item.image_url || item.media_assets?.public_url || "";
-  return { ...item, image_url:image, thumbnail_url:localAwardCover || item.thumbnail_url || item.media_assets?.thumbnail_url || image };
+  return { ...item, image_url:image, thumbnail_url:localAwardCover || item.thumbnail_url || item.media_assets?.thumbnail_url || image, internal_links:Array.isArray(item.internal_links)?item.internal_links:[] };
 };
 export async function getPress(admin = false) { const fn = admin ? window.RuchiBackend?.media?.getAllPress : window.RuchiBackend?.media?.getPress; const result = await fn?.(); return (result?.data || []).map(withCover); }
 export async function getPressBySlug(slug) { const result = await window.RuchiBackend?.media?.getPressBySlug?.(slug); return result?.data ? withCover(result.data) : null; }
