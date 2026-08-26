@@ -1,5 +1,6 @@
 const MSG91_BASE_URL = "https://control.msg91.com/api/v5/otp";
 const env = (name) => globalThis?.process?.env?.[name] || globalThis?.Netlify?.env?.get?.(name) || "";
+const supabaseServerKey = () => env("SUPABASE_SECRET_KEY") || env("SUPABASE_SERVICE_ROLE_KEY");
 const JSON_HEADERS = { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" };
 function json(status, body) { return new Response(JSON.stringify(body), { status, headers: JSON_HEADERS }); }
 function normalizeIndianMobile(value) { const digits = String(value || "").replace(/\D/g, ""); const local = digits.length === 12 && digits.startsWith("91") ? digits.slice(2) : digits; return /^[6-9]\d{9}$/.test(local) ? `91${local}` : ""; }
@@ -27,13 +28,13 @@ async function callMsg91(action, mobile, otp, authKey, templateId) {
 
 async function supabaseRequest(path, options = {}) {
   const supabaseUrl = env("SUPABASE_URL").replace(/\/$/, "");
-  const serviceKey = env("SUPABASE_SERVICE_ROLE_KEY");
-  if (!supabaseUrl || !serviceKey) throw new Error("Lead verification storage is not configured.");
+  const serverKey = supabaseServerKey();
+  if (!supabaseUrl || !serverKey) throw new Error("Lead verification storage is not configured. Add SUPABASE_URL and SUPABASE_SECRET_KEY to Netlify.");
   const response = await fetch(`${supabaseUrl}/rest/v1/${path}`, {
     ...options,
     headers: {
-      apikey: serviceKey,
-      Authorization: `Bearer ${serviceKey}`,
+      apikey: serverKey,
+      Authorization: `Bearer ${serverKey}`,
       "Content-Type": "application/json",
       ...(options.headers || {}),
     },
@@ -116,7 +117,7 @@ export default async (request) => {
   const leadId = String(body?.leadId || "").trim();
   if (action === "verify" && !leadId) return json(400, { error: "Submit your enquiry before verifying the OTP." });
   if (action === "verify" && leadId && !isUuid(leadId)) return json(400, { error: "The captured lead reference is invalid. Please submit the form again." });
-  if (action === "verify" && leadId && (!env("SUPABASE_URL") || !env("SUPABASE_SERVICE_ROLE_KEY"))) return json(503, { error: "Lead verification storage is not configured." });
+  if (action === "verify" && leadId && (!env("SUPABASE_URL") || !supabaseServerKey())) return json(503, { error: "Lead verification storage is not configured. Add SUPABASE_URL and SUPABASE_SECRET_KEY to Netlify." });
   try {
     const result = await callMsg91(action, mobile, otp, authKey, templateId);
     if (!result.ok) {

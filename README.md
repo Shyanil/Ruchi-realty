@@ -94,7 +94,7 @@ Server-only variables (never prefix these with `VITE_`):
 - `TURNSTILE_SITE_KEY`
 - `TURNSTILE_SECRET_KEY`
 - `SUPABASE_URL`
-- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_SECRET_KEY` (preferred) or legacy `SUPABASE_SERVICE_ROLE_KEY`
 - `MSG91_AUTH_KEY`
 - `MSG91_TEMPLATE_ID`
 

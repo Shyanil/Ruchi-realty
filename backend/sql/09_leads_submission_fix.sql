@@ -26,6 +26,10 @@ alter table public.leads add column if not exists notes text;
 alter table public.leads add column if not exists created_at timestamptz;
 alter table public.leads add column if not exists updated_at timestamptz;
 
+-- Older versions of the leads table required email, while the current
+-- phone-verification forms intentionally allow it to be omitted.
+alter table public.leads alter column email drop not null;
+
 update public.leads
 set interest = coalesce(nullif(interest, ''), 'General'),
     source = coalesce(nullif(source, ''), 'Website'),

@@ -17,13 +17,13 @@ Run `backend/sql/14_lead_verification_crm.sql` in the Supabase SQL Editor after 
 Configure these server-only environment variables in Netlify:
 
 - `SUPABASE_URL`
-- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_SECRET_KEY` (preferred) or the legacy `SUPABASE_SERVICE_ROLE_KEY`
 - `MSG91_AUTH_KEY`
 - `MSG91_TEMPLATE_ID`
 - `CRM_WEBHOOK_URL`
 - `CRM_WEBHOOK_AUTH_TOKEN` (optional)
 
-Never expose the service-role key, MSG91 key, or CRM token through a `VITE_` variable.
+Never expose the Supabase secret/service-role key, MSG91 key, or CRM token through a `VITE_` variable. The browser continues to use only `VITE_SUPABASE_ANON_KEY` (or a publishable key); the server key is required so OTP verification can update a lead without exposing an anonymous update policy.
 
 ## CRM webhook contract
 
