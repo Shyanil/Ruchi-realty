@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import Nav from "../components/Nav";
 import { Footer } from "../components/Footer";
 import SEO from "../components/SEO";
+import RichText from "../components/RichText";
 import { Reveal, RImg } from "../components/shared";
 import { CardArrow } from "../components/ProjectsSection";
 import LeadCaptureFlow, { inferLeadCity } from "../components/LeadCaptureFlow";
@@ -23,6 +24,7 @@ import { ACTIVE_ACRES_ANGELICA_FALLBACK } from "./ActiveAcresAngelicaPage";
 import { ACTIVE_GREENS_FALLBACK } from "./ActiveGreensPage";
 import { ONE_RAJARHAT_FALLBACK } from "./OneRajarhatPage";
 import { ONE_PRIME_RESIDENTIAL_FALLBACK } from "./OnePrimeResidentialPage";
+import { plainTextFromRichText } from "../utils/richText";
 
 const PROJECT_LEGACY_META = {
   "oscar-indore": { city: "Indore", type: "Premium Plotted Development" },
@@ -602,7 +604,7 @@ function normalizeProjectSubpage(project, sp, fallbackSp = null) {
   const isOscarPalace = project?.slug === "oscar-palace" || fallbackSp?.heroTitle === "Oscar Palace";
   const isSaatvikGreen = project?.slug === "saatvikgreen-indore" || fallbackSp?.heroTitle === "Saatvik Green";
   const title = (isAngelica ? fallbackSp?.heroTitle : "") || sp?.heroTitle || project?.title || project?.name || "Project";
-  const description = project?.description || "Explore this Ruchi Realty project with thoughtfully planned spaces, dependable execution, and a location selected for everyday convenience.";
+  const description = plainTextFromRichText(project?.description) || "Explore this Ruchi Realty project with thoughtfully planned spaces, dependable execution, and a location selected for everyday convenience.";
   const videoSection = (isOscarFort ? fallbackCustom.videoSection || fallbackSp?.videoSection : custom.videoSection || sp?.videoSection || fallbackCustom.videoSection || fallbackSp?.videoSection) || {};
   const legacyVideoUrl = (videoSection.videoUrl || "").trim() || (sp?.walkthroughVideoId || "").trim() || (fallbackSp?.walkthroughVideoId || "").trim();
   const fallbackVideoItems = Array.isArray(fallbackSp?.videos) && fallbackSp.videos.length ? fallbackSp.videos : [];
@@ -864,7 +866,7 @@ function ProjectOverview({ data }) {
     <section className="section-pad project-section" id="overview"><div className="rr-wrap">
       <div className="project-section__head project-section__head--overview"><span className="eyebrow">Project Overview</span><h2>Designed with purpose,<br/><span className="rr-grad">made for everyday life</span></h2><p className="project-section__description">Learn about the planning, character, and everyday experience created for {data.title}.</p></div>
       <div className="project-overview__layout">
-        <div className="project-overview__copy">{overviewCopy.map((text,index)=><p key={index}>{text}</p>)}</div>
+        <div className="project-overview__copy">{overviewCopy.map((text,index)=><RichText content={text} key={index} />)}</div>
         {overviewImage ? <RImg className="project-overview__image" src={overviewImage} fallbackSrc={overviewFallbackImage} alt={`${data.title} overview`} /> : null}
       </div>
     </div></section>

@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import MediaAdmin from "../components/admin/MediaAdmin";
 import AdminShell, { showAdminToast } from "../components/admin/AdminShell";
 import AdminDashboard from "../components/admin/AdminDashboard";
+import RichTextEditor from "../components/admin/RichTextEditor";
+import { normalizeRichTextHtml, plainTextFromRichText } from "../utils/richText";
 
 const toJSON = (value) => {
   try { return JSON.stringify(value, null, 2); } catch { return ""; }
@@ -946,7 +948,10 @@ function ProjectsAdmin() {
     event.preventDefault();
     setUpdating(true);
     try {
-      const paragraphs = overviewText.split(/\n{2,}/).map(p => p.trim()).filter(Boolean);
+      const overviewHtml = normalizeRichTextHtml(overviewText);
+      const paragraphs = overviewHtml ? [overviewHtml] : [];
+      const richDescription = normalizeRichTextHtml(form.description);
+      const plainDescription = plainTextFromRichText(richDescription);
       const vidUrl = (form.videoSection?.videoUrl || form.walkthroughVideoId || "").trim();
       const videoSectionPayload = {
         enabled: Boolean(vidUrl),
@@ -968,13 +973,13 @@ function ProjectsAdmin() {
       const subpagePayload = (projectId) => ({
         project_id: projectId,
         heroTitle: form.heroTitle || form.title,
-        heroTagline: form.heroTagline || form.tag || form.description,
+        heroTagline: form.heroTagline || form.tag || plainDescription,
         heroLogo: form.heroLogo || form.companyLogoUrl || "assets/logo-h.webp",
         heroBg: form.heroBg || form.image_url,
         heroMobileUrl: form.heroMobileUrl || "",
         heroImagePosition: form.heroImagePosition || "center center",
         heroImageFit: form.heroImageFit || "cover",
-        overviewParagraphs: paragraphs.length ? paragraphs : [form.description].filter(Boolean),
+        overviewParagraphs: paragraphs.length ? paragraphs : [richDescription].filter(Boolean),
         overviewHighlights: withOverviewHighlightIcons(form.overviewHighlights),
         amenities: form.amenities,
         specifications: specsWithCustom,
@@ -1001,15 +1006,16 @@ function ProjectsAdmin() {
         ctaLabels: form.ctaLabels || { brochure: "Download Brochure", visit: "Schedule a Site Visit" },
         ogImage: form.ogImage || form.heroBg || form.image_url || "",
         metaTitle: form.metaTitle || `${form.title} | Ruchi Realty`,
-        metaDescription: form.metaDescription || form.description,
+        metaDescription: form.metaDescription || plainDescription,
         isPublished: form.isPublished !== false,
       });
+      const projectRecord = { ...form, description: richDescription };
       if (editingId) {
-        await window.RuchiBackend.projects.updateProject(editingId, form);
+        await window.RuchiBackend.projects.updateProject(editingId, projectRecord);
         const { error: subpageError } = await window.RuchiBackend.projectSubpages.upsert(subpagePayload(editingId));
         if (subpageError) throw subpageError;
       } else {
-        const { data: created, error: createError } = await window.RuchiBackend.projects.createProject(form);
+        const { data: created, error: createError } = await window.RuchiBackend.projects.createProject(projectRecord);
         if (createError) throw createError;
         if (created?.id) {
           const { error: subpageError } = await window.RuchiBackend.projectSubpages.upsert(subpagePayload(created.id));
@@ -1175,7 +1181,7 @@ function ProjectsAdmin() {
           <AdminField label="Feature order"><input inputMode="numeric" pattern="[0-9]*" value={form.feature_order ?? ""} onChange={(event) => set("feature_order", event.target.value.replace(/[^0-9]/g, ""))} placeholder="Homepage featured order, lower first" /></AdminField>
         </div>
         <AdminImageUpload label="Project image" value={form.image_url} onChange={(value) => set("image_url", value)} />
-        <AdminField label="Description"><textarea rows={4} value={form.description} onChange={(event) => set("description", event.target.value)} /></AdminField>
+        <AdminField label="Description"><RichTextEditor value={form.description} onChange={(value) => set("description", value)} placeholder="Write the public project description..." minHeight={150} /></AdminField>
         <label className="admin-check"><input type="checkbox" checked={form.featured} onChange={(event) => set("featured", event.target.checked)} /> Featured project</label>
 
         <details className="admin-details" open={!editingId} style={{ marginTop: "24px", width: "100%", maxWidth: "100%", overflow: "hidden" }}>
@@ -1191,7 +1197,7 @@ function ProjectsAdmin() {
             <AdminField label="Hero image fit"><select value={form.heroImageFit} onChange={(e) => set("heroImageFit", e.target.value)}><option value="cover">Cover — fill hero</option><option value="contain">Contain — preserve entire image</option></select></AdminField>
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Overview</h3>
-            <AdminField label="Overview Paragraphs (separate paragraphs with an empty line)"><textarea rows={6} value={overviewText} onChange={(e) => setOverviewText(e.target.value)} placeholder="Write first paragraph.&#10;&#10;Write second paragraph." /></AdminField>
+            <AdminField label="Overview content"><RichTextEditor value={overviewText} onChange={setOverviewText} placeholder="Write the formatted project overview..." minHeight={260} /></AdminField>
             <KeyValueListEditor title="Overview Highlights" items={form.overviewHighlights.length ? form.overviewHighlights : DEFAULT_OVERVIEW_HIGHLIGHTS} onChange={(list) => set("overviewHighlights", withOverviewHighlightIcons(list))} keyPlaceholder="Highlight Label" valuePlaceholder="Highlight Description" />
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Amenities</h3>
@@ -1532,7 +1538,7 @@ function BlogsAdmin() {
     event.preventDefault();
     setUpdating(true);
     try {
-      const payload = { ...form, related_project_links: String(form.related_project_links || "").split(",").map((item) => item.trim()).filter(Boolean) };
+      const payload = { ...form, content: normalizeRichTextHtml(form.content), related_project_links: String(form.related_project_links || "").split(",").map((item) => item.trim()).filter(Boolean) };
       const result = editingId ? await window.RuchiBackend.blogs.updateBlog(editingId, payload) : await window.RuchiBackend.blogs.createBlog(payload);
       if (result.error) throw result.error;
       showAdminToast(editingId ? "Blog updated" : "Blog created", `${form.title || "The article"} was saved successfully.`);
@@ -1682,7 +1688,7 @@ function BlogsAdmin() {
         <AdminImageUpload label="Blog image" value={form.image} onChange={(value) => set("image", value)} />
         <AdminField label="Image alt text"><input required value={form.image_alt} onChange={(event) => set("image_alt", event.target.value)} /></AdminField>
         <AdminField label="Excerpt"><textarea required rows={3} value={form.excerpt} onChange={(event) => set("excerpt", event.target.value)} /></AdminField>
-        <AdminField label="Content"><textarea required rows={7} value={form.content} onChange={(event) => set("content", event.target.value)} /></AdminField>
+        <AdminField label="Content"><RichTextEditor required value={form.content} onChange={(value) => set("content", value)} placeholder="Write and format the full article..." minHeight={420} /></AdminField>
         <AdminField label="Tags, comma separated"><input value={form.tags} onChange={(event) => set("tags", event.target.value)} /></AdminField>
         <div className="admin-form-grid"><AdminField label="SEO title"><input maxLength="70" value={form.seo_title} onChange={(event) => set("seo_title", event.target.value)} /></AdminField><AdminField label="Canonical URL"><input type="url" value={form.canonical_url} onChange={(event) => set("canonical_url", event.target.value)} /></AdminField><AdminField label="Reading time (minutes)"><input type="number" min="1" value={form.reading_time_minutes} onChange={(event) => set("reading_time_minutes", event.target.value)} /></AdminField></div>
         <AdminField label="SEO description"><textarea maxLength="170" rows={3} value={form.seo_description} onChange={(event) => set("seo_description", event.target.value)} /></AdminField>

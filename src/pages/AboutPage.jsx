@@ -9,31 +9,31 @@ const LEDGER_ITEMS = [
     no: "01",
     title: "Environmental Sustainability",
     desc: "Green spaces, efficient systems, and responsible material choices designed for lasting value.",
-    img: "/assets/how-we-work/how-we-work-family-building.webp"
+    img: "/assets/how-we-work/environmental-sustainability.webp"
   },
   {
     no: "02",
     title: "Innovative Designs",
     desc: "Practical layouts shaped around natural light, ventilation, and modern everyday living.",
-    img: "/assets/how-we-work/how-we-work-family-laughter.webp"
+    img: "/assets/how-we-work/innovative-designs.webp"
   },
   {
     no: "03",
     title: "Customer Satisfaction",
     desc: "Clear communication, transparent commitments, and support that continues after handover.",
-    img: "/assets/how-we-work/how-we-work-grandfather-granddaughter.webp"
+    img: "/assets/how-we-work/customer-satisfaction.webp"
   },
   {
     no: "04",
     title: "Timely Completion",
     desc: "Disciplined phase planning, visible milestones, and clear communication through delivery.",
-    img: "/assets/how-we-work/how-we-work-father-daughter-study.webp"
+    img: "/assets/how-we-work/timely-completion.webp"
   },
   {
     no: "05",
     title: "Quality Construction",
     desc: "Specified materials and multi-stage engineering checks from structure through finishes.",
-    img: "/assets/how-we-work/how-we-work-family-home.webp"
+    img: "/assets/how-we-work/quality-construction.webp"
   }
 ];
 
@@ -186,7 +186,8 @@ function AboutLegacy() {
 }
 
 function AboutPhilosophy() {
-  const [activeLedger, setActiveLedger] = useState(0);
+  const [previewLedger, setPreviewLedger] = useState(null);
+  const activeLedger = previewLedger ?? 0;
 
   return (
     <section className="ab-philosophy section-pad" id="philosophy">
@@ -210,7 +211,8 @@ function AboutPhilosophy() {
                 alt={item.title}
                 loading="lazy"
                 decoding="async"
-                className={`ab-philosophy__panel-img ${activeLedger === idx ? "is-visible" : ""}`}
+                className="ab-philosophy__panel-img"
+                hidden={activeLedger !== idx}
               />
             ))}
             <div className="ab-philosophy__image-overlay"></div>
@@ -222,12 +224,23 @@ function AboutPhilosophy() {
 
           <Reveal delay={120} className="ab-philosophy__ledger">
             {LEDGER_ITEMS.map((item, index) => {
-              const isOpen = activeLedger === index;
+              const isOpen = previewLedger === index;
               return (
-                <div key={index}
+                <div key={item.no}
                   className={`ab-ledger-item ${isOpen ? "is-active" : ""}`}
-                  onMouseEnter={() => setActiveLedger(index)}
-                  onClick={() => setActiveLedger(index)}>
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isOpen}
+                  onMouseEnter={() => setPreviewLedger(index)}
+                  onMouseLeave={() => setPreviewLedger(null)}
+                  onFocus={() => setPreviewLedger(index)}
+                  onBlur={() => setPreviewLedger(null)}
+                  onClick={() => setPreviewLedger((current) => current === index ? null : index)}
+                  onKeyDown={(event) => {
+                    if (event.key !== "Enter" && event.key !== " ") return;
+                    event.preventDefault();
+                    setPreviewLedger((current) => current === index ? null : index);
+                  }}>
                   <div className="ab-ledger-item__header">
                     <span className="ab-ledger-item__no">{item.no}</span>
                     <h3 className="ab-ledger-item__title">{item.title}</h3>

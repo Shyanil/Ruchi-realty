@@ -7,7 +7,7 @@ const SOUND_HEADER_SCROLL_THRESHOLD = 1;
 export default function Hero() {
   const vid = useRef(null);
   const retryTimer = useRef(null);
-  const audioUnlocked = useRef(false);
+  const userWantsSound = useRef(false);
   const [videoReady, setVideoReady] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [soundOn, setSoundOn] = useState(false);
@@ -36,10 +36,11 @@ export default function Hero() {
               vid.current.muted = true;
               setSoundOn(false);
             }
-          } else if (audioUnlocked.current && vid.current.muted) {
+          } else if (userWantsSound.current && vid.current.muted) {
             vid.current.muted = false;
             setSoundOn(true);
             vid.current.play().catch(() => {
+              userWantsSound.current = false;
               vid.current.muted = true;
               setSoundOn(false);
             });
@@ -87,13 +88,15 @@ export default function Hero() {
     const video = vid.current;
     if (!video || window.scrollY > SOUND_HEADER_SCROLL_THRESHOLD) return;
     if (!video.muted) {
+      userWantsSound.current = false;
       video.muted = true;
       setSoundOn(false);
       return;
     }
-    audioUnlocked.current = true;
+    userWantsSound.current = true;
     video.muted = false;
     video.play().catch(() => {
+      userWantsSound.current = false;
       video.muted = true;
       setSoundOn(false);
     });

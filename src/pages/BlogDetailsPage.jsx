@@ -6,9 +6,11 @@ import SEO from "../components/SEO";
 import ShareButtons from "../components/blog/ShareButtons";
 import CommentSection from "../components/blog/CommentSection";
 import InternalLinks from "../components/InternalLinks";
+import RichText from "../components/RichText";
 import { getBlogBySlug, getPublicBlogs, normalizeBlog, slugify } from "../services/blogService";
 import { BLOG } from "../data/siteData";
 import { breadcrumbSchema, faqSchema } from "../data/structuredData";
+import { hasRichTextHtml, richTextHeadings } from "../utils/richText";
 
 const SITE = "https://ruchirealty.com";
 const formatDate = (value) => value ? new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "long", year: "numeric" }).format(new Date(value)) : "";
@@ -23,6 +25,7 @@ const inline = (text) => {
 };
 
 function ArticleBody({ content }) {
+  if (hasRichTextHtml(content)) return <RichText content={content} className="article-copy" />;
   const blocks = content.split(/\n{2,}/).map((part) => part.trim()).filter(Boolean);
   return <div className="article-copy">{blocks.map((block, index) => {
     if (/^###\s+/.test(block)) { const text = block.replace(/^###\s+/, ""); return <h3 id={slugify(text)} key={index}>{text}</h3>; }
@@ -56,7 +59,11 @@ export default function BlogDetailsPage() {
   }, [slug]);
 
   const canonical = blog?.canonical_url || `${SITE}/blogs/${slug}`;
-  const headings = useMemo(() => (blog?.content.match(/^##\s+.+$/gm) || []).map((line) => ({ text: line.replace(/^##\s+/, ""), id: slugify(line.replace(/^##\s+/, "")) })), [blog?.content]);
+  const headings = useMemo(() => {
+    if (!blog?.content) return [];
+    const labels = hasRichTextHtml(blog.content) ? richTextHeadings(blog.content) : (blog.content.match(/^##\s+.+$/gm) || []).map((line) => line.replace(/^##\s+/, ""));
+    return labels.map((text) => ({ text, id: slugify(text) }));
+  }, [blog?.content]);
   const schemas = useMemo(() => !blog ? [] : [
     { "@context": "https://schema.org", "@type": ["Article", "BlogPosting"], "@id": `${canonical}#article`, headline: blog.title, description: blog.seo_description, image: { "@type": "ImageObject", url: new URL(blog.og_image_url, SITE).toString() }, datePublished: blog.published_at, dateModified: blog.updated_at || blog.published_at, author: { "@type": "Person", name: blog.author }, publisher: { "@type": "Organization", "@id": `${SITE}/#organization`, name: "Ruchi Realty", url: SITE, logo: { "@type": "ImageObject", url: `${SITE}/assets/logo-h.webp` } }, mainEntityOfPage: canonical, isPartOf: { "@type": "Blog", "@id": `${SITE}/blogs#blog`, name: "Ruchi Realty Blogs" }, articleSection: blog.category, keywords: blog.tags.join(", ") },
     breadcrumbSchema([{ name: "Home", url: "/" }, { name: "Blogs", url: "/blogs" }, { name: blog.title, url: `/blogs/${blog.slug}` }]),
