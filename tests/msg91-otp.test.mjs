@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { after, before, test } from "node:test";
-import otpHandler from "./msg91-otp.mjs";
+import otpHandler from "../netlify/functions/msg91-otp.mjs";
 
 const originalFetch = globalThis.fetch;
 
