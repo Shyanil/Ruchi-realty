@@ -6,14 +6,43 @@ const JSON_HEADERS = { "Content-Type": "application/json; charset=utf-8", "Cache
 function json(status, body) { return new Response(JSON.stringify(body), { status, headers: JSON_HEADERS }); }
 function normalizeIndianMobile(value) { const digits = String(value || "").replace(/\D/g, ""); const local = digits.length === 12 && digits.startsWith("91") ? digits.slice(2) : digits; return /^[6-9]\d{9}$/.test(local) ? `91${local}` : ""; }
 function isUuid(value) { return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(value || "")); }
-function providerSucceeded(payload) { const type = String(payload?.type || payload?.status || "").toLowerCase(); const message = String(payload?.message || payload?.error || "").toLowerCase(); const failed = type === "error" || type === "failed" || type === "failure" || message.includes("invalid auth") || message.includes("unauthorized") || message.includes("error"); return !failed && (type === "success" || payload?.verified === true || message.includes("otp verified success") || message.includes("otp sent") || message.includes("success")); }
+function providerText(payload) {
+  return [payload?.type, payload?.status, payload?.message, payload?.error, payload?.description]
+    .filter((value) => value !== undefined && value !== null)
+    .map((value) => typeof value === "string" ? value : JSON.stringify(value))
+    .join(" ")
+    .toLowerCase()
+    .replace(/[_-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+function providerSucceeded(payload) {
+  const type = String(payload?.type || payload?.status || "").toLowerCase();
+  const message = providerText(payload);
+  const failed = /\b(error|failed|failure|invalid|incorrect|mismatch|expired|unauthori[sz]ed)\b/.test(message)
+    || /\bnot (?:match|matched|verified|sent|found)\b/.test(message)
+    || message.includes("authentication failure");
+  return !failed && (
+    ["success", "succeeded", "ok"].includes(type)
+    || payload?.verified === true
+    || /\botp (?:has been )?verified(?: successfully)?\b/.test(message)
+    || /\botp (?:has been )?sent(?: successfully)?\b/.test(message)
+  );
+}
 function providerError(payload, fallback) {
-  const message = String(payload?.message || payload?.error || "").toLowerCase();
+  const message = providerText(payload);
   if (message.includes("ip is not whitelisted") || message.includes("ip whitelist")) return "MSG91 is blocking this server IP. Disable IP whitelisting in MSG91 or whitelist your hosting server, then try again.";
   if (message.includes("expired")) return "This OTP has expired. Please request a new OTP.";
-  if (message.includes("invalid") || message.includes("incorrect") || message.includes("mismatch")) return "The OTP is incorrect. Please check it and try again.";
+  if (message.includes("invalid") || message.includes("incorrect") || message.includes("mismatch") || message.includes("not match") || message.includes("not verified")) return "The OTP is incorrect. Please check it and try again.";
   if (message.includes("retry") || message.includes("maximum") || message.includes("limit")) return "Too many OTP attempts. Please wait and try again later.";
+  if (message.includes("auth") || message.includes("unauthorized")) return "The OTP service credentials were rejected. Please check the MSG91 settings in Netlify.";
   return fallback;
+}
+function providerErrorStatus(payload, httpStatus) {
+  const message = providerText(payload);
+  if (message.includes("expired") || message.includes("invalid") || message.includes("incorrect") || message.includes("mismatch") || message.includes("not match") || message.includes("not verified")) return 422;
+  if (httpStatus === 429 || message.includes("maximum") || message.includes("limit")) return 429;
+  return 502;
 }
 async function callMsg91(action, mobile, otp, authKey, templateId) {
   const url = new URL(action === "verify" ? `${MSG91_BASE_URL}/verify` : action === "resend" ? `${MSG91_BASE_URL}/retry` : MSG91_BASE_URL);
@@ -24,7 +53,7 @@ async function callMsg91(action, mobile, otp, authKey, templateId) {
   else { url.searchParams.set("retrytype", "text"); request.method = "GET"; }
   const response = await fetch(url, request); const text = await response.text(); let payload = {};
   try { payload = text ? JSON.parse(text) : {}; } catch { payload = { message: text }; }
-  return { ok: response.ok && providerSucceeded(payload), payload };
+  return { ok: response.ok && providerSucceeded(payload), payload, status: response.status };
 }
 
 async function supabaseRequest(path, options = {}) {
@@ -109,10 +138,10 @@ async function verifyCapturedLead(leadId, mobile) {
 
 export default async (request) => {
   if (request.method !== "POST") return json(405, { error: "Method not allowed." });
-  const authKey = env("MSG91_AUTH_KEY"); const templateId = env("MSG91_TEMPLATE_ID");
-  if (!authKey || !templateId) return json(503, { error: "OTP service is not configured." });
   let body; try { body = await request.json(); } catch { return json(400, { error: "Invalid request." }); }
   const action = String(body?.action || "").toLowerCase(); if (!["send", "verify", "resend"].includes(action)) return json(400, { error: "Invalid OTP action." });
+  const authKey = env("MSG91_AUTH_KEY"); const templateId = env("MSG91_TEMPLATE_ID");
+  if (!authKey || (action === "send" && !templateId)) return json(503, { error: "OTP service is not configured." });
   const mobile = normalizeIndianMobile(body?.mobile); if (!mobile) return json(400, { error: "Enter a valid 10-digit Indian mobile number." });
   const otp = String(body?.otp || "").trim(); if (action === "verify" && !/^\d{4,8}$/.test(otp)) return json(400, { error: "Enter the OTP sent to your mobile number." });
   const leadId = String(body?.leadId || "").trim();
@@ -123,11 +152,25 @@ export default async (request) => {
     const result = await callMsg91(action, mobile, otp, authKey, templateId);
     if (!result.ok) {
       const fallback = action === "verify" ? "Could not verify the OTP. Please try again." : action === "resend" ? "Could not resend the OTP. Please try again." : "Could not send the OTP. Please try again.";
-      return json(502, { error: providerError(result.payload, fallback) });
+      console.error("MSG91 OTP request rejected", { action, status: result.status, response: providerText(result.payload).slice(0, 300) });
+      return json(providerErrorStatus(result.payload, result.status), { error: providerError(result.payload, fallback) });
     }
-    const captured = action === "verify" ? await verifyCapturedLead(leadId, mobile) : null;
-    return json(200, { success: true, verified: action === "verify", leadId: captured?.lead?.id, crmStatus: captured?.crmStatus });
+    let captured = null;
+    let storageStatus = "not_applicable";
+    if (action === "verify") {
+      try {
+        captured = await verifyCapturedLead(leadId, mobile);
+        storageStatus = "saved";
+      } catch (error) {
+        // MSG91 has already accepted the one-time code. Do not make the visitor
+        // repeat a consumed OTP because a secondary lead/CRM write failed.
+        storageStatus = "failed";
+        console.error("OTP verified but lead persistence failed", { leadId, error: String(error?.message || error).slice(0, 500) });
+      }
+    }
+    return json(200, { success: true, verified: action === "verify", leadId: captured?.lead?.id || leadId || undefined, crmStatus: captured?.crmStatus, storageStatus });
   } catch (error) {
+    console.error("OTP function failed", { error: String(error?.message || error).slice(0, 500) });
     return json(502, { error: error?.message || "The OTP service is temporarily unavailable. Please try again." });
   }
 };
