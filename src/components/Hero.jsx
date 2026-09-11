@@ -57,16 +57,18 @@ export default function Hero() {
     const video = vid.current;
     if (!video) return undefined;
 
-    // Mobile browsers only guarantee autoplay when muted is present from the
-    // first paint. Audio remains available through the explicit sound button.
+    // Mobile browsers (iOS Safari) only guarantee autoplay when muted and inline attributes are set on first paint.
+    video.setAttribute("playsinline", "true");
+    video.setAttribute("webkit-playsinline", "true");
     video.defaultMuted = true;
     video.muted = true;
     setSoundOn(false);
+
     const retryPlayback = () => {
+      if (!video) return;
       video.muted = true;
       video.play().catch(() => {
-        // Keep the poster visible when autoplay is blocked. A later user
-        // interaction can still start playback through the sound control.
+        // Keep poster visible if blocked by iOS power saver
       });
     };
 
@@ -76,11 +78,21 @@ export default function Hero() {
       }, 400);
     });
 
+    const onUserTouch = () => {
+      if (video && video.paused) {
+        retryPlayback();
+      }
+    };
+
     video.addEventListener("canplay", retryPlayback, { once: true });
+    window.addEventListener("touchstart", onUserTouch, { once: true, passive: true });
+    window.addEventListener("pointerdown", onUserTouch, { once: true, passive: true });
 
     return () => {
       window.clearTimeout(retryTimer.current);
       video.removeEventListener("canplay", retryPlayback);
+      window.removeEventListener("touchstart", onUserTouch);
+      window.removeEventListener("pointerdown", onUserTouch);
     };
   }, []);
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Reveal, RImg } from "./shared";
 import { PROJECTS } from "../data/projects";
@@ -221,6 +221,24 @@ export function ProjectsSection() {
     setCity(selectedCity);
     setPage(0);
   };
+  const touchStartPos = useRef({ x: 0, y: 0 });
+  const handleTouchStart = (e) => {
+    setPaused(true);
+    if (e.touches && e.touches[0]) {
+      touchStartPos.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+  };
+  const handleTouchEnd = (e) => {
+    setPaused(false);
+    if (e.changedTouches && e.changedTouches[0]) {
+      const deltaX = e.changedTouches[0].clientX - touchStartPos.current.x;
+      const deltaY = e.changedTouches[0].clientY - touchStartPos.current.y;
+      if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY)) {
+        changePage(deltaX < 0 ? 1 : -1);
+      }
+    }
+  };
+
   useEffect(() => {
     if (paused || moving || pageCount < 2) return undefined;
     const timer = window.setTimeout(() => changePage(1), 3200);
@@ -259,7 +277,9 @@ export function ProjectsSection() {
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
           onFocusCapture={() => setPaused(true)}
-          onBlurCapture={() => setPaused(false)}>
+          onBlurCapture={() => setPaused(false)}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}>
           <div className={`pgrid projects__page ${moving ? "projects__page--out" : "projects__page--in"}`}
             key={`${city}-${currentPage}`} aria-live="polite">
             {shown.map((p, i) =>

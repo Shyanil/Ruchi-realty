@@ -19,6 +19,7 @@ export default function SEO({ title, description, canonical, image, type = "webs
     const imageUrl = new URL(image || "/assets/logo-h.webp", SITE_URL).toString();
     document.title = title;
     upsertMeta('meta[name="description"]', { name: "description", content: description });
+    upsertMeta('meta[name="theme-color"]', { name: "theme-color", content: "#231f20" });
     [["og:title", title], ["og:description", description], ["og:url", url], ["og:image", imageUrl], ["og:type", type], ["twitter:card", "summary_large_image"], ["twitter:title", title], ["twitter:description", description], ["twitter:image", imageUrl]].forEach(([property, content]) => {
       const attr = property.startsWith("twitter:") ? "name" : "property";
       upsertMeta(`meta[${attr}="${property}"]`, { [attr]: property, content });

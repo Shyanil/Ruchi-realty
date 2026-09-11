@@ -771,7 +771,13 @@ function SectionNav({ data, visible = false }) {
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
-        if (e.isIntersecting) setActive(e.target.id);
+        if (e.isIntersecting) {
+          setActive(e.target.id);
+          const btn = document.querySelector(`.osc-sticky-nav__btn[data-section-id="${e.target.id}"]`);
+          if (btn && btn.scrollIntoView) {
+            btn.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+          }
+        }
       });
     }, { threshold: 0.3, rootMargin: "-80px 0px 0px 0px" });
 
@@ -798,6 +804,7 @@ function SectionNav({ data, visible = false }) {
           <button
             key={id}
             type="button"
+            data-section-id={id}
             tabIndex={visible ? 0 : -1}
             className={`osc-sticky-nav__btn ${active === id ? "is-active" : ""}`}
             onClick={() => scrollTo(id)}
