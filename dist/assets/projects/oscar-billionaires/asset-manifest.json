@@ -1,0 +1,13 @@
+{
+  "project": "Oscar Billionaires",
+  "slug": "oscar-billionaires",
+  "format": "High-resolution JPG brochure visuals supplied in the Billionaire ZIP were converted to optimized WebP for the project page.",
+  "assets": [
+    { "original": "Billionaire/Oscar Ruchi 32 PAGES DIGITAL PRINT 4.jpg", "output": "/assets/projects/oscar-billionaires/entrance-plaza.webp", "usage": "gallery" },
+    { "original": "Billionaire/Oscar Ruchi 32 PAGES DIGITAL PRINT 4.jpg", "output": "/assets/projects/oscar-billionaires/hero-entrance.webp", "usage": "desktop hero crop" },
+    { "original": "Billionaire/Oscar Ruchi 32 PAGES DIGITAL PRINT 4.jpg", "output": "/assets/projects/oscar-billionaires/hero-entrance-mobile.webp", "usage": "mobile hero crop" },
+    { "original": "Billionaire/Oscar Ruchi 32 PAGES DIGITAL 5.jpg", "output": "/assets/projects/oscar-billionaires/roundabout-temple.webp", "usage": "gallery" },
+    { "original": "Billionaire/Oscar Ruchi 32 PAGES DIGITAL 6.jpg", "output": "/assets/projects/oscar-billionaires/central-garden-roundabout.webp", "usage": "gallery" },
+    { "original": "Billionaire/Oscar Ruchi 32 PAGES DIGITAL 9.jpg", "output": "/assets/projects/oscar-billionaires/garden-front.webp", "usage": "overview and gallery" }
+  ]
+}

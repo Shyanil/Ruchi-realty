@@ -9,7 +9,7 @@ const KOLKATA_PROJECTS = [
 
 const KOLKATA_RESIDENTIAL = KOLKATA_PROJECTS.filter((url) => url !== "/projects/active-business-park");
 const INDORE_PROJECTS = [
-  "/projects/oscar-indore",
+  "/projects/oscar-billionaires",
   "/projects/oscar-pride-indore",
   "/projects/saatvik-vihar-indore",
   "/projects/ruchi-lifescapes-indore-project",
@@ -310,4 +310,3 @@ export const LOCAL_SEO_PAGES = {
 };
 
 export const LOCAL_SEO_PAGE_LIST = Object.values(LOCAL_SEO_PAGES);
-

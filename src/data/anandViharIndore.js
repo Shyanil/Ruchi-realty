@@ -2,7 +2,7 @@ export const ANAND_VIHAR_INDORE_FALLBACK = {
   heroTitle: "Anand Vihar",
   heroTagline: "Premium Plots in Indore",
   heroLogo: "/projects/anand-vihar-indore/project-logo.webp",
-  heroBg: "/projects/anand-vihar-indore/hero.webp",
+  heroBg: "/projects/anand-vihar-indore/hero-project-pool.webp",
   overviewParagraphs: [
     "Enriched with several years of real estate experience, we have deep insights into this sector and understand the pulse of the masses and classes, their requirements and expectations about affordable dwelling places with world-class amenities. We introduce Premium plots in Indore.",
     "We believe in providing complete Living Solutions. And we focus on quality, ambiance and affordability. We don’t over-promise and under-provide. We provide what we promise. Realistic offer is the hallmark of Anand Vihar.",
@@ -25,7 +25,7 @@ export const ANAND_VIHAR_INDORE_FALLBACK = {
   ],
   specifications: [
     { title: "Project Details", desc: "Morod, Near Country Club, Khandwa Road, Indore - 452020. Registration ID: P-IND-17-1342. Phone: +91 89292 25275. Email: info@anandviharindore.com" },
-    { title: "__hero_mobile_url__", desc: "/projects/anand-vihar-indore/hero-mobile.webp" },
+    { title: "__hero_mobile_url__", desc: "/projects/anand-vihar-indore/hero-mobile-project-pool.webp" },
     { title: "__video_section__", desc: JSON.stringify({ enabled: false, videoUrl: "", thumbnailUrl: "" }) },
   ],
   locationImage: "/projects/anand-vihar-indore/location-map.webp",
@@ -41,10 +41,18 @@ export const ANAND_VIHAR_INDORE_FALLBACK = {
     { name: "Hotels & Restaurants", dist: "Approx 3 Minutes" },
   ],
   walkthroughVideoId: "",
-  galleryImages: Array.from({ length: 6 }, (_, index) => ({
-    src: `/projects/anand-vihar-indore/gallery-${index + 1}.webp`,
-    alt: `Anand Vihar Indore gallery image ${index + 1}`,
-  })),
+  galleryImages: [
+    ...Array.from({ length: 6 }, (_, index) => ({
+      src: `/projects/anand-vihar-indore/gallery-${index + 1}.webp`,
+      alt: `Anand Vihar Indore gallery image ${index + 1}`,
+    })),
+    { src: "/projects/anand-vihar-indore/hero-project-pool.webp", alt: "Swimming pool and clubhouse at Anand Vihar Indore" },
+    { src: "/projects/anand-vihar-indore/anand-vihar-entrance.webp", alt: "Main entrance gate of Anand Vihar Indore" },
+    { src: "/projects/anand-vihar-indore/anand-vihar-swimming-pool.webp", alt: "Swimming pool at Anand Vihar Indore" },
+    { src: "/projects/anand-vihar-indore/anand-vihar-clubhouse.webp", alt: "Anand Vihar clubhouse" },
+    { src: "/projects/anand-vihar-indore/anand-vihar-play-area.webp", alt: "Children's play area at Anand Vihar Indore" },
+    { src: "/projects/anand-vihar-indore/anand-vihar-landscaped-garden.webp", alt: "Landscaped garden and gazebo at Anand Vihar Indore" },
+  ],
   brochureUrl: "",
   metaTitle: "Anand Vihar Indore - Ruchi Realty",
   metaDescription: "Anand Vihar offers premium residential plots in Indore with world-class amenities, realistic offerings, quality living solutions, and a convenient location near Country Club, Khandwa Road.",

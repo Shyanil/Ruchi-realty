@@ -59,7 +59,7 @@ const PROJECTS = [
   // --- Ongoing flagship + Ready to Move marquee (lead the default "All" view) ---
   { name: "One Victoria", city: "Action Area 1, New Town, Kolkata", type: "Residential", status: "Ongoing", url: "/projects/one-victoria-new-town", img: "/projects/one-victoria-new-town/hero.webp" },
   { name: "One Prime Residential", city: "New Town, Kolkata", type: "Residential", status: "Ongoing", url: "/projects/one-prime-residential", img: "/projects/one-prime-residential/card.webp" },
-  { name: "Oscar Billionaires", city: "Indore", type: "Township", status: "Ready to Move", url: "https://ruchirealty.com/oscar-indore/", img: "assets/projects/oscar-billionaires.webp" },
+  { name: "Oscar Billionaires", city: "Indore", type: "Township", status: "Ready to Move", url: "/projects/oscar-billionaires", img: "assets/projects/oscar-billionaires.webp" },
   { name: "Active Acres", city: "Kolkata", type: "Residential", status: "Ready to Move", url: "https://ruchirealty.com/active-acres/", img: "assets/projects/active-acres.webp" },
 
   // --- Ready to Move · Kolkata ---
@@ -84,7 +84,7 @@ const PROJECTS = [
 
   // --- Upcoming ---
   { name: "Oscar Palace", city: "Indore", type: "Township", status: "Upcoming", url: "https://ruchirealty.com/oscar-palace/", img: "assets/projects/oscar-palace.webp" },
-  { name: "Ruchi Enclave", city: "Indore", type: "Township", status: "Upcoming", url: "/projects/ruchi-enclave-indore", img: "/projects/ruchi-enclave-indore/hero.webp" },
+  { name: "Ruchi Enclave", city: "Jhalariya Road, Indore", type: "Township", status: "Ready to Move", url: "/projects/ruchi-enclave-indore", img: "/projects/ruchi-enclave-indore/hero-entry-gate.webp" },
   { name: "Ruchi Hills", city: "Indore", type: "Residential", status: "Upcoming", img: "assets/projects/ruchi-hills.webp" },
 ];
 

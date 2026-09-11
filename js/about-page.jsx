@@ -57,7 +57,7 @@ const ABOUT_PROJECTS = {
     { name: "Oscar Palace", desc: "Royal-themed project designed like a majestic kingdom palace.", status: "Ongoing", img: "assets/projects/oscar-palace.webp" },
     { name: "Oscar Sanctuary", desc: "Oscar Sanctuary is a residential project in Indore. Full project details can be updated from the admin panel.", status: "Ongoing", img: "/projects/oscar-sanctuary-indore/hero.webp", url: "/projects/oscar-sanctuary-indore" },
     { name: "Ruchi Lifescapes", desc: "Luxury plots spanning 73 acres with 700 plots.", status: "Completed", img: "/projects/ruchi-lifescapes-indore-project/hero.webp", url: "/projects/ruchi-lifescapes-indore-project" },
-    { name: "Ruchi Enclave", desc: "Ruchi Enclave is a residential project in Indore. Full project details can be updated from the admin panel.", status: "Upcoming", img: "/projects/ruchi-enclave-indore/hero.webp", url: "/projects/ruchi-enclave-indore" },
+    { name: "Ruchi Enclave", desc: "A completed residential plotting project on Jhalariya Road, near Bypass Road, Indore.", status: "Completed", img: "/projects/ruchi-enclave-indore/hero-entry-gate.webp", url: "/projects/ruchi-enclave-indore" },
     { name: "Saatvik Vihar", desc: "Luxury plots across 31 acres with 698 plots.", status: "Completed", img: "/projects/saatvik-vihar-indore/hero.webp", url: "/projects/saatvik-vihar-indore" },
     { name: "Saatvik Green", desc: "Premium plotting project across 28 acres.", status: "Ongoing", img: "/projects/saatvikgreen-indore/hero.webp", url: "/projects/saatvikgreen-indore" },
     { name: "Anand Vihar", desc: "Premium plotting project with 900 plots.", status: "Completed", img: "/projects/anand-vihar-indore/hero.webp", url: "/projects/anand-vihar-indore" }

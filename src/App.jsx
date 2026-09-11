@@ -69,8 +69,10 @@ export default function App() {
       <WhatsAppChat />
       <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/oscar-indore" element={<Navigate to="/projects/oscar-indore" replace />} />
-      <Route path="/Oscar.html" element={<Navigate to="/projects/oscar-indore" replace />} />
+      <Route path="/oscar-indore" element={<Navigate to="/projects/oscar-billionaires" replace />} />
+      <Route path="/projects/oscar-indore" element={<Navigate to="/projects/oscar-billionaires" replace />} />
+      <Route path="/oscar-billionaires" element={<Navigate to="/projects/oscar-billionaires" replace />} />
+      <Route path="/Oscar.html" element={<Navigate to="/projects/oscar-billionaires" replace />} />
       <Route path="/active-business-park" element={<Navigate to="/projects/active-business-park" replace />} />
       <Route path="/ActiveBusinessPark.html" element={<Navigate to="/projects/active-business-park" replace />} />
       <Route path="/active-acres-angelica" element={<Navigate to="/projects/active-acres-angelica" replace />} />

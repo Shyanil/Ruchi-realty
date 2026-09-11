@@ -105,6 +105,7 @@
     if (key.includes("one rajarhat")) return "one-rajarhat";
     if (key.includes("one prime")) return "one-prime-residential";
     if (key.includes("one victoria") && place.includes("kolkata")) return "one-victoria-new-town";
+    if (key.includes("oscar") && key.includes("billion")) return "oscar-billionaires";
     if (key.includes("ruchi lifescapes") && place.includes("bhopal")) return "lifescapes-bhopal";
     if (key.includes("ruchi lifescapes") && place.includes("indore")) return "ruchi-lifescapes-indore-project";
     if (key.includes("anand vihar") && place.includes("indore")) return "anand-vihar-indore";
@@ -122,7 +123,7 @@
     const key = title.toLowerCase().trim();
     const place = location.toLowerCase().trim();
     if (key.includes("one victoria") && place.includes("kolkata")) return "/projects/one-victoria-new-town";
-    if (key.includes("oscar") && key.includes("billion")) return "/projects/oscar-indore";
+    if (key.includes("oscar") && key.includes("billion")) return "/projects/oscar-billionaires";
     if (key.includes("active greens") || key.includes("active green")) return "/projects/active-greens";
     if (key.includes("one rajarhat")) return "/projects/one-rajarhat";
     if (key.includes("one prime")) return "/projects/one-prime-residential";
@@ -719,6 +720,7 @@
     hero_mobile_url: sp.heroMobileUrl || "",
     hero_image_position: sp.heroImagePosition || "center center",
     hero_image_fit: sp.heroImageFit || "cover",
+    overview_image: sp.overviewImage || "",
     overview_paragraphs: Array.isArray(sp.overviewParagraphs) ? sp.overviewParagraphs : [],
     overview_highlights: Array.isArray(sp.overviewHighlights) ? sp.overviewHighlights : [],
     amenities: Array.isArray(sp.amenities) ? sp.amenities : [],

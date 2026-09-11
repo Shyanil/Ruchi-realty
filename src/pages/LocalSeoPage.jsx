@@ -18,7 +18,7 @@ const PROJECT_FACTS = {
   "/projects/one-rajarhat": { location: "Rajarhat, Kolkata", configuration: "1, 2, 3 & 4 BHK apartments" },
   "/projects/active-business-park": { location: "Kolkata", configuration: "Offices, retail & commercial spaces" },
   "/projects/active-greens": { location: "Kolkata", configuration: "2 & 3 BHK apartments" },
-  "/projects/oscar-indore": { location: "Indore", configuration: "Premium residential plots" },
+  "/projects/oscar-billionaires": { location: "Indore", configuration: "Premium residential plots" },
   "/projects/oscar-pride-indore": { location: "Indore", configuration: "Residential plots" },
   "/projects/saatvik-vihar-indore": { location: "Mangliya Sadak, Indore", configuration: "Residential plots" },
   "/projects/ruchi-lifescapes-indore-project": { location: "Jhalariya, Indore", configuration: "Villa plots" },

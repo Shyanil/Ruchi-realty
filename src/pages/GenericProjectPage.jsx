@@ -27,7 +27,7 @@ import { ONE_PRIME_RESIDENTIAL_FALLBACK } from "./OnePrimeResidentialPage";
 import { plainTextFromRichText } from "../utils/richText";
 
 const PROJECT_LEGACY_META = {
-  "oscar-indore": { city: "Indore", type: "Premium Plotted Development" },
+  "oscar-billionaires": { city: "Indore", type: "Premium Plotted Development" },
   "active-business-park": { city: "Kolkata", type: "Commercial" },
   "active-acres-angelica": { city: "Kolkata", type: "Residential" },
   "active-greens": { city: "Kolkata", type: "Residential" },
@@ -42,7 +42,7 @@ const ICONS = {
 };
 
 const FALLBACK_SUBPAGES = {
-  "oscar-indore": OSCAR_FALLBACK,
+  "oscar-billionaires": OSCAR_FALLBACK,
   "active-business-park": ACTIVE_BUSINESS_PARK_FALLBACK,
   "active-acres-angelica": ACTIVE_ACRES_ANGELICA_FALLBACK,
   "active-greens": ACTIVE_GREENS_FALLBACK,
@@ -398,7 +398,7 @@ const FALLBACK_SUBPAGES = {
     heroTitle: "Ruchi Lifescapes",
     heroTagline: "Discover luxury living at Ruchi Lifescapes Bhopal, offering residential options from 1000 to 4000 sqft. and ample amenities.",
     heroLogo: "/projects/lifescapes-bhopal/logo.webp",
-    heroBg: "/projects/lifescapes-bhopal/card.webp",
+    heroBg: "/projects/lifescapes-bhopal/hero-township-landscape.webp",
     overviewParagraphs: [
       "Discover the pinnacle of luxury living at Ruchi Lifescapes Bhopal, where every aspect of convenience and elegance converges seamlessly. Situated in the heart of Bhopal, Madhya Pradesh, this prestigious real estate project offers a lifestyle that surpasses all expectations.",
       "Spanning across one of the most sought-after areas in the city, Ruchi Lifescapes Bhopal presents a diverse range of living spaces, including row houses, apartments, and shops, with sizes ranging from 1000 to 4000 square feet. Whether you are seeking a cozy abode or a spacious dwelling, our project caters to all preferences.",
@@ -424,6 +424,7 @@ const FALLBACK_SUBPAGES = {
       { name: "Squash", icon: "tennis" }
     ],
     specifications: [
+      { title: "__hero_mobile_url__", desc: "/projects/lifescapes-bhopal/hero-mobile-row-houses.webp" },
       { title: "__floor_plans__", desc: "[{\"title\":\"Master Layout\",\"desc\":\"/projects/lifescapes-bhopal/floor-master.webp\"},{\"title\":\"2.5 BHK\",\"desc\":\"/projects/lifescapes-bhopal/floor-2-5-bhk.webp\"},{\"title\":\"3 BHK\",\"desc\":\"/projects/lifescapes-bhopal/floor-3-bhk.webp\"},{\"title\":\"Orchid Row House\",\"desc\":\"/projects/lifescapes-bhopal/floor-orchid-row-house.webp\"},{\"title\":\"Orchid Row House 2\",\"desc\":\"/projects/lifescapes-bhopal/floor-orchid-row-house-2.webp\"},{\"title\":\"Tulip Twin Bungalow\",\"desc\":\"/projects/lifescapes-bhopal/floor-tulip-twin-bungalow.webp\"},{\"title\":\"Villa\",\"desc\":\"/projects/lifescapes-bhopal/floor-villa.webp\"}]" },
       { title: "__video_section__", desc: "{\"enabled\":false,\"videoUrl\":\"\",\"thumbnailUrl\":\"\"}" }
     ],
@@ -443,7 +444,16 @@ const FALLBACK_SUBPAGES = {
       { src: "/projects/lifescapes-bhopal/gallery-3.webp", alt: "Ruchi Lifescapes Bhopal gallery image 3" },
       { src: "/projects/lifescapes-bhopal/gallery-4.webp", alt: "Ruchi Lifescapes Bhopal gallery image 4" },
       { src: "/projects/lifescapes-bhopal/gallery-5.webp", alt: "Ruchi Lifescapes Bhopal gallery image 5" },
-      { src: "/projects/lifescapes-bhopal/gallery-6.webp", alt: "Ruchi Lifescapes Bhopal gallery image 6" }
+      { src: "/projects/lifescapes-bhopal/gallery-6.webp", alt: "Ruchi Lifescapes Bhopal gallery image 6" },
+      { src: "/projects/lifescapes-bhopal/hero-township-landscape.webp", alt: "Landscaped central garden at Ruchi Lifescapes Bhopal", category: "Project photograph" },
+      { src: "/projects/lifescapes-bhopal/gallery-clubhouse.webp", alt: "Clubhouse building and landscaped surroundings at Ruchi Lifescapes Bhopal", category: "Project photograph" },
+      { src: "/projects/lifescapes-bhopal/gallery-apartment-tower.webp", alt: "Completed apartment tower at Ruchi Lifescapes Bhopal", category: "Project photograph" },
+      { src: "/projects/lifescapes-bhopal/gallery-temple.webp", alt: "Temple within Ruchi Lifescapes Bhopal", category: "Project photograph" },
+      { src: "/projects/lifescapes-bhopal/gallery-apartment-courtyard.webp", alt: "Landscaped apartment courtyard and play area at Ruchi Lifescapes Bhopal", category: "Project photograph" },
+      { src: "/projects/lifescapes-bhopal/gallery-playground-courtyard.webp", alt: "Children's playground within the apartment courtyard at Ruchi Lifescapes Bhopal", category: "Project photograph" },
+      { src: "/projects/lifescapes-bhopal/gallery-row-houses-avenue.webp", alt: "Tree-lined row house avenue at Ruchi Lifescapes Bhopal", category: "Project photograph" },
+      { src: "/projects/lifescapes-bhopal/gallery-row-houses-park.webp", alt: "Row houses overlooking a landscaped park at Ruchi Lifescapes Bhopal", category: "Project photograph" },
+      { src: "/projects/lifescapes-bhopal/gallery-apartment-playground.webp", alt: "Apartment blocks surrounding a children's play area at Ruchi Lifescapes Bhopal", category: "Project photograph" }
     ],
     brochureUrl: "/projects/lifescapes-bhopal/brochure.pdf",
     metaTitle: "Ruchi Lifescapes Bhopal - Ruchi Realty",
@@ -601,14 +611,20 @@ function normalizeProjectSubpage(project, sp, fallbackSp = null) {
   const fallbackCustom = extractCustomSpecs(fallbackSp?.specifications || []);
   const isAngelica = project?.slug === "active-acres-angelica" || fallbackSp?.heroTitle === "Angelica - Active Acres";
   const isOscarFort = project?.slug === "oscar-fort-indore" || fallbackSp?.heroTitle === "Oscar Fort";
+  const isOscarBillionaires = project?.slug === "oscar-billionaires" || fallbackSp?.heroTitle === "Oscar Billionaires";
   const isOscarPalace = project?.slug === "oscar-palace" || fallbackSp?.heroTitle === "Oscar Palace";
+  const isOscarSanctuary = project?.slug === "oscar-sanctuary-indore" || fallbackSp?.heroTitle === "Oscar Sanctuary";
   const isSaatvikGreen = project?.slug === "saatvikgreen-indore" || fallbackSp?.heroTitle === "Saatvik Green";
-  const title = (isAngelica ? fallbackSp?.heroTitle : "") || sp?.heroTitle || project?.title || project?.name || "Project";
+  const isAnandVihar = project?.slug === "anand-vihar-indore" || fallbackSp?.heroTitle === "Anand Vihar";
+  const isRuchiEnclave = project?.slug === "ruchi-enclave-indore" || fallbackSp?.heroTitle === "Ruchi Enclave";
+  const isLifescapesBhopal = project?.slug === "lifescapes-bhopal";
+  const title = (isAngelica || isOscarBillionaires ? fallbackSp?.heroTitle : "") || sp?.heroTitle || project?.title || project?.name || "Project";
   const description = plainTextFromRichText(project?.description) || "Explore this Ruchi Realty project with thoughtfully planned spaces, dependable execution, and a location selected for everyday convenience.";
-  const videoSection = (isOscarFort ? fallbackCustom.videoSection || fallbackSp?.videoSection : custom.videoSection || sp?.videoSection || fallbackCustom.videoSection || fallbackSp?.videoSection) || {};
+  const useFallbackVideoSection = isOscarFort || isOscarPalace;
+  const videoSection = (useFallbackVideoSection ? fallbackCustom.videoSection || fallbackSp?.videoSection : custom.videoSection || sp?.videoSection || fallbackCustom.videoSection || fallbackSp?.videoSection) || {};
   const legacyVideoUrl = (videoSection.videoUrl || "").trim() || (sp?.walkthroughVideoId || "").trim() || (fallbackSp?.walkthroughVideoId || "").trim();
   const fallbackVideoItems = Array.isArray(fallbackSp?.videos) && fallbackSp.videos.length ? fallbackSp.videos : [];
-  const videoItems = isOscarFort ? fallbackVideoItems.length ? fallbackVideoItems : legacyVideoUrl ? [{ ...videoSection, videoUrl: legacyVideoUrl }] : [] : Array.isArray(sp?.videos) && sp.videos.length ? sp.videos : fallbackVideoItems.length ? fallbackVideoItems : legacyVideoUrl ? [{ ...videoSection, videoUrl: legacyVideoUrl }] : [];
+  const videoItems = useFallbackVideoSection ? fallbackVideoItems.length ? fallbackVideoItems : legacyVideoUrl ? [{ ...videoSection, videoUrl: legacyVideoUrl }] : [] : Array.isArray(sp?.videos) && sp.videos.length ? sp.videos : fallbackVideoItems.length ? fallbackVideoItems : legacyVideoUrl ? [{ ...videoSection, videoUrl: legacyVideoUrl }] : [];
   const videos = videoItems
     .filter((item) => item?.videoUrl || item?.url)
     .map((item, index) => ({ title: item.title || (isAngelica ? "Testimonials" : `Project video ${index + 1}`), videoUrl: videoEmbedUrl(item.videoUrl || item.url), thumbnailUrl: assetUrl(item.thumbnailUrl || item.poster || ""), thumbnailFallbackUrl: assetUrl(fallbackVideoItems[index]?.thumbnailUrl || fallbackVideoItems[index]?.poster || "") }));
@@ -623,7 +639,7 @@ function normalizeProjectSubpage(project, sp, fallbackSp = null) {
   const largeImageSource = (img) => img?.largeSrc || img?.large_src || img?.lightboxSrc || img?.lightbox_src || img?.fullSrc || img?.full_src || img?.large_url || img?.full_url || "";
   const normalizeImages = (items, fallbackItems = []) => clean(items, (img) => imageSource(img))
     .map((img, index) => ({ ...img, alt: img.alt || fallbackItems[index]?.alt || "", category: img.category || fallbackItems[index]?.category || "", src: assetUrl(imageSource(img)), largeSrc: assetUrl(largeImageSource(img) || largeImageSource(fallbackItems[index]) || ""), fallbackSrc: assetUrl(imageSource(fallbackItems[index])) }));
-  const remoteGalleryImages = normalizeImages(sp?.galleryImages || [], fallbackSp?.galleryImages || []);
+  const remoteGalleryImages = isOscarBillionaires ? [] : normalizeImages(sp?.galleryImages || [], fallbackSp?.galleryImages || []);
   const fallbackGalleryImages = normalizeImages(fallbackSp?.galleryImages || []);
   const rawGalleryImages = [...remoteGalleryImages, ...fallbackGalleryImages].filter((img, index, items) => items.findIndex((candidate) => candidate.src === img.src || (candidate.alt && candidate.alt === img.alt)) === index);
   const isConstructionImage = (img) => /construction|progress|update/i.test(String(img?.category || ""));
@@ -642,22 +658,22 @@ function normalizeProjectSubpage(project, sp, fallbackSp = null) {
     type,
     slug: project?.slug || (isAngelica ? "active-acres-angelica" : ""),
     location,
-    tag: sp?.heroTagline || project?.tag || description,
+    tag: (isOscarBillionaires ? fallbackSp?.heroTagline : "") || sp?.heroTagline || project?.tag || description,
     heroLogo: project?.slug === "ruchi-lifescapes-indore-project" ? "/projects/ruchi-lifescapes-indore-project/logo.webp" : assetUrl((isAngelica ? fallbackSp?.heroLogo : "") || sp?.heroLogo || ""),
-    heroBg: assetUrl((isAngelica || isOscarFort ? fallbackSp?.heroBg : "") || sp?.heroBg || project?.image_url || project?.img || "assets/projects/oscar-billionaires.webp"),
+    heroBg: assetUrl((isAngelica || isOscarFort || isOscarPalace || isOscarSanctuary || isOscarBillionaires || isSaatvikGreen || isAnandVihar || isRuchiEnclave || isLifescapesBhopal ? fallbackSp?.heroBg : "") || sp?.heroBg || project?.image_url || project?.img || "assets/projects/oscar-billionaires.webp"),
     heroFallbackLogo: assetUrl(fallbackSp?.heroLogo || ""),
     heroFallbackBg: assetUrl(fallbackSp?.heroBg || project?.img || "assets/projects/oscar-billionaires.webp"),
-    heroMobileUrl: assetUrl((isAngelica ? fallbackSp?.heroMobileUrl : "") || custom.heroMobileUrl || sp?.heroMobileUrl || ""),
+    heroMobileUrl: assetUrl((isAngelica || isOscarPalace || isOscarSanctuary || isOscarBillionaires || isSaatvikGreen || isAnandVihar || isRuchiEnclave || isLifescapesBhopal ? fallbackCustom.heroMobileUrl || fallbackSp?.heroMobileUrl : "") || custom.heroMobileUrl || sp?.heroMobileUrl || ""),
     heroImagePosition: sp?.heroImagePosition || "center center",
     heroImageFit: ["cover", "contain"].includes(sp?.heroImageFit) ? sp.heroImageFit : "cover",
-    heroMedia: custom.heroMedia,
+    heroMedia: isOscarPalace ? null : custom.heroMedia,
     status,
-    overviewImage: assetUrl((isOscarPalace ? fallbackSp?.overviewImage : "") || sp?.overviewImage || fallbackSp?.overviewImage || ""),
+    overviewImage: assetUrl((isOscarPalace || isOscarBillionaires ? fallbackSp?.overviewImage : "") || sp?.overviewImage || fallbackSp?.overviewImage || ""),
     overviewParagraphs: clean(sp?.overviewParagraphs, (item) => typeof item === "string" && item.trim()),
     overviewHighlights: clean(sp?.overviewHighlights, (item) => item?.label || item?.desc).slice(0, 4),
     amenities: clean(sp?.amenities, (item) => item?.name),
     specifications: clean(custom.specifications, (item) => item?.title && (item?.desc || item?.details || item?.value)),
-    specificationImage: assetUrl(sp?.specificationImage || ""),
+    specificationImage: assetUrl(isOscarBillionaires ? "" : sp?.specificationImage || ""),
     specificationFallbackImage: assetUrl(fallbackSp?.specificationImage || ""),
     floorPlans,
     videos,
@@ -681,9 +697,9 @@ function normalizeProjectSubpage(project, sp, fallbackSp = null) {
     faqs,
     relatedProjectSlugs: clean(sp?.relatedProjectSlugs, (item) => typeof item === "string" && item.trim()),
     ctaLabels: { brochure: sp?.ctaLabels?.brochure || "Download Brochure", visit: sp?.ctaLabels?.visit || "Schedule a Site Visit" },
-    ogImage: assetUrl(sp?.ogImage || sp?.heroBg || project?.image_url || ""),
-    metaTitle: sp?.metaTitle || `${title} | Ruchi Realty`,
-    metaDescription: sp?.metaDescription || description,
+    ogImage: assetUrl((isOscarBillionaires ? fallbackSp?.heroBg : "") || sp?.ogImage || sp?.heroBg || project?.image_url || ""),
+    metaTitle: (isOscarBillionaires ? fallbackSp?.metaTitle : "") || sp?.metaTitle || `${title} | Ruchi Realty`,
+    metaDescription: (isOscarBillionaires ? fallbackSp?.metaDescription : "") || sp?.metaDescription || description,
   };
 }
 

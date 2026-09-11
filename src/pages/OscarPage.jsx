@@ -6,6 +6,7 @@ import { Reveal } from "../components/shared";
 import BrochureLeadPopup from "../components/BrochureLeadPopup";
 
 const BASE = "assets/projects/oscar";
+const PHOTO_BASE = "assets/projects/oscar-billionaires";
 
 const SECTIONS = [
   { id: "overview", label: "Overview" },
@@ -48,21 +49,19 @@ const DESTINATIONS = [
 ];
 
 const GALLERY_IMAGES = [
-  { src: `${BASE}/tennis-court.webp`, alt: "Tennis Court at Oscar Indore" },
-  { src: `${BASE}/boundary-wall.webp`, alt: "11 Feet Boundary Wall at Oscar Indore" },
-  { src: `${BASE}/accupressure-track.webp`, alt: "Accupressure Track at Oscar Indore" },
-  { src: `${BASE}/central-gazebo.webp`, alt: "Central Gazebo at Oscar Indore" },
-  { src: `${BASE}/garden-gazebo.webp`, alt: "Garden Gazebo at Oscar Indore" },
-  { src: `${BASE}/roundabout.webp`, alt: "Roundabout at Oscar Indore" },
-  { src: `${BASE}/street-view.webp`, alt: "Street View of Oscar Indore" },
-  { src: `${BASE}/temple.webp`, alt: "Temple at Oscar Indore" },
+  { src: `${PHOTO_BASE}/entrance-plaza.webp`, alt: "Grand entrance plaza at Oscar Billionaires Indore" },
+  { src: `${PHOTO_BASE}/roundabout-temple.webp`, alt: "Entrance boulevard roundabout and temple at Oscar Billionaires Indore" },
+  { src: `${PHOTO_BASE}/central-garden-roundabout.webp`, alt: "Central garden roundabout at Oscar Billionaires Indore" },
+  { src: `${PHOTO_BASE}/garden-front.webp`, alt: "Garden-front view at Oscar Billionaires Indore" },
 ];
 
 export const OSCAR_FALLBACK = {
-  heroTitle: "Oscar",
-  heroTagline: "A Smart Upgrade To Premium Living",
+  heroTitle: "Oscar Billionaires",
+  heroTagline: "The Billionaire's Destination",
   heroLogo: `${BASE}/logo.webp`,
-  heroBg: `${BASE}/hero.webp`,
+  heroBg: `${PHOTO_BASE}/hero-entrance.webp`,
+  heroMobileUrl: `${PHOTO_BASE}/hero-entrance-mobile.webp`,
+  overviewImage: `${PHOTO_BASE}/garden-front.webp`,
   overviewParagraphs: [
     "A Plotted development project, Oscar presents us with the first opportunity to share our definition of what a residential enclave should truly embody. A unique presentation of empirical lifestyle experience, architecturally the concept for the project reflects the traditional heritage living coupled with design influences that are current and appeals to the taste of modern generation.",
     "Conveniently located on the Indore ByPass it is for the city-dwellers looking for quietude. The project's relative sparsity, ample open spaces and oneness with nature are a huge draw for a quick retreat. Here, peace and privacy are as much a function of design as demand."
@@ -76,12 +75,12 @@ export const OSCAR_FALLBACK = {
   walkthroughVideoId: "HDft2VxWI9k",
   galleryImages: GALLERY_IMAGES,
   brochureUrl: `${BASE}/brochure.pdf`,
-  metaTitle: "Oscar | Premium Plotted Development in Indore | Ruchi Realty",
-  metaDescription: "Oscar is a premium plotted development at Bicholi Hapsi, Indore Bypass, with plots from 4,000 to 12,500 sq. ft., clubhouse amenities and planned urban infrastructure."
+  metaTitle: "Oscar Billionaires | Premium Plotted Development in Indore | Ruchi Realty",
+  metaDescription: "Oscar Billionaires is a premium plotted development at Bicholi Hapsi, Indore Bypass, with plots from 4,000 to 12,500 sq. ft., clubhouse amenities and planned urban infrastructure."
 };
 
 function HeroSection({ subpage, onBrochureClick }) {
-  return <ProjectSplitHero subpage={subpage} title="Oscar" location="Bicholi Hapsi, Indore Bypass" type="Premium Plotted Development" slug="oscar-indore" onBrochure={onBrochureClick} />;
+  return <ProjectSplitHero subpage={subpage} title="Oscar Billionaires" location="Bicholi Hapsi, Indore Bypass" type="Premium Plotted Development" slug="oscar-billionaires" onBrochure={onBrochureClick} />;
 }
 
 function StickyNav() {
@@ -216,18 +215,13 @@ function SpecificationsSection({ subpage }) {
             Built to the highest<br /><span className="rr-grad">standards of quality</span>
           </h2>
         </Reveal>
-        <div className="osc-specs__layout">
-          <Reveal className="osc-specs__visual">
-            <img decoding="async" src={`${BASE}/specification.webp`} alt="Oscar Specifications" loading="lazy" className="osc-specs__img" />
-          </Reveal>
-          <div className="osc-specs__cards">
-            {(subpage.specifications || []).map((s, i) => (
-              <Reveal key={s.title || i} delay={i * 70} className="osc-spec-card">
-                <h4 className="osc-spec-card__title">{s.title}</h4>
-                <p className="osc-spec-card__desc">{s.desc}</p>
-              </Reveal>
-            ))}
-          </div>
+        <div className="osc-specs__cards">
+          {(subpage.specifications || []).map((s, i) => (
+            <Reveal key={s.title || i} delay={i * 70} className="osc-spec-card">
+              <h4 className="osc-spec-card__title">{s.title}</h4>
+              <p className="osc-spec-card__desc">{s.desc}</p>
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>
@@ -248,7 +242,7 @@ function LocationSection({ subpage }) {
         </Reveal>
         <div className="osc-location__grid">
           <Reveal className="osc-location__visual">
-            <img decoding="async" src={subpage.locationImage} alt="Oscar Location Map" loading="lazy" className="osc-location__img" />
+            <img decoding="async" src={subpage.locationImage} alt="Oscar Billionaires location map" loading="lazy" className="osc-location__img" />
           </Reveal>
           <Reveal delay={80} className="osc-location__info">
             <h3 className="osc-location__heading">Key Destinations</h3>
@@ -263,7 +257,7 @@ function LocationSection({ subpage }) {
             {subpage.locationMapEmbed && (
               <div className="osc-location__map-wrap">
                 <iframe
-                  title="Oscar Indore Location"
+                  title="Oscar Billionaires Indore location"
                   src={subpage.locationMapEmbed}
                   width="100%" height="240" style={{ border: 0 }}
                   allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"
@@ -288,7 +282,7 @@ function WalkthroughSection({ subpage }) {
           <div className="osc-walkthrough__header">
             <div className="eyebrow" style={{ color: "var(--rr-indigo)", marginBottom: "16px" }}>WALKTHROUGH</div>
             <h2 className="osc-section__title">
-              Oscar Walkthrough<br /><span className="rr-grad">experience the space</span>
+              Oscar Billionaires walkthrough<br /><span className="rr-grad">experience the space</span>
             </h2>
             <p className="osc-walkthrough__lead">
               Tailored to meet your expectations, walk around the exceptional living.
@@ -300,7 +294,7 @@ function WalkthroughSection({ subpage }) {
             {playing && videoId ? (
               <iframe
                 src={`https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1`}
-                title="Oscar Walkthrough Video"
+                title="Oscar Billionaires walkthrough video"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />
@@ -365,7 +359,7 @@ function GallerySection({ subpage }) {
           <div className="sec-head sec-head--dark" style={{ marginBottom: "40px" }}>
             <div>
               <div className="eyebrow" style={{ color: "var(--rr-lime)" }}>GALLERY</div>
-              <h2>A closer look<br /><span className="rr-grad">at the Oscar lifestyle</span></h2>
+              <h2>A closer look<br /><span className="rr-grad">at the Oscar Billionaires lifestyle</span></h2>
             </div>
           </div>
         </Reveal>
@@ -455,7 +449,7 @@ function GallerySection({ subpage }) {
 }
 
 function BrochurePopup({ subpage, onClose }) {
-  return <BrochureLeadPopup project="Oscar Billionaires - Indore" city="Indore" slug="oscar-indore" source="Oscar page brochure download" brochureUrl={subpage.brochureUrl} onClose={onClose} />;
+  return <BrochureLeadPopup project="Oscar Billionaires - Indore" city="Indore" slug="oscar-billionaires" source="Oscar page brochure download" brochureUrl={subpage.brochureUrl} onClose={onClose} />;
 }
 
 function CtaSection({ subpage, onBrochureClick }) {
@@ -495,9 +489,9 @@ export default function OscarPage() {
         const { data: projects } = await window.RuchiBackend.projects.getPublicProjects();
         if (!active) return;
         
-        // Find the project matching url "/oscar-indore" or title "Oscar Billionaires"
+        // Find the project by its canonical or legacy URL, or by title.
         const project = (projects || []).find(
-          (p) => p.url === "/oscar-indore" || p.title === "Oscar Billionaires"
+          (p) => p.url === "/projects/oscar-billionaires" || p.url === "/projects/oscar-indore" || p.url === "/oscar-indore" || p.title === "Oscar Billionaires"
         );
         
         if (project) {

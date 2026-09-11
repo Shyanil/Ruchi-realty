@@ -64,7 +64,7 @@ function projectFallbackImage(p) {
 const PROJECT_CARD_DETAILS = {
   "/projects/one-victoria-new-town": { configuration: "3 & 4 BHK luxury apartments" },
   "/projects/one-prime-residential": { configuration: "2 & 3 BHK apartments" },
-  "/projects/oscar-indore": { configuration: "Premium residential plots", sizeRange: "4,000–12,500 sq. ft." },
+  "/projects/oscar-billionaires": { configuration: "Premium residential plots", sizeRange: "4,000–12,500 sq. ft." },
   "/projects/one-rajarhat": { configuration: "1, 2, 3 & 4 BHK apartments", sizeRange: "900–3,000 sq. ft." },
   "/projects/active-business-park": { configuration: "Offices, retail & commercial spaces", sizeRange: "652–33,000 sq. ft." },
   "/projects/active-greens": { configuration: "2 & 3 BHK apartments", sizeRange: "1,065–1,555 sq. ft." },

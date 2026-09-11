@@ -1,16 +1,34 @@
 {
   "project": "Ruchi Enclave Indore",
   "slug": "ruchi-enclave-indore",
+  "format": "Supplied JPG renders converted to optimized WebP; official March 2026 brochure linked from Ruchi Realty.",
+  "source_image_total_mb": 65.59,
+  "output_image_total_mb": 2.25,
   "assets": [
     {
-      "original_url": "https://ruchirealty.com/wp-content/uploads/elementor/thumbs/ruchi_enclave_slider-rkz7cpnktz2oztaikuupxb48vcwtfdlndpzfsefibs.webp",
-      "downloaded_local_path": "public/projects/ruchi-enclave-indore/hero.webp",
-      "final_public_path": "/projects/ruchi-enclave-indore/hero.webp",
-      "usage_section": "temporary hero/card"
+      "source": "Ruchi Enclave/IMG-20231125-WA0003.jpg",
+      "output": "/projects/ruchi-enclave-indore/hero-entry-gate.webp",
+      "usage": "desktop hero and gallery"
+    },
+    {
+      "source": "Ruchi Enclave/Ruchi__3 - Photo_3 - Photo.jpg",
+      "output": "/projects/ruchi-enclave-indore/gallery-pocket-park-aerial.webp",
+      "usage": "overview and gallery"
+    },
+    {
+      "source": "Ruchi Enclave/Ruchi__3 - Photo_6 - Photo.jpg",
+      "output": "/projects/ruchi-enclave-indore/gallery-garden-pavilion.webp",
+      "usage": "gallery"
+    },
+    {
+      "source": "Ruchi Enclave/Ruchi__3 - Photo_6 - Photo.jpg",
+      "output": "/projects/ruchi-enclave-indore/hero-mobile-garden-pavilion.webp",
+      "usage": "mobile hero"
+    },
+    {
+      "source": "https://ruchirealty.com/wp-content/uploads/2026/03/Ruchi-Enclave-Indore.pdf",
+      "output": "https://ruchirealty.com/wp-content/uploads/2026/03/Ruchi-Enclave-Indore.pdf",
+      "usage": "official external brochure"
     }
-  ],
-  "verify": [
-    "Project business status requires confirmation; Upcoming is retained from the existing admin-compatible listing value.",
-    "Overview details, highlights, amenities, gallery, floor plans, location media, brochure and walkthrough are intentionally empty for later admin updates."
   ]
 }

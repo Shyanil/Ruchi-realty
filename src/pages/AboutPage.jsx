@@ -48,13 +48,13 @@ const ABOUT_PROJECTS = {
     { name: "One Victoria", desc: "An ongoing residential and retail development in Action Area 1, New Town, Kolkata.", status: "Ongoing", img: "/projects/one-victoria-new-town/hero.webp", url: "/projects/one-victoria-new-town" }
   ],
   Indore: [
-    { name: "Oscar The Billionaire's Destination", desc: "Ultra-premium luxury plotted development on 24 acres.", status: "Completed", img: "assets/projects/oscar-billionaires.webp", url: "/projects/oscar-indore" },
+    { name: "Oscar The Billionaire's Destination", desc: "Ultra-premium luxury plotted development on 24 acres.", status: "Completed", img: "assets/projects/oscar-billionaires.webp", url: "/projects/oscar-billionaires" },
     { name: "Oscar Pride", desc: "Ultra-premium luxury plots across 8 acres.", status: "Completed", img: "assets/projects/oscar-pride.webp", url: "/projects/oscar-pride-indore" },
     { name: "Oscar Fort", desc: "An ongoing residential development in Indore.", status: "Ongoing", img: "assets/projects/oscar-fort.webp", url: "/projects/oscar-fort-indore" },
     { name: "Oscar Palace", desc: "Royal-themed project designed like a majestic kingdom palace.", status: "Ongoing", img: "assets/projects/oscar-palace.webp", url: "/projects/oscar-palace" },
     { name: "Oscar Sanctuary", desc: "Oscar Sanctuary is a residential project in Indore. Full project details can be updated from the admin panel.", status: "Ongoing", img: "/projects/oscar-sanctuary-indore/hero.webp", url: "/projects/oscar-sanctuary-indore" },
     { name: "Ruchi Lifescapes", desc: "Luxury plots spanning 73 acres with 700 plots.", status: "Completed", img: "/projects/ruchi-lifescapes-indore-project/hero.webp", url: "/projects/ruchi-lifescapes-indore-project" },
-    { name: "Ruchi Enclave", desc: "A ready-to-move residential project in Indore.", status: "Completed", img: "/projects/ruchi-enclave-indore/hero.webp", url: "/projects/ruchi-enclave-indore" },
+    { name: "Ruchi Enclave", desc: "A completed residential plotting project on Jhalariya Road, near Bypass Road, Indore.", status: "Completed", img: "/projects/ruchi-enclave-indore/hero-entry-gate.webp", url: "/projects/ruchi-enclave-indore" },
     { name: "Saatvik Vihar", desc: "Luxury plots across 31 acres with 698 plots.", status: "Completed", img: "/projects/saatvik-vihar-indore/hero.webp", url: "/projects/saatvik-vihar-indore" },
     { name: "Saatvik Green", desc: "A ready-to-move plotted residential project in Indore.", status: "Completed", img: "/projects/saatvikgreen-indore/hero.webp", url: "/projects/saatvikgreen-indore" },
     { name: "Anand Vihar", desc: "Premium plotting project with 900 plots.", status: "Completed", img: "/projects/anand-vihar-indore/hero.webp", url: "/projects/anand-vihar-indore" }

@@ -1,16 +1,104 @@
 {
   "project": "Oscar Sanctuary",
   "slug": "oscar-sanctuary-indore",
+  "format": "Final-approved architectural JPG renders converted to optimized WebP. The source marked OLD and the In process by BTB folder were intentionally excluded.",
+  "source_total_mb": 13.35,
+  "output_total_mb": 9.91,
   "assets": [
     {
-      "original_url": "https://ruchirealty.com/wp-content/uploads/2026/03/os-1.webp",
-      "downloaded_local_path": "public/projects/oscar-sanctuary-indore/hero.webp",
-      "final_public_path": "/projects/oscar-sanctuary-indore/hero.webp",
-      "usage": "temporary hero/card"
+      "source": "Oscar Sanctuary/Final approved/AERIAL_VIEW_001.jpg",
+      "output": "/projects/oscar-sanctuary-indore/gallery-aerial-view-001.webp",
+      "usage": "overview and gallery"
+    },
+    {
+      "source": "Oscar Sanctuary/Final approved/CLUB_VIEW_003.jpg",
+      "output": "/projects/oscar-sanctuary-indore/gallery-club-view-003.webp",
+      "usage": "gallery"
+    },
+    {
+      "source": "Oscar Sanctuary/Final approved/POCKET_PARK_001_VIEW_002.jpg",
+      "output": "/projects/oscar-sanctuary-indore/gallery-pocket-park-001-view-002.webp",
+      "usage": "gallery"
+    },
+    {
+      "source": "Oscar Sanctuary/Final approved/POCKET_PARK_002_VIEW_001.jpg",
+      "output": "/projects/oscar-sanctuary-indore/gallery-pocket-park-002-view-001.webp",
+      "usage": "gallery"
+    },
+    {
+      "source": "Oscar Sanctuary/Final approved/POCKET_PARK_004_VIEW_005.jpg",
+      "output": "/projects/oscar-sanctuary-indore/gallery-pocket-park-004-view-005.webp",
+      "usage": "gallery"
+    },
+    {
+      "source": "Oscar Sanctuary/Final approved/POCKET_PARK_005_VIEW_001.jpg",
+      "output": "/projects/oscar-sanctuary-indore/gallery-pocket-park-005-view-001.webp",
+      "usage": "gallery"
+    },
+    {
+      "source": "Oscar Sanctuary/Final approved/POCKET_PARK_006_VIEW_001_UPDATE.jpg",
+      "output": "/projects/oscar-sanctuary-indore/gallery-pocket-park-006-view-001-update.webp",
+      "usage": "gallery"
+    },
+    {
+      "source": "Oscar Sanctuary/Final approved/POCKET_PARK_007_VIEW_004.jpg",
+      "output": "/projects/oscar-sanctuary-indore/gallery-pocket-park-007-view-004.webp",
+      "usage": "hero and gallery"
+    },
+    {
+      "source": "Oscar Sanctuary/Final approved/POCKET_PARK_008_VIEW_001.jpg",
+      "output": "/projects/oscar-sanctuary-indore/gallery-pocket-park-008-view-001.webp",
+      "usage": "gallery"
+    },
+    {
+      "source": "Oscar Sanctuary/Final approved/POCKET_PARK_009_VIEW_002.jpg",
+      "output": "/projects/oscar-sanctuary-indore/gallery-pocket-park-009-view-002.webp",
+      "usage": "gallery"
+    },
+    {
+      "source": "Oscar Sanctuary/Final approved/POCKET_PARK_010_VIEWS_003.jpg",
+      "output": "/projects/oscar-sanctuary-indore/gallery-pocket-park-010-views-003.webp",
+      "usage": "gallery"
+    },
+    {
+      "source": "Oscar Sanctuary/Final approved/POCKET_PARK_011_VIEW_004_UPDATE.jpg",
+      "output": "/projects/oscar-sanctuary-indore/gallery-pocket-park-011-view-004-update.webp",
+      "usage": "gallery"
+    },
+    {
+      "source": "Oscar Sanctuary/Final approved/POCKET_PARK_015_VIEW_003.jpg",
+      "output": "/projects/oscar-sanctuary-indore/gallery-pocket-park-015-view-003.webp",
+      "usage": "gallery"
+    },
+    {
+      "source": "Oscar Sanctuary/Final approved/POCKET_PARK_016_VIEW_001.jpg",
+      "output": "/projects/oscar-sanctuary-indore/gallery-pocket-park-016-view-001.webp",
+      "usage": "gallery"
+    },
+    {
+      "source": "Oscar Sanctuary/Final approved/POCKET_PARK_017_VIEW_001_UPDATE.jpg",
+      "output": "/projects/oscar-sanctuary-indore/gallery-pocket-park-017-view-001-update.webp",
+      "usage": "gallery"
+    },
+    {
+      "source": "Oscar Sanctuary/Final approved/POCKET_PARK_018_VIEW_001.jpg",
+      "output": "/projects/oscar-sanctuary-indore/gallery-pocket-park-018-view-001.webp",
+      "usage": "gallery"
+    },
+    {
+      "source": "Oscar Sanctuary/Final approved/POCKET_PARK_019_VIEW_001.jpg",
+      "output": "/projects/oscar-sanctuary-indore/gallery-pocket-park-019-view-001.webp",
+      "usage": "gallery"
+    },
+    {
+      "source": "Oscar Sanctuary/Final approved/POCKET_PARK_021&022_VIEW_001.jpg",
+      "output": "/projects/oscar-sanctuary-indore/gallery-pocket-park-021-and-022-view-001.webp",
+      "usage": "gallery"
+    },
+    {
+      "source": "Oscar Sanctuary/Final approved/POCKET_PARK_007_VIEW_004.jpg",
+      "output": "/projects/oscar-sanctuary-indore/hero-mobile-pocket-park.webp",
+      "usage": "mobile hero"
     }
-  ],
-  "verify": [
-    "Business status requires confirmation; Ongoing is retained from the existing primary project listing.",
-    "Overview, highlights, amenities, gallery, floor plans, location, brochure, and walkthrough remain intentionally empty."
   ]
 }

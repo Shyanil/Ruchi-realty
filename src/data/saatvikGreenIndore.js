@@ -2,7 +2,7 @@ export const SAATVIK_GREEN_INDORE_FALLBACK = {
   heroTitle: "Saatvik Green",
   heroTagline: "Saatvik Green Indore",
   heroLogo: "/projects/saatvikgreen-indore/project-logo.webp",
-  heroBg: "/projects/saatvikgreen-indore/hero.webp",
+  heroBg: "/projects/saatvikgreen-indore/hero-entrance-gate.webp",
   overviewParagraphs: [
     "Saatvik Green Indore is a residential development spanning over 28 acres, well located on the Indore-Dewas Bypass near Manglia Toll Plaza and close to educational, recreational, and shopping hubs.",
     "Saatvik Green, Indore is designed to provide necessary facilities for residents, including dedicated plots for schools, a shopping area, adequate water supply, electrification, and well-lit wide roads.",
@@ -17,7 +17,7 @@ export const SAATVIK_GREEN_INDORE_FALLBACK = {
   amenities: [],
   specifications: [
     { title: "Project Details", desc: "Rahukhedi, Mangliya, Indore-Dewas Bypass, near Manglia Toll Plaza, Indore. Registration IDs: P-SWR-24-4662 and P-SWR-24-4859. Phone: +91 89292 25275. Email: emarketing@ruchirealty.com" },
-    { title: "__hero_mobile_url__", desc: "/projects/saatvikgreen-indore/hero-mobile.webp" },
+    { title: "__hero_mobile_url__", desc: "/projects/saatvikgreen-indore/hero-mobile-entrance-gate.webp" },
     { title: "__company_logo_url__", desc: "/projects/saatvikgreen-indore/company-logo.webp" },
     { title: "__video_section__", desc: JSON.stringify({ enabled: false, videoUrl: "", thumbnailUrl: "" }) },
   ],
@@ -34,10 +34,21 @@ export const SAATVIK_GREEN_INDORE_FALLBACK = {
     { name: "Acropolis Institute & Bhawan Public School", dist: "Nearby" },
   ],
   walkthroughVideoId: "",
-  galleryImages: Array.from({ length: 11 }, (_, index) => ({
-    src: `/projects/saatvikgreen-indore/gallery-${index + 1}.webp`,
-    alt: `Saatvik Green Indore gallery image ${index + 1}`,
-  })),
+  galleryImages: [
+    ...Array.from({ length: 11 }, (_, index) => ({
+      src: `/projects/saatvikgreen-indore/gallery-${index + 1}.webp`,
+      alt: `Saatvik Green Indore gallery image ${index + 1}`,
+    })),
+    { src: "/projects/saatvikgreen-indore/hero-entrance-gate.webp", alt: "Completed entrance gate at Saatvik Green Indore", category: "Project photograph" },
+    { src: "/projects/saatvikgreen-indore/gallery-sports-turf-wide.webp", alt: "Outdoor sports turf at Saatvik Green Indore", category: "Project photograph" },
+    { src: "/projects/saatvikgreen-indore/gallery-sports-turf.webp", alt: "Full view of the outdoor sports turf at Saatvik Green Indore", category: "Project photograph" },
+    { src: "/projects/saatvikgreen-indore/gallery-childrens-play-area.webp", alt: "Children's play area at Saatvik Green Indore", category: "Project photograph" },
+    { src: "/projects/saatvikgreen-indore/gallery-landscaped-playground.webp", alt: "Landscaped playground and garden at Saatvik Green Indore", category: "Project photograph" },
+    { src: "/projects/saatvikgreen-indore/gallery-outdoor-chess-garden.webp", alt: "Outdoor chess area in the landscaped garden at Saatvik Green Indore", category: "Project photograph" },
+    { src: "/projects/saatvikgreen-indore/gallery-community-garden.webp", alt: "Community garden and children's play zone at Saatvik Green Indore", category: "Project photograph" },
+    { src: "/projects/saatvikgreen-indore/gallery-entrance-driveway.webp", alt: "Landscaped entrance driveway at Saatvik Green Indore", category: "Project photograph" },
+    { src: "/projects/saatvikgreen-indore/gallery-entrance-landscaping.webp", alt: "Palm-lined entrance landscaping at Saatvik Green Indore", category: "Project photograph" },
+  ],
   brochureUrl: "",
   metaTitle: "Saatvik Green Indore - Ruchi Realty",
   metaDescription: "Saatvik Green Indore is a 28+ acre residential development on the Indore-Dewas Bypass near Manglia Toll Plaza, offering residential and commercial plots from 850 to 3500 sqft with strong connectivity, wide roads, and proposed shopping, school, and medical facilities.",

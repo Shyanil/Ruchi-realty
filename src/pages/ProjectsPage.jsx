@@ -13,7 +13,7 @@ const PP_CITIES = ["All", "Kolkata", "Indore", "Bhopal"];
 const PP_STATUS = ["All", "Ready to Move", "Ongoing", "Upcoming"];
 const PP_TYPES = ["All", "Residential", "Commercial", "Plotted Development", "Apartments"];
 const PLOTTED_PROJECT_SLUGS = new Set([
-  "oscar-indore",
+  "oscar-billionaires",
   "oscar-pride-indore",
   "saatvik-vihar-indore",
   "ruchi-lifescapes-indore-project",

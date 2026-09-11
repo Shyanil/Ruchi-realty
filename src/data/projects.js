@@ -1,7 +1,7 @@
 export const PROJECTS = [
   { name: "One Victoria", city: "Action Area 1, New Town, Kolkata", type: "Residential", status: "Ongoing", url: "/projects/one-victoria-new-town", img: "/projects/one-victoria-new-town/hero.webp" },
   { name: "One Prime Residential", city: "New Town, Kolkata", type: "Residential", status: "Ready to Move", url: "/projects/one-prime-residential", img: "/projects/one-prime-residential/card.webp" },
-  { name: "Oscar Billionaires", city: "Indore", type: "Residential", status: "Ready to Move", url: "/projects/oscar-indore", img: "assets/projects/oscar-billionaires.webp" },
+  { name: "Oscar Billionaires", city: "Indore", type: "Residential", status: "Ready to Move", url: "/projects/oscar-billionaires", img: "assets/projects/oscar-billionaires.webp" },
   { name: "Active Acres", city: "Kolkata", type: "Residential", status: "Ready to Move", url: "/projects/active-acres-angelica", img: "assets/projects/active-acres.webp" },
   { name: "One Rajarhat", city: "Rajarhat - Kolkata", type: "Residential", status: "Ready to Move", url: "/projects/one-rajarhat", img: "assets/projects/one-rajarhat.webp" },
   { name: "Active Business Park", city: "Kolkata", type: "Commercial", status: "Ready to Move", url: "/projects/active-business-park", img: "assets/projects/active-business-park.webp" },
@@ -14,9 +14,9 @@ export const PROJECTS = [
   { name: "Ruchi Lifescapes", city: "Bhopal, Madhya Pradesh", type: "Residential", status: "Ready to Move", url: "/projects/lifescapes-bhopal", img: "/projects/lifescapes-bhopal/card.webp" },
   { name: "Active Acres Angelica", city: "Active Acres - Kolkata", type: "Residential", status: "Ongoing", url: "/projects/active-acres-angelica", img: "/assets/projects/active-acres-angelica/hero.webp" },
   { name: "Oscar Fort", city: "Indore", type: "Residential", status: "Ongoing", url: "/projects/oscar-fort-indore", img: "/projects/oscar-fort-indore/hero.webp" },
-  { name: "Oscar Sanctuary", city: "Indore", type: "Residential", status: "Ongoing", url: "/projects/oscar-sanctuary-indore", img: "/projects/oscar-sanctuary-indore/hero.webp" },
-  { name: "Oscar Palace", city: "Indore", type: "Residential", status: "Upcoming", url: "/projects/oscar-palace", img: "/projects/oscar-palace/hero.webp", mediaBadge: "Video" },
-  { name: "Ruchi Enclave", city: "Indore", type: "Residential", status: "Ready to Move", url: "/projects/ruchi-enclave-indore", img: "/projects/ruchi-enclave-indore/hero.webp" },
+  { name: "Oscar Sanctuary", city: "Indore", type: "Residential", status: "Ongoing", url: "/projects/oscar-sanctuary-indore", img: "/projects/oscar-sanctuary-indore/gallery-pocket-park-007-view-004.webp" },
+  { name: "Oscar Palace", city: "Indore", type: "Residential", status: "Upcoming", url: "/projects/oscar-palace", img: "/projects/oscar-palace/real-437a3939-hdr.webp" },
+  { name: "Ruchi Enclave", city: "Jhalariya Road, Indore", type: "Residential", status: "Ready to Move", url: "/projects/ruchi-enclave-indore", img: "/projects/ruchi-enclave-indore/hero-entry-gate.webp" },
   { name: "Ruchi Hills", city: "Indore", type: "Residential", status: "Upcoming", img: "assets/projects/ruchi-hills.webp" },
 ];
 

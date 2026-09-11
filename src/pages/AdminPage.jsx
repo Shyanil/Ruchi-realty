@@ -80,6 +80,7 @@ const emptyProject = {
   heroMobileUrl: "",
   heroImagePosition: "center center",
   heroImageFit: "cover",
+  overviewImage: "",
   companyLogoUrl: "",
   gmbGoogleIconUrl: "",
   gmbStarIconUrl: "",
@@ -209,7 +210,7 @@ async function deleteUploadedAsset(url) {
 function collectProjectAssetUrls(project = {}, subpage = null) {
   const urls = [project.image_url, project.img];
   if (!subpage) return urls.filter(Boolean);
-  urls.push(subpage.heroLogo, subpage.heroBg, subpage.locationImage, subpage.brochureUrl);
+  urls.push(subpage.heroLogo, subpage.heroBg, subpage.heroMobileUrl, subpage.overviewImage, subpage.specificationImage, subpage.locationImage, subpage.brochureUrl, subpage.ogImage);
   (subpage.galleryImages || []).forEach((item) => urls.push(item.src, item.largeSrc || item.lightboxSrc));
   (subpage.constructionUpdates || []).forEach((item) => urls.push(item.src));
   (subpage.specifications || []).forEach((item) => {
@@ -900,9 +901,10 @@ function ProjectsAdmin() {
       overviewHighlights: withOverviewHighlightIcons(sp?.overviewHighlights),
       amenities: sp?.amenities || [],
       specifications: extracted.specifications || [],
-      heroMobileUrl: extracted.heroMobileUrl || "",
+      heroMobileUrl: sp?.heroMobileUrl || extracted.heroMobileUrl || "",
       heroImagePosition: sp?.heroImagePosition || "center center",
       heroImageFit: sp?.heroImageFit || "cover",
+      overviewImage: sp?.overviewImage || "",
       companyLogoUrl: extracted.companyLogoUrl || "",
       gmbGoogleIconUrl: extracted.gmbGoogleIconUrl || "",
       gmbStarIconUrl: extracted.gmbStarIconUrl || "",
@@ -979,6 +981,7 @@ function ProjectsAdmin() {
         heroMobileUrl: form.heroMobileUrl || "",
         heroImagePosition: form.heroImagePosition || "center center",
         heroImageFit: form.heroImageFit || "cover",
+        overviewImage: form.overviewImage || "",
         overviewParagraphs: paragraphs.length ? paragraphs : [richDescription].filter(Boolean),
         overviewHighlights: withOverviewHighlightIcons(form.overviewHighlights),
         amenities: form.amenities,
@@ -1197,6 +1200,7 @@ function ProjectsAdmin() {
             <AdminField label="Hero image fit"><select value={form.heroImageFit} onChange={(e) => set("heroImageFit", e.target.value)}><option value="cover">Cover — fill hero</option><option value="contain">Contain — preserve entire image</option></select></AdminField>
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Overview</h3>
+            <AdminImageUpload label="Overview image" value={form.overviewImage} onChange={(value) => set("overviewImage", value)} />
             <AdminField label="Overview content"><RichTextEditor value={overviewText} onChange={setOverviewText} placeholder="Write the formatted project overview..." minHeight={260} /></AdminField>
             <KeyValueListEditor title="Overview Highlights" items={form.overviewHighlights.length ? form.overviewHighlights : DEFAULT_OVERVIEW_HIGHLIGHTS} onChange={(list) => set("overviewHighlights", withOverviewHighlightIcons(list))} keyPlaceholder="Highlight Label" valuePlaceholder="Highlight Description" />
 

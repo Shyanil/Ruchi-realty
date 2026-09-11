@@ -3117,9 +3117,9 @@ body.nav-locked { overflow: hidden; }
 .victoria-hero .osc-hero__bg{background:radial-gradient(circle at 28% 45%,#34304a 0,#15131e 52%,#0d0c13 100%)}
 .victoria-hero .osc-hero__bg img{object-fit:cover;object-position:center;transform:none!important}
 .project-hero--one-prime-residential .osc-hero__bg img,.project-hero--active-greens .osc-hero__bg img,.project-hero--lifescapes-bhopal .osc-hero__bg img,.project-hero--oscar-sanctuary-indore .osc-hero__bg img,.project-hero--ruchi-enclave-indore .osc-hero__bg img{object-fit:contain;object-position:left center}
-.project-hero--oscar-indore .osc-hero__bg,.project-hero--one-rajarhat .osc-hero__bg{background:#15131e}
-.project-hero--oscar-indore .osc-hero__bg img{object-fit:cover!important;object-position:center 30%!important;transform:scale(1.1)!important}
-.project-hero--oscar-indore .osc-hero__overlay{background:linear-gradient(90deg,rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.15) 100%)!important;opacity:0.25!important}
+.project-hero--oscar-billionaires .osc-hero__bg,.project-hero--one-rajarhat .osc-hero__bg{background:#15131e}
+.project-hero--oscar-billionaires .osc-hero__bg img{object-fit:cover!important;object-position:center center!important;transform:none!important}
+.project-hero--oscar-billionaires .osc-hero__overlay{background:linear-gradient(90deg,rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.15) 100%)!important;opacity:0.25!important}
 .project-hero--one-rajarhat .osc-hero__bg img{object-fit:cover!important;object-position:center 25%!important;transform:scale(1.12)!important}
 .project-hero--one-rajarhat .osc-hero__overlay{background:linear-gradient(90deg,rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.2) 100%)!important;opacity:0.3!important}
 @media(max-width:640px){.project-hero--one-prime-residential .osc-hero__bg img,.project-hero--active-greens .osc-hero__bg img,.project-hero--lifescapes-bhopal .osc-hero__bg img,.project-hero--oscar-sanctuary-indore .osc-hero__bg img,.project-hero--ruchi-enclave-indore .osc-hero__bg img{object-position:center}}
