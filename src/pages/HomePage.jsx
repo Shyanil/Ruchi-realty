@@ -49,7 +49,7 @@ export default function HomePage() {
   return (
     <>
       <SEO title="Ruchi Realty | Real Estate Developer in Kolkata, Indore & Bhopal" description="Explore residential apartments, commercial spaces and plotted developments by Ruchi Realty across Kolkata, Indore and Bhopal. View project details, locations, status, brochures and site visit options." canonical="https://ruchirealty.com/" image="/uploads/hero-one-victoria.webp" schemas={HOME_SCHEMAS} />
-      <Nav onContact={scrollToContact} heroSound solidAt={1} />
+      <Nav onContact={scrollToContact} heroSound solidAt={1} topOverlay />
       <main>
         <Hero />
         <Intro />

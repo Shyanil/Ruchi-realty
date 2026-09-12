@@ -95,23 +95,8 @@ export default function AdminShell({ tab, onTab, user, onLogout, children }) {
   const [query, setQuery] = useState("");
   const [searchItems, setSearchItems] = useState([]);
   const [searchLoaded, setSearchLoaded] = useState(false);
-  const [attentionCount, setAttentionCount] = useState(0);
   const [title, subtitle] = PAGE_META[tab] || PAGE_META.dashboard;
   const adminName = adminNameFor(user);
-
-  useEffect(() => {
-    let active = true;
-    Promise.all([
-      window.RuchiBackend?.leads?.getAllLeads?.(),
-      window.RuchiBackend?.careerApplications?.getAll?.(),
-    ]).then(([leadResult, appResult]) => {
-      if (!active) return;
-      const newLeads = (leadResult?.data || []).filter((item) => item.status === "new").length;
-      const newApps = (appResult?.data || []).filter((item) => item.status === "new").length;
-      setAttentionCount(newLeads + newApps);
-    }).catch(() => {});
-    return () => { active = false; };
-  }, []);
 
   const ensureSearch = async () => {
     if (searchLoaded) return;
@@ -163,7 +148,6 @@ export default function AdminShell({ tab, onTab, user, onLogout, children }) {
             <input value={query} onFocus={ensureSearch} onChange={(event) => setQuery(event.target.value)} placeholder="Search projects, blogs, jobs, leads" aria-label="Search admin content" />
             {query ? <div className="admin-search-results">{results.length ? results.map((item) => <button type="button" key={`${item.tab}-${item.id}`} onClick={() => navigate(item.tab)}><span>{item.type}</span><strong>{item.title}</strong><small>{item.meta}</small></button>) : <p>No matching content found.</p>}</div> : null}
           </div>
-          <button type="button" className="admin-icon-button" onClick={() => navigate("leads")} aria-label={`${attentionCount} new leads and applications`}><AdminIcon name="bell" />{attentionCount ? <span>{attentionCount}</span> : null}</button>
           <div className="admin-quick-create">
             <button type="button" className="admin-primary admin-quick-create__button" onClick={() => setQuickOpen((value) => !value)}><AdminIcon name="plus" />Create</button>
             {quickOpen ? <div className="admin-quick-menu">{[["projects", "New project"], ["careers", "New job"], ["blogs", "New blog"], ["media_gallery", "Upload media"]].map(([id, label]) => <button type="button" key={id} onClick={() => navigate(id)}>{label}</button>)}</div> : null}

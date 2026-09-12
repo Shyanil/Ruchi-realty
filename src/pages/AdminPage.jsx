@@ -1348,6 +1348,11 @@ function ProjectsAdmin() {
   );
 }
 
+function leadVerificationStatus(lead = {}) {
+  const status = String(lead.verification_status || "").trim().toLowerCase();
+  return status === "verified" || Boolean(lead.verified_at) ? "verified" : "unverified";
+}
+
 function LeadsAdmin() {
   const [leads, setLeads] = useState([]);
   const [query, setQuery] = useState("");
@@ -1357,11 +1362,28 @@ function LeadsAdmin() {
   const [dateFilter, setDateFilter] = useState("All");
   const [leadSort, setLeadSort] = useState("newest");
   const [selectedLead, setSelectedLead] = useState(null);
-  const load = async () => {
-    const { data } = await window.RuchiBackend.leads.getAllLeads();
-    setLeads(data || []);
+  const load = async ({ silent = false } = {}) => {
+    const { data, error } = await window.RuchiBackend.leads.getAllLeads();
+    if (error) {
+      if (!silent) showAdminToast("Leads could not refresh", error.message || "Check the admin connection and try again.");
+      return;
+    }
+    const nextLeads = data || [];
+    setLeads(nextLeads);
+    setSelectedLead((current) => current ? nextLeads.find((lead) => lead.id === current.id) || null : null);
   };
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+    const refreshVisibleLeads = () => {
+      if (document.visibilityState === "visible") load({ silent: true });
+    };
+    window.addEventListener("focus", refreshVisibleLeads);
+    document.addEventListener("visibilitychange", refreshVisibleLeads);
+    return () => {
+      window.removeEventListener("focus", refreshVisibleLeads);
+      document.removeEventListener("visibilitychange", refreshVisibleLeads);
+    };
+  }, []);
 
   const updateStatus = async (id, status) => {
     await window.RuchiBackend.leads.updateLeadStatus(id, status);
@@ -1381,14 +1403,14 @@ function LeadsAdmin() {
     const cutoff = dateFilter === "All" ? 0 : Date.now() - Number(dateFilter) * 86400000;
     return haystack.includes(query.toLowerCase())
       && (statusFilter === "All" || lead.status === statusFilter)
-      && (verificationFilter === "All" || (lead.verification_status || "unverified") === verificationFilter)
+      && (verificationFilter === "All" || leadVerificationStatus(lead) === verificationFilter)
       && (sourceFilter === "All" || lead.source === sourceFilter)
       && (!cutoff || new Date(lead.created_at || 0).getTime() >= cutoff);
   }).sort((a, b) => leadSort === "oldest" ? new Date(a.created_at || 0) - new Date(b.created_at || 0) : new Date(b.created_at || 0) - new Date(a.created_at || 0));
 
   const leadStatuses = ["new", "contacted", "qualified", "lost", "closed"];
   const leadSources = [...new Set(leads.map((lead) => lead.source).filter(Boolean))].sort();
-  const verifiedCount = leads.filter((lead) => lead.verification_status === "verified").length;
+  const verifiedCount = leads.filter((lead) => leadVerificationStatus(lead) === "verified").length;
   const unverifiedCount = leads.length - verifiedCount;
 
   return (
@@ -1418,8 +1440,10 @@ function LeadsAdmin() {
               <header className="admin-lead-card__header">
                 <span className="admin-lead-avatar" aria-hidden="true">{String(lead.name || "L").trim().slice(0, 1).toUpperCase()}</span>
                 <div><strong>{lead.name || "Unnamed lead"}</strong><small>{lead.created_at ? new Date(lead.created_at).toLocaleString() : "Recently received"}</small></div>
-                <span className={`admin-status admin-status--${lead.status || "new"}`}><i />{lead.status || "new"}</span>
-                <span className={`admin-app-status admin-app-status--${lead.verification_status || "unverified"}`}>{lead.verification_status || "unverified"}</span>
+                <div className="admin-lead-card__badges">
+                  <span className={`admin-status admin-status--${lead.status || "new"}`}><i />{lead.status || "new"}</span>
+                  <span className={`admin-app-status admin-app-status--${leadVerificationStatus(lead)}`}>{leadVerificationStatus(lead)}</span>
+                </div>
               </header>
               <div className="admin-lead-card__details">
                 <span><small>Phone</small>{lead.phone || "Not provided"}</span>
@@ -1442,7 +1466,7 @@ function LeadsAdmin() {
         )) : <div className="admin-empty-state"><h3>No matching leads</h3><p>New website enquiries will appear here. Adjust the search or status filter to see other records.</p><a href="/#contact" target="_blank" rel="noreferrer">View website form</a></div>}
       </div>
       </div>
-      {selectedLead ? <div className="admin-drawer-layer" role="dialog" aria-modal="true" aria-label={`Lead details for ${selectedLead.name}`}><button className="admin-drawer-scrim" type="button" aria-label="Close lead details" onClick={() => setSelectedLead(null)} /><aside className="admin-drawer"><header><div><span>Lead details</span><h2>{selectedLead.name}</h2></div><button type="button" onClick={() => setSelectedLead(null)} aria-label="Close">×</button></header><div className="admin-drawer__body"><span className={`admin-app-status admin-app-status--${selectedLead.status}`}>{selectedLead.status}</span> <span className={`admin-app-status admin-app-status--${selectedLead.verification_status || "unverified"}`}>{selectedLead.verification_status || "unverified"}</span><dl><div><dt>Email</dt><dd><a href={`mailto:${selectedLead.email}`}>{selectedLead.email || "Not provided"}</a></dd></div><div><dt>Phone</dt><dd><a href={`tel:${selectedLead.phone}`}>{selectedLead.phone || "Not provided"}</a></dd></div><div><dt>Project interest</dt><dd>{selectedLead.interest || "Not specified"}</dd></div><div><dt>City</dt><dd>{selectedLead.city || "Not specified"}</dd></div><div><dt>Verification</dt><dd>{selectedLead.verification_status || "unverified"}{selectedLead.verified_at ? ` on ${new Date(selectedLead.verified_at).toLocaleString()}` : ""}</dd></div><div><dt>CRM delivery</dt><dd>{selectedLead.crm_status || "not_sent"}{selectedLead.crm_error ? ` — ${selectedLead.crm_error}` : ""}</dd></div><div><dt>Source</dt><dd>{selectedLead.source || "Not specified"}</dd></div><div><dt>Received</dt><dd>{selectedLead.created_at ? new Date(selectedLead.created_at).toLocaleString() : "Not available"}</dd></div></dl>{selectedLead.notes ? <section><h3>Notes</h3><p>{selectedLead.notes}</p></section> : null}</div><footer><select value={selectedLead.status} onChange={async (event) => { const status = event.target.value; await updateStatus(selectedLead.id, status); setSelectedLead((lead) => ({ ...lead, status })); }}>{leadStatuses.map((item) => <option key={item}>{item}</option>)}</select><button type="button" className="admin-danger" onClick={() => remove(selectedLead.id)}>Delete lead</button></footer></aside></div> : null}
+      {selectedLead ? <div className="admin-drawer-layer" role="dialog" aria-modal="true" aria-label={`Lead details for ${selectedLead.name}`}><button className="admin-drawer-scrim" type="button" aria-label="Close lead details" onClick={() => setSelectedLead(null)} /><aside className="admin-drawer"><header><div><span>Lead details</span><h2>{selectedLead.name}</h2></div><button type="button" onClick={() => setSelectedLead(null)} aria-label="Close">×</button></header><div className="admin-drawer__body"><span className={`admin-app-status admin-app-status--${selectedLead.status}`}>{selectedLead.status}</span> <span className={`admin-app-status admin-app-status--${leadVerificationStatus(selectedLead)}`}>{leadVerificationStatus(selectedLead)}</span><dl><div><dt>Email</dt><dd><a href={`mailto:${selectedLead.email}`}>{selectedLead.email || "Not provided"}</a></dd></div><div><dt>Phone</dt><dd><a href={`tel:${selectedLead.phone}`}>{selectedLead.phone || "Not provided"}</a></dd></div><div><dt>Project interest</dt><dd>{selectedLead.interest || "Not specified"}</dd></div><div><dt>City</dt><dd>{selectedLead.city || "Not specified"}</dd></div><div><dt>Verification</dt><dd>{leadVerificationStatus(selectedLead)}{selectedLead.verified_at ? ` on ${new Date(selectedLead.verified_at).toLocaleString()}` : ""}</dd></div><div><dt>CRM delivery</dt><dd>{selectedLead.crm_status || "not_sent"}{selectedLead.crm_error ? ` — ${selectedLead.crm_error}` : ""}</dd></div><div><dt>Source</dt><dd>{selectedLead.source || "Not specified"}</dd></div><div><dt>Received</dt><dd>{selectedLead.created_at ? new Date(selectedLead.created_at).toLocaleString() : "Not available"}</dd></div></dl>{selectedLead.notes ? <section><h3>Notes</h3><p>{selectedLead.notes}</p></section> : null}</div><footer><select value={selectedLead.status} onChange={async (event) => { const status = event.target.value; await updateStatus(selectedLead.id, status); setSelectedLead((lead) => ({ ...lead, status })); }}>{leadStatuses.map((item) => <option key={item}>{item}</option>)}</select><button type="button" className="admin-danger" onClick={() => remove(selectedLead.id)}>Delete lead</button></footer></aside></div> : null}
     </section>
   );
 }
@@ -1540,6 +1564,17 @@ function BlogsAdmin() {
   };
   const save = async (event) => {
     event.preventDefault();
+    const missingField = [
+      ["content", "title", form.title?.trim()],
+      ["content", "excerpt", form.excerpt?.trim()],
+      ["content", "article content", plainTextFromRichText(form.content).trim()],
+      ["media", "image alt text", form.image_alt?.trim()],
+    ].find(([, , value]) => !value);
+    if (missingField) {
+      setEditorTab(missingField[0]);
+      alert(`Please complete the ${missingField[1]} before saving.`);
+      return;
+    }
     setUpdating(true);
     try {
       const payload = { ...form, content: normalizeRichTextHtml(form.content), related_project_links: String(form.related_project_links || "").split(",").map((item) => item.trim()).filter(Boolean) };
@@ -1627,6 +1662,7 @@ function BlogsAdmin() {
     });
     formElement.querySelectorAll(":scope > .admin-uploader").forEach((uploader) => { uploader.hidden = editorTab !== "media"; });
     formElement.querySelectorAll(":scope > .admin-check").forEach((field) => { field.hidden = editorTab !== "publishing"; });
+    formElement.querySelectorAll(":scope > .admin-list-editor").forEach((field) => { field.hidden = editorTab !== "content"; });
     formElement.querySelectorAll(":scope > .admin-form-grid").forEach((grid) => { grid.hidden = Array.from(grid.children).every((child) => child.hidden); });
   }, [editorTab, editorOpen]);
 

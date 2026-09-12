@@ -432,7 +432,7 @@ function MegaPanel({ cfg, go }) {
   );
 }
 
-export default function Nav({ onContact, hidden, solid: forceSolid = false, solidAt, heroSound = false }) {
+export default function Nav({ onContact, hidden, solid: forceSolid = false, solidAt, heroSound = false, topOverlay = false }) {
   const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(null);
   const [mobile, setMobile] = useState(false);
@@ -530,7 +530,7 @@ export default function Nav({ onContact, hidden, solid: forceSolid = false, soli
 
   return (
     <header
-      className={`nav ${dark ? "nav--top" : "nav--solid"} ${topContext ? "nav--top-context" : ""} ${open ? "nav--mega" : ""} ${hidden ? "nav--hidden" : ""}`}
+      className={`nav ${dark ? "nav--top" : "nav--solid"} ${topContext ? "nav--top-context" : ""} ${topOverlay ? "nav--top-overlay" : ""} ${open ? "nav--mega" : ""} ${hidden ? "nav--hidden" : ""}`}
       onMouseEnter={cancelMenuClose}
       onMouseLeave={scheduleMenuClose}>
       <div className="nav__bar">
