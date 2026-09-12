@@ -318,7 +318,7 @@ const VIDEO_TESTIMONIALS = [
   { customerName: "One Victoria Residents", customerRole: "Resident testimonial", project: "One Victoria", city: "Kolkata", dur: "1:39", quote: "Trust we could check before we signed.", poster: "assets/testimonial_9.webp", video: "https://player.vimeo.com/video/1106031951?autoplay=1&rel=0&controls=0#t=" },
 ];
 
-export const SHOWREEL = "/assets/hero_video.mp4";
+export const SHOWREEL = "/assets/hero_video_new.mp4";
 export const MOBILE_SHOWREEL = "/assets/hero_video_mobile.mp4";
 
 export {
