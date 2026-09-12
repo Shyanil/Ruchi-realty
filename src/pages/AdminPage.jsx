@@ -948,6 +948,16 @@ function ProjectsAdmin() {
 
   const save = async (event) => {
     event.preventDefault();
+    const missingField = [
+      ["overview", "project title", form.title?.trim()],
+      ["overview", "project tag", form.tag?.trim()],
+      ["overview", "project location", form.location?.trim()],
+    ].find(([, , value]) => !value);
+    if (missingField) {
+      setEditorTab(missingField[0]);
+      alert(`Please complete the ${missingField[1]} before saving.`);
+      return;
+    }
     setUpdating(true);
     try {
       const overviewHtml = normalizeRichTextHtml(overviewText);
@@ -1157,7 +1167,7 @@ function ProjectsAdmin() {
       )}
       <div className="admin-collection-head"><div><span className="admin-section-kicker">Website portfolio</span><h2>Projects</h2><p>Manage all residential and commercial projects.</p></div><button type="button" className="admin-primary" onClick={() => { setEditingId(null); setForm(emptyProject); setOverviewText(""); setEditorTab("overview"); setEditorOpen(true); }}>+ Add project</button></div>
       <div className="admin-projects-layout">
-      {editorOpen ? <form className="admin-panel admin-project-editor" onSubmit={save} style={{ maxWidth: "100%", overflowX: "hidden" }}>
+      {editorOpen ? <form className="admin-panel admin-project-editor" onSubmit={save} noValidate style={{ maxWidth: "100%", overflowX: "hidden" }}>
         <div className="admin-panel__head">
           <div><span className="admin-section-kicker">Project editor</span><h2>{editingId ? form.title || "Update project" : "Create project"}</h2></div>
           {editingId ? <button type="button" className="admin-text-btn" onClick={reset}>Cancel edit</button> : null}
