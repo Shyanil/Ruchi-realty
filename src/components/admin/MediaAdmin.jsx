@@ -133,8 +133,18 @@ function Records({ items, edit, remove, dateKey }) {
 }
 
 function Editor({ kind, onSubmit, upload, onCancel, children }) {
-  return <form className="admin-panel media-editor" onSubmit={onSubmit}>
-    <div className="media-editor-head"><div><span>Content editor</span><h2>{kind}</h2></div><button type="button" className="admin-text-btn" onClick={onCancel}>Close</button></div>
+  return <form className="admin-panel media-editor" onSubmit={onSubmit} noValidate>
+    <div className="media-editor-head">
+      <div><span>Content editor</span><h2>{kind}</h2></div>
+      <div className="admin-header-actions">
+        <button type="button" className="admin-text-btn" onClick={onCancel}>Close</button>
+        <button className="admin-primary" type="submit">Save</button>
+      </div>
+    </div>
+    <div className="admin-editor-actions admin-editor-actions--top">
+      <span>Save changes for "{kind}"</span>
+      <button className="admin-primary" type="submit">Save</button>
+    </div>
     <MediaUploader label="Optional cover image" onUploaded={upload} />
     <div className="media-editor-body">{children}</div>
     <div className="admin-editor-actions"><span>Changes use the existing media publishing workflow.</span><button className="admin-primary" type="submit">Save {kind.toLowerCase()}</button></div>

@@ -155,6 +155,22 @@ const emptyJob = {
 };
 
 const JOB_TYPES = ["Full-time", "Part-time", "Contract", "Internship", "Future Opportunity"];
+const PROJECT_EDITOR_TABS = [
+  ["overview", "Overview"],
+  ["media", "Media"],
+  ["content", "Content"],
+  ["floorplans", "Floor plans"],
+  ["location", "Location"],
+  ["reviews", "Reviews and video"],
+  ["seo", "SEO and publishing"],
+];
+const BLOG_EDITOR_TABS = [
+  ["content", "Content"],
+  ["media", "Featured image"],
+  ["publishing", "Publishing"],
+  ["seo", "SEO"],
+  ["social", "Social"],
+];
 const AMENITY_PRESETS = [
   { name: "Swimming Pool", icon: "pool" },
   { name: "Gymnasium", icon: "gym" },
@@ -1170,10 +1186,17 @@ function ProjectsAdmin() {
       {editorOpen ? <form className="admin-panel admin-project-editor" onSubmit={save} noValidate style={{ maxWidth: "100%", overflowX: "hidden" }}>
         <div className="admin-panel__head">
           <div><span className="admin-section-kicker">Project editor</span><h2>{editingId ? form.title || "Update project" : "Create project"}</h2></div>
-          {editingId ? <button type="button" className="admin-text-btn" onClick={reset}>Cancel edit</button> : null}
+          <div className="admin-header-actions">
+            {editingId ? <button type="button" className="admin-text-btn" onClick={reset}>Cancel edit</button> : null}
+            <button className="admin-primary" type="submit" disabled={updating}>{updating ? "Saving…" : "Save"}</button>
+          </div>
         </div>
         <div className="admin-editor-tabs admin-project-editor-tabs" role="tablist" aria-label="Project editor sections">
-          {[["overview", "Overview"], ["media", "Media"], ["content", "Content"], ["floorplans", "Floor plans"], ["location", "Location"], ["reviews", "Reviews and video"], ["seo", "SEO and publishing"]].map(([id, label], index) => <button type="button" role="tab" aria-selected={editorTab === id} className={editorTab === id ? "is-active" : ""} key={id} onClick={() => setEditorTab(id)}><span>{String(index + 1).padStart(2, "0")}</span><b>{label}</b></button>)}
+          {PROJECT_EDITOR_TABS.map(([id, label], index) => <button type="button" role="tab" aria-selected={editorTab === id} className={editorTab === id ? "is-active" : ""} key={id} onClick={() => setEditorTab(id)}><span>{String(index + 1).padStart(2, "0")}</span><b>{label}</b></button>)}
+        </div>
+        <div className="admin-editor-actions admin-editor-actions--top">
+          <span>{editingId ? `Save details for "${form.title || "Project"}" (${PROJECT_EDITOR_TABS.find(([id]) => id === editorTab)?.[1] || "Overview"})` : "Save new project details"}</span>
+          <button className="admin-primary" type="submit" disabled={updating}>{updating ? "Saving…" : "Save"}</button>
         </div>
         <div className={`admin-project-editor-content is-${editorTab}`}>
         <div className="admin-form-grid">
@@ -1525,7 +1548,16 @@ function SettingsAdmin() {
       <div className="admin-settings-layout">
         <nav aria-label="Settings sections">{[["general", "General"], ["social", "Social"], ["location", "Location"]].map(([id, label]) => <button type="button" className={section === id ? "is-active" : ""} key={id} onClick={() => setSection(id)}>{label}</button>)}</nav>
         <form className="admin-panel admin-settings-form" onSubmit={save}>
-          <div className="admin-panel__head"><div><span className="admin-section-kicker">{section}</span><h2>{section === "general" ? "Contact and business" : section === "social" ? "Social profiles" : "Office location"}</h2></div></div>
+          <div className="admin-panel__head">
+            <div><span className="admin-section-kicker">{section} settings</span><h2>{section === "general" ? "Contact and business" : section === "social" ? "Social profiles" : "Office location"}</h2></div>
+            <div className="admin-header-actions">
+              <button className="admin-primary" type="submit" disabled={!dirty || saving}>{saving ? "Saving…" : "Save"}</button>
+            </div>
+          </div>
+          <div className="admin-editor-actions admin-editor-actions--top">
+            <span>{dirty ? "Review and save your changes." : "All changes are saved."}</span>
+            <button className="admin-primary" type="submit" disabled={!dirty || saving}>{saving ? "Saving…" : "Save"}</button>
+          </div>
           {section === "general" ? <div className="admin-form-grid">
         {["siteName", "phone", "whatsapp", "email", "workingHours"].map((key) => (
           <AdminField key={key} label={key}>
@@ -1717,12 +1749,19 @@ function BlogsAdmin() {
           </div>
         </div>
       )}
-      {subTab === "posts" ? <div className={`admin-blogs-layout${editorOpen ? " is-editing" : ""}`}>{editorOpen ? <form className="admin-panel admin-blog-editor" onSubmit={save}>
+      {subTab === "posts" ? <div className={`admin-blogs-layout${editorOpen ? " is-editing" : ""}`}>{editorOpen ? <form className="admin-panel admin-blog-editor" onSubmit={save} noValidate>
         <div className="admin-panel__head">
           <div><span className="admin-section-kicker">Blog editor</span><h2>{editingId ? form.title || "Update blog" : "Create blog"}</h2></div>
-          {editingId ? <button type="button" className="admin-text-btn" onClick={reset}>Cancel edit</button> : null}
+          <div className="admin-header-actions">
+            {editingId ? <button type="button" className="admin-text-btn" onClick={reset}>Cancel edit</button> : null}
+            <button className="admin-primary" type="submit" disabled={updating}>{updating ? "Saving…" : "Save"}</button>
+          </div>
         </div>
-        <div className="admin-editor-tabs" role="tablist" aria-label="Blog editor sections">{[["content", "Content"], ["media", "Featured image"], ["publishing", "Publishing"], ["seo", "SEO"], ["social", "Social"]].map(([id, label]) => <button type="button" role="tab" aria-selected={editorTab === id} className={editorTab === id ? "is-active" : ""} key={id} onClick={() => setEditorTab(id)}>{label}</button>)}</div>
+        <div className="admin-editor-tabs" role="tablist" aria-label="Blog editor sections">{BLOG_EDITOR_TABS.map(([id, label]) => <button type="button" role="tab" aria-selected={editorTab === id} className={editorTab === id ? "is-active" : ""} key={id} onClick={() => setEditorTab(id)}>{label}</button>)}</div>
+        <div className="admin-editor-actions admin-editor-actions--top">
+          <span>{editingId ? `Save details for "${form.title || "Blog post"}"` : "Save new blog post"}</span>
+          <button className="admin-primary" type="submit" disabled={updating}>{updating ? "Saving…" : "Save"}</button>
+        </div>
         <div className="admin-form-grid">
           <AdminField label="Title"><input required value={form.title} onChange={(event) => set("title", event.target.value)} /></AdminField>
           <AdminField label="Category">
@@ -1907,10 +1946,17 @@ function CareersAdmin() {
             </div>
           </div>
 
-          {editorOpen ? <form className="admin-panel admin-job-editor" onSubmit={save}>
+          {editorOpen ? <form className="admin-panel admin-job-editor" onSubmit={save} noValidate>
             <div className="admin-panel__head">
-              <h2>{editingId ? "Update job" : "Add job"}</h2>
-              {editingId ? <button type="button" className="admin-text-btn" onClick={reset}>Cancel</button> : null}
+              <div><span className="admin-section-kicker">Career editor</span><h2>{editingId ? form.title || "Update job" : "Add job"}</h2></div>
+              <div className="admin-header-actions">
+                {editingId ? <button type="button" className="admin-text-btn" onClick={reset}>Cancel</button> : null}
+                <button className="admin-primary" type="submit">{editingId ? "Save" : "Add job"}</button>
+              </div>
+            </div>
+            <div className="admin-editor-actions admin-editor-actions--top">
+              <span>{editingId ? `Save details for "${form.title || "Job listing"}"` : "Save new job listing"}</span>
+              <button className="admin-primary" type="submit">{editingId ? "Save" : "Add job"}</button>
             </div>
             <div className="admin-form-grid">
               <AdminField label="Title"><input required value={form.title} onChange={(event) => set("title", event.target.value)} /></AdminField>
