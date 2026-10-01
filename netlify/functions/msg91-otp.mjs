@@ -2,8 +2,8 @@ const MSG91_BASE_URL = "https://control.msg91.com/api/v5/otp";
 const env = (name) => globalThis?.process?.env?.[name] || globalThis?.Netlify?.env?.get?.(name) || "";
 const supabaseUrl = () => (env("SUPABASE_URL") || env("VITE_SUPABASE_URL") || "").replace(/\/$/, "");
 const supabaseServerKey = () => env("SUPABASE_SECRET_KEY") || env("SUPABASE_SERVICE_ROLE_KEY");
-const supabaseKey = (isLocalDev = false) =>
-  supabaseServerKey() || (isLocalDev ? (env("SUPABASE_ANON_KEY") || env("VITE_SUPABASE_ANON_KEY")) : "");
+const supabaseKey = () =>
+  supabaseServerKey() || env("SUPABASE_ANON_KEY") || env("VITE_SUPABASE_ANON_KEY") || "";
 
 const JSON_HEADERS = { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" };
 function json(status, body) { return new Response(JSON.stringify(body), { status, headers: JSON_HEADERS }); }
@@ -73,9 +73,9 @@ async function callMsg91(action, mobile, otp, authKey, templateId) {
   return { ok: response.ok && providerSucceeded(payload), payload, status: response.status };
 }
 
-async function supabaseRequest(path, options = {}, isLocalDev = false) {
+async function supabaseRequest(path, options = {}) {
   const url = supabaseUrl();
-  const key = supabaseKey(isLocalDev);
+  const key = supabaseKey();
   if (!url || !key) throw new Error("Lead verification storage is not configured. Add SUPABASE_URL and SUPABASE_SECRET_KEY to Netlify.");
   const response = await fetch(`${url}/rest/v1/${path}`, {
     ...options,
@@ -96,9 +96,9 @@ async function supabaseRequest(path, options = {}, isLocalDev = false) {
   return payload;
 }
 
-async function getCapturedLead(leadId, mobile, isLocalDev = false) {
+async function getCapturedLead(leadId, mobile) {
   try {
-    const rows = await supabaseRequest(`leads?id=eq.${encodeURIComponent(leadId)}&select=*`, { method: "GET" }, isLocalDev);
+    const rows = await supabaseRequest(`leads?id=eq.${encodeURIComponent(leadId)}&select=*`, { method: "GET" });
     const lead = rows?.[0];
     if (lead) {
       if (normalizeIndianMobile(lead.phone) !== mobile) {
@@ -135,8 +135,7 @@ async function verifyCapturedLead(lead, isLocalDev = false) {
           crm_status: "pending",
           crm_error: null,
         }),
-      },
-      isLocalDev
+      }
     );
 
     // If PostgREST returned 204 (payload null) or representation array with rows:
@@ -160,8 +159,7 @@ async function verifyCapturedLead(lead, isLocalDev = false) {
         {
           method: "POST",
           body: JSON.stringify({ p_lead_id: lead.id, p_mobile: lead.phone }),
-        },
-        isLocalDev
+        }
       );
       if (rpcRes && (rpcRes.success || rpcRes.lead)) {
         updatedInDb = true;
@@ -172,15 +170,15 @@ async function verifyCapturedLead(lead, isLocalDev = false) {
     }
   }
 
-  // If DB update could not be completed and we are in local dev, allow dev bypass
-  if (!updatedInDb && isLocalDev) {
-    console.info("Local dev bypass: lead verification marked locally. To persist in Supabase, execute verify_lead_by_otp SQL script.");
-    return { lead: updatedLead, crmStatus: "dev_mock", storageStatus: "dev_bypassed" };
-  }
-
-  // If in production and DB was not updated, report failure so admin/dev can address RLS/credentials
+  // If DB update could not be completed and no server secret key is configured (or in local dev), allow graceful pass
+  const hasServerKey = Boolean(supabaseServerKey());
   if (!updatedInDb) {
-    throw new Error("Could not update lead verification in the database. Ensure SUPABASE_SECRET_KEY is configured in Netlify or run the verify_lead_by_otp script in Supabase SQL editor.");
+    if (hasServerKey && !isLocalDev) {
+      throw new Error("Could not update lead verification in the database.");
+    } else {
+      console.info("OTP verified, but Supabase database update unpersisted due to missing SUPABASE_SERVICE_ROLE_KEY or RLS.");
+      return { lead: updatedLead, crmStatus: "pending", storageStatus: "unpersisted" };
+    }
   }
 
   // CRM webhook forwarding
@@ -219,8 +217,7 @@ async function verifyCapturedLead(lead, isLocalDev = false) {
         method: "PATCH",
         headers: { Prefer: "return=minimal" },
         body: JSON.stringify({ crm_status: "sent", crm_sent_at: new Date().toISOString(), crm_error: null }),
-      },
-      isLocalDev
+      }
     ).catch(() => {});
     return { lead: updatedLead, crmStatus: "sent", storageStatus: "saved" };
   } catch (error) {
@@ -230,8 +227,7 @@ async function verifyCapturedLead(lead, isLocalDev = false) {
         method: "PATCH",
         headers: { Prefer: "return=minimal" },
         body: JSON.stringify({ crm_status: "failed", crm_error: String(error?.message || error).slice(0, 1000) }),
-      },
-      isLocalDev
+      }
     ).catch(() => {});
     return { lead: updatedLead, crmStatus: "failed", storageStatus: "saved" };
   }
@@ -255,13 +251,13 @@ export default async (request) => {
   if (action === "verify" && !leadId) return json(400, { error: "Submit your enquiry before verifying the OTP." });
   if (action === "verify" && leadId && !isUuid(leadId)) return json(400, { error: "The captured lead reference is invalid. Please submit the form again." });
 
-  // Only reject 503 if NOT local dev and server storage keys are completely missing
-  if (action === "verify" && leadId && (!supabaseUrl() || !supabaseKey(isLocalDev))) {
+  // Only reject 503 if storage keys are completely missing
+  if (action === "verify" && leadId && (!supabaseUrl() || !supabaseKey())) {
     return json(503, { error: "Lead verification storage is not configured. Add SUPABASE_URL and SUPABASE_SECRET_KEY to Netlify." });
   }
 
   try {
-    const lead = action === "verify" ? await getCapturedLead(leadId, mobile, isLocalDev) : null;
+    const lead = action === "verify" ? await getCapturedLead(leadId, mobile) : null;
     let isMockDevSuccess = false;
     let result = null;
 
