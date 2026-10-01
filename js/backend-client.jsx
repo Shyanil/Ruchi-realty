@@ -373,6 +373,22 @@
         json: { status },
       });
     },
+    async updateVerificationStatus(id, verificationStatus) {
+      const isVerified = verificationStatus === "verified";
+      return rest("leads", { id: `eq.${id}`, select: "*" }, {
+        method: "PATCH",
+        auth: true,
+        headers: { Prefer: "return=representation" },
+        json: {
+          verification_status: verificationStatus,
+          verified_at: isVerified ? new Date().toISOString() : null,
+          crm_status: isVerified ? "pending" : "not_sent",
+        },
+      });
+    },
+    async verifyLead(id) {
+      return this.updateVerificationStatus(id, "verified");
+    },
     async deleteLead(id) {
       return rest("leads", { id: `eq.${id}` }, { method: "DELETE", auth: true });
     },

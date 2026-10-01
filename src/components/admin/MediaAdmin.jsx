@@ -1,10 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
-import { getGallery, getPress, getEvents, GALLERY_CATEGORIES, EVENT_TYPES, slugifyMedia } from "../../services/mediaService";
+import { getGallery, getPress, getEvents, GALLERY_CATEGORIES, EVENT_TYPES, slugifyMedia, youtubeThumb } from "../../services/mediaService";
 import { showAdminToast } from "./AdminShell";
 
 const categories = GALLERY_CATEGORIES;
 const types = EVENT_TYPES.filter((value) => value !== "All");
 const statuses = ["draft", "published", "unpublished"];
+
+const emptyGallery = {
+  title: "", slug: "", caption: "", alt_text: "", category: "Videos", album: "",
+  media_type: "video", video_url: "", image_url: "", thumbnail_url: "",
+  status: "published", is_featured: false, display_order: 0, image_asset_id: null,
+};
 
 const emptyPress = {
   title: "", slug: "", excerpt: "", content: "", release_date: "", source_name: "", author: "Ruchi Realty",
@@ -101,7 +107,7 @@ function SeoFields({ form, setForm }) {
   </div>;
 }
 
-function InternalLinksEditor({ links = [], onChange, onSave }) {
+function InternalLinksEditor({ links = [], onChange }) {
   const items = Array.isArray(links) ? links : [];
   const update = (index, key, value) => onChange(items.map((item, itemIndex) => itemIndex === index ? { ...item, [key]: value } : item));
   return <fieldset className="media-internal-links">
@@ -112,7 +118,7 @@ function InternalLinksEditor({ links = [], onChange, onSave }) {
       <input aria-label={`Internal link ${index + 1} path`} placeholder="/projects/one-victoria-new-town" value={item.url || ""} onChange={(event) => update(index, "url", event.target.value)} />
       <button type="button" onClick={() => onChange(items.filter((_, itemIndex) => itemIndex !== index))}>Remove</button>
     </div>)}
-    <div className="media-internal-links__actions"><button type="button" onClick={() => onChange([...items, { label: "", url: "" }])}>+ Add internal link</button>{onSave ? <button type="button" onClick={() => onSave(items)}>Save links</button> : null}</div>
+    <div className="media-internal-links__actions"><button type="button" onClick={() => onChange([...items, { label: "", url: "" }])}>+ Add internal link</button></div>
   </fieldset>;
 }
 
@@ -156,8 +162,10 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
   const [gallery, setGallery] = useState([]);
   const [press, setPress] = useState([]);
   const [events, setEvents] = useState([]);
+  const [galleryForm, setGalleryForm] = useState(emptyGallery);
   const [pressForm, setPressForm] = useState(emptyPress);
   const [eventForm, setEventForm] = useState(emptyEvent);
+  const [editGallery, setEditGallery] = useState();
   const [editPress, setEditPress] = useState();
   const [editEvent, setEditEvent] = useState();
   const [editorOpen, setEditorOpen] = useState(false);
@@ -175,40 +183,126 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
   useEffect(() => { setTab(initialTab); setEditorOpen(false); }, [initialTab]);
 
   const addGallery = async (asset, file) => {
-    await window.RuchiBackend.media.saveGallery({
-      title: file.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " "),
-      slug: `${slugifyMedia(file.name.replace(/\.[^.]+$/, ""))}-${asset.id.slice(0, 6)}`,
-      caption: "", alt_text: file.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " "),
-      image_asset_id: asset.id, category: "Events", album: "", display_order: gallery.length,
-      status: "published", is_featured: false,
+    const title = file.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ");
+    const category = categoryFilter !== "All" ? categoryFilter : "Events";
+    const res = await window.RuchiBackend.media.saveGallery({
+      title,
+      slug: `${slugifyMedia(title)}-${asset.id.slice(0, 6)}`,
+      caption: "",
+      alt_text: title,
+      image_asset_id: asset.id,
+      image_url: asset.public_url || "",
+      thumbnail_url: asset.thumbnail_url || "",
+      category,
+      album: "",
+      media_type: "image",
+      display_order: gallery.length,
+      status: "published",
+      is_featured: false,
     });
+    if (res?.error) {
+      showAdminToast("Upload failed", res.error.message || "Failed to save gallery item.");
+      return;
+    }
     showAdminToast("Media uploaded", `${file.name} was added to the gallery.`);
     load();
   };
+
   const patchGallery = async (item, key, value) => {
-    await window.RuchiBackend.media.saveGallery({ [key]: value }, item.id);
-    if (["status", "is_featured"].includes(key)) showAdminToast("Media updated", "The publishing settings were saved.");
+    const payload = { [key]: value };
+    if (key === "video_url") {
+      const isVid = Boolean(value && value.trim());
+      payload.media_type = isVid ? "video" : "image";
+      if (isVid && !item.thumbnail_url && !item.image_asset_id) {
+        const yt = youtubeThumb(value);
+        if (yt) {
+          payload.thumbnail_url = yt;
+          payload.image_url = yt;
+        }
+      }
+    }
+    const res = await window.RuchiBackend.media.saveGallery(payload, item.id);
+    if (res?.error) {
+      showAdminToast("Update failed", res.error.message || "Could not save changes to Supabase.");
+      return;
+    }
+    if (["status", "is_featured", "category"].includes(key)) {
+      showAdminToast("Media updated", `The ${key} setting was saved.`);
+    } else if (key === "video_url") {
+      showAdminToast("Video link saved", "Video URL and media type updated successfully.");
+    }
     load();
   };
+
+  const saveGalleryItem = async (event) => {
+    event.preventDefault();
+    if (!galleryForm.title?.trim()) {
+      alert("Please enter a title for the gallery item.");
+      return;
+    }
+    const isVideo = galleryForm.media_type === "video" || Boolean(galleryForm.video_url && galleryForm.video_url.trim());
+    let ytThumb = "";
+    if (galleryForm.video_url) {
+      ytThumb = youtubeThumb(galleryForm.video_url);
+    }
+    const slug = galleryForm.slug?.trim() || `${slugifyMedia(galleryForm.title)}-${Math.random().toString(36).slice(2, 7)}`;
+    const payload = {
+      title: galleryForm.title.trim(),
+      slug,
+      caption: galleryForm.caption || "",
+      alt_text: galleryForm.alt_text || galleryForm.title.trim(),
+      category: galleryForm.category || (isVideo ? "Videos" : "Events"),
+      album: galleryForm.album || "",
+      media_type: isVideo ? "video" : "image",
+      video_url: galleryForm.video_url || "",
+      image_url: galleryForm.image_url || ytThumb || "",
+      thumbnail_url: galleryForm.thumbnail_url || ytThumb || galleryForm.image_url || "",
+      status: galleryForm.status || "published",
+      is_featured: Boolean(galleryForm.is_featured),
+      display_order: Number(galleryForm.display_order || 0),
+      image_asset_id: galleryForm.image_asset_id || null,
+    };
+
+    const res = await window.RuchiBackend.media.saveGallery(payload, editGallery);
+    if (res?.error) {
+      showAdminToast("Save failed", res.error.message || "Failed to save gallery item.");
+      return;
+    }
+    showAdminToast(editGallery ? "Gallery item updated" : "Gallery item created", `${payload.title} was saved successfully.`);
+    setGalleryForm(emptyGallery);
+    setEditGallery(undefined);
+    setEditorOpen(false);
+    load();
+  };
+
   const savePress = async (event) => {
     event.preventDefault();
     const payload = { ...pressForm, slug: pressForm.slug || slugifyMedia(pressForm.title), release_date: pressForm.release_date || null };
-    await window.RuchiBackend.media.savePress(payload, editPress);
+    const res = await window.RuchiBackend.media.savePress(payload, editPress);
+    if (res?.error) {
+      showAdminToast("Save failed", res.error.message || "Failed to save press release.");
+      return;
+    }
     showAdminToast(editPress ? "Press release updated" : "Press release created", `${pressForm.title} was saved successfully.`);
     setPressForm(emptyPress); setEditPress(); setEditorOpen(false); load();
   };
+
   const saveEvent = async (event) => {
     event.preventDefault();
     if (eventForm.video_url && !/^https?:\/\//i.test(eventForm.video_url)) return alert("Video URL must begin with http:// or https://");
     const payload = { ...eventForm, slug: eventForm.slug || slugifyMedia(eventForm.title), event_date: eventForm.event_date || null };
-    await window.RuchiBackend.media.saveEvent(payload, editEvent);
+    const res = await window.RuchiBackend.media.saveEvent(payload, editEvent);
+    if (res?.error) {
+      showAdminToast("Save failed", res.error.message || "Failed to save event.");
+      return;
+    }
     showAdminToast(editEvent ? "Event updated" : "Event created", `${eventForm.title} was saved successfully.`);
     setEventForm(emptyEvent); setEditEvent(); setEditorOpen(false); load();
   };
 
   const currentItems = tab === "gallery" ? gallery : tab === "press" ? press : events;
   const filteredItems = useMemo(() => currentItems.filter((item) => {
-    const matchesQuery = `${item.title || ""} ${item.caption || item.excerpt || ""} ${item.related_project_slug || ""}`.toLowerCase().includes(query.toLowerCase());
+    const matchesQuery = `${item.title || ""} ${item.caption || item.excerpt || ""} ${item.album || ""}`.toLowerCase().includes(query.toLowerCase());
     const matchesStatus = statusFilter === "All" || item.status === statusFilter;
     const matchesCategory = tab !== "gallery" || categoryFilter === "All" || item.category === categoryFilter;
     return matchesQuery && matchesStatus && matchesCategory;
@@ -218,28 +312,269 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
     return new Date(b.updated_at || b.created_at || b.release_date || b.event_date || 0) - new Date(a.updated_at || a.created_at || a.release_date || a.event_date || 0);
   }), [currentItems, query, statusFilter, categoryFilter, sort, tab]);
 
-  const changeTab = (nextTab) => { setTab(nextTab); setEditorOpen(false); setQuery(""); setStatusFilter("All"); setCategoryFilter("All"); onSectionChange?.(nextTab); };
+  const changeTab = (nextTab) => {
+    setTab(nextTab);
+    setEditorOpen(false);
+    setEditGallery(undefined);
+    setQuery("");
+    setStatusFilter("All");
+    setCategoryFilter("All");
+    onSectionChange?.(nextTab);
+  };
+
   const openNew = () => {
-    if (tab === "press") { setEditPress(); setPressForm(emptyPress); }
-    if (tab === "events") { setEditEvent(); setEventForm(emptyEvent); }
+    if (tab === "gallery") {
+      setEditGallery(undefined);
+      setGalleryForm({
+        ...emptyGallery,
+        category: categoryFilter !== "All" ? categoryFilter : "Videos",
+        display_order: gallery.length,
+      });
+      setEditorOpen(true);
+    }
+    if (tab === "press") { setEditPress(); setPressForm(emptyPress); setEditorOpen(true); }
+    if (tab === "events") { setEditEvent(); setEventForm(emptyEvent); setEditorOpen(true); }
+  };
+
+  const openEditGallery = (item) => {
+    setEditGallery(item.id);
+    setGalleryForm({
+      ...emptyGallery,
+      ...item,
+      image_url: item.image_url || item.thumbnail_url || "",
+      thumbnail_url: item.thumbnail_url || item.image_url || "",
+    });
     setEditorOpen(true);
   };
 
   return <section className="admin-media-page">
-    <div className="admin-collection-head"><div><span className="admin-section-kicker">Asset library</span><h2>Media</h2><p>Organize gallery images, press releases, events and awards.</p></div>{tab === "gallery" ? <MediaUploader multiple label="Upload media" onUploaded={addGallery} /> : <button type="button" className="admin-primary" onClick={openNew}>+ Add {tab === "press" ? "press release" : "event or award"}</button>}</div>
-    <div className="admin-pipeline-stats admin-media-stats">
-      <article><span>Gallery assets</span><strong>{gallery.length}</strong></article><article><span>Press releases</span><strong>{press.length}</strong></article><article><span>Events & awards</span><strong>{events.length}</strong></article><article><span>Featured</span><strong>{[...gallery, ...press, ...events].filter((item) => item.is_featured).length}</strong></article>
+    <div className="admin-collection-head">
+      <div>
+        <span className="admin-section-kicker">Asset library</span>
+        <h2>Media</h2>
+        <p>Organize gallery images, video URLs, press releases, events and awards.</p>
+      </div>
+      <div className="media-head-actions">
+        {tab === "gallery" ? (
+          <>
+            <button type="button" className="admin-primary" onClick={openNew}>+ Add video or item</button>
+            <MediaUploader multiple label="Upload image(s)" onUploaded={addGallery} />
+          </>
+        ) : (
+          <button type="button" className="admin-primary" onClick={openNew}>
+            + Add {tab === "press" ? "press release" : "event or award"}
+          </button>
+        )}
+      </div>
     </div>
-    <div className="admin-subtabs"><button className={tab === "gallery" ? "is-active" : ""} onClick={() => changeTab("gallery")}>Gallery ({gallery.length})</button><button className={tab === "press" ? "is-active" : ""} onClick={() => changeTab("press")}>Press Releases ({press.length})</button><button className={tab === "events" ? "is-active" : ""} onClick={() => changeTab("events")}>Events & Awards ({events.length})</button></div>
-    <div className="admin-toolbar media-filterbar"><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search media..." />{tab === "gallery" ? <select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}><option value="All">All categories</option>{categories.map((category) => <option key={category}>{category}</option>)}</select> : null}<select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}><option value="All">All statuses</option>{statuses.map((status) => <option key={status}>{status}</option>)}</select><select value={sort} onChange={(event) => setSort(event.target.value)}><option value="newest">Recently updated</option><option value="name">Name A-Z</option><option value="order">Display order</option></select></div>
+    <div className="admin-pipeline-stats admin-media-stats">
+      <article><span>Gallery assets</span><strong>{gallery.length}</strong></article>
+      <article><span>Press releases</span><strong>{press.length}</strong></article>
+      <article><span>Events & awards</span><strong>{events.length}</strong></article>
+      <article><span>Featured</span><strong>{[...gallery, ...press, ...events].filter((item) => item.is_featured).length}</strong></article>
+    </div>
+    <div className="admin-subtabs">
+      <button className={tab === "gallery" ? "is-active" : ""} onClick={() => changeTab("gallery")}>Gallery ({gallery.length})</button>
+      <button className={tab === "press" ? "is-active" : ""} onClick={() => changeTab("press")}>Press Releases ({press.length})</button>
+      <button className={tab === "events" ? "is-active" : ""} onClick={() => changeTab("events")}>Events & Awards ({events.length})</button>
+    </div>
+    <div className="admin-toolbar media-filterbar">
+      <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search media..." />
+      {tab === "gallery" ? (
+        <select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}>
+          <option value="All">All categories</option>
+          {categories.map((category) => <option key={category}>{category}</option>)}
+        </select>
+      ) : null}
+      <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}>
+        <option value="All">All statuses</option>
+        {statuses.map((status) => <option key={status}>{status}</option>)}
+      </select>
+      <select value={sort} onChange={(event) => setSort(event.target.value)}>
+        <option value="newest">Recently updated</option>
+        <option value="name">Name A-Z</option>
+        <option value="order">Display order</option>
+      </select>
+    </div>
 
-    {tab === "gallery" ? <div className="admin-panel media-admin-panel"><div className="admin-panel__head"><h2>Gallery library</h2><span className="admin-count">{filteredItems.length}</span></div><div className="media-admin-gallery">{filteredItems.length ? filteredItems.map((item) => <article key={item.id}>
-      {item.thumbnail_url || item.image_url ? <img decoding="async" loading="lazy" src={item.thumbnail_url || item.image_url} alt="" /> : <div className="media-placeholder">VIDEO</div>}
-      <div><input aria-label="Media title" value={item.title || ""} onChange={(event) => setGallery((value) => value.map((entry) => entry.id === item.id ? { ...entry, title: event.target.value } : entry))} onBlur={(event) => patchGallery(item, "title", event.target.value)} /><input aria-label="Caption" placeholder="Caption" value={item.caption || ""} onChange={(event) => setGallery((value) => value.map((entry) => entry.id === item.id ? { ...entry, caption: event.target.value } : entry))} onBlur={(event) => patchGallery(item, "caption", event.target.value)} /><input aria-label="Alt text" placeholder="Alt text" value={item.alt_text || ""} onChange={(event) => setGallery((value) => value.map((entry) => entry.id === item.id ? { ...entry, alt_text: event.target.value } : entry))} onBlur={(event) => patchGallery(item, "alt_text", event.target.value)} />
-        <div><select aria-label="Category" value={item.category} onChange={(event) => patchGallery(item, "category", event.target.value)}>{categories.map((category) => <option key={category}>{category}</option>)}</select><input placeholder="Album" value={item.album || ""} onChange={(event) => setGallery((value) => value.map((entry) => entry.id === item.id ? { ...entry, album: event.target.value } : entry))} onBlur={(event) => patchGallery(item, "album", event.target.value)} /><input placeholder="Video URL" value={item.video_url || ""} onChange={(event) => setGallery((value) => value.map((entry) => entry.id === item.id ? { ...entry, video_url: event.target.value, media_type: event.target.value ? "video" : "image" } : entry))} onBlur={(event) => patchGallery(item, "video_url", event.target.value)} /><input placeholder="Project slug" value={item.related_project_slug || ""} onChange={(event) => setGallery((value) => value.map((entry) => entry.id === item.id ? { ...entry, related_project_slug: event.target.value } : entry))} onBlur={(event) => patchGallery(item, "related_project_slug", event.target.value)} /></div>
-        <InternalLinksEditor links={item.internal_links} onChange={(links) => setGallery((value) => value.map((entry) => entry.id === item.id ? { ...entry, internal_links: links } : entry))} onSave={(links) => patchGallery(item, "internal_links", links)} />
-        <div className="admin-actions"><select aria-label="Publishing status" value={item.status} onChange={(event) => patchGallery(item, "status", event.target.value)}>{statuses.map((status) => <option key={status}>{status}</option>)}</select><button type="button" onClick={() => patchGallery(item, "is_featured", !item.is_featured)}>{item.is_featured ? "Featured" : "Set featured"}</button><button type="button" onClick={() => patchGallery(item, "display_order", Math.max(0, item.display_order - 1))}>Move up</button><button type="button" onClick={() => patchGallery(item, "display_order", item.display_order + 1)}>Move down</button><button type="button" onClick={async () => { if (confirm("Delete gallery item permanently?")) { await window.RuchiBackend.media.deleteGallery(item.id); load(); } }}>Delete</button></div>
-      </div></article>) : <div className="admin-empty-state"><span>□</span><h3>No media found</h3><p>Upload a new asset or adjust the active filters.</p></div>}</div></div> : null}
+    {tab === "gallery" ? (
+      <div className={`media-library-layout${editorOpen ? " is-editing" : ""}`}>
+        {editorOpen ? (
+          <Editor
+            kind={editGallery ? "Edit gallery item" : "New gallery item / video"}
+            onSubmit={saveGalleryItem}
+            onCancel={() => { setEditorOpen(false); setEditGallery(undefined); }}
+            upload={async (asset) => {
+              setGalleryForm((value) => ({
+                ...value,
+                image_asset_id: asset.id,
+                image_url: asset.public_url || value.image_url,
+                thumbnail_url: asset.thumbnail_url || value.thumbnail_url,
+              }));
+              showAdminToast("Image attached", "Image asset linked to this gallery item.");
+            }}
+          >
+            <Field label="Title *">
+              <input required value={galleryForm.title} onChange={(e) => setGalleryForm({ ...galleryForm, title: e.target.value })} placeholder="e.g. Construction Walkthrough" />
+            </Field>
+            <Field label="Category">
+              <select value={galleryForm.category} onChange={(e) => setGalleryForm({ ...galleryForm, category: e.target.value })}>
+                {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </Field>
+            <Field label="Media Type">
+              <select value={galleryForm.media_type} onChange={(e) => setGalleryForm({ ...galleryForm, media_type: e.target.value })}>
+                <option value="video">Video</option>
+                <option value="image">Image</option>
+              </select>
+            </Field>
+            <Field label="Album / Tag">
+              <input value={galleryForm.album} onChange={(e) => setGalleryForm({ ...galleryForm, album: e.target.value })} placeholder="e.g. Interior Walkthrough" />
+            </Field>
+            <Field label="Video URL" wide>
+              <input
+                type="url"
+                placeholder="https://www.youtube.com/watch?v=... or .mp4 URL"
+                value={galleryForm.video_url}
+                onChange={(e) => {
+                  const url = e.target.value;
+                  const yt = youtubeThumb(url);
+                  setGalleryForm((cur) => ({
+                    ...cur,
+                    video_url: url,
+                    media_type: url.trim() ? "video" : cur.media_type,
+                    category: (url.trim() && (!cur.category || cur.category === "Events")) ? "Videos" : cur.category,
+                    thumbnail_url: cur.thumbnail_url || yt,
+                    image_url: cur.image_url || yt,
+                  }));
+                }}
+              />
+              <small style={{ color: "#64748b", marginTop: 4, display: "block", fontSize: 11 }}>
+                Paste a YouTube URL or direct video link. YouTube thumbnail is detected automatically.
+              </small>
+            </Field>
+            <Field label="Custom Image / Thumbnail URL" wide>
+              <input
+                placeholder="https://... (or leave blank to use YouTube thumbnail / uploaded image)"
+                value={galleryForm.thumbnail_url || galleryForm.image_url || ""}
+                onChange={(e) => setGalleryForm({ ...galleryForm, thumbnail_url: e.target.value, image_url: e.target.value })}
+              />
+            </Field>
+            <Field label="Caption" wide>
+              <textarea rows="2" value={galleryForm.caption} onChange={(e) => setGalleryForm({ ...galleryForm, caption: e.target.value })} placeholder="Optional description or caption" />
+            </Field>
+            <Field label="Alt text" wide>
+              <input value={galleryForm.alt_text} onChange={(e) => setGalleryForm({ ...galleryForm, alt_text: e.target.value })} placeholder="Accessibility text describing the visual" />
+            </Field>
+            <StatusFields form={galleryForm} setForm={setGalleryForm} />
+          </Editor>
+        ) : null}
+        <div className="admin-panel media-admin-panel">
+          <div className="admin-panel__head">
+            <h2>Gallery library</h2>
+            <span className="admin-count">{filteredItems.length}</span>
+          </div>
+          <div className="media-admin-gallery">
+            {filteredItems.length ? filteredItems.map((item) => (
+              <article key={item.id} className="media-admin-card">
+                <div className="media-thumb-wrap">
+                  {item.thumbnail_url || item.image_url ? (
+                    <img decoding="async" loading="lazy" src={item.thumbnail_url || item.image_url} alt="" />
+                  ) : (
+                    <div className="media-placeholder">VIDEO</div>
+                  )}
+                  {item.media_type === "video" && <span className="media-thumb-play" aria-hidden="true">&#9654;</span>}
+                </div>
+                <div className="media-card-content">
+                  <input
+                    aria-label="Media title"
+                    placeholder="Media title"
+                    value={item.title || ""}
+                    onChange={(event) => setGallery((val) => val.map((entry) => entry.id === item.id ? { ...entry, title: event.target.value } : entry))}
+                    onBlur={(event) => patchGallery(item, "title", event.target.value)}
+                  />
+                  <input
+                    aria-label="Caption"
+                    placeholder="Caption"
+                    value={item.caption || ""}
+                    onChange={(event) => setGallery((val) => val.map((entry) => entry.id === item.id ? { ...entry, caption: event.target.value } : entry))}
+                    onBlur={(event) => patchGallery(item, "caption", event.target.value)}
+                  />
+                  <div className="media-gallery-meta">
+                    <div className="media-field-cell">
+                      <label>Category</label>
+                      <select
+                        aria-label="Category"
+                        value={item.category || "Videos"}
+                        onChange={(event) => patchGallery(item, "category", event.target.value)}
+                      >
+                        {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+                      </select>
+                    </div>
+                    <div className="media-field-cell">
+                      <label>Album / Tag</label>
+                      <input
+                        placeholder="Album"
+                        value={item.album || ""}
+                        onChange={(event) => setGallery((val) => val.map((entry) => entry.id === item.id ? { ...entry, album: event.target.value } : entry))}
+                        onBlur={(event) => patchGallery(item, "album", event.target.value)}
+                      />
+                    </div>
+                    <div className="media-field-cell media-field-cell--full">
+                      <label>
+                        Video URL {item.media_type === "video" && <span className="media-pill-tag">Video</span>}
+                      </label>
+                      <input
+                        placeholder="https://www.youtube.com/watch?v=... or MP4"
+                        value={item.video_url || ""}
+                        onChange={(event) => setGallery((val) => val.map((entry) => entry.id === item.id ? { ...entry, video_url: event.target.value, media_type: event.target.value ? "video" : "image" } : entry))}
+                        onBlur={(event) => patchGallery(item, "video_url", event.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div className="admin-actions">
+                    <button type="button" className="admin-edit-btn" onClick={() => openEditGallery(item)}>Edit details</button>
+                    <select
+                      aria-label="Publishing status"
+                      value={item.status}
+                      onChange={(event) => patchGallery(item, "status", event.target.value)}
+                    >
+                      {statuses.map((status) => <option key={status}>{status}</option>)}
+                    </select>
+                    <button type="button" onClick={() => patchGallery(item, "is_featured", !item.is_featured)}>
+                      {item.is_featured ? "Featured" : "Set featured"}
+                    </button>
+                    <button type="button" onClick={() => patchGallery(item, "display_order", Math.max(0, (item.display_order || 0) - 1))}>
+                      Up
+                    </button>
+                    <button type="button" onClick={() => patchGallery(item, "display_order", (item.display_order || 0) + 1)}>
+                      Down
+                    </button>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (confirm("Delete gallery item permanently?")) {
+                          await window.RuchiBackend.media.deleteGallery(item.id);
+                          load();
+                        }
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </article>
+            )) : (
+              <div className="admin-empty-state">
+                <span>□</span>
+                <h3>No media found</h3>
+                <p>Upload a new asset, add a video, or adjust the active filters.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    ) : null}
 
     {tab === "press" ? <div className={`media-library-layout${editorOpen ? " is-editing" : ""}`}>
       {editorOpen ? <Editor kind={editPress ? "Edit press release" : "New press release"} onSubmit={savePress} onCancel={() => setEditorOpen(false)} upload={async (asset) => setPressForm((value) => ({ ...value, cover_asset_id: asset.id }))}>

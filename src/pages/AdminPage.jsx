@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import MediaAdmin from "../components/admin/MediaAdmin";
 import AdminShell, { showAdminToast } from "../components/admin/AdminShell";
 import AdminDashboard from "../components/admin/AdminDashboard";
@@ -1430,6 +1430,20 @@ function LeadsAdmin() {
     setSelectedLead(null);
     load();
   };
+  const toggleVerification = async (lead) => {
+    const isCurrentlyVerified = leadVerificationStatus(lead) === "verified";
+    const nextStatus = isCurrentlyVerified ? "unverified" : "verified";
+    const { error } = await window.RuchiBackend.leads.updateVerificationStatus(lead.id, nextStatus);
+    if (error) {
+      showAdminToast("Verification update failed", error.message || "Could not update lead verification.");
+      return;
+    }
+    showAdminToast(
+      nextStatus === "verified" ? "Lead verified" : "Lead unverified",
+      `The lead has been marked as ${nextStatus}.`
+    );
+    load();
+  };
 
   const filteredLeads = leads.filter((lead) => {
     const haystack = `${lead.name} ${lead.phone} ${lead.email} ${lead.interest} ${lead.city} ${lead.source}`.toLowerCase();
@@ -1490,6 +1504,14 @@ function LeadsAdmin() {
             </div>
             <div className="admin-actions admin-lead-card__actions">
               <button type="button" onClick={() => setSelectedLead(lead)}>View details</button>
+              <button
+                type="button"
+                className={`admin-lead-verify-toggle ${leadVerificationStatus(lead) === "verified" ? "is-verified" : "is-unverified"}`}
+                onClick={() => toggleVerification(lead)}
+                title={leadVerificationStatus(lead) === "verified" ? "Click to mark as unverified" : "Click to mark as verified"}
+              >
+                {leadVerificationStatus(lead) === "verified" ? "✓ Verified" : "Verify Lead"}
+              </button>
               <select aria-label={`Status for ${lead.name || "lead"}`} value={lead.status || "new"} onChange={(event) => updateStatus(lead.id, event.target.value)}>
                 {["new", "contacted", "qualified", "lost", "closed"].map((item) => <option key={item}>{item}</option>)}
               </select>
@@ -1499,7 +1521,7 @@ function LeadsAdmin() {
         )) : <div className="admin-empty-state"><h3>No matching leads</h3><p>New website enquiries will appear here. Adjust the search or status filter to see other records.</p><a href="/#contact" target="_blank" rel="noreferrer">View website form</a></div>}
       </div>
       </div>
-      {selectedLead ? <div className="admin-drawer-layer" role="dialog" aria-modal="true" aria-label={`Lead details for ${selectedLead.name}`}><button className="admin-drawer-scrim" type="button" aria-label="Close lead details" onClick={() => setSelectedLead(null)} /><aside className="admin-drawer"><header><div><span>Lead details</span><h2>{selectedLead.name}</h2></div><button type="button" onClick={() => setSelectedLead(null)} aria-label="Close">×</button></header><div className="admin-drawer__body"><span className={`admin-app-status admin-app-status--${selectedLead.status}`}>{selectedLead.status}</span> <span className={`admin-app-status admin-app-status--${leadVerificationStatus(selectedLead)}`}>{leadVerificationStatus(selectedLead)}</span><dl><div><dt>Email</dt><dd><a href={`mailto:${selectedLead.email}`}>{selectedLead.email || "Not provided"}</a></dd></div><div><dt>Phone</dt><dd><a href={`tel:${selectedLead.phone}`}>{selectedLead.phone || "Not provided"}</a></dd></div><div><dt>Project interest</dt><dd>{selectedLead.interest || "Not specified"}</dd></div><div><dt>City</dt><dd>{selectedLead.city || "Not specified"}</dd></div><div><dt>Verification</dt><dd>{leadVerificationStatus(selectedLead)}{selectedLead.verified_at ? ` on ${new Date(selectedLead.verified_at).toLocaleString()}` : ""}</dd></div><div><dt>CRM delivery</dt><dd>{selectedLead.crm_status || "not_sent"}{selectedLead.crm_error ? ` — ${selectedLead.crm_error}` : ""}</dd></div><div><dt>Source</dt><dd>{selectedLead.source || "Not specified"}</dd></div><div><dt>Received</dt><dd>{selectedLead.created_at ? new Date(selectedLead.created_at).toLocaleString() : "Not available"}</dd></div></dl>{selectedLead.notes ? <section><h3>Notes</h3><p>{selectedLead.notes}</p></section> : null}</div><footer><select value={selectedLead.status} onChange={async (event) => { const status = event.target.value; await updateStatus(selectedLead.id, status); setSelectedLead((lead) => ({ ...lead, status })); }}>{leadStatuses.map((item) => <option key={item}>{item}</option>)}</select><button type="button" className="admin-danger" onClick={() => remove(selectedLead.id)}>Delete lead</button></footer></aside></div> : null}
+      {selectedLead ? <div className="admin-drawer-layer" role="dialog" aria-modal="true" aria-label={`Lead details for ${selectedLead.name}`}><button className="admin-drawer-scrim" type="button" aria-label="Close lead details" onClick={() => setSelectedLead(null)} /><aside className="admin-drawer"><header><div><span>Lead details</span><h2>{selectedLead.name}</h2></div><button type="button" onClick={() => setSelectedLead(null)} aria-label="Close">×</button></header><div className="admin-drawer__body"><span className={`admin-app-status admin-app-status--${selectedLead.status}`}>{selectedLead.status}</span> <span className={`admin-app-status admin-app-status--${leadVerificationStatus(selectedLead)}`}>{leadVerificationStatus(selectedLead)}</span><dl><div><dt>Email</dt><dd><a href={`mailto:${selectedLead.email}`}>{selectedLead.email || "Not provided"}</a></dd></div><div><dt>Phone</dt><dd><a href={`tel:${selectedLead.phone}`}>{selectedLead.phone || "Not provided"}</a></dd></div><div><dt>Project interest</dt><dd>{selectedLead.interest || "Not specified"}</dd></div><div><dt>City</dt><dd>{selectedLead.city || "Not specified"}</dd></div><div><dt>Verification</dt><dd>{leadVerificationStatus(selectedLead)}{selectedLead.verified_at ? ` on ${new Date(selectedLead.verified_at).toLocaleString()}` : ""}</dd></div><div><dt>CRM delivery</dt><dd>{selectedLead.crm_status || "not_sent"}{selectedLead.crm_error ? ` — ${selectedLead.crm_error}` : ""}</dd></div><div><dt>Source</dt><dd>{selectedLead.source || "Not specified"}</dd></div><div><dt>Received</dt><dd>{selectedLead.created_at ? new Date(selectedLead.created_at).toLocaleString() : "Not available"}</dd></div></dl>{selectedLead.notes ? <section><h3>Notes</h3><p>{selectedLead.notes}</p></section> : null}</div><footer><select value={selectedLead.status} onChange={async (event) => { const status = event.target.value; await updateStatus(selectedLead.id, status); setSelectedLead((lead) => ({ ...lead, status })); }}>{leadStatuses.map((item) => <option key={item}>{item}</option>)}</select><button type="button" className={`admin-lead-verify-toggle ${leadVerificationStatus(selectedLead) === "verified" ? "is-verified" : "is-unverified"}`} onClick={async () => { await toggleVerification(selectedLead); const nextVerStatus = leadVerificationStatus(selectedLead) === "verified" ? "unverified" : "verified"; setSelectedLead((lead) => ({ ...lead, verification_status: nextVerStatus, verified_at: nextVerStatus === "verified" ? new Date().toISOString() : null })); }}>{leadVerificationStatus(selectedLead) === "verified" ? "Mark unverified" : "Mark verified"}</button><button type="button" className="admin-danger" onClick={() => remove(selectedLead.id)}>Delete lead</button></footer></aside></div> : null}
     </section>
   );
 }
@@ -1834,6 +1856,7 @@ function CareersAdmin() {
   const [applicationQuery, setApplicationQuery] = useState("");
   const [applicationStatus, setApplicationStatus] = useState("All");
   const [applicationJob, setApplicationJob] = useState("All");
+  const jobEditorRef = useRef(null);
 
   const loadJobs = async () => {
     const { data } = await window.RuchiBackend.careers.getAll();
@@ -1874,6 +1897,9 @@ function CareersAdmin() {
       is_active: job.is_active !== false,
       sort_order: job.sort_order ?? "",
     });
+    setTimeout(() => {
+      jobEditorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 60);
   };
   const remove = async (id) => {
     if (!confirm("Delete this job listing permanently?")) return;
@@ -1903,8 +1929,36 @@ function CareersAdmin() {
 
   return (
     <>
-      <div className="admin-collection-head"><div><span className="admin-section-kicker">Recruitment</span><h2>Careers</h2><p>Manage open positions and candidate applications.</p></div><button type="button" className="admin-primary" onClick={() => { setEditingId(null); setForm(emptyJob); setEditorOpen(true); setSubTab("jobs"); }}>+ Add job</button></div>
-      <div className="admin-pipeline-stats admin-career-stats">{[["Active jobs", jobs.filter((job) => job.is_active).length], ["Total applications", applications.length], ["New applications", applications.filter((app) => app.status === "new").length], ["Closed positions", jobs.filter((job) => !job.is_active).length]].map(([label, value]) => <article key={label}><span>{label}</span><strong>{value}</strong></article>)}</div>
+      <div className="admin-collection-head">
+        <div>
+          <span className="admin-section-kicker">Recruitment</span>
+          <h2>Careers</h2>
+          <p>Manage open positions and candidate applications.</p>
+        </div>
+        <button
+          type="button"
+          className="admin-primary"
+          onClick={() => {
+            setEditingId(null);
+            setForm(emptyJob);
+            setEditorOpen(true);
+            setSubTab("jobs");
+            setTimeout(() => {
+              jobEditorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }, 60);
+          }}
+        >
+          + Add job
+        </button>
+      </div>
+      <div className="admin-pipeline-stats admin-career-stats">
+        {[["Active jobs", jobs.filter((job) => job.is_active).length], ["Total applications", applications.length], ["New applications", applications.filter((app) => app.status === "new").length], ["Closed positions", jobs.filter((job) => !job.is_active).length]].map(([label, value]) => (
+          <article key={label}>
+            <span>{label}</span>
+            <strong>{value}</strong>
+          </article>
+        ))}
+      </div>
       <div className="admin-careers-head">
         <div className="admin-subtabs admin-careers-subtabs">
           <button type="button" className={subTab === "jobs" ? "is-active" : ""} onClick={() => setSubTab("jobs")}>Job Listings</button>
@@ -1914,7 +1968,64 @@ function CareersAdmin() {
       </div>
 
       {subTab === "jobs" ? (
-        <div className="admin-grid admin-careers-grid">
+        <div className="admin-careers-jobs-layout">
+          {editorOpen ? (
+            <form ref={jobEditorRef} className="admin-panel admin-job-editor" onSubmit={save} noValidate>
+              <div className="admin-panel__head">
+                <div>
+                  <span className="admin-section-kicker">Career editor</span>
+                  <h2>{editingId ? form.title || "Update job" : "Add new job"}</h2>
+                </div>
+                <div className="admin-header-actions">
+                  <button type="button" className="admin-text-btn" onClick={reset}>Close</button>
+                  <button className="admin-primary" type="submit">{editingId ? "Save changes" : "Add job"}</button>
+                </div>
+              </div>
+              <div className="admin-editor-actions admin-editor-actions--top">
+                <span>{editingId ? `Save details for "${form.title || "Job listing"}"` : "Save new job listing"}</span>
+                <div className="admin-header-actions">
+                  <button type="button" className="admin-text-btn" onClick={reset}>Cancel</button>
+                  <button className="admin-primary" type="submit">{editingId ? "Save changes" : "Add job"}</button>
+                </div>
+              </div>
+              <div className="admin-form-grid">
+                <AdminField label="Title *">
+                  <input required value={form.title} onChange={(event) => set("title", event.target.value)} placeholder="e.g. Senior Project Manager" />
+                </AdminField>
+                <AdminField label="Department *">
+                  <input required value={form.dept} onChange={(event) => set("dept", event.target.value)} placeholder="e.g. Construction & Engineering" />
+                </AdminField>
+                <AdminField label="Type">
+                  <select value={form.type} onChange={(event) => set("type", event.target.value)}>
+                    {JOB_TYPES.map((item) => <option key={item}>{item}</option>)}
+                  </select>
+                </AdminField>
+                <AdminField label="Sort order">
+                  <input type="number" value={form.sort_order} onChange={(event) => set("sort_order", event.target.value)} placeholder="0" />
+                </AdminField>
+              </div>
+              <AdminField label="Short description *">
+                <textarea required rows={2} value={form.desc} onChange={(event) => set("desc", event.target.value)} placeholder="Brief summary of the role shown in the job card" />
+              </AdminField>
+              <AdminField label="Overview">
+                <textarea rows={3} value={form.overview} onChange={(event) => set("overview", event.target.value)} placeholder="Full role overview, department goals, and team introduction" />
+              </AdminField>
+              <AdminField label="Responsibilities (one per line)">
+                <textarea rows={4} value={form.responsibilities} onChange={(event) => set("responsibilities", event.target.value)} placeholder="Lead on-site construction activities&#10;Manage contractor schedules&#10;Ensure safety compliance" />
+              </AdminField>
+              <AdminField label="Requirements (one per line)">
+                <textarea rows={4} value={form.requirements} onChange={(event) => set("requirements", event.target.value)} placeholder="B.Tech in Civil Engineering&#10;5+ years experience in high-rise residential projects&#10;Strong communication skills" />
+              </AdminField>
+              <label className="admin-check">
+                <input type="checkbox" checked={form.is_active} onChange={(event) => set("is_active", event.target.checked)} /> Active listing (visible to applicants)
+              </label>
+              <div className="admin-editor-actions">
+                <button type="button" className="admin-text-btn" onClick={reset}>Cancel</button>
+                <button className="admin-primary" type="submit">{editingId ? "Update job" : "Add job"}</button>
+              </div>
+            </form>
+          ) : null}
+
           <div className="admin-panel">
             <div className="admin-panel__head">
               <h2>Job Listings</h2>
@@ -1945,36 +2056,6 @@ function CareersAdmin() {
               )) : <p className="admin-empty">No job listings yet.</p>}
             </div>
           </div>
-
-          {editorOpen ? <form className="admin-panel admin-job-editor" onSubmit={save} noValidate>
-            <div className="admin-panel__head">
-              <div><span className="admin-section-kicker">Career editor</span><h2>{editingId ? form.title || "Update job" : "Add job"}</h2></div>
-              <div className="admin-header-actions">
-                {editingId ? <button type="button" className="admin-text-btn" onClick={reset}>Cancel</button> : null}
-                <button className="admin-primary" type="submit">{editingId ? "Save" : "Add job"}</button>
-              </div>
-            </div>
-            <div className="admin-editor-actions admin-editor-actions--top">
-              <span>{editingId ? `Save details for "${form.title || "Job listing"}"` : "Save new job listing"}</span>
-              <button className="admin-primary" type="submit">{editingId ? "Save" : "Add job"}</button>
-            </div>
-            <div className="admin-form-grid">
-              <AdminField label="Title"><input required value={form.title} onChange={(event) => set("title", event.target.value)} /></AdminField>
-              <AdminField label="Department"><input required value={form.dept} onChange={(event) => set("dept", event.target.value)} /></AdminField>
-              <AdminField label="Type">
-                <select value={form.type} onChange={(event) => set("type", event.target.value)}>
-                  {JOB_TYPES.map((item) => <option key={item}>{item}</option>)}
-                </select>
-              </AdminField>
-              <AdminField label="Sort order"><input type="number" value={form.sort_order} onChange={(event) => set("sort_order", event.target.value)} /></AdminField>
-            </div>
-            <AdminField label="Short description"><textarea required rows={2} value={form.desc} onChange={(event) => set("desc", event.target.value)} /></AdminField>
-            <AdminField label="Overview"><textarea rows={3} value={form.overview} onChange={(event) => set("overview", event.target.value)} /></AdminField>
-            <AdminField label="Responsibilities (one per line)"><textarea rows={4} value={form.responsibilities} onChange={(event) => set("responsibilities", event.target.value)} /></AdminField>
-            <AdminField label="Requirements (one per line)"><textarea rows={4} value={form.requirements} onChange={(event) => set("requirements", event.target.value)} /></AdminField>
-            <label className="admin-check"><input type="checkbox" checked={form.is_active} onChange={(event) => set("is_active", event.target.checked)} /> Active listing</label>
-            <button className="admin-primary" type="submit">{editingId ? "Update job" : "Add job"}</button>
-          </form> : null}
         </div>
       ) : subTab === "applications" ? (
         <>

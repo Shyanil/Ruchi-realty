@@ -1,11 +1,45 @@
-import { GALLERY_MEDIA } from "../data/galleryMedia";
+import { GALLERY_MEDIA } from "../data/galleryMedia.js";
 export const GALLERY_CATEGORIES = ["Videos","Events","Office Culture"];
 export const EVENT_TYPES = ["All","Event","Award","Media Coverage"];
 export const slugifyMedia = (value = "") => value.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 let manifestCache;
 const manifest = async () => manifestCache || (manifestCache = await fetch("/assets/media/gallery/media-assets-manifest.json").then((r) => r.json()));
-const youtubeThumb = (url = "") => { const id=url.match(/[?&]v=([^&]+)/)?.[1]||url.match(/youtu\.be\/([^?]+)/)?.[1]; return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : ""; };
-const normalizeGallery = (item) => { const image=item.image_url||item.media_assets?.public_url||item.public_url||youtubeThumb(item.video_url); return { ...item, id:item.id||item.hash, media_type:item.media_type||(item.video_url?"video":"image"), image_url:image, thumbnail_url:item.thumbnail_url||item.media_assets?.thumbnail_url||image, title:item.title||item.alt_text, is_featured:Boolean(item.is_featured), internal_links:Array.isArray(item.internal_links)?item.internal_links:[] }; };
+export const extractYoutubeId = (url = "") => {
+  if (typeof url !== "string") return "";
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|watch\?v=|watch\?.+&v=))([\w-]{11})/i);
+  return match ? match[1] : "";
+};
+export const youtubeThumb = (url = "") => {
+  const id = extractYoutubeId(url);
+  return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : "";
+};
+export const fixLocalMediaExt = (url = "") => {
+  if (typeof url !== "string") return url;
+  if (url.startsWith("/assets/media/")) {
+    return url.replace(/\.(jpg|jpeg|png)$/i, ".webp");
+  }
+  return url;
+};
+export const normalizeGallery = (item) => {
+  if (!item) return null;
+  const isVideo = Boolean(item.video_url && item.video_url.trim()) || item.media_type === "video";
+  const ytThumb = item.video_url ? youtubeThumb(item.video_url) : "";
+  const rawImage = item.image_url || item.media_assets?.public_url || item.public_url || ytThumb;
+  const image = fixLocalMediaExt(rawImage);
+  const rawThumb = item.thumbnail_url || item.media_assets?.thumbnail_url || ytThumb || image;
+  const thumb = fixLocalMediaExt(rawThumb);
+  return {
+    ...item,
+    id: item.id || item.hash,
+    media_type: isVideo ? "video" : (item.media_type || "image"),
+    image_url: image || thumb,
+    thumbnail_url: thumb || image,
+    title: item.title || item.alt_text || "Gallery Item",
+    category: item.category || (isVideo ? "Videos" : "Events"),
+    is_featured: Boolean(item.is_featured),
+    internal_links: Array.isArray(item.internal_links) ? item.internal_links : []
+  };
+};
 export async function getGallery(admin = false) { const fn = admin ? window.RuchiBackend?.media?.getAllGallery : window.RuchiBackend?.media?.getGallery; const result = await fn?.(); if (result?.data?.length) return result.data.map(normalizeGallery); return GALLERY_MEDIA.map(normalizeGallery); }
 const normalizeAwardTitle = (value = "") => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const AWARD_COVERS = {
@@ -26,8 +60,11 @@ const AWARD_COVERS = {
 };
 const withCover = (item) => {
   const localAwardCover = AWARD_COVERS[normalizeAwardTitle(item.title)];
-  const image = localAwardCover || item.image_url || item.media_assets?.public_url || "";
-  return { ...item, image_url:image, thumbnail_url:localAwardCover || item.thumbnail_url || item.media_assets?.thumbnail_url || image, internal_links:Array.isArray(item.internal_links)?item.internal_links:[] };
+  const rawImage = localAwardCover || item.image_url || item.media_assets?.public_url || "";
+  const image = fixLocalMediaExt(rawImage);
+  const rawThumb = localAwardCover || item.thumbnail_url || item.media_assets?.thumbnail_url || image;
+  const thumb = fixLocalMediaExt(rawThumb);
+  return { ...item, image_url:image, thumbnail_url:thumb, internal_links:Array.isArray(item.internal_links)?item.internal_links:[] };
 };
 export async function getPress(admin = false) { const fn = admin ? window.RuchiBackend?.media?.getAllPress : window.RuchiBackend?.media?.getPress; const result = await fn?.(); return (result?.data || []).map(withCover); }
 export async function getPressBySlug(slug) { const result = await window.RuchiBackend?.media?.getPressBySlug?.(slug); return result?.data ? withCover(result.data) : null; }
