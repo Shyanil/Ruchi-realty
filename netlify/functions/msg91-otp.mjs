@@ -3,7 +3,7 @@ const env = (name) => globalThis?.process?.env?.[name] || globalThis?.Netlify?.e
 const supabaseUrl = () => (env("SUPABASE_URL") || env("VITE_SUPABASE_URL") || "").replace(/\/$/, "");
 const supabaseServerKey = () => env("SUPABASE_SECRET_KEY") || env("SUPABASE_SERVICE_ROLE_KEY");
 const supabaseKey = () =>
-  supabaseServerKey() || env("SUPABASE_ANON_KEY") || env("VITE_SUPABASE_ANON_KEY") || "";
+  supabaseServerKey() || env("SUPABASE_ANON_KEY") || env("NEXT_PUBLIC_SUPABASE_ANON_KEY") || env("VITE_SUPABASE_ANON_KEY") || "";
 
 const JSON_HEADERS = { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" };
 function json(status, body) { return new Response(JSON.stringify(body), { status, headers: JSON_HEADERS }); }
@@ -16,11 +16,12 @@ function isUuid(value) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(value || ""));
 }
 function isLocalhostRequest(request) {
+  if (process.env.NODE_ENV !== "development") return false;
   try {
     const url = new URL(request?.url || "http://localhost");
     if (url.hostname === "localhost" || url.hostname === "127.0.0.1") return true;
   } catch {}
-  return process.env.NODE_ENV === "development" && process.env.NETLIFY !== "true";
+  return false;
 }
 
 function providerText(payload) {
@@ -52,7 +53,7 @@ function providerError(payload, fallback) {
   if (message.includes("expired")) return "This OTP has expired. Please request a new OTP.";
   if (message.includes("invalid") || message.includes("incorrect") || message.includes("mismatch") || message.includes("not match") || message.includes("not verified")) return "The OTP is incorrect. Please check it and try again.";
   if (message.includes("retry") || message.includes("maximum") || message.includes("limit")) return "Too many OTP attempts. Please wait and try again later.";
-  if (message.includes("auth") || message.includes("unauthorized")) return "The OTP service credentials were rejected. Please check the MSG91 settings in Netlify.";
+  if (message.includes("auth") || message.includes("unauthorized")) return "The OTP service credentials were rejected. Please check the MSG91 settings in your hosting environment.";
   return fallback;
 }
 function providerErrorStatus(payload, httpStatus) {
