@@ -10,6 +10,7 @@
     "build": "next build --webpack",
     "build:cloudflare": "opennextjs-cloudflare build",
     "preview:cloudflare": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "predeploy:cloudflare": "node scripts/ensure-cloudflare-build.mjs",
     "deploy:cloudflare": "opennextjs-cloudflare deploy -- --keep-vars",
     "start": "next start",
     "test": "node --test tests/*.test.mjs"
