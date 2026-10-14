@@ -5,9 +5,11 @@ import SEO from "../components/SEO";
 import InternalLinks from "../components/InternalLinks";
 import MediaHero from "../components/media/MediaHero";
 import { EVENT_TYPES, getEvents } from "../services/mediaService";
+import { useServerData } from "../server-data";
 
 export default function EventsAwardsPage() {
-  const [items, setItems] = useState([]);
+  const serverData = useServerData();
+  const [items, setItems] = useState(serverData.events || []);
   const [type, setType] = useState("All");
   useEffect(() => { getEvents().then(setItems); }, []);
   const filtered = useMemo(() => items.filter((item) => type === "All" || item.item_type === type), [items, type]);

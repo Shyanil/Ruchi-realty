@@ -4,19 +4,25 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build && vite build --ssr src/entry-server.jsx --outDir .ssr && node scripts/prerender.mjs",
-    "preview": "vite preview",
-    "test": "node --test --test-isolation=none tests/*.test.mjs"
+    "predev": "node scripts/sync-backend-client.mjs",
+    "dev": "next dev --webpack",
+    "prebuild": "node scripts/sync-backend-client.mjs",
+    "build": "next build --webpack",
+    "build:cloudflare": "opennextjs-cloudflare build",
+    "preview:cloudflare": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy:cloudflare": "opennextjs-cloudflare deploy -- --keep-vars",
+    "start": "next start",
+    "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "@opennextjs/cloudflare": "^1.20.11",
+    "next": "16.3.8",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
     "react-router-dom": "^6.28.0",
     "sharp": "^0.35.2"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.4",
-    "vite": "^6.0.0"
+    "wrangler": "^4.151.0"
   }
 }

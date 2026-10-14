@@ -5,11 +5,13 @@ import { Footer } from '../components/Footer';
 import SEO from '../components/SEO';
 import MediaHero from '../components/media/MediaHero';
 import { getPress } from '../services/mediaService';
+import { useServerData } from '../server-data';
 
 const date = (value) => value ? new Date(value).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Press update';
 
 export default function PressReleasesPage() {
-  const [items, setItems] = useState([]);
+  const serverData = useServerData();
+  const [items, setItems] = useState(serverData.press || []);
   const [query, setQuery] = useState('');
 
   useEffect(() => { getPress().then(setItems); }, []);

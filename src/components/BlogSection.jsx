@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Reveal, RImg } from "./shared";
 import { BLOG } from "../data/siteData";
+import { useServerData } from "../server-data";
 
 export function BlogSection() {
-  const [items, setItems] = useState(() => BLOG);
+  const serverData = useServerData();
+  const [items, setItems] = useState(() => serverData.blogs || BLOG);
   useEffect(() => {
     let active = true;
     if (window.RuchiBackend?.blogs) {

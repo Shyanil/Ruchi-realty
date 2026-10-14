@@ -8,6 +8,7 @@ import { Reveal, RImg } from "../components/shared";
 import { CardArrow } from "../components/ProjectsSection";
 import LeadCaptureFlow, { inferLeadCity } from "../components/LeadCaptureFlow";
 import { PROJECTS } from "../data/projects";
+import { useServerData } from "../server-data";
 import { ORGANIZATION_ID, absoluteUrl, breadcrumbSchema, faqSchema } from "../data/structuredData";
 import { OSCAR_PRIDE_FALLBACK } from "../data/oscarPride";
 import { OSCAR_PALACE_FALLBACK } from "../data/oscarPalace";
@@ -1076,6 +1077,7 @@ function ProjectEnquiryCTA({ data, onEnquire }) {
   return <section className="section-pad project-final-cta" id="enquire"><div className="rr-wrap project-final-cta__inner"><span className="eyebrow">Take a Closer Look</span><h2>Discover {data.title}<br/><span>in complete detail</span></h2><p>{data.brochureUrl?"Download the project brochure for plans, amenities, specifications and location highlights—all in one place.":"Share your details and our project team will help with plans, availability and a site visit."}</p><button className="submit-btn" type="button" onClick={onEnquire}>{data.brochureUrl?data.ctaLabels.brochure:data.ctaLabels.visit}<CtaArrow/></button></div></section>;
 }
 export default function GenericProjectPage({ slugOverride = "" }) {
+  const serverData = useServerData();
   const params = useParams();
   const slug = slugOverride || params.slug;
   const fallback = FALLBACK_SUBPAGES[slug] || null;
@@ -1089,9 +1091,9 @@ export default function GenericProjectPage({ slugOverride = "" }) {
     location: fallbackMeta.city || fallbackListing?.city || "",
     type: fallbackMeta.type || fallbackListing?.type || "Residential",
   } : null;
-  const [project, setProject] = useState(fallbackProject);
-  const [subpage, setSubpage] = useState(fallback);
-  const [loaded, setLoaded] = useState(Boolean(fallback));
+  const [project, setProject] = useState(serverData.project || fallbackProject);
+  const [subpage, setSubpage] = useState(() => mergeProjectSubpage(fallback, serverData.subpage));
+  const [loaded, setLoaded] = useState(Boolean(fallback || serverData.project));
   const [brochurePopup, setBrochurePopup] = useState(false);
   const [heroPassed, setHeroPassed] = useState(false);
 

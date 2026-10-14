@@ -6,6 +6,7 @@ import { Footer } from "../components/Footer";
 import SEO from "../components/SEO";
 import { getPublicBlogs, normalizeBlog } from "../services/blogService";
 import { BLOG } from "../data/siteData";
+import { useServerData } from "../server-data";
 import { ORGANIZATION_ID, absoluteUrl, breadcrumbSchema } from "../data/structuredData";
 
 const PAGE_SIZE = 6;
@@ -24,7 +25,8 @@ function Card({ blog }) {
 }
 
 export default function BlogPage() {
-  const [blogs, setBlogs] = useState(() => BLOG.map(normalizeBlog));
+  const serverData = useServerData();
+  const [blogs, setBlogs] = useState(() => serverData.blogs || BLOG.map(normalizeBlog));
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
   const [visible, setVisible] = useState(PAGE_SIZE);

@@ -5,11 +5,13 @@ import { Footer } from "../components/Footer";
 import SEO from "../components/SEO";
 import InternalLinks from "../components/InternalLinks";
 import { getPressBySlug } from "../services/mediaService";
+import { useServerData } from "../server-data";
 
 export default function PressReleaseDetailPage() {
+  const serverData = useServerData();
   const { slug } = useParams();
-  const [item, setItem] = useState();
-  const [loading, setLoading] = useState(true);
+  const [item, setItem] = useState(serverData.pressItem);
+  const [loading, setLoading] = useState(!serverData.pressItem);
 
   useEffect(() => {
     getPressBySlug(slug).then((value) => {

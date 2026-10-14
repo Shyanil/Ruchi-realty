@@ -9,6 +9,7 @@ import InternalLinks from "../components/InternalLinks";
 import RichText from "../components/RichText";
 import { getBlogBySlug, getPublicBlogs, normalizeBlog, slugify } from "../services/blogService";
 import { BLOG } from "../data/siteData";
+import { useServerData } from "../server-data";
 import { breadcrumbSchema, faqSchema } from "../data/structuredData";
 import { hasRichTextHtml, richTextHeadings } from "../utils/richText";
 
@@ -39,9 +40,10 @@ function ArticleBody({ content }) {
 }
 
 export default function BlogDetailsPage() {
+  const serverData = useServerData();
   const { slug } = useParams();
-  const fallbackBlogs = useMemo(() => BLOG.map(normalizeBlog), []);
-  const fallbackBlog = fallbackBlogs.find((item) => item.slug === slug) || null;
+  const fallbackBlogs = useMemo(() => serverData.blogs || BLOG.map(normalizeBlog), [serverData.blogs]);
+  const fallbackBlog = serverData.blog || fallbackBlogs.find((item) => item.slug === slug) || null;
   const [blog, setBlog] = useState(fallbackBlog);
   const [related, setRelated] = useState(() => fallbackBlogs.filter((entry) => entry.slug !== slug && entry.category === fallbackBlog?.category).slice(0, 3));
   const [loading, setLoading] = useState(!fallbackBlog);

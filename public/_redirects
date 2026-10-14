@@ -45,6 +45,3 @@
 /press-releases /media/press-releases 301
 /press-releases/ /media/press-releases 301
 /awards /media/events-awards 301
-/blogs/* /index.html 200
-/blogs /index.html 200
-/*    /index.html   200

@@ -6,6 +6,7 @@ import MediaHero from '../components/media/MediaHero';
 import MediaLightbox from '../components/media/MediaLightbox';
 import { GALLERY_CATEGORIES, getGallery, normalizeGallery, youtubeThumb } from '../services/mediaService';
 import { GALLERY_MEDIA } from '../data/galleryMedia.js';
+import { useServerData } from '../server-data';
 
 const GALLERY_FALLBACK_IMAGE = '/assets/media/gallery/gallery-4.webp';
 
@@ -28,7 +29,8 @@ function GalleryCard({ item, index, onOpen }) {
 }
 
 export default function MediaGalleryPage() {
-  const [items, setItems] = useState(() => GALLERY_MEDIA.map(normalizeGallery));
+  const serverData = useServerData();
+  const [items, setItems] = useState(() => serverData.gallery || GALLERY_MEDIA.map(normalizeGallery));
   const [category, setCategory] = useState(GALLERY_CATEGORIES[0]);
   const [query, setQuery] = useState('');
   const [limit, setLimit] = useState(12);

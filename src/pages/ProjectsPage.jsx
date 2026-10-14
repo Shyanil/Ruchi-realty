@@ -7,6 +7,7 @@ import { Reveal } from "../components/shared";
 import { ProjectTile, cityOf } from "../components/ProjectsSection";
 import SEO from "../components/SEO";
 import { PROJECTS } from "../data/projects";
+import { useServerData } from "../server-data";
 import { ORGANIZATION_ID, absoluteUrl, breadcrumbSchema, faqSchema } from "../data/structuredData";
 
 const PP_CITIES = ["All", "Kolkata", "Indore", "Bhopal"];
@@ -109,12 +110,13 @@ function scrollToProjects() {
 }
 
 export default function ProjectsPage() {
+  const serverData = useServerData();
   const routeLocation = useLocation();
   const navigate = useNavigate();
   const init = ppHashFilter(routeLocation.hash);
   const [city, setCity] = useState(init.city);
   const [status, setStatus] = useState(init.status);
-  const [items, setItems] = useState(() => PROJECTS);
+  const [items, setItems] = useState(() => serverData.projects?.length ? serverData.projects : PROJECTS);
   const [type, setType] = useState(init.type);
 
   const updateFilters = ({ nextCity = city, nextStatus = status, nextType = type } = {}) => {

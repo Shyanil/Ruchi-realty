@@ -195,6 +195,7 @@ export function Footer() {
 
         <div className="footer__bottom">
           <span>© 2026 · Ruchi Realty Holdings Ltd. · Established 2008</span>
+          <span className="footer__credit">Designed and developed by <a href="https://squashcode.com/" target="_blank" rel="noopener noreferrer">SquashCode</a></span>
           <span className="footer__legal">
             <Link to="/privacy-policy">Privacy</Link><Link to="/disclaimer">Disclaimer</Link>
           </span>

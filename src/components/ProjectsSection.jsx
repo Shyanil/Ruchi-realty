@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Reveal, RImg } from "./shared";
 import { PROJECTS } from "../data/projects";
+import { useServerData } from "../server-data";
 
 const PROJECT_CITIES = ["All", "Kolkata", "Indore", "Bhopal"];
 const PROJECTS_PER_PAGE = 3;
@@ -187,9 +188,10 @@ export function ProjectTile({ p, i, n }) {
 }
 
 export function ProjectsSection() {
+  const serverData = useServerData();
   const [city, setCity] = useState("All");
   const [page, setPage] = useState(0);
-  const [items, setItems] = useState(() => PROJECTS);
+  const [items, setItems] = useState(() => serverData.projects?.length ? serverData.projects : PROJECTS);
   const [moving, setMoving] = useState(false);
   const [paused, setPaused] = useState(false);
   useEffect(() => {

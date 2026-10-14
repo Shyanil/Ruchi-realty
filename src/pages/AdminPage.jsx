@@ -404,7 +404,7 @@ function AdminLogin({ onLogin }) {
   return (
     <main className="admin-login">
       <form className="admin-login__box" onSubmit={submit}>
-        <img decoding="async" loading="lazy" src="assets/logo-h.webp" alt="Ruchi Realty" />
+        <img decoding="async" loading="lazy" src="/assets/logo-h.webp" alt="Ruchi Realty" />
         <p className="admin-kicker">Secure admin login</p>
         <h1>Admin panel</h1>
         <AdminField label="Email">
@@ -2129,8 +2129,8 @@ function CareersAdmin() {
 }
 
 export default function AdminPage() {
-  const [user, setUser] = useState(() => window.RuchiBackend?.auth?.currentUser());
-  const [checkingSession, setCheckingSession] = useState(Boolean(window.RuchiBackend?.auth?.currentUser()));
+  const [user, setUser] = useState(null);
+  const [checkingSession, setCheckingSession] = useState(true);
   const [tab, setTab] = useState("dashboard");
   useEffect(() => {
     document.body.classList.add("admin-body");

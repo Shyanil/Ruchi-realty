@@ -1,47 +1,28 @@
-import { useEffect } from "react";
+import Head from 'next/head';
 
-const SITE_URL = "https://ruchirealty.com";
-const upsertMeta = (selector, attrs) => {
-  let element = document.head.querySelector(selector);
-  if (!element) {
-    element = document.createElement("meta");
-    document.head.appendChild(element);
-  }
-  Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, value));
-};
+const SITE_URL = 'https://ruchirealty.com';
 
-export default function SEO({ title, description, canonical, image, type = "website", article, schemas = [] }) {
-  useEffect(() => {
-    const clean = new URL(canonical || location.pathname, SITE_URL);
-    clean.search = "";
-    clean.hash = "";
-    const url = clean.toString();
-    const imageUrl = new URL(image || "/assets/logo-h.webp", SITE_URL).toString();
-    document.title = title;
-    upsertMeta('meta[name="description"]', { name: "description", content: description });
-    upsertMeta('meta[name="theme-color"]', { name: "theme-color", content: "#231f20" });
-    [["og:title", title], ["og:description", description], ["og:url", url], ["og:image", imageUrl], ["og:type", type], ["twitter:card", "summary_large_image"], ["twitter:title", title], ["twitter:description", description], ["twitter:image", imageUrl]].forEach(([property, content]) => {
-      const attr = property.startsWith("twitter:") ? "name" : "property";
-      upsertMeta(`meta[${attr}="${property}"]`, { [attr]: property, content });
-    });
-    if (article?.publishedTime) upsertMeta('meta[property="article:published_time"]', { property: "article:published_time", content: article.publishedTime });
-    if (article?.modifiedTime) upsertMeta('meta[property="article:modified_time"]', { property: "article:modified_time", content: article.modifiedTime });
-    if (article?.author) upsertMeta('meta[property="article:author"]', { property: "article:author", content: article.author });
-    let link = document.head.querySelector('link[rel="canonical"]');
-    if (!link) {
-      link = document.createElement("link");
-      link.rel = "canonical";
-      document.head.appendChild(link);
-    }
-    link.href = url;
-  }, [title, description, canonical, image, type, article]);
-
-  return <>{schemas.filter(Boolean).map((schema, index) => (
-    <script
-      data-ruchi-schema="true"
-      key={`${Array.isArray(schema["@type"]) ? schema["@type"].join("-") : schema["@type"] || "schema"}-${schema["@id"] || index}`}
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }}
-    />
-  ))}</>;
+export default function SEO({ title, description, canonical, image, type = 'website', article, schemas = [] }) {
+  const url = new URL(canonical || '/', SITE_URL);
+  url.search = '';
+  url.hash = '';
+  const imageUrl = new URL(image || '/assets/logo-h.webp', SITE_URL).toString();
+  return <Head>
+    <title>{title}</title>
+    <meta name="description" content={description} key="description" />
+    <link rel="canonical" href={url.toString()} key="canonical" />
+    <meta property="og:title" content={title} key="og:title" />
+    <meta property="og:description" content={description} key="og:description" />
+    <meta property="og:url" content={url.toString()} key="og:url" />
+    <meta property="og:image" content={imageUrl} key="og:image" />
+    <meta property="og:type" content={type} key="og:type" />
+    <meta name="twitter:card" content="summary_large_image" key="twitter:card" />
+    <meta name="twitter:title" content={title} key="twitter:title" />
+    <meta name="twitter:description" content={description} key="twitter:description" />
+    <meta name="twitter:image" content={imageUrl} key="twitter:image" />
+    {article?.publishedTime && <meta property="article:published_time" content={article.publishedTime} key="article:published_time" />}
+    {article?.modifiedTime && <meta property="article:modified_time" content={article.modifiedTime} key="article:modified_time" />}
+    {article?.author && <meta property="article:author" content={article.author} key="article:author" />}
+    {schemas.filter(Boolean).map((schema, index) => <script key={`${schema['@id'] || schema['@type'] || 'schema'}-${index}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, '\\u003c') }} />)}
+  </Head>;
 }

@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /Admin.html
+Disallow: /api/
 
 Sitemap: https://ruchirealty.com/sitemap.xml

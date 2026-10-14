@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import Nav from "../components/Nav";
 import { Footer } from "../components/Footer";
 import { Reveal } from "../components/shared";
+import SEO from "../components/SEO";
+import { useServerData } from "../server-data";
 
 const JOBS = [
   {
@@ -455,8 +457,9 @@ function JobDetailView({ job, onBack }) {
 }
 
 export default function CareersPage() {
+  const serverData = useServerData();
   const [selectedJob, setSelectedJob] = useState(null);
-  const [jobs, setJobs] = useState([]);
+  const [jobs, setJobs] = useState(() => serverData.jobs?.length ? serverData.jobs : JOBS);
 
   useEffect(() => {
     if (window.RuchiBackend?.careers) {
@@ -500,10 +503,12 @@ export default function CareersPage() {
 
   return (
     <div className="cr-page">
+      <SEO title="Careers at Ruchi Realty" description="Explore career opportunities at Ruchi Realty in real estate sales, engineering, customer service and operations." canonical="https://ruchirealty.com/careers" />
       <Nav solid onContact={() => {
         if (window.smoothTo) window.smoothTo("#contact");
       }} />
 
+      <main>
       {selectedJob ? (
         <JobDetailView job={selectedJob} onBack={() => handleSelectJob(null)} />
       ) : (
@@ -513,6 +518,7 @@ export default function CareersPage() {
           <CareersPositions jobs={jobs} onSelectJob={handleSelectJob} />
         </>
       )}
+      </main>
 
       <Footer />
     </div>
