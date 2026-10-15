@@ -1,6 +1,18 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { mediaScope, planMediaPosition, sortMediaByOrder } from '../src/components/admin/mediaOrder.mjs';
+import { mediaScope, nextMediaOrder, planMediaPosition, sortMediaByOrder } from '../src/components/admin/mediaOrder.mjs';
+
+test('new media uses the current database maximum within its section or gallery category', () => {
+  const gallery = [
+    { category: 'Videos', display_order: 0 },
+    { category: 'Videos', display_order: 20 },
+    { category: 'Events', display_order: 8 },
+  ];
+  assert.equal(nextMediaOrder(gallery, 'gallery', 'Videos'), 21);
+  assert.equal(nextMediaOrder(gallery, 'gallery', 'Events'), 9);
+  assert.equal(nextMediaOrder(gallery, 'gallery', 'Office Culture'), 0);
+  assert.equal(nextMediaOrder([{ display_order: 7 }], 'press'), 8);
+});
 
 test('entering a position normalizes ties and moves directly to that position', () => {
   const original = [

@@ -19,6 +19,16 @@ export function mediaScope(items, item, section) {
     : items);
 }
 
+export function nextMediaOrder(items, section, category) {
+  const scoped = section === 'gallery'
+    ? items.filter((item) => item.category === category)
+    : items;
+  return scoped.reduce((next, item) => {
+    const order = Number(item.display_order);
+    return Number.isInteger(order) && order >= next ? order + 1 : next;
+  }, 0);
+}
+
 export function planMediaPosition(items, id, targetPosition, section) {
   const item = items.find((entry) => entry.id === id);
   if (!item || !Number.isInteger(targetPosition) || targetPosition < 0) return [];

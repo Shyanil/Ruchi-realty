@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { getGallery, getPress, getEvents, GALLERY_CATEGORIES, EVENT_TYPES, slugifyMedia, youtubeThumb } from "../../services/mediaService";
 import { showAdminToast } from "./AdminShell";
-import { compareMediaOrder, mediaScope, planMediaPosition } from "./mediaOrder.mjs";
+import { compareMediaOrder, mediaScope, nextMediaOrder, planMediaPosition } from "./mediaOrder.mjs";
 
 const categories = GALLERY_CATEGORIES;
 const types = EVENT_TYPES.filter((value) => value !== "All");
@@ -217,6 +217,13 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
     return window.RuchiBackend.media.saveEvent(payload, id);
   };
 
+  const nextOrderFromDatabase = async (section, category) => {
+    const method = section === "gallery" ? "getAllGallery" : section === "press" ? "getAllPress" : "getAllEvents";
+    const { data, error } = await window.RuchiBackend.media[method]();
+    if (error) throw error;
+    return nextMediaOrder(data || [], section, category);
+  };
+
   const featureMedia = async (item) => {
     const { error } = await saveMediaPatch(tab, item.id, { is_featured: !item.is_featured });
     if (error) return showAdminToast("Featured update failed", error.message);
@@ -252,6 +259,9 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
   const addGallery = async (asset, file) => {
     const title = file.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ");
     const category = categoryFilter !== "All" ? categoryFilter : "Events";
+    let displayOrder;
+    try { displayOrder = await nextOrderFromDatabase("gallery", category); }
+    catch (error) { showAdminToast("Upload failed", error.message || "Could not read gallery order."); return; }
     const res = await window.RuchiBackend.media.saveGallery({
       title,
       slug: `${slugifyMedia(title)}-${asset.id.slice(0, 6)}`,
@@ -263,7 +273,7 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
       category,
       album: "",
       media_type: "image",
-      display_order: gallery.filter((item) => item.category === category).length,
+      display_order: displayOrder,
       status: "published",
       is_featured: false,
     });
@@ -278,7 +288,8 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
   const patchGallery = async (item, key, value) => {
     const payload = { [key]: value };
     if (key === "category" && value !== item.category) {
-      payload.display_order = gallery.filter((entry) => entry.category === value).length;
+      try { payload.display_order = await nextOrderFromDatabase("gallery", value); }
+      catch (error) { showAdminToast("Update failed", error.message || "Could not read gallery order."); return; }
     }
     if (key === "video_url") {
       const isVid = Boolean(value && value.trim());
@@ -316,6 +327,11 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
       ytThumb = youtubeThumb(galleryForm.video_url);
     }
     const slug = galleryForm.slug?.trim() || `${slugifyMedia(galleryForm.title)}-${Math.random().toString(36).slice(2, 7)}`;
+    let displayOrder = Number(galleryForm.display_order || 0);
+    if (!editGallery || gallery.find((item) => item.id === editGallery)?.category !== galleryForm.category) {
+      try { displayOrder = await nextOrderFromDatabase("gallery", galleryForm.category); }
+      catch (error) { showAdminToast("Save failed", error.message || "Could not read gallery order."); return; }
+    }
     const payload = {
       title: galleryForm.title.trim(),
       slug,
@@ -329,9 +345,7 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
       thumbnail_url: galleryForm.thumbnail_url || ytThumb || galleryForm.image_url || "",
       status: galleryForm.status || "published",
       is_featured: Boolean(galleryForm.is_featured),
-      display_order: editGallery && gallery.find((item) => item.id === editGallery)?.category === galleryForm.category
-        ? Number(galleryForm.display_order || 0)
-        : gallery.filter((item) => item.category === galleryForm.category && item.id !== editGallery).length,
+      display_order: displayOrder,
       image_asset_id: galleryForm.image_asset_id || null,
     };
 
@@ -352,7 +366,10 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
     const payload = Object.fromEntries(Object.keys(emptyPress).map((key) => [key, pressForm[key]]));
     payload.slug = pressForm.slug || slugifyMedia(pressForm.title);
     payload.release_date = pressForm.release_date || null;
-    if (!editPress) payload.display_order = press.length;
+    if (!editPress) {
+      try { payload.display_order = await nextOrderFromDatabase("press"); }
+      catch (error) { showAdminToast("Save failed", error.message || "Could not read press order."); return; }
+    }
     const res = await window.RuchiBackend.media.savePress(payload, editPress);
     if (res?.error) {
       showAdminToast("Save failed", res.error.message || "Failed to save press release.");
@@ -369,7 +386,10 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
     payload.slug = eventForm.slug || slugifyMedia(eventForm.title);
     payload.event_date = eventForm.event_date || null;
     payload.video_url = eventForm.video_url?.trim() || null;
-    if (!editEvent) payload.display_order = events.length;
+    if (!editEvent) {
+      try { payload.display_order = await nextOrderFromDatabase("events"); }
+      catch (error) { showAdminToast("Save failed", error.message || "Could not read event order."); return; }
+    }
     const res = await window.RuchiBackend.media.saveEvent(payload, editEvent);
     if (res?.error) {
       showAdminToast("Save failed", res.error.message || "Failed to save event.");
