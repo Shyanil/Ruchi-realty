@@ -40,7 +40,7 @@ export const normalizeGallery = (item) => {
     internal_links: Array.isArray(item.internal_links) ? item.internal_links : []
   };
 };
-export async function getGallery(admin = false) { const fn = admin ? window.RuchiBackend?.media?.getAllGallery : window.RuchiBackend?.media?.getGallery; const result = await fn?.(); if (result?.data?.length) return result.data.map(normalizeGallery); return GALLERY_MEDIA.map(normalizeGallery); }
+export async function getGallery(admin = false) { const fn = admin ? window.RuchiBackend?.media?.getAllGallery : window.RuchiBackend?.media?.getGallery; const result = await fn?.(); if (admin) return (result?.data || []).map(normalizeGallery); if (result?.data?.length) return result.data.map(normalizeGallery); return GALLERY_MEDIA.map(normalizeGallery); }
 const normalizeAwardTitle = (value = "") => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const AWARD_COVERS = {
   "mega property expo award": "/assets/media/award-mega-property-expo-2025-transparent.webp",
@@ -68,4 +68,4 @@ const withCover = (item) => {
 };
 export async function getPress(admin = false) { const fn = admin ? window.RuchiBackend?.media?.getAllPress : window.RuchiBackend?.media?.getPress; const result = await fn?.(); return (result?.data || []).map(withCover); }
 export async function getPressBySlug(slug) { const result = await window.RuchiBackend?.media?.getPressBySlug?.(slug); return result?.data ? withCover(result.data) : null; }
-export async function getEvents(admin = false) { const fn = admin ? window.RuchiBackend?.media?.getAllEvents : window.RuchiBackend?.media?.getEvents; const result = await fn?.(); if (result?.data?.length) return result.data.map(withCover); const items = await manifest(); return items.filter((item) => item.category === "Events" || item.category === "Awards").map((item,index) => ({ id:item.hash, title:item.title, slug:item.slug, item_type:item.category === "Awards" ? "Award" : item.slug.startsWith("bhaskar") ? "Media Coverage" : "Event", excerpt:item.caption, description:item.caption, image_url:item.public_url, thumbnail_url:item.thumbnail_url, status:"published", is_featured:index === 0, display_order:index })); }
+export async function getEvents(admin = false) { const fn = admin ? window.RuchiBackend?.media?.getAllEvents : window.RuchiBackend?.media?.getEvents; const result = await fn?.(); if (admin) return (result?.data || []).map(withCover); if (result?.data?.length) return result.data.map(withCover); const items = await manifest(); return items.filter((item) => item.category === "Events" || item.category === "Awards").map((item,index) => ({ id:item.hash, title:item.title, slug:item.slug, item_type:item.category === "Awards" ? "Award" : item.slug.startsWith("bhaskar") ? "Media Coverage" : "Event", excerpt:item.caption, description:item.caption, image_url:item.public_url, thumbnail_url:item.thumbnail_url, status:"published", is_featured:index === 0, display_order:index })); }

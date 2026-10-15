@@ -1040,16 +1040,16 @@ function ProjectsAdmin() {
       });
       const projectRecord = { ...form, description: richDescription };
       if (editingId) {
-        await window.RuchiBackend.projects.updateProject(editingId, projectRecord);
+        const { error: updateError } = await window.RuchiBackend.projects.updateProject(editingId, projectRecord);
+        if (updateError) throw updateError;
         const { error: subpageError } = await window.RuchiBackend.projectSubpages.upsert(subpagePayload(editingId));
         if (subpageError) throw subpageError;
       } else {
         const { data: created, error: createError } = await window.RuchiBackend.projects.createProject(projectRecord);
         if (createError) throw createError;
-        if (created?.id) {
-          const { error: subpageError } = await window.RuchiBackend.projectSubpages.upsert(subpagePayload(created.id));
-          if (subpageError) throw subpageError;
-        }
+        if (!created?.id) throw new Error("Project was not returned after saving.");
+        const { error: subpageError } = await window.RuchiBackend.projectSubpages.upsert(subpagePayload(created.id));
+        if (subpageError) throw subpageError;
       }
       showAdminToast(editingId ? "Project updated" : "Project created", `${form.title || "Project"} was saved successfully.`);
       reset();
@@ -1064,13 +1064,20 @@ function ProjectsAdmin() {
   const remove = async (id) => {
     const project = projects.find((item) => item.id === id) || {};
     if (!confirm(`Delete ${project.title || "this project"} and its uploaded project assets permanently?`)) return;
-    const { data: sp } = await window.RuchiBackend.projectSubpages.getByProjectId(id);
-    await Promise.all(collectProjectAssetUrls(project, sp).map((url) => deleteUploadedAsset(url)));
-    await window.RuchiBackend.projectSubpages.delete(id);
-    await window.RuchiBackend.projects.deleteProject(id);
-    showAdminToast("Project deleted", `${project.title || "The project"} and its managed assets were removed.`);
-    if (editingId === id) reset();
-    load();
+    try {
+      const { data: sp, error: lookupError } = await window.RuchiBackend.projectSubpages.getByProjectId(id);
+      if (lookupError) throw lookupError;
+      const { error: subpageError } = await window.RuchiBackend.projectSubpages.delete(id);
+      if (subpageError) throw subpageError;
+      const { error: projectError } = await window.RuchiBackend.projects.deleteProject(id);
+      if (projectError) throw projectError;
+      await Promise.all(collectProjectAssetUrls(project, sp).map((url) => deleteUploadedAsset(url)));
+      showAdminToast("Project deleted", `${project.title || "The project"} and its managed assets were removed.`);
+      if (editingId === id) reset();
+      load();
+    } catch (error) {
+      alert(`Failed to delete project: ${error.message}`);
+    }
   };
 
   const duplicateProject = async (project) => {
@@ -1081,9 +1088,13 @@ function ProjectsAdmin() {
       feature_order: "",
     });
     if (error) return alert(`Could not duplicate project: ${error.message}`);
+    if (!created?.id) return alert("Could not duplicate project: the new project was not returned.");
     const { data: subpage } = await window.RuchiBackend.projectSubpages.getByProjectId(project.id);
-    if (created?.id && subpage) await window.RuchiBackend.projectSubpages.upsert({ ...subpage, project_id: created.id, isPublished: false });
-    showAdminToast("Project duplicated", "A new unpublished copy is ready to review.");
+    if (subpage) {
+      const { error: subpageError } = await window.RuchiBackend.projectSubpages.upsert({ ...subpage, project_id: created.id, isPublished: false });
+      if (subpageError) return alert(`Project copied, but its detail page could not be copied: ${subpageError.message}`);
+    }
+    showAdminToast("Project duplicated", "A new copy is ready to review.");
     load();
   };
 
@@ -1419,16 +1430,23 @@ function LeadsAdmin() {
   }, []);
 
   const updateStatus = async (id, status) => {
-    await window.RuchiBackend.leads.updateLeadStatus(id, status);
+    const { error } = await window.RuchiBackend.leads.updateLeadStatus(id, status);
+    if (error) {
+      showAdminToast("Lead status update failed", error.message);
+      return false;
+    }
     showAdminToast("Lead status updated", `The lead is now marked ${status}.`);
     load();
+    return true;
   };
   const remove = async (id) => {
     if (!confirm("Delete this lead permanently?")) return;
-    await window.RuchiBackend.leads.deleteLead(id);
+    const { error } = await window.RuchiBackend.leads.deleteLead(id);
+    if (error) return showAdminToast("Lead deletion failed", error.message);
     showAdminToast("Lead deleted", "The enquiry was removed from the website lead database.");
     setSelectedLead(null);
     load();
+    return true;
   };
   const toggleVerification = async (lead) => {
     const isCurrentlyVerified = leadVerificationStatus(lead) === "verified";
@@ -1436,13 +1454,14 @@ function LeadsAdmin() {
     const { error } = await window.RuchiBackend.leads.updateVerificationStatus(lead.id, nextStatus);
     if (error) {
       showAdminToast("Verification update failed", error.message || "Could not update lead verification.");
-      return;
+      return false;
     }
     showAdminToast(
       nextStatus === "verified" ? "Lead verified" : "Lead unverified",
       `The lead has been marked as ${nextStatus}.`
     );
     load();
+    return true;
   };
 
   const filteredLeads = leads.filter((lead) => {
@@ -1521,7 +1540,7 @@ function LeadsAdmin() {
         )) : <div className="admin-empty-state"><h3>No matching leads</h3><p>New website enquiries will appear here. Adjust the search or status filter to see other records.</p><a href="/#contact" target="_blank" rel="noreferrer">View website form</a></div>}
       </div>
       </div>
-      {selectedLead ? <div className="admin-drawer-layer" role="dialog" aria-modal="true" aria-label={`Lead details for ${selectedLead.name}`}><button className="admin-drawer-scrim" type="button" aria-label="Close lead details" onClick={() => setSelectedLead(null)} /><aside className="admin-drawer"><header><div><span>Lead details</span><h2>{selectedLead.name}</h2></div><button type="button" onClick={() => setSelectedLead(null)} aria-label="Close">×</button></header><div className="admin-drawer__body"><span className={`admin-app-status admin-app-status--${selectedLead.status}`}>{selectedLead.status}</span> <span className={`admin-app-status admin-app-status--${leadVerificationStatus(selectedLead)}`}>{leadVerificationStatus(selectedLead)}</span><dl><div><dt>Email</dt><dd><a href={`mailto:${selectedLead.email}`}>{selectedLead.email || "Not provided"}</a></dd></div><div><dt>Phone</dt><dd><a href={`tel:${selectedLead.phone}`}>{selectedLead.phone || "Not provided"}</a></dd></div><div><dt>Project interest</dt><dd>{selectedLead.interest || "Not specified"}</dd></div><div><dt>City</dt><dd>{selectedLead.city || "Not specified"}</dd></div><div><dt>Verification</dt><dd>{leadVerificationStatus(selectedLead)}{selectedLead.verified_at ? ` on ${new Date(selectedLead.verified_at).toLocaleString()}` : ""}</dd></div><div><dt>CRM delivery</dt><dd>{selectedLead.crm_status || "not_sent"}{selectedLead.crm_error ? ` — ${selectedLead.crm_error}` : ""}</dd></div><div><dt>Source</dt><dd>{selectedLead.source || "Not specified"}</dd></div><div><dt>Received</dt><dd>{selectedLead.created_at ? new Date(selectedLead.created_at).toLocaleString() : "Not available"}</dd></div></dl>{selectedLead.notes ? <section><h3>Notes</h3><p>{selectedLead.notes}</p></section> : null}</div><footer><select value={selectedLead.status} onChange={async (event) => { const status = event.target.value; await updateStatus(selectedLead.id, status); setSelectedLead((lead) => ({ ...lead, status })); }}>{leadStatuses.map((item) => <option key={item}>{item}</option>)}</select><button type="button" className={`admin-lead-verify-toggle ${leadVerificationStatus(selectedLead) === "verified" ? "is-verified" : "is-unverified"}`} onClick={async () => { await toggleVerification(selectedLead); const nextVerStatus = leadVerificationStatus(selectedLead) === "verified" ? "unverified" : "verified"; setSelectedLead((lead) => ({ ...lead, verification_status: nextVerStatus, verified_at: nextVerStatus === "verified" ? new Date().toISOString() : null })); }}>{leadVerificationStatus(selectedLead) === "verified" ? "Mark unverified" : "Mark verified"}</button><button type="button" className="admin-danger" onClick={() => remove(selectedLead.id)}>Delete lead</button></footer></aside></div> : null}
+      {selectedLead ? <div className="admin-drawer-layer" role="dialog" aria-modal="true" aria-label={`Lead details for ${selectedLead.name}`}><button className="admin-drawer-scrim" type="button" aria-label="Close lead details" onClick={() => setSelectedLead(null)} /><aside className="admin-drawer"><header><div><span>Lead details</span><h2>{selectedLead.name}</h2></div><button type="button" onClick={() => setSelectedLead(null)} aria-label="Close">×</button></header><div className="admin-drawer__body"><span className={`admin-app-status admin-app-status--${selectedLead.status}`}>{selectedLead.status}</span> <span className={`admin-app-status admin-app-status--${leadVerificationStatus(selectedLead)}`}>{leadVerificationStatus(selectedLead)}</span><dl><div><dt>Email</dt><dd><a href={`mailto:${selectedLead.email}`}>{selectedLead.email || "Not provided"}</a></dd></div><div><dt>Phone</dt><dd><a href={`tel:${selectedLead.phone}`}>{selectedLead.phone || "Not provided"}</a></dd></div><div><dt>Project interest</dt><dd>{selectedLead.interest || "Not specified"}</dd></div><div><dt>City</dt><dd>{selectedLead.city || "Not specified"}</dd></div><div><dt>Verification</dt><dd>{leadVerificationStatus(selectedLead)}{selectedLead.verified_at ? ` on ${new Date(selectedLead.verified_at).toLocaleString()}` : ""}</dd></div><div><dt>CRM delivery</dt><dd>{selectedLead.crm_status || "not_sent"}{selectedLead.crm_error ? ` — ${selectedLead.crm_error}` : ""}</dd></div><div><dt>Source</dt><dd>{selectedLead.source || "Not specified"}</dd></div><div><dt>Received</dt><dd>{selectedLead.created_at ? new Date(selectedLead.created_at).toLocaleString() : "Not available"}</dd></div></dl>{selectedLead.notes ? <section><h3>Notes</h3><p>{selectedLead.notes}</p></section> : null}</div><footer><select value={selectedLead.status} onChange={async (event) => { const status = event.target.value; if (await updateStatus(selectedLead.id, status)) setSelectedLead((lead) => ({ ...lead, status })); }}>{leadStatuses.map((item) => <option key={item}>{item}</option>)}</select><button type="button" className={`admin-lead-verify-toggle ${leadVerificationStatus(selectedLead) === "verified" ? "is-verified" : "is-unverified"}`} onClick={async () => { if (!(await toggleVerification(selectedLead))) return; const nextVerStatus = leadVerificationStatus(selectedLead) === "verified" ? "unverified" : "verified"; setSelectedLead((lead) => ({ ...lead, verification_status: nextVerStatus, verified_at: nextVerStatus === "verified" ? new Date().toISOString() : null })); }}>{leadVerificationStatus(selectedLead) === "verified" ? "Mark unverified" : "Mark verified"}</button><button type="button" className="admin-danger" onClick={() => remove(selectedLead.id)}>Delete lead</button></footer></aside></div> : null}
     </section>
   );
 }
@@ -1668,7 +1687,8 @@ function BlogsAdmin() {
   };
   const remove = async (id) => {
     if (!confirm("Delete this blog post permanently?")) return;
-    await window.RuchiBackend.blogs.deleteBlog(id);
+    const { error } = await window.RuchiBackend.blogs.deleteBlog(id);
+    if (error) return showAdminToast("Blog deletion failed", error.message);
     showAdminToast("Blog deleted", "The article was removed from the content library.");
     if (editingId === id) reset();
     load();
@@ -1707,8 +1727,8 @@ function BlogsAdmin() {
     const matchesFilter = postFilter === "all" || (postFilter === "featured" ? blog.featured : blog.status === postFilter);
     return matchesQuery && matchesFilter;
   });
-  const moderate = async (id, status) => { const { error } = await window.RuchiBackend.blogs.updateCommentStatus(id, status); if (!error) { showAdminToast("Comment updated", `The comment is now marked ${status}.`); loadComments(); } };
-  const removeComment = async (id) => { if (!confirm("Delete this comment permanently?")) return; await window.RuchiBackend.blogs.deleteComment(id); loadComments(); };
+  const moderate = async (id, status) => { const { error } = await window.RuchiBackend.blogs.updateCommentStatus(id, status); if (error) return showAdminToast("Comment update failed", error.message); showAdminToast("Comment updated", `The comment is now marked ${status}.`); loadComments(); };
+  const removeComment = async (id) => { if (!confirm("Delete this comment permanently?")) return; const { error } = await window.RuchiBackend.blogs.deleteComment(id); if (error) return showAdminToast("Comment deletion failed", error.message); loadComments(); };
 
   useEffect(() => {
     const formElement = document.querySelector(".admin-blog-editor");
@@ -1877,8 +1897,10 @@ function CareersAdmin() {
   };
   const save = async (event) => {
     event.preventDefault();
-    if (editingId) await window.RuchiBackend.careers.update(editingId, form);
-    else await window.RuchiBackend.careers.create(form);
+    const { error } = editingId
+      ? await window.RuchiBackend.careers.update(editingId, form)
+      : await window.RuchiBackend.careers.create(form);
+    if (error) return showAdminToast("Job save failed", error.message);
     showAdminToast(editingId ? "Job updated" : "Job created", `${form.title || "The position"} was saved successfully.`);
     reset();
     loadJobs();
@@ -1903,7 +1925,8 @@ function CareersAdmin() {
   };
   const remove = async (id) => {
     if (!confirm("Delete this job listing permanently?")) return;
-    await window.RuchiBackend.careers.remove(id);
+    const { error } = await window.RuchiBackend.careers.remove(id);
+    if (error) return showAdminToast("Job deletion failed", error.message);
     showAdminToast("Job deleted", "The career listing was removed.");
     if (editingId === id) reset();
     loadJobs();
@@ -1915,7 +1938,8 @@ function CareersAdmin() {
   const toggleActive = async (id, current) => {
     const job = jobs.find((j) => j.id === id);
     if (!job) return;
-    await window.RuchiBackend.careers.update(id, { ...job, is_active: !current });
+    const { error } = await window.RuchiBackend.careers.update(id, { ...job, is_active: !current });
+    if (error) return showAdminToast("Job visibility update failed", error.message);
     loadJobs();
   };
 
@@ -2093,7 +2117,8 @@ function CareersAdmin() {
                   <span className={`admin-app-status admin-app-status--${app.status}`}>{app.status}</span>
                   <button type="button" className="admin-text-btn" onClick={() => setSelectedApplication(app)}>View details</button>
                   <select value={app.status} onChange={async (event) => {
-                    await window.RuchiBackend.careerApplications.updateStatus(app.id, event.target.value);
+                    const { error } = await window.RuchiBackend.careerApplications.updateStatus(app.id, event.target.value);
+                    if (error) return showAdminToast("Application update failed", error.message);
                     loadApplications();
                   }}>
                     {["new", "contacted", "qualified", "lost", "closed"].map((item) => <option key={item}>{item}</option>)}
@@ -2121,7 +2146,7 @@ function CareersAdmin() {
             {selectedApplication.message ? <section><h3>Message</h3><p>{selectedApplication.message}</p></section> : null}
             {selectedApplication.resume_url ? <a href={selectedApplication.resume_url} target="_blank" rel="noopener noreferrer" className="admin-primary admin-drawer-resume">Open resume</a> : null}
           </div>
-          <footer><span>Application status</span><select value={selectedApplication.status} onChange={async (event) => { const status = event.target.value; await window.RuchiBackend.careerApplications.updateStatus(selectedApplication.id, status); setSelectedApplication((current) => ({ ...current, status })); loadApplications(); }}>{["new", "contacted", "qualified", "lost", "closed"].map((item) => <option key={item}>{item}</option>)}</select></footer>
+          <footer><span>Application status</span><select value={selectedApplication.status} onChange={async (event) => { const status = event.target.value; const { error } = await window.RuchiBackend.careerApplications.updateStatus(selectedApplication.id, status); if (error) return showAdminToast("Application update failed", error.message); setSelectedApplication((current) => ({ ...current, status })); loadApplications(); }}>{["new", "contacted", "qualified", "lost", "closed"].map((item) => <option key={item}>{item}</option>)}</select></footer>
         </aside>
       </div> : null}
     </>

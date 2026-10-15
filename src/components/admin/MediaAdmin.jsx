@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getGallery, getPress, getEvents, GALLERY_CATEGORIES, EVENT_TYPES, slugifyMedia, youtubeThumb } from "../../services/mediaService";
 import { showAdminToast } from "./AdminShell";
+import { compareMediaOrder, mediaScope, planMediaPosition } from "./mediaOrder.mjs";
 
 const categories = GALLERY_CATEGORIES;
 const types = EVENT_TYPES.filter((value) => value !== "All");
@@ -95,7 +96,6 @@ function StatusFields({ form, setForm }) {
   return <fieldset className="media-publish">
     <legend>Publishing</legend>
     <Field label="Status"><select value={form.status} onChange={(event) => setForm({ ...form, status: event.target.value })}>{statuses.map((status) => <option value={status} key={status}>{status}</option>)}</select></Field>
-    <Field label="Display order"><input type="number" min="0" value={form.display_order} onChange={(event) => setForm({ ...form, display_order: Number(event.target.value) })} /></Field>
     <label className="media-feature-toggle"><input type="checkbox" checked={form.is_featured} onChange={(event) => setForm({ ...form, is_featured: event.target.checked })} /><span><strong>Featured item</strong><small>Show prominently on the public page.</small></span></label>
   </fieldset>;
 }
@@ -122,7 +122,32 @@ function InternalLinksEditor({ links = [], onChange }) {
   </fieldset>;
 }
 
-function Records({ items, edit, remove, dateKey }) {
+function OrderInput({ item, items, section, changePosition, busy }) {
+  const scope = mediaScope(items, item, section);
+  const position = scope.findIndex((entry) => entry.id === item.id);
+  const [draft, setDraft] = useState(String(position));
+  useEffect(() => { setDraft(String(position)); }, [position, busy]);
+  const commit = () => {
+    const value = Number(draft);
+    if (draft.trim() && Number.isInteger(value) && value >= 0 && value !== position) {
+      changePosition(item, Math.min(value, scope.length - 1));
+    } else {
+      setDraft(String(position));
+    }
+  };
+  return <label className="media-order-input">
+    <span>Order</span>
+    <input type="number" min="0" max={scope.length - 1} step="1" value={draft} disabled={busy}
+      aria-label={`Order for ${item.title} in ${section === "gallery" ? item.category : section === "press" ? "Press Releases" : "Events & Awards"}`}
+      onChange={(event) => setDraft(event.target.value)} onBlur={commit}
+      onKeyDown={(event) => {
+        if (event.key === "Enter") { event.preventDefault(); event.currentTarget.blur(); }
+        if (event.key === "Escape") { setDraft(String(position)); event.currentTarget.blur(); }
+      }} />
+  </label>;
+}
+
+function Records({ items, allItems, section, edit, remove, feature, changePosition, dateKey, busy }) {
   return <div className="media-admin-records">
     {items.length ? items.map((item) => <article key={item.id}>
       <div className="media-admin-record__info"><strong>{item.title}</strong><small>{item[dateKey] ? new Date(item[dateKey]).toLocaleDateString() : "No date"}</small></div>
@@ -131,8 +156,10 @@ function Records({ items, edit, remove, dateKey }) {
         {item.is_featured ? <span className="admin-featured-pill">Featured</span> : null}
       </div>
       <div className="media-admin-record__actions">
-        <button type="button" onClick={() => edit(item)}>Edit</button>
-        <button type="button" onClick={() => { if (confirm(`Delete ${item.title || "this media record"} permanently?`)) remove(item.id); }}>Delete</button>
+        <button type="button" disabled={busy} onClick={() => edit(item)}>Edit</button>
+        <button type="button" disabled={busy} aria-pressed={Boolean(item.is_featured)} onClick={() => feature(item)}>{item.is_featured ? "Featured" : "Feature"}</button>
+        <OrderInput item={item} items={allItems} section={section} changePosition={changePosition} busy={busy} />
+        <button type="button" disabled={busy} onClick={() => { if (confirm(`Delete ${item.title || "this media record"} permanently?`)) remove(item.id); }}>Remove</button>
       </div>
     </article>) : <div className="admin-empty-state"><span>□</span><h3>No matching entries</h3><p>Create the first record or adjust the active filters.</p></div>}
   </div>;
@@ -172,7 +199,9 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
   const [query, setQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
-  const [sort, setSort] = useState("newest");
+  const [sort, setSort] = useState("order");
+  const [reordering, setReordering] = useState(false);
+  const reorderInFlight = useRef(false);
 
   const load = () => Promise.all([getGallery(true), getPress(true), getEvents(true)]).then(([galleryData, pressData, eventData]) => {
     setGallery(galleryData);
@@ -181,6 +210,44 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
   });
   useEffect(() => { load(); }, []);
   useEffect(() => { setTab(initialTab); setEditorOpen(false); }, [initialTab]);
+
+  const saveMediaPatch = (section, id, payload) => {
+    if (section === "gallery") return window.RuchiBackend.media.saveGallery(payload, id);
+    if (section === "press") return window.RuchiBackend.media.savePress(payload, id);
+    return window.RuchiBackend.media.saveEvent(payload, id);
+  };
+
+  const featureMedia = async (item) => {
+    const { error } = await saveMediaPatch(tab, item.id, { is_featured: !item.is_featured });
+    if (error) return showAdminToast("Featured update failed", error.message);
+    showAdminToast("Featured updated", `${item.title} was ${item.is_featured ? "removed from" : "added to"} featured items.`);
+    load();
+  };
+
+  const changeMediaPosition = async (item, position) => {
+    if (reorderInFlight.current) return;
+    const changes = planMediaPosition(tab === "gallery" ? gallery : tab === "press" ? press : events, item.id, position, tab);
+    if (!changes.length) return;
+    reorderInFlight.current = true;
+    setReordering(true);
+    const completed = [];
+    try {
+      for (const change of changes) {
+        const { error } = await saveMediaPatch(tab, change.id, { display_order: change.display_order });
+        if (error) throw error;
+        completed.push(change);
+      }
+      setSort("order");
+      showAdminToast("Order updated", `${item.title} is now order ${position}${tab === "gallery" ? ` in ${item.category}` : ""}.`);
+    } catch (error) {
+      for (const change of completed.reverse()) {
+        await saveMediaPatch(tab, change.id, { display_order: change.previous_order ?? null });
+      }
+      showAdminToast("Order update failed", error.message || "Could not save the new order.");
+    } finally {
+      try { await load(); } finally { reorderInFlight.current = false; setReordering(false); }
+    }
+  };
 
   const addGallery = async (asset, file) => {
     const title = file.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ");
@@ -196,7 +263,7 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
       category,
       album: "",
       media_type: "image",
-      display_order: gallery.length,
+      display_order: gallery.filter((item) => item.category === category).length,
       status: "published",
       is_featured: false,
     });
@@ -210,6 +277,9 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
 
   const patchGallery = async (item, key, value) => {
     const payload = { [key]: value };
+    if (key === "category" && value !== item.category) {
+      payload.display_order = gallery.filter((entry) => entry.category === value).length;
+    }
     if (key === "video_url") {
       const isVid = Boolean(value && value.trim());
       payload.media_type = isVid ? "video" : "image";
@@ -259,7 +329,9 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
       thumbnail_url: galleryForm.thumbnail_url || ytThumb || galleryForm.image_url || "",
       status: galleryForm.status || "published",
       is_featured: Boolean(galleryForm.is_featured),
-      display_order: Number(galleryForm.display_order || 0),
+      display_order: editGallery && gallery.find((item) => item.id === editGallery)?.category === galleryForm.category
+        ? Number(galleryForm.display_order || 0)
+        : gallery.filter((item) => item.category === galleryForm.category && item.id !== editGallery).length,
       image_asset_id: galleryForm.image_asset_id || null,
     };
 
@@ -277,7 +349,10 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
 
   const savePress = async (event) => {
     event.preventDefault();
-    const payload = { ...pressForm, slug: pressForm.slug || slugifyMedia(pressForm.title), release_date: pressForm.release_date || null };
+    const payload = Object.fromEntries(Object.keys(emptyPress).map((key) => [key, pressForm[key]]));
+    payload.slug = pressForm.slug || slugifyMedia(pressForm.title);
+    payload.release_date = pressForm.release_date || null;
+    if (!editPress) payload.display_order = press.length;
     const res = await window.RuchiBackend.media.savePress(payload, editPress);
     if (res?.error) {
       showAdminToast("Save failed", res.error.message || "Failed to save press release.");
@@ -290,7 +365,11 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
   const saveEvent = async (event) => {
     event.preventDefault();
     if (eventForm.video_url && !/^https?:\/\//i.test(eventForm.video_url)) return alert("Video URL must begin with http:// or https://");
-    const payload = { ...eventForm, slug: eventForm.slug || slugifyMedia(eventForm.title), event_date: eventForm.event_date || null };
+    const payload = Object.fromEntries(Object.keys(emptyEvent).map((key) => [key, eventForm[key]]));
+    payload.slug = eventForm.slug || slugifyMedia(eventForm.title);
+    payload.event_date = eventForm.event_date || null;
+    payload.video_url = eventForm.video_url?.trim() || null;
+    if (!editEvent) payload.display_order = events.length;
     const res = await window.RuchiBackend.media.saveEvent(payload, editEvent);
     if (res?.error) {
       showAdminToast("Save failed", res.error.message || "Failed to save event.");
@@ -308,10 +387,14 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
     return matchesQuery && matchesStatus && matchesCategory;
   }).sort((a, b) => {
     if (sort === "name") return String(a.title || "").localeCompare(String(b.title || ""));
-    if (sort === "order") return Number(a.display_order || 0) - Number(b.display_order || 0);
+    if (sort === "order") {
+      if (tab === "gallery" && a.category !== b.category) {
+        return (categories.indexOf(a.category) + 1 || categories.length + 1) - (categories.indexOf(b.category) + 1 || categories.length + 1);
+      }
+      return compareMediaOrder(a, b);
+    }
     return new Date(b.updated_at || b.created_at || b.release_date || b.event_date || 0) - new Date(a.updated_at || a.created_at || a.release_date || a.event_date || 0);
   }), [currentItems, query, statusFilter, categoryFilter, sort, tab]);
-
   const changeTab = (nextTab) => {
     setTab(nextTab);
     setEditorOpen(false);
@@ -328,7 +411,7 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
       setGalleryForm({
         ...emptyGallery,
         category: categoryFilter !== "All" ? categoryFilter : "Videos",
-        display_order: gallery.length,
+        display_order: gallery.filter((item) => item.category === (categoryFilter !== "All" ? categoryFilter : "Videos")).length,
       });
       setEditorOpen(true);
     }
@@ -396,6 +479,7 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
         <option value="order">Display order</option>
       </select>
     </div>
+    <p className="media-order-hint">Enter an order number starting at 0. Gallery numbering starts over in each category.</p>
 
     {tab === "gallery" ? (
       <div className={`media-library-layout${editorOpen ? " is-editing" : ""}`}>
@@ -541,25 +625,22 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
                     >
                       {statuses.map((status) => <option key={status}>{status}</option>)}
                     </select>
-                    <button type="button" onClick={() => patchGallery(item, "is_featured", !item.is_featured)}>
+                    <button type="button" disabled={reordering} aria-pressed={Boolean(item.is_featured)} onClick={() => featureMedia(item)}>
                       {item.is_featured ? "Featured" : "Set featured"}
                     </button>
-                    <button type="button" onClick={() => patchGallery(item, "display_order", Math.max(0, (item.display_order || 0) - 1))}>
-                      Up
-                    </button>
-                    <button type="button" onClick={() => patchGallery(item, "display_order", (item.display_order || 0) + 1)}>
-                      Down
-                    </button>
+                    <OrderInput item={item} items={gallery} section="gallery" changePosition={changeMediaPosition} busy={reordering} />
                     <button
                       type="button"
+                      disabled={reordering}
                       onClick={async () => {
                         if (confirm("Delete gallery item permanently?")) {
-                          await window.RuchiBackend.media.deleteGallery(item.id);
+                          const { error } = await window.RuchiBackend.media.deleteGallery(item.id);
+                          if (error) return showAdminToast("Gallery deletion failed", error.message);
                           load();
                         }
                       }}
                     >
-                      Delete
+                      Remove
                     </button>
                   </div>
                 </div>
@@ -579,11 +660,11 @@ export default function MediaAdmin({ initialTab = "gallery", onSectionChange }) 
     {tab === "press" ? <div className={`media-library-layout${editorOpen ? " is-editing" : ""}`}>
       {editorOpen ? <Editor kind={editPress ? "Edit press release" : "New press release"} onSubmit={savePress} onCancel={() => setEditorOpen(false)} upload={async (asset) => setPressForm((value) => ({ ...value, cover_asset_id: asset.id }))}>
         <Field label="Title"><input required value={pressForm.title} onChange={(event) => setPressForm({ ...pressForm, title: event.target.value })} /></Field><Field label="Slug"><input value={pressForm.slug} onChange={(event) => setPressForm({ ...pressForm, slug: event.target.value })} /></Field><Field label="Release date"><input type="date" value={pressForm.release_date} onChange={(event) => setPressForm({ ...pressForm, release_date: event.target.value })} /></Field><Field label="Source / publication"><input value={pressForm.source_name} onChange={(event) => setPressForm({ ...pressForm, source_name: event.target.value })} /></Field><Field label="Author"><input value={pressForm.author} onChange={(event) => setPressForm({ ...pressForm, author: event.target.value })} /></Field><Field label="Excerpt" wide><textarea rows="3" value={pressForm.excerpt} onChange={(event) => setPressForm({ ...pressForm, excerpt: event.target.value })} /></Field><Field label="Full content" wide><textarea rows="8" value={pressForm.content} onChange={(event) => setPressForm({ ...pressForm, content: event.target.value })} /></Field><Field label="PDF URL"><input value={pressForm.pdf_url} onChange={(event) => setPressForm({ ...pressForm, pdf_url: event.target.value })} /></Field><Field label="External article URL"><input value={pressForm.external_url} onChange={(event) => setPressForm({ ...pressForm, external_url: event.target.value })} /></Field><InternalLinksEditor links={pressForm.internal_links} onChange={(links) => setPressForm({ ...pressForm, internal_links: links })} /><SeoFields form={pressForm} setForm={setPressForm} /><StatusFields form={pressForm} setForm={setPressForm} />
-      </Editor> : null}<div className="admin-panel media-record-panel"><div className="admin-panel__head"><h2>Press releases</h2><span className="admin-count">{filteredItems.length}</span></div><Records items={filteredItems} dateKey="release_date" edit={(item) => { setEditPress(item.id); setPressForm({ ...emptyPress, ...item, release_date: item.release_date || "" }); setEditorOpen(true); }} remove={async (id) => { await window.RuchiBackend.media.deletePress(id); load(); }} /></div></div> : null}
+      </Editor> : null}<div className="admin-panel media-record-panel"><div className="admin-panel__head"><h2>Press releases</h2><span className="admin-count">{filteredItems.length}</span></div><Records items={filteredItems} allItems={press} section="press" dateKey="release_date" feature={featureMedia} changePosition={changeMediaPosition} busy={reordering} edit={(item) => { setEditPress(item.id); setPressForm({ ...emptyPress, ...item, release_date: item.release_date || "" }); setEditorOpen(true); }} remove={async (id) => { const { error } = await window.RuchiBackend.media.deletePress(id); if (error) return showAdminToast("Press deletion failed", error.message); load(); }} /></div></div> : null}
 
     {tab === "events" ? <div className={`media-library-layout${editorOpen ? " is-editing" : ""}`}>
       {editorOpen ? <Editor kind={editEvent ? "Edit event or award" : "New event or award"} onSubmit={saveEvent} onCancel={() => setEditorOpen(false)} upload={async (asset) => setEventForm((value) => ({ ...value, cover_asset_id: asset.id }))}>
         <Field label="Title"><input required value={eventForm.title} onChange={(event) => setEventForm({ ...eventForm, title: event.target.value })} /></Field><Field label="Slug"><input value={eventForm.slug} onChange={(event) => setEventForm({ ...eventForm, slug: event.target.value })} /></Field><Field label="Type"><select value={eventForm.item_type} onChange={(event) => setEventForm({ ...eventForm, item_type: event.target.value })}>{types.map((type) => <option key={type}>{type}</option>)}</select></Field><Field label="Event date"><input type="date" value={eventForm.event_date} onChange={(event) => setEventForm({ ...eventForm, event_date: event.target.value })} /></Field><Field label="Location"><input value={eventForm.location} onChange={(event) => setEventForm({ ...eventForm, location: event.target.value })} /></Field><Field label="Short description" wide><textarea rows="3" value={eventForm.excerpt} onChange={(event) => setEventForm({ ...eventForm, excerpt: event.target.value })} /></Field><Field label="Full description" wide><textarea rows="6" value={eventForm.description} onChange={(event) => setEventForm({ ...eventForm, description: event.target.value })} /></Field><Field label="Video URL"><input type="url" placeholder="https://youtube.com/..." value={eventForm.video_url} onChange={(event) => setEventForm({ ...eventForm, video_url: event.target.value })} /></Field><Field label="External link"><input value={eventForm.external_url} onChange={(event) => setEventForm({ ...eventForm, external_url: event.target.value })} /></Field><Field label="Related project slug"><input value={eventForm.related_project_slug} onChange={(event) => setEventForm({ ...eventForm, related_project_slug: event.target.value })} /></Field><InternalLinksEditor links={eventForm.internal_links} onChange={(links) => setEventForm({ ...eventForm, internal_links: links })} /><SeoFields form={eventForm} setForm={setEventForm} /><StatusFields form={eventForm} setForm={setEventForm} />
-      </Editor> : null}<div className="admin-panel media-record-panel"><div className="admin-panel__head"><h2>Events & awards</h2><span className="admin-count">{filteredItems.length}</span></div><Records items={filteredItems} dateKey="event_date" edit={(item) => { setEditEvent(item.id); setEventForm({ ...emptyEvent, ...item, event_date: item.event_date || "" }); setEditorOpen(true); }} remove={async (id) => { await window.RuchiBackend.media.deleteEvent(id); load(); }} /></div></div> : null}
+      </Editor> : null}<div className="admin-panel media-record-panel"><div className="admin-panel__head"><h2>Events & awards</h2><span className="admin-count">{filteredItems.length}</span></div><Records items={filteredItems} allItems={events} section="events" dateKey="event_date" feature={featureMedia} changePosition={changeMediaPosition} busy={reordering} edit={(item) => { setEditEvent(item.id); setEventForm({ ...emptyEvent, ...item, event_date: item.event_date || "" }); setEditorOpen(true); }} remove={async (id) => { const { error } = await window.RuchiBackend.media.deleteEvent(id); if (error) return showAdminToast("Event deletion failed", error.message); load(); }} /></div></div> : null}
   </section>;
 }

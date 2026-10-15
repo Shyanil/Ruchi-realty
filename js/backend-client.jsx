@@ -465,6 +465,8 @@
     };
   };
 
+  const careerList = (value) => Array.isArray(value) ? value : String(value || "").split(/\r?\n/).map((item) => item.trim()).filter(Boolean);
+
   const careerJobPayload = (job = {}) => ({
     slug: job.slug || slugify(job.title),
     title: job.title,
@@ -473,8 +475,8 @@
     desc: job.desc,
     dropdown_val: job.dropdown_val || `${job.title}, ${job.dept}`,
     overview: job.overview || "",
-    responsibilities: Array.isArray(job.responsibilities) ? job.responsibilities : [],
-    requirements: Array.isArray(job.requirements) ? job.requirements : [],
+    responsibilities: careerList(job.responsibilities),
+    requirements: careerList(job.requirements),
     is_active: job.is_active !== false,
     sort_order: toOrder(job.sort_order) ?? 0,
   });
@@ -664,12 +666,12 @@
   };
 
   const mediaService = {
-    async getGallery() { return rest("media_gallery_items", { select: "*,media_assets!image_asset_id(*)", status: "eq.published", order: "display_order.asc,created_at.desc" }); },
-    async getAllGallery() { return rest("media_gallery_items", { select: "*,media_assets!image_asset_id(*)", order: "display_order.asc,created_at.desc" }, { auth: true }); },
-    async getPress() { return rest("media_press_releases", { select: "*,media_assets!cover_asset_id(*)", status: "eq.published", order: "is_featured.desc,release_date.desc,display_order.asc" }); },
-    async getAllPress() { return rest("media_press_releases", { select: "*,media_assets!cover_asset_id(*)", order: "release_date.desc,display_order.asc" }, { auth: true }); },
+    async getGallery() { return rest("media_gallery_items", { select: "*,media_assets!image_asset_id(*)", status: "eq.published", order: "display_order.asc,created_at.asc" }); },
+    async getAllGallery() { return rest("media_gallery_items", { select: "*,media_assets!image_asset_id(*)", order: "display_order.asc,created_at.asc" }, { auth: true }); },
+    async getPress() { return rest("media_press_releases", { select: "*,media_assets!cover_asset_id(*)", status: "eq.published", order: "display_order.asc,release_date.desc" }); },
+    async getAllPress() { return rest("media_press_releases", { select: "*,media_assets!cover_asset_id(*)", order: "display_order.asc,release_date.desc" }, { auth: true }); },
     async getPressBySlug(slug) { const result=await rest("media_press_releases", { select: "*,media_assets!cover_asset_id(*)", slug:`eq.${slug}`, status:"eq.published", limit:"1" }); return result.error?result:{data:result.data?.[0]||null,error:null}; },
-    async getEvents() { return rest("media_events_awards", { select: "*,media_assets!cover_asset_id(*)", status:"eq.published", order:"is_featured.desc,display_order.asc,event_date.desc" }); },
+    async getEvents() { return rest("media_events_awards", { select: "*,media_assets!cover_asset_id(*)", status:"eq.published", order:"display_order.asc,event_date.desc" }); },
     async getAllEvents() { return rest("media_events_awards", { select: "*,media_assets!cover_asset_id(*)", order:"display_order.asc,event_date.desc" }, { auth:true }); },
     async createAsset(url, usageType="gallery", meta={}) { const hash=meta.hash||await crypto.subtle.digest("SHA-256",new TextEncoder().encode(url)).then(b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")); const result=await rest("media_assets",{on_conflict:"hash",select:"*"},{method:"POST",auth:true,headers:{Prefer:"resolution=merge-duplicates,return=representation"},json:{original_filename:meta.original_filename||url.split("/").pop(),file_path:url,public_url:url,thumbnail_url:url,mime_type:"image/webp",file_size:meta.file_size||null,width:meta.width||null,height:meta.height||null,hash,usage_type:usageType}}); return result.error?result:{data:result.data?.[0],error:null}; },
     async saveGallery(data,id) { const method=id?"PATCH":"POST", params=id?{id:`eq.${id}`,select:"*"}:{select:"*"}; return rest("media_gallery_items",params,{method,auth:true,headers:{Prefer:"return=representation"},json:data}); },

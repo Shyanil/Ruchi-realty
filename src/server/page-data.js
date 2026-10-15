@@ -1,4 +1,5 @@
 import { PROJECTS } from '../data/projects';
+import { normalizePublicProjects } from './normalize-projects.mjs';
 import { BLOG } from '../data/siteData';
 import { LOCAL_SEO_PAGE_LIST } from '../data/localSeoPages';
 import { normalizeBlog } from '../services/blogService';
@@ -48,16 +49,6 @@ function normalizeSubpage(row) {
   return result;
 }
 
-function normalizePublicProjects(records) {
-  const bySlug = new Map(PROJECTS.map((project) => [project.slug || project.url?.split('/').pop(), project]));
-  for (const item of records || []) {
-    const seed = bySlug.get(item.slug) || {};
-    const image = item.image_url || seed.image_url || seed.img || '';
-    bySlug.set(item.slug, { ...seed, ...item, name: item.title || seed.name, city: item.location || seed.city, image_url: image, img: image, url: item.url || seed.url || `/projects/${item.slug}` });
-  }
-  return [...bySlug.values()];
-}
-
 export async function loadPageData(path) {
   if (path === '/careers' || path === '/Careers.html') {
     const jobs = await supabaseRows('career_jobs', { is_active: 'eq.true', order: 'sort_order.asc.nullslast,created_at.desc' });
@@ -93,9 +84,9 @@ export async function loadPageData(path) {
   }
   if (path.startsWith('/media')) {
     const [galleryRows, pressRows, eventRows] = await Promise.all([
-      supabaseRows('media_gallery_items', { select: '*,media_assets!image_asset_id(*)', status: 'eq.published', order: 'display_order.asc,created_at.desc' }),
-      supabaseRows('media_press_releases', { select: '*,media_assets!cover_asset_id(*)', status: 'eq.published', order: 'release_date.desc,display_order.asc' }),
-      supabaseRows('media_events_awards', { select: '*,media_assets!cover_asset_id(*)', status: 'eq.published', order: 'is_featured.desc,display_order.asc,event_date.desc' }),
+      supabaseRows('media_gallery_items', { select: '*,media_assets!image_asset_id(*)', status: 'eq.published', order: 'display_order.asc,created_at.asc' }),
+      supabaseRows('media_press_releases', { select: '*,media_assets!cover_asset_id(*)', status: 'eq.published', order: 'display_order.asc,release_date.desc' }),
+      supabaseRows('media_events_awards', { select: '*,media_assets!cover_asset_id(*)', status: 'eq.published', order: 'display_order.asc,event_date.desc' }),
     ]);
     const gallery = Array.isArray(galleryRows) && galleryRows.length ? galleryRows.map(normalizeGallery) : GALLERY_MEDIA.map(normalizeGallery);
     const withCover = (item) => ({ ...item, image_url: item.image_url || item.media_assets?.public_url || '', thumbnail_url: item.thumbnail_url || item.media_assets?.thumbnail_url || item.image_url || item.media_assets?.public_url || '', internal_links: Array.isArray(item.internal_links) ? item.internal_links : [] });
