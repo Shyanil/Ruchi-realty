@@ -1,7 +1,9 @@
 import handler from '../../netlify/functions/blog-comments.mjs';
 
 export default async function blogComments(req, res) {
-  const body = req.body == null ? undefined : JSON.stringify(req.body);
+  const body = req.method === 'GET' || req.method === 'HEAD' || req.body == null
+    ? undefined
+    : JSON.stringify(req.body);
   const host = req.headers.host || 'localhost';
   const protocol = req.headers['x-forwarded-proto'] || (host.startsWith('localhost') ? 'http' : 'https');
   const response = await handler(new Request(`${protocol}://${host}/api/blog-comments`, {

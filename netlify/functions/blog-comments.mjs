@@ -23,6 +23,7 @@ async function verifyTurnstile(token, secret, remoteIp) {
   const response = await fetch(TURNSTILE_VERIFY_URL, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    signal: AbortSignal.timeout(10_000),
     body: payload,
   });
   if (!response.ok) throw new Error("Turnstile verification service returned an error.");
@@ -89,13 +90,13 @@ export default async (request) => {
   }
 
   const secretKey = env("TURNSTILE_SECRET_KEY");
-  if (!siteKey || !secretKey) return json(503, { error: "Comment verification is not configured." });
+  const allowedHostnames = new Set(env("TURNSTILE_HOSTNAMES").split(",").map((hostname) => hostname.trim()).filter(Boolean));
+  if (!siteKey || !secretKey || !allowedHostnames.size) return json(503, { error: "Comment verification is not configured." });
 
   try {
     const verification = await verifyTurnstile(turnstileToken, secretKey, clientIp(request));
-    const actionIsValid = verification.action === "blog_comment";
-    if (!verification.success || !actionIsValid) {
-      console.warn("Turnstile rejected a blog comment:", verification["error-codes"] || [], verification.action || "");
+    if (!verification.success || verification.action !== "blog_comment" || !allowedHostnames.has(verification.hostname)) {
+      console.warn("Turnstile rejected a blog comment:", verification["error-codes"] || [], verification.action || "", verification.hostname || "");
       return json(400, { error: "Security verification failed or expired. Please try again." });
     }
 

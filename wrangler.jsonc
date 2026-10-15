@@ -4,6 +4,10 @@
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-10-14",
   "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "TURNSTILE_SITE_KEY": "0x4AAAAAAEUAxrsUpqA6e7s0",
+    "TURNSTILE_HOSTNAMES": "ruchi-realty.shyanilsquashcode.workers.dev,ruchirealty.com,www.ruchirealty.com"
+  },
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
