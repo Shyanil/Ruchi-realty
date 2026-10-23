@@ -22,7 +22,7 @@ export default function AdminDashboard({ onTab, user }) {
     try {
       const api = window.RuchiBackend;
       const results = await Promise.all([
-        api.projects.getAllProjects(), api.leads.getAllLeads(), api.blogs.getAllBlogs(), api.careers.getAll(), api.careerApplications.getAll(),
+        api.projects.getPublicProjects(), api.leads.getAllLeads(), api.blogs.getAllBlogs(), api.careers.getAll(), api.careerApplications.getAll(),
         api.media?.getAllGallery?.() || Promise.resolve({ data: [] }), api.media?.getAllPress?.() || Promise.resolve({ data: [] }), api.media?.getAllEvents?.() || Promise.resolve({ data: [] }),
       ]);
       const [projects, leads, blogs, jobs, applications, gallery, press, events] = results.map((result) => result?.data || []);
@@ -73,7 +73,7 @@ export default function AdminDashboard({ onTab, user }) {
         <StatCard icon="image" label="Media assets" value={analytics.mediaTotal} detail={`${data.gallery.length} gallery items`} onClick={() => onTab("media_gallery")} />
       </div>
       <div className="admin-analytics-grid admin-analytics-grid--dashboard">
-        <article className="admin-chart-card"><header><div><span>Portfolio</span><h3>Project overview</h3></div><small>Live database</small></header><DonutChart data={projectStatuses} total={data.projects.length} label="Projects" /></article>
+        <article className="admin-chart-card"><header><div><span>Portfolio</span><h3>Project overview</h3></div><small>Website projects</small></header><DonutChart data={projectStatuses} total={data.projects.length} label="Projects" /></article>
         <article className="admin-chart-card"><header><div><span>Inventory mix</span><h3>Project types</h3></div><small>Current total</small></header><BarChart data={projectTypes} /></article>
         <article className="admin-chart-card"><header><div><span>Geographic footprint</span><h3>Projects by location</h3></div><small>{projectLocations.length} locations</small></header>{projectLocations.length ? <ColumnChart data={projectLocations} /> : <EmptyState icon="building" title="No locations yet" description="Project locations will appear here." />}</article>
         <article className="admin-chart-card"><header><div><span>CRM pipeline</span><h3>Leads overview</h3></div><button type="button" onClick={() => onTab("leads")}>View all</button></header><BarChart data={leadStatuses} /></article>
