@@ -276,13 +276,16 @@
     reading_time_minutes: blog.reading_time_minutes || Math.max(1, Math.ceil(String(blog.content || "").split(/\s+/).filter(Boolean).length / 200)),
   });
 
+  const blogImageUrl = (blog = {}) => String(blog.image || blog.img || "").trim() || "/assets/logo-h.webp";
+  const isWebpImageUrl = (url) => /\.webp$/i.test(String(url || "").trim());
+
   const blogPayload = (blog = {}) => ({
     title: blog.title,
     slug: blog.slug || slugify(blog.title),
     excerpt: blog.excerpt,
     content: blog.content,
     author: blog.author || "Admin",
-    image: blog.image || blog.img || "",
+    image: blogImageUrl(blog),
     tags: Array.isArray(blog.tags) ? blog.tags : String(blog.tags || "").split(",").map((tag) => tag.trim()).filter(Boolean),
     category: blog.category || "News",
     featured: Boolean(blog.featured),
@@ -296,7 +299,7 @@
     og_description: blog.og_description || null,
     og_image_url: blog.og_image_url || blog.image || null,
     reading_time_minutes: Number(blog.reading_time_minutes) || null,
-    old_url: blog.old_url || null,
+    old_url: String(blog.old_url || "").trim() || null,
     related_project_links: Array.isArray(blog.related_project_links) ? blog.related_project_links : [],
     internal_links: Array.isArray(blog.internal_links) ? blog.internal_links : [],
   });
@@ -610,6 +613,7 @@
       return result.error ? result : { data: result.data?.[0] ? normalizeBlog(result.data[0]) : null, error: null };
     },
     async createBlog(blogData) {
+      if (!isWebpImageUrl(blogImageUrl(blogData))) return { data: null, error: new Error("Featured image URL must end in .webp. Use Upload file to convert a JPG or PNG automatically.") };
       const result = await rest("blogs", { select: "*" }, {
         method: "POST",
         auth: true,
@@ -619,6 +623,7 @@
       return result.error ? result : { data: normalizeBlog(result.data?.[0]), error: null };
     },
     async updateBlog(id, blogData) {
+      if (!isWebpImageUrl(blogImageUrl(blogData))) return { data: null, error: new Error("Featured image URL must end in .webp. Use Upload file to convert a JPG or PNG automatically.") };
       const result = await rest("blogs", { id: `eq.${id}`, select: "*" }, {
         method: "PATCH",
         auth: true,

@@ -312,7 +312,7 @@ function uploadGuidance(label = "") {
   if (key.includes("logo")) return "Upload only the project/logo mark here. Do not upload a landscape, building, or brochure image in this field.";
   if (key.includes("background") || key.includes("project image")) return "Upload a landscape/project visual here. Do not upload the logo in this field.";
   if (key.includes("location")) return "Upload a map or location image here.";
-  if (key.includes("blog")) return "Upload the blog cover image here.";
+  if (key.includes("blog")) return "Upload JPG, PNG or WebP to convert it automatically. Pasted URLs must end in .webp. Leave blank to use the Ruchi Realty logo.";
   return "Upload the matching image for this field.";
 }
 
@@ -1668,6 +1668,11 @@ function BlogsAdmin() {
       alert(`Please complete the ${missingField[1]} before saving.`);
       return;
     }
+    if (form.image?.trim() && !/\.webp$/i.test(form.image.trim())) {
+      setEditorTab("media");
+      alert("Featured image URL must end in .webp. Use Upload file to convert a JPG or PNG automatically.");
+      return;
+    }
     setUpdating(true);
     try {
       const payload = { ...form, content: normalizeRichTextHtml(form.content), related_project_links: String(form.related_project_links || "").split(",").map((item) => item.trim()).filter(Boolean) };
@@ -1710,6 +1715,9 @@ function BlogsAdmin() {
       ...blog,
       title: `${blog.title} Copy`,
       slug: `${blog.slug || "article"}-copy-${suffix}`,
+      image: /\.webp$/i.test(String(blog.image || "").trim()) ? blog.image : "/assets/logo-h.webp",
+      old_url: null,
+      canonical_url: null,
       status: "draft",
       featured: false,
       published_at: new Date().toISOString(),
