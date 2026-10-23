@@ -565,6 +565,11 @@ function videoEmbedUrl(value = "") {
   return id ? `https://www.youtube.com/embed/${id}` : text;
 }
 
+function youtubeThumbnail(value = "") {
+  const id = videoEmbedUrl(value).match(/youtube\.com\/embed\/([A-Za-z0-9_-]{11})/)?.[1];
+  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
+}
+
 function highlightIconSrc(icon, index) {
   const key = String(icon || DEFAULT_HIGHLIGHTS[index]?.icon || "").toLowerCase();
   if (ICONS[key]) return assetUrl(ICONS[key]);
@@ -623,12 +628,12 @@ function normalizeProjectSubpage(project, sp, fallbackSp = null) {
   const description = plainTextFromRichText(project?.description) || "Explore this Ruchi Realty project with thoughtfully planned spaces, dependable execution, and a location selected for everyday convenience.";
   const useFallbackVideoSection = isOscarFort || isOscarPalace;
   const videoSection = (useFallbackVideoSection ? fallbackCustom.videoSection || fallbackSp?.videoSection : custom.videoSection || sp?.videoSection || fallbackCustom.videoSection || fallbackSp?.videoSection) || {};
-  const legacyVideoUrl = (videoSection.videoUrl || "").trim() || (sp?.walkthroughVideoId || "").trim() || (fallbackSp?.walkthroughVideoId || "").trim();
+  const legacyVideoUrl = (sp?.walkthroughVideoId || "").trim() || (videoSection.enabled === false ? "" : (videoSection.videoUrl || "").trim()) || (fallbackSp?.walkthroughVideoId || "").trim();
   const fallbackVideoItems = Array.isArray(fallbackSp?.videos) && fallbackSp.videos.length ? fallbackSp.videos : [];
   const videoItems = useFallbackVideoSection ? fallbackVideoItems.length ? fallbackVideoItems : legacyVideoUrl ? [{ ...videoSection, videoUrl: legacyVideoUrl }] : [] : Array.isArray(sp?.videos) && sp.videos.length ? sp.videos : fallbackVideoItems.length ? fallbackVideoItems : legacyVideoUrl ? [{ ...videoSection, videoUrl: legacyVideoUrl }] : [];
   const videos = videoItems
-    .filter((item) => item?.videoUrl || item?.url)
-    .map((item, index) => ({ title: item.title || (isAngelica ? "Testimonials" : `Project video ${index + 1}`), videoUrl: videoEmbedUrl(item.videoUrl || item.url), thumbnailUrl: assetUrl(item.thumbnailUrl || item.poster || ""), thumbnailFallbackUrl: assetUrl(fallbackVideoItems[index]?.thumbnailUrl || fallbackVideoItems[index]?.poster || "") }));
+    .filter((item) => item?.enabled !== false && (item?.videoUrl || item?.url))
+    .map((item, index) => ({ kind: item.kind || (isAngelica ? "testimonial" : "walkthrough"), title: item.title || (isAngelica ? "Testimonials" : `Project video ${index + 1}`), videoUrl: videoEmbedUrl(item.videoUrl || item.url), thumbnailUrl: assetUrl(item.thumbnailUrl || item.poster || youtubeThumbnail(item.videoUrl || item.url)), thumbnailFallbackUrl: assetUrl(fallbackVideoItems[index]?.thumbnailUrl || fallbackVideoItems[index]?.poster || "") }));
   const reviewsSource = custom.gmbReviews || sp?.gmbReviews || fallbackCustom.gmbReviews || fallbackSp?.gmbReviews || null;
   const gmbReviews = reviewsSource?.enabled && Array.isArray(reviewsSource.reviews) ? { ...reviewsSource, googleIconUrl: assetUrl(reviewsSource.googleIconUrl || ""), starIconUrl: assetUrl(reviewsSource.starIconUrl || ""), reviews: reviewsSource.reviews.filter((review) => review?.author || review?.text).map((review) => ({ ...review, avatar: assetUrl(review.avatar || review.image || "") })) } : null;
   const clean = (items, predicate) => (Array.isArray(items) ? items : []).filter(predicate);
@@ -758,7 +763,8 @@ function SectionNav({ data, visible = false }) {
 
       ["specifications", "Specifications", data.specifications?.length],
       ["amenities", "Amenities", data.amenities?.length],
-      ["walkthrough", data.slug === "active-acres-angelica" ? "Testimonials" : "Walkthrough", data.videos?.length],
+      ["walkthrough", "Walkthrough", data.videos?.filter((video) => video.kind === "walkthrough").length],
+      ["video-testimonials", "Video testimonials", data.videos?.filter((video) => video.kind === "testimonial").length],
       ["reviews", "Reviews", data.gmbReviews?.reviews?.length],
       ["gallery", "Gallery", data.galleryImages?.length],
       ["construction-updates", "Construction", data.constructionUpdates?.length],
@@ -1038,12 +1044,12 @@ function ProjectLocation({ data }) {
   return <section className="section-pad project-section project-location" id="location"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">Location &amp; Connectivity</span><h2>A connected address,<br/><span className="rr-grad">close to what matters</span></h2><p className="project-section__description">Explore nearby essentials, transport connections and important destinations around {data.title}.</p></div><div className={`project-location__grid${mapVisual ? "" : " is-details-only"}`}>{mapVisual}<div className="project-location__content">{groups.length ? <div className="project-location__groups">{groups.map((group) => <article className="project-location__group" key={group.type}><header><span><LocationCategoryIcon type={group.type} /></span><h3>{group.title}</h3></header><ul>{group.items.map((item, index) => <li key={`${group.type}-${item.name}-${index}`}><span>{item.name}</span><strong>{item.distance || item.dist || "Nearby"}</strong></li>)}</ul></article>)}</div> : null}</div></div></div></section>;
 }
 
-function ProjectWalkthrough({ data }) {
+function ProjectWalkthrough({ data, kind = "walkthrough" }) {
   const [playingIndex, setPlayingIndex] = useState(null);
-  const videos = data.videos || [];
-  const isTestimonial = data.slug === "active-acres-angelica";
+  const videos = (data.videos || []).filter((video) => video.kind === kind);
+  const isTestimonial = kind === "testimonial";
   if (!videos.length) return null;
-  return <section className="section-pad project-section project-walkthrough" id="walkthrough"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">{isTestimonial ? "Testimonials" : videos.length > 1 ? "Project Videos" : "Walkthrough Video"}</span><h2>{isTestimonial ? <>Hear from the community<br /><span className="rr-grad">at Active Acres Angelica</span></> : <>Explore the project<br /><span className="rr-grad">from wherever you are</span></>}</h2><p className="project-section__description">{isTestimonial ? "Watch the Active Acres Angelica testimonial and discover the experience of living in this community." : "Take a closer look at the spaces and details that define the project."}</p></div><div className={`project-video-grid ${videos.length === 1 ? "is-single" : ""}`}>{videos.map((video, index) => <article className="project-video-card" key={`${video.videoUrl}-${index}`}>{videos.length > 1 ? <h3>{video.title}</h3> : null}<div className="project-walkthrough__frame">{playingIndex === index ? <iframe title={video.title || `${data.title} video ${index + 1}`} src={video.videoUrl} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen /> : <button type="button" onClick={() => setPlayingIndex(index)} aria-label={`Play ${video.title || "project video"}`} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", padding: 0, border: 0, background: "#111", cursor: "pointer" }}><img decoding="async" loading="lazy" src={video.thumbnailUrl || data.heroBg} alt={`${video.title || data.title} video thumbnail`} onError={(event) => { if (video.thumbnailFallbackUrl && event.currentTarget.src !== new URL(video.thumbnailFallbackUrl, window.location.origin).href) event.currentTarget.src = video.thumbnailFallbackUrl; }} style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }} /><span aria-hidden="true" style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", background: "linear-gradient(180deg,rgba(10,9,24,.08),rgba(10,9,24,.62))", color: "#fff", fontSize: "48px" }}>▶</span></button>}</div></article>)}</div></div></section>;
+  return <section className="section-pad project-section project-walkthrough" id={isTestimonial ? "video-testimonials" : "walkthrough"}><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">{isTestimonial ? "Testimonials" : videos.length > 1 ? "Project Videos" : "Walkthrough Video"}</span><h2>{isTestimonial ? <>Hear from the community<br /><span className="rr-grad">at {data.title}</span></> : <>Explore the project<br /><span className="rr-grad">from wherever you are</span></>}</h2><p className="project-section__description">{isTestimonial ? "Watch the video testimonial and discover the experience of this community." : "Take a closer look at the spaces and details that define the project."}</p></div><div className={`project-video-grid ${videos.length === 1 ? "is-single" : ""}`}>{videos.map((video, index) => <article className="project-video-card" key={`${video.videoUrl}-${index}`}>{videos.length > 1 ? <h3>{video.title}</h3> : null}<div className="project-walkthrough__frame">{playingIndex === index ? <iframe title={video.title || `${data.title} video ${index + 1}`} src={video.videoUrl} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen /> : <button type="button" onClick={() => setPlayingIndex(index)} aria-label={`Play ${video.title || "project video"}`} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", padding: 0, border: 0, background: "#111", cursor: "pointer" }}><img decoding="async" loading="lazy" src={video.thumbnailUrl || data.heroBg} alt={`${video.title || data.title} video thumbnail`} onError={(event) => { if (video.thumbnailFallbackUrl && event.currentTarget.src !== new URL(video.thumbnailFallbackUrl, window.location.origin).href) event.currentTarget.src = video.thumbnailFallbackUrl; }} style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }} /><span aria-hidden="true" style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", background: "linear-gradient(180deg,rgba(10,9,24,.08),rgba(10,9,24,.62))", color: "#fff", fontSize: "48px" }}>▶</span></button>}</div></article>)}</div></div></section>;
 }
 
 function ProjectTestimonials({ data }) {
@@ -1096,6 +1102,15 @@ export default function GenericProjectPage({ slugOverride = "" }) {
   const [loaded, setLoaded] = useState(Boolean(fallback || serverData.project));
   const [brochurePopup, setBrochurePopup] = useState(false);
   const [heroPassed, setHeroPassed] = useState(false);
+  const [relatedProjects, setRelatedProjects] = useState(() => serverData.projects || PROJECTS.map((item) => ({ slug: item.url?.split("/").pop(), title: item.name, location: item.city, image_url: item.img, url: item.url })));
+
+  useEffect(() => {
+    let active = true;
+    window.RuchiBackend?.projects?.getPublicProjects?.().then(({ data }) => {
+      if (active && Array.isArray(data)) setRelatedProjects(data);
+    }).catch(() => {});
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -1130,6 +1145,7 @@ export default function GenericProjectPage({ slugOverride = "" }) {
   }, [slug]);
 
   const data = useMemo(() => normalizeProjectSubpage(project, subpage, fallback), [project, subpage, fallback]);
+  const selectedRelatedProjects = data.relatedProjectSlugs.map((relatedSlug) => relatedProjects.find((item) => item.slug === relatedSlug)).filter((item) => item && item.slug !== slug);
   const canonical = `https://ruchirealty.com/projects/${slug}`;
   const projectSchemas = useMemo(() => {
     const primaryType = String(data.type || "").toLowerCase();
@@ -1250,6 +1266,7 @@ export default function GenericProjectPage({ slugOverride = "" }) {
         <ProjectSpecifications data={data} />
         <ProjectAmenities amenities={data.amenities} />
         <ProjectWalkthrough data={data} />
+        <ProjectWalkthrough data={data} kind="testimonial" />
         <ProjectTestimonials data={data} />
         <ProjectGallery data={data} />
         <ProjectGallery data={data} construction />
@@ -1257,6 +1274,7 @@ export default function GenericProjectPage({ slugOverride = "" }) {
         <ProjectLocation data={data} />
         <ProjectEnquiryCTA data={data} onEnquire={onBrochure} />
         <ProjectFaq data={data} />
+        {selectedRelatedProjects.length ? <section className="section-pad project-related"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">More Projects</span><h2>Explore related projects</h2></div><div className="project-related__grid">{selectedRelatedProjects.map((item) => <Link className="project-related__card" to={item.url || `/projects/${item.slug}`} key={item.slug}><img src={item.image_url || item.img || "/assets/logo-h.webp"} alt="" loading="lazy" /><div><h3>{item.title || item.name}</h3><p>{item.location || item.city}</p><span>View project →</span></div></Link>)}</div></div></section> : null}
       </main>
       <Footer />
       {brochurePopup ? <BrochurePopup data={data} onClose={() => setBrochurePopup(false)} /> : null}

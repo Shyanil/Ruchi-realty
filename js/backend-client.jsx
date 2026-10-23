@@ -165,11 +165,12 @@
       sort_order: toOrder(project.sort_order),
       feature_order: toOrder(project.feature_order),
       slug,
-      url: project.url || projectRouteForTitle(title, location) || `/projects/${slug}`,
+      url: project.url || (project.slug ? `/projects/${slug}` : projectRouteForTitle(title, location)) || `/projects/${slug}`,
     };
   };
 
   const projectPayload = (project = {}) => ({
+    slug: slugify(project.slug || projectSlugForTitle(project.title || project.name, project.location || project.city)),
     title: project.title || project.name,
     tag: project.tag || project.status || "Project",
     image_url: project.image_url || project.img || "",

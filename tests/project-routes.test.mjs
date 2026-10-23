@@ -16,3 +16,10 @@ test('database updates keep established project routes', () => {
   assert.equal(project.url, '/projects/oscar-pride-indore');
   assert.ok(project.image_url);
 });
+
+test('a saved custom slug becomes the project page URL', () => {
+  const project = normalizePublicProjects([{ id: 'custom-id', title: 'New Residences', location: 'Indore', slug: 'my-custom-page' }])
+    .find((item) => item.id === 'custom-id');
+  assert.equal(project.slug, 'my-custom-page');
+  assert.equal(project.url, '/projects/my-custom-page');
+});

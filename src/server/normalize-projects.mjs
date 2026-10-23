@@ -3,8 +3,7 @@ import { PROJECTS } from '../data/projects.js';
 export function normalizePublicProjects(records) {
   const bySlug = new Map(PROJECTS.map((project) => [project.slug || project.url?.split('/').pop(), project]));
   for (const item of records || []) {
-    // The projects table has no slug column. Use the same URL as the browser
-    // for newly created projects, while retaining existing seed project URLs.
+    // Preserve legacy seed URLs and honor an explicitly saved project slug.
     const title = item.title || item.name || '';
     const location = item.location || item.city || '';
     const seedMatch = PROJECTS.find((project) => project.url &&

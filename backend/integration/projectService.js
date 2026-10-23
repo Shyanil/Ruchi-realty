@@ -10,6 +10,7 @@ const buildPayload = (projectData) => {
       : Number(value);
 
   return {
+    slug: String(projectData.slug || `${projectData.title}-${projectData.location}`).toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
     title: projectData.title,
     tag: projectData.tag,
     image_url: projectData.image_url,

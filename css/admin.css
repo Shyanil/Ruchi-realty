@@ -1067,6 +1067,8 @@
 
 /* Top Save Details Bar & Header Actions for Admin Editors */
 .admin-editor-actions--top{position:static;bottom:auto;border-top:none;border-bottom:1px solid var(--admin-border);background:#f6f7fc;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0;z-index:4;border-radius:0}
+.admin-blog-editor>.admin-panel__head,.admin-blog-editor>.admin-editor-tabs{position:static;top:auto}.admin-blog-editor>.admin-form-grid,.admin-blog-editor>.admin-field,.admin-blog-editor>.admin-uploader{min-width:0}.admin-blog-editor>.admin-form-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}.admin-blog-editor>.admin-form-grid>.admin-field{min-width:0}.admin-blog-editor .admin-uploader{max-width:calc(100% - 44px)}.admin-blog-editor .admin-editor-tabs{flex-wrap:wrap;overflow:visible}.admin-blog-editor .admin-editor-actions:last-child{position:static}
+@media(max-width:680px){.admin-blog-editor .admin-uploader{max-width:calc(100% - 28px)}}
 .admin-editor-actions--top span{color:var(--admin-muted);font-size:12px;font-weight:600}
 .admin-editor-actions--top .admin-primary{flex:0 0 auto;min-height:36px;padding:8px 24px;font-size:12px;font-weight:700;border-radius:7px;box-shadow:0 3px 12px rgba(46,49,146,.22)}
 .admin-panel__head .admin-header-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}

@@ -64,6 +64,7 @@ function extractSpecsAndCustomData(specifications) {
 
 const emptyProject = {
   title: "",
+  slug: "",
   tag: "",
   image_url: "",
   location: "",
@@ -104,6 +105,7 @@ const emptyProject = {
   businessHubs: [],
   shoppingCentres: [],
   walkthroughVideoId: "",
+  walkthroughThumbnailUrl: "",
   galleryImages: [],
   constructionUpdates: [],
   brochureUrl: "",
@@ -894,6 +896,7 @@ function ProjectsAdmin() {
 
     const base = {
       title: project.title || "",
+      slug: project.slug || "",
       tag: project.tag || "",
       image_url: project.image_url || "",
       location: project.location || "",
@@ -926,7 +929,7 @@ function ProjectsAdmin() {
       gmbStarIconUrl: extracted.gmbStarIconUrl || "",
       locationMapUrl: extracted.locationMapUrl || "",
       floorPlans: sp?.floorPlans?.length ? sp.floorPlans : extracted.floorPlans || [],
-      videoSection: sp?.videos?.[0] || (extracted.videoSection?.videoUrl ? extracted.videoSection : { enabled: Boolean(sp?.walkthroughVideoId), videoUrl: sp?.walkthroughVideoId || "", thumbnailUrl: "" }),
+      videoSection: sp?.videos?.find((video) => video.kind === "testimonial") || (extracted.videoSection?.kind === "testimonial" ? extracted.videoSection : { enabled: false, videoUrl: "", thumbnailUrl: "" }),
       gmbReviews: extracted.gmbReviews || { enabled: false, googleIconUrl: "", starIconUrl: "", reviews: [] },
       locationImage: sp?.locationImage || "",
       locationMapEmbed: sp?.locationMapEmbed || "",
@@ -938,7 +941,8 @@ function ProjectsAdmin() {
       airportRailwayDistances: sp?.airportRailwayDistances || [],
       businessHubs: sp?.businessHubs || [],
       shoppingCentres: sp?.shoppingCentres || [],
-      walkthroughVideoId: extracted.videoSection?.videoUrl || sp?.walkthroughVideoId || "",
+      walkthroughVideoId: sp?.videos?.find((video) => video.kind === "walkthrough")?.videoUrl || sp?.walkthroughVideoId || (extracted.videoSection?.kind !== "testimonial" ? extracted.videoSection?.videoUrl : "") || "",
+      walkthroughThumbnailUrl: sp?.videos?.find((video) => video.kind === "walkthrough")?.thumbnailUrl || (extracted.videoSection?.kind !== "testimonial" ? extracted.videoSection?.thumbnailUrl : "") || "",
       galleryImages: sp?.galleryImages || [],
       constructionUpdates: sp?.constructionUpdates?.length ? sp.constructionUpdates : extracted.constructionUpdates || [],
       brochureUrl: sp?.brochureUrl || "",
@@ -980,10 +984,13 @@ function ProjectsAdmin() {
       const paragraphs = overviewHtml ? [overviewHtml] : [];
       const richDescription = normalizeRichTextHtml(form.description);
       const plainDescription = plainTextFromRichText(richDescription);
-      const vidUrl = (form.videoSection?.videoUrl || form.walkthroughVideoId || "").trim();
+      const vidUrl = (form.videoSection?.videoUrl || "").trim();
+      const walkthroughUrl = (form.walkthroughVideoId || "").trim();
+      const walkthroughVideo = walkthroughUrl ? { kind: "walkthrough", title: "Project Walkthrough", videoUrl: walkthroughUrl, thumbnailUrl: form.walkthroughThumbnailUrl || "" } : null;
       const videoSectionPayload = {
-        enabled: Boolean(vidUrl),
-        title: form.videoSection?.title || "Construction Walkthrough",
+        kind: "testimonial",
+        enabled: Boolean(form.videoSection?.enabled && vidUrl),
+        title: form.videoSection?.title || "Video Testimonial",
         videoUrl: vidUrl,
         thumbnailUrl: form.videoSection?.thumbnailUrl || ""
       };
@@ -1024,8 +1031,8 @@ function ProjectsAdmin() {
         airportRailwayDistances: form.airportRailwayDistances || [],
         businessHubs: form.businessHubs || [],
         shoppingCentres: form.shoppingCentres || [],
-        walkthroughVideoId: vidUrl,
-        videos: vidUrl ? [videoSectionPayload] : [],
+        walkthroughVideoId: walkthroughUrl,
+        videos: [walkthroughVideo, videoSectionPayload.enabled ? videoSectionPayload : null].filter(Boolean),
         galleryImages: form.galleryImages,
         constructionUpdates: form.constructionUpdates,
         brochureUrl: form.brochureUrl || "",
@@ -1038,7 +1045,7 @@ function ProjectsAdmin() {
         metaDescription: form.metaDescription || plainDescription,
         isPublished: form.isPublished !== false,
       });
-      const projectRecord = { ...form, description: richDescription };
+      const projectRecord = { ...form, slug: form.slug.trim(), description: richDescription };
       if (editingId) {
         const { error: updateError } = await window.RuchiBackend.projects.updateProject(editingId, projectRecord);
         if (updateError) throw updateError;
@@ -1084,6 +1091,7 @@ function ProjectsAdmin() {
     const { data: created, error } = await window.RuchiBackend.projects.createProject({
       ...project,
       title: `${project.title} Copy`,
+      slug: `${project.slug || "project"}-copy-${Date.now().toString().slice(-6)}`,
       featured: false,
       feature_order: "",
     });
@@ -1212,6 +1220,7 @@ function ProjectsAdmin() {
         <div className={`admin-project-editor-content is-${editorTab}`}>
         <div className="admin-form-grid">
           <AdminField label="Title"><input required value={form.title} onChange={(event) => set("title", event.target.value)} /></AdminField>
+          <AdminField label="Project page URL slug"><input value={form.slug} onChange={(event) => set("slug", event.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))} placeholder="generated-from-title-and-location" /><small className="admin-field-hint">/projects/{form.slug || "generated-from-title-and-location"}</small></AdminField>
           <AdminField label="Tag"><input required value={form.tag} onChange={(event) => set("tag", event.target.value)} /></AdminField>
           <AdminField label="Location"><input required value={form.location} onChange={(event) => set("location", event.target.value)} /></AdminField>
           <AdminField label="Type">
@@ -1287,13 +1296,14 @@ function ProjectsAdmin() {
                 placeholder="Paste YouTube video link here"
               />
             </AdminField>
+            <AdminField label="Walkthrough thumbnail URL"><input value={form.walkthroughThumbnailUrl || ""} onChange={(e) => set("walkthroughThumbnailUrl", e.target.value)} placeholder="Optional image URL; YouTube thumbnail is used automatically" /></AdminField>
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>Video / Testimonial Section</h3>
             <label className="admin-check" style={{ margin: "12px 0" }}>
               <input type="checkbox" checked={form.videoSection?.enabled} onChange={(e) => set("videoSection", { ...form.videoSection, enabled: e.target.checked })} /> Enable Video / Testimonial Section
             </label>
-            <AdminField label="Video URL"><input value={form.videoSection?.videoUrl || ""} onChange={(e) => set("videoSection", { ...form.videoSection, videoUrl: e.target.value })} placeholder="YouTube link or direct video file URL" /></AdminField>
-            <AdminField label="Video Thumbnail URL"><input value={form.videoSection?.thumbnailUrl || ""} onChange={(e) => set("videoSection", { ...form.videoSection, thumbnailUrl: e.target.value })} placeholder="Thumbnail image URL" /></AdminField>
+            <AdminField label="Testimonial video URL"><input value={form.videoSection?.videoUrl || ""} onChange={(e) => set("videoSection", { ...form.videoSection, videoUrl: e.target.value })} placeholder="YouTube link or direct video file URL" /></AdminField>
+            <AdminField label="Testimonial thumbnail URL"><input value={form.videoSection?.thumbnailUrl || ""} onChange={(e) => set("videoSection", { ...form.videoSection, thumbnailUrl: e.target.value })} placeholder="Optional image URL; YouTube thumbnail is used automatically" /></AdminField>
 
             <h3 style={{ margin: "20px 0 8px", fontSize: "13px", letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.5 }}>GMB Reviews Section</h3>
             <label className="admin-check" style={{ margin: "12px 0" }}>
