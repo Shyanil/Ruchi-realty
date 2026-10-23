@@ -24,7 +24,6 @@ const PLOTTED_PROJECT_SLUGS = new Set([
   "oscar-sanctuary-indore",
   "oscar-palace",
   "ruchi-enclave-indore",
-  "ruchi-hills",
 ]);
 const APARTMENT_PROJECT_SLUGS = new Set([
   "one-victoria-new-town",

@@ -17,7 +17,6 @@ export const PROJECTS = [
   { name: "Oscar Sanctuary", city: "Indore", type: "Residential", status: "Ongoing", url: "/projects/oscar-sanctuary-indore", img: "/projects/oscar-sanctuary-indore/gallery-pocket-park-007-view-004.webp" },
   { name: "Oscar Palace", city: "Indore", type: "Residential", status: "Upcoming", url: "/projects/oscar-palace", img: "/projects/oscar-palace/real-437a3939-hdr.webp" },
   { name: "Ruchi Enclave", city: "Jhalariya Road, Indore", type: "Residential", status: "Ready to Move", url: "/projects/ruchi-enclave-indore", img: "/projects/ruchi-enclave-indore/hero-entry-gate.webp" },
-  { name: "Ruchi Hills", city: "Indore", type: "Residential", status: "Upcoming", img: "assets/projects/ruchi-hills.webp" },
 ];
 
 export const PROJECT_OPTIONS = [

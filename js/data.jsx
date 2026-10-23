@@ -85,7 +85,6 @@ const PROJECTS = [
   // --- Upcoming ---
   { name: "Oscar Palace", city: "Indore", type: "Township", status: "Upcoming", url: "https://ruchirealty.com/oscar-palace/", img: "assets/projects/oscar-palace.webp" },
   { name: "Ruchi Enclave", city: "Jhalariya Road, Indore", type: "Township", status: "Ready to Move", url: "/projects/ruchi-enclave-indore", img: "/projects/ruchi-enclave-indore/hero-entry-gate.webp" },
-  { name: "Ruchi Hills", city: "Indore", type: "Residential", status: "Upcoming", img: "assets/projects/ruchi-hills.webp" },
 ];
 
 const PROJECT_OPTIONS = [
