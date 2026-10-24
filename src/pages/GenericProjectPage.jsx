@@ -1274,7 +1274,10 @@ export default function GenericProjectPage({ slugOverride = "" }) {
         <ProjectLocation data={data} />
         <ProjectEnquiryCTA data={data} onEnquire={onBrochure} />
         <ProjectFaq data={data} />
-        {selectedRelatedProjects.length ? <section className="section-pad project-related"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">More Projects</span><h2>Explore related projects</h2></div><div className="project-related__grid">{selectedRelatedProjects.map((item) => <Link className="project-related__card" to={item.url || `/projects/${item.slug}`} key={item.slug}><img src={item.image_url || item.img || "/assets/logo-h.webp"} alt="" loading="lazy" /><div><h3>{item.title || item.name}</h3><p>{item.location || item.city}</p><span>View project →</span></div></Link>)}</div></div></section> : null}
+        {selectedRelatedProjects.length ? <section className="section-pad project-related"><div className="rr-wrap"><div className="project-section__head"><span className="eyebrow">More Projects</span><h2>Explore related projects</h2></div><div className="project-related__grid">{selectedRelatedProjects.map((item) => {
+          const seedImage = PROJECTS.find((project) => project.url?.split("/").pop() === item.slug)?.img;
+          return <Link className="project-related__card" to={item.url || `/projects/${item.slug}`} key={item.slug}><RImg className="project-related__image" src={item.image_url || item.img} fallbackSrc={[seedImage, "/assets/logo-h.webp"]} alt="" /><div className="project-related__details"><h3>{item.title || item.name}</h3><p>{item.location || item.city}</p><span>View project →</span></div></Link>;
+        })}</div></div></section> : null}
       </main>
       <Footer />
       {brochurePopup ? <BrochurePopup data={data} onClose={() => setBrochurePopup(false)} /> : null}
