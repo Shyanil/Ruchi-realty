@@ -32,9 +32,9 @@ async function verifyTurnstile(token, secret, remoteIp) {
 
 async function insertComment(comment) {
   const supabaseUrl = env("SUPABASE_URL");
-  const serviceRoleKey = env("SUPABASE_SERVICE_ROLE_KEY");
+  const serviceRoleKey = env("SUPABASE_SECRET_KEY") || env("SUPABASE_SERVICE_ROLE_KEY");
   if (!supabaseUrl) throw new Error("SUPABASE_URL is not configured.");
-  if (!serviceRoleKey) throw new Error("SUPABASE_SERVICE_ROLE_KEY is not configured.");
+  if (!serviceRoleKey) throw new Error("SUPABASE_SECRET_KEY or SUPABASE_SERVICE_ROLE_KEY is not configured.");
 
   const response = await fetch(`${supabaseUrl}/rest/v1/blog_comments`, {
     method: "POST",

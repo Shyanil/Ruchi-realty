@@ -54,3 +54,36 @@ test('server verifies action and hostname before saving a comment', async () => 
     }
   }
 });
+
+test('comment insert accepts the server-only Supabase secret key', async () => {
+  const keys = ['TURNSTILE_SITE_KEY', 'TURNSTILE_SECRET_KEY', 'TURNSTILE_HOSTNAMES', 'SUPABASE_URL', 'SUPABASE_SECRET_KEY', 'SUPABASE_SERVICE_ROLE_KEY'];
+  const previous = Object.fromEntries(keys.map((key) => [key, process.env[key]]));
+  const originalFetch = global.fetch;
+  Object.assign(process.env, {
+    TURNSTILE_SITE_KEY: '0x-test-site-key', TURNSTILE_SECRET_KEY: 'test-turnstile-secret',
+    TURNSTILE_HOSTNAMES: 'ruchi-realty.shyanilsquashcode.workers.dev',
+    SUPABASE_URL: 'https://example.supabase.co', SUPABASE_SECRET_KEY: 'sb_secret_test-key',
+  });
+  delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+  global.fetch = async (url, options) => {
+    if (String(url).includes('/siteverify')) {
+      return new Response(JSON.stringify({ success: true, action: 'blog_comment', hostname: 'ruchi-realty.shyanilsquashcode.workers.dev' }), { status: 200 });
+    }
+    assert.equal(options.headers.apikey, 'sb_secret_test-key');
+    assert.equal(options.headers.Authorization, 'Bearer sb_secret_test-key');
+    return new Response(null, { status: 201 });
+  };
+  try {
+    const response = await handler(new Request('https://ruchi-realty.shyanilsquashcode.workers.dev/api/blog-comments', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ blogId: '11111111-1111-4111-8111-111111111111', name: 'QA User', email: 'qa@example.com', comment: 'A valid length comment', turnstileToken: 'valid-shaped-token' }),
+    }));
+    assert.equal(response.status, 200);
+  } finally {
+    global.fetch = originalFetch;
+    for (const key of keys) {
+      if (previous[key] === undefined) delete process.env[key];
+      else process.env[key] = previous[key];
+    }
+  }
+});

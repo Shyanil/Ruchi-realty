@@ -6,4 +6,4 @@ revoke insert on table public.blog_comments from public, anon, authenticated;
 
 -- Approved comments remain publicly readable through the existing SELECT policy.
 -- Comment moderation remains available through the existing authenticated admin policies.
--- The Netlify function inserts with SUPABASE_SERVICE_ROLE_KEY, which bypasses RLS.
+-- The server function inserts with SUPABASE_SECRET_KEY or SUPABASE_SERVICE_ROLE_KEY, which bypasses RLS.
